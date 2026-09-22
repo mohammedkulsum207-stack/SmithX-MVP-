@@ -25,44 +25,51 @@ let products = [
 let cart = [];
 
 function money(n) {
-  return n.toLocaleString("en-KE");
+  return Number(n).toLocaleString("en-KE");
 }
 
 function renderProducts() {
   const search = document.getElementById("search");
-  const productsContainer = document.getElementById("products");
+  const container = document.getElementById("products");
 
-  if (!productsContainer) return;
+  if (!container) return;
 
   const q = (search?.value || "").toLowerCase();
 
-  productsContainer.innerHTML = products
-    .filter(p => p.name.toLowerCase().includes(q))
-    .map(p => `
-      <article class="card">
-        <img
-          src="${p.image}"
-          alt="${p.name}"
-          class="product-image"
-          onerror="this.src='https://via.placeholder.com/800x600?text=SmithX+Product'"
-        >
+  const filtered = products.filter(product =>
+    product.name.toLowerCase().includes(q)
+  );
 
-        <div class="card-body">
-          <h3>${p.name}</h3>
+  container.innerHTML = filtered.map(product => `
+    <article class="card">
 
-          <p class="muted">${p.desc}</p>
+      <img
+        src="${product.image}"
+        alt="${product.name}"
+        class="product-image"
+        onerror="this.src='https://via.placeholder.com/800x600?text=SmithX+Product'"
+      >
 
-          <div class="price">
-            KES ${money(p.price)}
-          </div>
+      <div class="card-body">
 
-          <button class="primary" onclick="addToCart(${p.id})">
-            Add to cart
-          </button>
+        <h3>${product.name}</h3>
+
+        <p class="muted">${product.desc}</p>
+
+        <div class="price">
+          KES ${money(product.price)}
         </div>
-      </article>
-    `)
-    .join("");
+
+        <button
+          class="primary"
+          onclick="addToCart(${product.id})"
+        >
+          Add to cart
+        </button>
+
+      </div>
+    </article>
+  `).join("");
 }
 
 function addToCart(id) {
@@ -70,15 +77,34 @@ function addToCart(id) {
 
   if (!product) return;
 
-  cart.push(product);
+  const existing = cart.find(item => item.id === id);
 
-  const cartCount = document.getElementById("cartCount");
-
-  if (cartCount) {
-    cartCount.textContent = cart.length;
+  if (existing) {
+    existing.quantity++;
+  } else {
+    cart.push({
+      ...product,
+      quantity: 1
+    });
   }
 
+  updateCartCount();
+  renderCart();
+
   toast("Added to cart");
+}
+
+function updateCartCount() {
+  const cartCount = document.getElementById("cartCount");
+
+  if (!cartCount) return;
+
+  const count = cart.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
+  cartCount.textContent = count;
 }
 
 function openCart() {
@@ -90,29 +116,102 @@ function closeCart() {
   document.getElementById("cart")?.classList.remove("open");
 }
 
+function increaseQuantity(id) {
+  const item = cart.find(p => p.id === id);
+
+  if (item) {
+    item.quantity++;
+  }
+
+  updateCartCount();
+  renderCart();
+}
+
+function decreaseQuantity(id) {
+  const item = cart.find(p => p.id === id);
+
+  if (!item) return;
+
+  item.quantity--;
+
+  if (item.quantity <= 0) {
+    cart = cart.filter(p => p.id !== id);
+  }
+
+  updateCartCount();
+  renderCart();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(p => p.id !== id);
+
+  updateCartCount();
+  renderCart();
+
+  toast("Product removed");
+}
+
 function renderCart() {
   const cartItems = document.getElementById("cartItems");
-  const total = document.getElementById("total");
+  const totalElement = document.getElementById("total");
 
-  if (!cartItems || !total) return;
+  if (!cartItems || !totalElement) return;
 
   if (cart.length === 0) {
     cartItems.innerHTML =
       "<p class='muted'>Your cart is empty.</p>";
-  } else {
-    cartItems.innerHTML = cart
-      .map(p => `
-        <div class="cart-item">
-          <span>${p.name}</span>
-          <b>KES ${money(p.price)}</b>
-        </div>
-      `)
-      .join("");
+
+    totalElement.textContent = "0";
+    return;
   }
 
-  total.textContent = money(
-    cart.reduce((sum, p) => sum + p.price, 0)
+  cartItems.innerHTML = cart.map(item => `
+    <div class="cart-item">
+
+      <div>
+        <strong>${item.name}</strong>
+
+        <div class="muted">
+          KES ${money(item.price)} each
+        </div>
+
+        <div style="margin-top:8px;">
+
+          <button onclick="decreaseQuantity(${item.id})">
+            −
+          </button>
+
+          <strong style="margin:0 10px;">
+            ${item.quantity}
+          </strong>
+
+          <button onclick="increaseQuantity(${item.id})">
+            +
+          </button>
+
+          <button
+            onclick="removeFromCart(${item.id})"
+            style="margin-left:10px;"
+          >
+            Remove
+          </button>
+
+        </div>
+      </div>
+
+      <strong>
+        KES ${money(item.price * item.quantity)}
+      </strong>
+
+    </div>
+  `).join("");
+
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
   );
+
+  totalElement.textContent = money(total);
 }
 
 function checkout() {
@@ -121,16 +220,16 @@ function checkout() {
     return;
   }
 
-  toast("Demo checkout complete");
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  toast(`Demo checkout: KES ${money(total)}`);
 
   cart = [];
 
-  const cartCount = document.getElementById("cartCount");
-
-  if (cartCount) {
-    cartCount.textContent = 0;
-  }
-
+  updateCartCount();
   renderCart();
 }
 
@@ -150,16 +249,22 @@ function toast(message) {
 const productForm = document.getElementById("productForm");
 
 if (productForm) {
-  productForm.addEventListener("submit", function (e) {
+  productForm.addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const name = document.getElementById("pname").value;
+    const name = document.getElementById("pname").value.trim();
     const price = Number(
       document.getElementById("pprice").value
     );
+
     const desc =
-      document.getElementById("pdesc").value ||
+      document.getElementById("pdesc").value.trim() ||
       "A new product available on SmithX.";
+
+    if (!name || !price) {
+      toast("Enter a product name and price");
+      return;
+    }
 
     products.unshift({
       id: Date.now(),
@@ -206,3 +311,4 @@ if (search) {
 }
 
 renderProducts();
+updateCartCount();
