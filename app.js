@@ -24,20 +24,20 @@ let products = [
 
 let cart = [];
 
-function money(n) {
-  return Number(n).toLocaleString("en-KE");
+function money(amount) {
+  return Number(amount).toLocaleString("en-KE");
 }
 
-function renderProducts() {
-  const search = document.getElementById("search");
+function render() {
   const container = document.getElementById("products");
+  const search = document.getElementById("search");
 
   if (!container) return;
 
-  const q = (search?.value || "").toLowerCase();
+  const query = (search?.value || "").toLowerCase();
 
   const filtered = products.filter(product =>
-    product.name.toLowerCase().includes(q)
+    product.name.toLowerCase().includes(query)
   );
 
   container.innerHTML = filtered.map(product => `
@@ -47,11 +47,10 @@ function renderProducts() {
         src="${product.image}"
         alt="${product.name}"
         class="product-image"
-        onerror="this.src='https://via.placeholder.com/800x600?text=SmithX+Product'"
+        onerror="this.style.display='none'"
       >
 
       <div class="card-body">
-
         <h3>${product.name}</h3>
 
         <p class="muted">${product.desc}</p>
@@ -66,8 +65,8 @@ function renderProducts() {
         >
           Add to cart
         </button>
-
       </div>
+
     </article>
   `).join("");
 }
@@ -88,23 +87,22 @@ function addToCart(id) {
     });
   }
 
-  updateCartCount();
+  updateCount();
   renderCart();
-
   toast("Added to cart");
 }
 
-function updateCartCount() {
-  const cartCount = document.getElementById("cartCount");
+function updateCount() {
+  const count = document.getElementById("count");
 
-  if (!cartCount) return;
+  if (!count) return;
 
-  const count = cart.reduce(
-    (total, item) => total + item.quantity,
+  const quantity = cart.reduce(
+    (sum, item) => sum + item.quantity,
     0
   );
 
-  cartCount.textContent = count;
+  count.textContent = quantity;
 }
 
 function openCart() {
@@ -116,18 +114,18 @@ function closeCart() {
   document.getElementById("cart")?.classList.remove("open");
 }
 
-function increaseQuantity(id) {
+function increase(id) {
   const item = cart.find(p => p.id === id);
 
   if (item) {
     item.quantity++;
   }
 
-  updateCartCount();
+  updateCount();
   renderCart();
 }
 
-function decreaseQuantity(id) {
+function decrease(id) {
   const item = cart.find(p => p.id === id);
 
   if (!item) return;
@@ -138,64 +136,58 @@ function decreaseQuantity(id) {
     cart = cart.filter(p => p.id !== id);
   }
 
-  updateCartCount();
+  updateCount();
   renderCart();
 }
 
-function removeFromCart(id) {
+function removeItem(id) {
   cart = cart.filter(p => p.id !== id);
 
-  updateCartCount();
+  updateCount();
   renderCart();
 
   toast("Product removed");
 }
 
 function renderCart() {
-  const cartItems = document.getElementById("cartItems");
+  const items = document.getElementById("items");
   const totalElement = document.getElementById("total");
 
-  if (!cartItems || !totalElement) return;
+  if (!items || !totalElement) return;
 
   if (cart.length === 0) {
-    cartItems.innerHTML =
+    items.innerHTML =
       "<p class='muted'>Your cart is empty.</p>";
 
     totalElement.textContent = "0";
     return;
   }
 
-  cartItems.innerHTML = cart.map(item => `
+  items.innerHTML = cart.map(item => `
     <div class="cart-item">
 
       <div>
         <strong>${item.name}</strong>
 
-        <div class="muted">
+        <p class="muted">
           KES ${money(item.price)} each
-        </div>
+        </p>
 
-        <div style="margin-top:8px;">
+        <div>
+          <button onclick="decrease(${item.id})">−</button>
 
-          <button onclick="decreaseQuantity(${item.id})">
-            −
-          </button>
-
-          <strong style="margin:0 10px;">
+          <strong style="margin:0 10px">
             ${item.quantity}
           </strong>
 
-          <button onclick="increaseQuantity(${item.id})">
-            +
-          </button>
+          <button onclick="increase(${item.id})">+</button>
 
           <button
-            onclick="removeFromCart(${item.id})"
-            style="margin-left:10px;"
+            onclick="removeItem(${item.id})"
+            style="margin-left:10px"
           >
             Remove
           </button>
-
         </div>
       </div>
 
@@ -207,7 +199,8 @@ function renderCart() {
   `).join("");
 
   const total = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) =>
+      sum + item.price * item.quantity,
     0
   );
 
@@ -221,44 +214,46 @@ function checkout() {
   }
 
   const total = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) =>
+      sum + item.price * item.quantity,
     0
   );
 
-  toast(`Demo checkout: KES ${money(total)}`);
+  toast(`Demo checkout — KES ${money(total)}`);
 
   cart = [];
 
-  updateCartCount();
+  updateCount();
   renderCart();
 }
 
 function toast(message) {
-  const toastBox = document.getElementById("toast");
+  const box = document.getElementById("toast");
 
-  if (!toastBox) return;
+  if (!box) return;
 
-  toastBox.textContent = message;
-  toastBox.style.display = "block";
+  box.textContent = message;
+  box.style.display = "block";
 
   setTimeout(() => {
-    toastBox.style.display = "none";
-  }, 1800);
+    box.style.display = "none";
+  }, 2000);
 }
 
-const productForm = document.getElementById("productForm");
+const form = document.getElementById("form");
 
-if (productForm) {
-  productForm.addEventListener("submit", function(e) {
+if (form) {
+  form.addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const name = document.getElementById("pname").value.trim();
+    const name = document.getElementById("name").value.trim();
+
     const price = Number(
-      document.getElementById("pprice").value
+      document.getElementById("price").value
     );
 
     const desc =
-      document.getElementById("pdesc").value.trim() ||
+      document.getElementById("desc").value.trim() ||
       "A new product available on SmithX.";
 
     if (!name || !price) {
@@ -275,21 +270,17 @@ if (productForm) {
       desc: desc
     });
 
-    productForm.reset();
+    form.reset();
 
-    renderProducts();
+    render();
 
     toast("Product added to marketplace");
-
-    document.getElementById("market")?.scrollIntoView({
-      behavior: "smooth"
-    });
   });
 }
 
-function generateDescription() {
+function ai() {
   const name = document
-    .getElementById("pname")
+    .getElementById("name")
     ?.value
     .trim();
 
@@ -298,17 +289,11 @@ function generateDescription() {
     return;
   }
 
-  document.getElementById("pdesc").value =
+  document.getElementById("desc").value =
     `Discover ${name}, designed to combine practical everyday value with a clean, modern experience. A great choice for customers looking for quality and convenience.`;
 
   toast("AI description generated");
 }
 
-const search = document.getElementById("search");
-
-if (search) {
-  search.addEventListener("input", renderProducts);
-}
-
-renderProducts();
-updateCartCount();
+render();
+updateCount();
