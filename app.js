@@ -122,68 +122,6 @@ function openProduct(id) {
   const product = products.find(p => p.id === id);
 
   if (!product) return;
-
-  let modal = document.getElementById("productModal");
-
-  if (!modal) {
-    modal = document.createElement("div");
-    modal.id = "productModal";
-    document.body.appendChild(modal);
-  }
-
-  modal.innerHTML = `
-    <div class="product-modal-backdrop" onclick="closeProduct()"></div>
-
-    <div class="product-modal">
-      <button class="product-modal-close" onclick="closeProduct()">×</button>
-
-      <img
-        src="${product.image}"
-        alt="${product.name}"
-      >
-
-      <div class="product-modal-content">
-        <small>SMITHX MARKETPLACE</small>
-
-        <h2>${product.name}</h2>
-
-        <p class="product-tagline">
-          ${product.tagline || "Quality made simple."}
-        </p>
-
-        <p class="muted">
-          ${product.desc}
-        </p>
-
-        <div class="product-modal-price">
-          KES ${money(product.price)}
-        </div>
-
-        <button
-          class="primary"
-          onclick="addToCart(${product.id}); closeProduct();"
-        >
-          Add to cart
-        </button>
-      </div>
-    </div>
-  `;
-
-  modal.classList.add("show");
-}
-
-function closeProduct() {
-  const modal = document.getElementById("productModal");
-
-  if (modal) {
-    modal.classList.remove("show");
-  }
-}
-
-/* -------------------------
-   CART
-------------------------- */
-
 function addToCart(id) {
   const product = products.find(p => p.id === id);
 
