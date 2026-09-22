@@ -3,18 +3,21 @@ let products = [
     id: 1,
     name: "Smart Wireless Headphones",
     price: 4500,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
     desc: "Immersive sound with a comfortable wireless design."
   },
   {
     id: 2,
     name: "Minimal Desk Lamp",
     price: 2800,
+    image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
     desc: "A modern lamp designed for focused workspaces."
   },
   {
     id: 3,
     name: "Everyday Travel Backpack",
     price: 3500,
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80",
     desc: "A durable everyday backpack for work and travel."
   }
 ];
@@ -37,7 +40,12 @@ function renderProducts() {
     .filter(p => p.name.toLowerCase().includes(q))
     .map(p => `
       <article class="card">
-        <div class="pic">◈</div>
+        <img
+          src="${p.image}"
+          alt="${p.name}"
+          class="product-image"
+          onerror="this.src='https://via.placeholder.com/800x600?text=SmithX+Product'"
+        >
 
         <div class="card-body">
           <h3>${p.name}</h3>
@@ -157,6 +165,8 @@ if (productForm) {
       id: Date.now(),
       name: name,
       price: price,
+      image:
+        "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
       desc: desc
     });
 
