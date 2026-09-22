@@ -1,343 +1,917 @@
-let products = [
+/* =========================
+   SMITHX PRODUCTS
+========================= */
+
+const defaultProducts = [
   {
     id: 1,
+    name: "Samsung Galaxy S26 Ultra",
+    price: 169999,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=800&q=80",
+    desc: "A premium flagship smartphone built for powerful performance, photography and everyday productivity.",
+    tagline: "Ultra performance. Built for more."
+  },
+
+  {
+    id: 2,
     name: "Smart Wireless Headphones",
     price: 4500,
+    category: "Electronics",
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
     desc: "Immersive sound with a comfortable wireless design.",
     tagline: "Your sound. Anywhere."
   },
+
   {
-    id: 2,
+    id: 3,
     name: "Minimal Desk Lamp",
     price: 2800,
+    category: "Home",
     image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
     desc: "A modern lamp designed for focused workspaces.",
     tagline: "Light up your best ideas."
   },
+
   {
-    id: 3,
+    id: 4,
     name: "Everyday Travel Backpack",
     price: 3500,
+    category: "Fashion",
     image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80",
-    desc: "A durable everyday backpack for work and travel.",
+    desc: "A durable everyday backpack for work, school and travel.",
     tagline: "Built for wherever you're going."
+  },
+
+  {
+    id: 5,
+    name: "Smart Watch",
+    price: 6500,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80",
+    desc: "A stylish smart watch designed to keep you connected throughout the day.",
+    tagline: "Stay connected. Stay moving."
+  },
+
+  {
+    id: 6,
+    name: "Premium Sneakers",
+    price: 7200,
+    category: "Fashion",
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
+    desc: "Comfortable everyday sneakers combining modern style and performance.",
+    tagline: "Move with confidence."
   }
 ];
 
-let cart = [];
-let orders = [];
-let revenue = 0;
 
-/* -------------------------
-   BASIC HELPERS
-------------------------- */
+/* =========================
+   LOAD SAVED PRODUCTS
+========================= */
 
-function money(amount) {
-  return Number(amount).toLocaleString("en-KE");
+let savedProducts = [];
+
+try {
+  savedProducts =
+    JSON.parse(
+      localStorage.getItem("smithxProducts")
+    ) || [];
+} catch (error) {
+  savedProducts = [];
 }
 
+
+/* Remove duplicate default products */
+
+const savedIds =
+  new Set(
+    savedProducts.map(product => product.id)
+  );
+
+
+let products = [
+  ...defaultProducts.filter(
+    product => !savedIds.has(product.id)
+  ),
+  ...savedProducts
+];
+
+
+/* =========================
+   CART / ORDERS
+========================= */
+
+let cart = [];
+
+let orders = [];
+
+let revenue = 0;
+
+let selectedImage = "";
+
+
+/* =========================
+   SAVE PRODUCTS
+========================= */
+
+function saveProducts() {
+
+  try {
+
+    localStorage.setItem(
+      "smithxProducts",
+      JSON.stringify(products)
+    );
+
+  } catch (error) {
+
+    console.log(
+      "Could not save products:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================
+   MONEY
+========================= */
+
+function money(amount) {
+
+  return Number(amount)
+    .toLocaleString("en-KE");
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
 function toast(message) {
-  const box = document.getElementById("toast");
+
+  const box =
+    document.getElementById("toast");
 
   if (!box) return;
 
   box.textContent = message;
+
   box.style.display = "block";
 
   setTimeout(() => {
+
     box.style.display = "none";
+
   }, 2200);
+
 }
 
-/* -------------------------
+
+/* =========================
+   IMAGE UPLOAD
+========================= */
+
+const imageInput =
+  document.getElementById("image");
+
+const imagePreview =
+  document.getElementById("imagePreview");
+
+
+if (imageInput) {
+
+  imageInput.addEventListener(
+    "change",
+    function () {
+
+      const file =
+        this.files[0];
+
+      if (!file) {
+
+        selectedImage = "";
+
+        if (imagePreview) {
+
+          imagePreview.style.display =
+            "none";
+
+        }
+
+        return;
+
+      }
+
+
+      if (!file.type.startsWith("image/")) {
+
+        toast(
+          "Please select an image"
+        );
+
+        this.value = "";
+
+        return;
+
+      }
+
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        function (event) {
+
+          selectedImage =
+            event.target.result;
+
+
+          if (imagePreview) {
+
+            imagePreview.src =
+              selectedImage;
+
+            imagePreview.style.display =
+              "block";
+
+          }
+
+        };
+
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+}
+
+
+/* =========================
    MARKETPLACE
-------------------------- */
+========================= */
 
 function render() {
-  const container = document.getElementById("products");
-  const search = document.getElementById("search");
+
+  const container =
+    document.getElementById("products");
+
+  const search =
+    document.getElementById("search");
+
 
   if (!container) return;
 
-  const query = (search?.value || "").toLowerCase();
 
-  const filtered = products.filter(product =>
-    product.name.toLowerCase().includes(query)
-  );
+  const query =
+    (search?.value || "")
+      .toLowerCase()
+      .trim();
+
+
+  const filtered =
+    products.filter(product =>
+
+      product.name
+        .toLowerCase()
+        .includes(query)
+
+    );
+
 
   if (filtered.length === 0) {
+
     container.innerHTML = `
-      <div style="grid-column:1/-1;padding:40px;text-align:center">
-        <h3>No products found</h3>
-        <p class="muted">Try another search.</p>
+
+      <div style="
+        grid-column:1/-1;
+        padding:40px;
+        text-align:center
+      ">
+
+        <h3>
+          No products found
+        </h3>
+
+        <p class="muted">
+          Try another search.
+        </p>
+
       </div>
+
     `;
+
     return;
+
   }
 
-  container.innerHTML = filtered.map(product => `
-    <article class="card">
+
+  container.innerHTML =
+
+    filtered.map(product => `
+
+      <article class="card">
+
+        <img
+          src="${product.image}"
+          alt="${product.name}"
+          class="product-image"
+          onerror="this.style.display='none'"
+        >
+
+        <div class="card-body">
+
+          <small style="
+            color:#2563eb;
+            font-weight:700;
+          ">
+            ${product.category || "General"}
+          </small>
+
+          <h3>
+            ${product.name}
+          </h3>
+
+          <p class="muted">
+            ${product.desc}
+          </p>
+
+          <div class="price">
+            KES ${money(product.price)}
+          </div>
+
+          <button
+            class="secondary"
+            onclick="openProduct(${product.id})"
+          >
+            View product
+          </button>
+
+          <button
+            class="primary"
+            onclick="addToCart(${product.id})"
+          >
+            Add to cart
+          </button>
+
+        </div>
+
+      </article>
+
+    `).join("");
+
+}
+
+
+/* =========================
+   PRODUCT DETAILS
+========================= */
+
+function openProduct(id) {
+
+  const product =
+    products.find(
+      p => p.id === id
+    );
+
+
+  if (!product) return;
+
+
+  let modal =
+    document.getElementById(
+      "productModal"
+    );
+
+
+  if (!modal) {
+
+    modal =
+      document.createElement("div");
+
+    modal.id =
+      "productModal";
+
+    document.body.appendChild(modal);
+
+  }
+
+
+  modal.innerHTML = `
+
+    <div
+      class="product-modal-backdrop"
+      onclick="closeProduct()"
+    ></div>
+
+    <div class="product-modal">
+
+      <button
+        class="product-modal-close"
+        onclick="closeProduct()"
+      >
+        ×
+      </button>
 
       <img
         src="${product.image}"
         alt="${product.name}"
-        class="product-image"
-        onerror="this.style.display='none'"
       >
 
-      <div class="card-body">
-        <h3>${product.name}</h3>
+      <div class="product-modal-content">
 
-        <p class="muted">${product.desc}</p>
+        <small>
+          SMITHX MARKETPLACE
+        </small>
 
-        <div class="price">
+        <h2>
+          ${product.name}
+        </h2>
+
+        <p class="product-tagline">
+          ${product.tagline ||
+          "Quality made simple."}
+        </p>
+
+        <p class="muted">
+          ${product.desc}
+        </p>
+
+        <div class="product-modal-price">
           KES ${money(product.price)}
         </div>
 
         <button
-          class="secondary"
-          onclick="openProduct(${product.id})"
-        >
-          View product
-        </button>
-
-        <button
           class="primary"
-          onclick="addToCart(${product.id})"
+          onclick="
+            addToCart(${product.id});
+            closeProduct();
+          "
         >
           Add to cart
         </button>
+
       </div>
 
-    </article>
-  `).join("");
+    </div>
+
+  `;
+
+
+  modal.classList.add("show");
+
 }
 
-/* -------------------------
-   PRODUCT DETAILS
-------------------------- */
 
-function openProduct(id) {
-  const product = products.find(p => p.id === id);
+function closeProduct() {
 
-  if (!product) return;
-function addToCart(id) {
-  const product = products.find(p => p.id === id);
+  const modal =
+    document.getElementById(
+      "productModal"
+    );
 
-  if (!product) return;
 
-  const existing = cart.find(item => item.id === id);
+  if (modal) {
 
-  if (existing) {
-    existing.quantity++;
-  } else {
-    cart.push({
-      ...product,
-      quantity: 1
-    });
+    modal.classList.remove("show");
+
   }
 
-  updateCount();
-  renderCart();
-  toast("Added to cart");
 }
 
+
+/* =========================
+   CART
+========================= */
+
+function addToCart(id) {
+
+  const product =
+    products.find(
+      p => p.id === id
+    );
+
+
+  if (!product) return;
+
+
+  const existing =
+    cart.find(
+      item => item.id === id
+    );
+
+
+  if (existing) {
+
+    existing.quantity++;
+
+  } else {
+
+    cart.push({
+
+      ...product,
+
+      quantity: 1
+
+    });
+
+  }
+
+
+  updateCount();
+
+  renderCart();
+
+  toast(
+    "Added to cart"
+  );
+
+}
+
+
 function updateCount() {
-  const count = document.getElementById("count");
+
+  const count =
+    document.getElementById(
+      "count"
+    );
+
 
   if (!count) return;
 
-  const quantity = cart.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
 
-  count.textContent = quantity;
+  const quantity =
+    cart.reduce(
+      (sum, item) =>
+        sum + item.quantity,
+      0
+    );
+
+
+  count.textContent =
+    quantity;
+
 }
+
 
 function openCart() {
-  document.getElementById("cart")?.classList.add("open");
+
+  document
+    .getElementById("cart")
+    ?.classList.add("open");
+
   renderCart();
+
 }
+
 
 function closeCart() {
-  document.getElementById("cart")?.classList.remove("open");
+
+  document
+    .getElementById("cart")
+    ?.classList.remove("open");
+
 }
+
 
 function increase(id) {
-  const item = cart.find(p => p.id === id);
+
+  const item =
+    cart.find(
+      p => p.id === id
+    );
+
 
   if (item) {
+
     item.quantity++;
+
   }
 
+
   updateCount();
+
   renderCart();
+
 }
 
+
 function decrease(id) {
-  const item = cart.find(p => p.id === id);
+
+  const item =
+    cart.find(
+      p => p.id === id
+    );
+
 
   if (!item) return;
 
+
   item.quantity--;
 
+
   if (item.quantity <= 0) {
-    cart = cart.filter(p => p.id !== id);
+
+    cart =
+      cart.filter(
+        p => p.id !== id
+      );
+
   }
 
+
   updateCount();
+
   renderCart();
+
 }
+
 
 function removeItem(id) {
-  cart = cart.filter(p => p.id !== id);
+
+  cart =
+    cart.filter(
+      p => p.id !== id
+    );
+
 
   updateCount();
+
   renderCart();
 
-  toast("Product removed");
+  toast(
+    "Product removed"
+  );
+
 }
 
-function renderCart() {
-  const items = document.getElementById("items");
-  const totalElement = document.getElementById("total");
 
-  if (!items || !totalElement) return;
+function renderCart() {
+
+  const items =
+    document.getElementById(
+      "items"
+    );
+
+  const totalElement =
+    document.getElementById(
+      "total"
+    );
+
+
+  if (!items || !totalElement)
+    return;
+
 
   if (cart.length === 0) {
+
     items.innerHTML =
       "<p class='muted'>Your cart is empty.</p>";
 
-    totalElement.textContent = "0";
+    totalElement.textContent =
+      "0";
+
     return;
+
   }
 
-  items.innerHTML = cart.map(item => `
-    <div class="cart-item">
 
-      <div>
-        <strong>${item.name}</strong>
+  items.innerHTML =
 
-        <p class="muted">
-          KES ${money(item.price)} each
-        </p>
+    cart.map(item => `
+
+      <div class="cart-item">
 
         <div>
-          <button onclick="decrease(${item.id})">−</button>
 
-          <strong style="margin:0 10px">
-            ${item.quantity}
+          <strong>
+            ${item.name}
           </strong>
 
-          <button onclick="increase(${item.id})">+</button>
+          <p class="muted">
+            KES ${money(item.price)} each
+          </p>
 
-          <button
-            onclick="removeItem(${item.id})"
-            style="margin-left:10px"
-          >
-            Remove
-          </button>
+          <div>
+
+            <button
+              onclick="decrease(${item.id})"
+            >
+              −
+            </button>
+
+            <strong style="margin:0 10px">
+              ${item.quantity}
+            </strong>
+
+            <button
+              onclick="increase(${item.id})"
+            >
+              +
+            </button>
+
+            <button
+              onclick="removeItem(${item.id})"
+              style="margin-left:10px"
+            >
+              Remove
+            </button>
+
+          </div>
+
         </div>
+
+        <strong>
+          KES ${money(
+            item.price *
+            item.quantity
+          )}
+        </strong>
+
       </div>
 
-      <strong>
-        KES ${money(item.price * item.quantity)}
-      </strong>
+    `).join("");
 
-    </div>
-  `).join("");
 
-  const total = cart.reduce(
-    (sum, item) =>
-      sum + item.price * item.quantity,
-    0
-  );
+  const total =
+    cart.reduce(
+      (sum, item) =>
+        sum +
+        item.price *
+        item.quantity,
+      0
+    );
 
-  totalElement.textContent = money(total);
+
+  totalElement.textContent =
+    money(total);
+
 }
 
-/* -------------------------
-   DEMO CHECKOUT
-------------------------- */
+
+/* =========================
+   CHECKOUT
+========================= */
 
 function checkout() {
+
   if (cart.length === 0) {
-    toast("Your cart is empty");
+
+    toast(
+      "Your cart is empty"
+    );
+
     return;
+
   }
 
-  const total = cart.reduce(
-    (sum, item) =>
-      sum + item.price * item.quantity,
-    0
-  );
 
-  const quantity = cart.reduce(
-    (sum, item) =>
-      sum + item.quantity,
-    0
-  );
+  const total =
+    cart.reduce(
+      (sum, item) =>
+        sum +
+        item.price *
+        item.quantity,
+      0
+    );
+
+
+  const quantity =
+    cart.reduce(
+      (sum, item) =>
+        sum + item.quantity,
+      0
+    );
+
 
   orders.push({
-    total: total,
-    quantity: quantity,
-    date: new Date().toLocaleDateString()
+
+    total,
+
+    quantity,
+
+    date:
+      new Date()
+        .toLocaleDateString()
+
   });
+
 
   revenue += total;
 
+
   updateDashboard();
 
-  toast(`Demo checkout — KES ${money(total)}`);
+
+  toast(
+    `Demo checkout — KES ${money(total)}`
+  );
+
 
   cart = [];
 
+
   updateCount();
+
   renderCart();
+
 }
 
-/* -------------------------
-   AI SELLER ASSISTANT
-------------------------- */
+
+/* =========================
+   AI ASSISTANT
+========================= */
 
 function ai() {
-  const name = document
-    .getElementById("name")
-    ?.value
-    .trim();
 
-  const priceInput = document.getElementById("price");
+  const name =
+    document
+      .getElementById("name")
+      ?.value
+      .trim();
 
-  const price = Number(priceInput?.value || 0);
+
+  const price =
+    Number(
+      document
+        .getElementById("price")
+        ?.value || 0
+    );
+
 
   if (!name) {
-    toast("Enter a product name first");
+
+    toast(
+      "Enter a product name first"
+    );
+
     return;
+
   }
 
-  const suggestedPrice = price || 2500;
 
-  document.getElementById("desc").value =
-    `Discover ${name}, designed to combine practical everyday value with a clean, modern experience. A great choice for customers looking for quality, convenience and reliability.`;
+  const suggestedPrice =
+    price || 2500;
 
-  let aiBox = document.getElementById("aiResult");
+
+  const desc =
+    document.getElementById(
+      "desc"
+    );
+
+
+  if (desc) {
+
+    desc.value =
+      `Discover ${name}, designed to combine practical everyday value with a clean, modern experience. A great choice for customers looking for quality, convenience and reliability.`;
+
+  }
+
+
+  let aiBox =
+    document.getElementById(
+      "aiResult"
+    );
+
 
   if (!aiBox) {
-    aiBox = document.createElement("div");
-    aiBox.id = "aiResult";
 
-    const aiSection = document.querySelector(".ai");
+    aiBox =
+      document.createElement("div");
+
+    aiBox.id =
+      "aiResult";
+
+
+    const aiSection =
+      document.querySelector(
+        ".ai"
+      );
+
 
     if (aiSection) {
-      aiSection.appendChild(aiBox);
+
+      aiSection.appendChild(
+        aiBox
+      );
+
     }
+
   }
 
+
   aiBox.innerHTML = `
+
     <div class="ai-result">
-      <strong>✦ SmithX AI Insights</strong>
+
+      <strong>
+        ✦ SmithX AI Insights
+      </strong>
 
       <p>
         <b>Suggested tagline:</b>
@@ -346,184 +920,432 @@ function ai() {
 
       <p>
         <b>Suggested price:</b>
-        KES ${money(suggestedPrice)}
+        KES ${money(
+          suggestedPrice
+        )}
       </p>
 
       <p>
         <b>Recommendation:</b>
-        Highlight the product's convenience, quality and everyday value.
+        Highlight the product's
+        convenience, quality and
+        everyday value.
       </p>
+
     </div>
+
   `;
 
-  toast("SmithX AI generated product insights");
+
+  toast(
+    "SmithX AI generated product insights"
+  );
+
 }
 
-/* -------------------------
-   SELLER PRODUCT CREATION
-------------------------- */
 
-const form = document.getElementById("form");
+/* =========================
+   CREATE PRODUCT
+========================= */
+
+const form =
+  document.getElementById(
+    "form"
+  );
+
 
 if (form) {
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
 
-    const name =
-      document.getElementById("name").value.trim();
+  form.addEventListener(
+    "submit",
+    function(e) {
 
-    const price =
-      Number(document.getElementById("price").value);
+      e.preventDefault();
 
-    const desc =
-      document.getElementById("desc").value.trim() ||
-      "A new product available on SmithX.";
 
-    if (!name || !price) {
-      toast("Enter a product name and price");
-      return;
+      const name =
+        document
+          .getElementById("name")
+          .value
+          .trim();
+
+
+      const price =
+        Number(
+          document
+            .getElementById("price")
+            .value
+        );
+
+
+      const desc =
+        document
+          .getElementById("desc")
+          .value
+          .trim() ||
+        "A new product available on SmithX.";
+
+
+      if (!name || !price) {
+
+        toast(
+          "Enter a product name and price"
+        );
+
+        return;
+
+      }
+
+
+      const newProduct = {
+
+        id:
+          Date.now(),
+
+        name,
+
+        price,
+
+        category:
+          "Electronics",
+
+        image:
+          selectedImage ||
+          "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
+
+        desc,
+
+        tagline:
+          `${name} — quality made simple.`
+
+      };
+
+
+      /*
+        ADD PRODUCT TO THE EXISTING
+        MARKETPLACE
+      */
+
+      products.push(
+        newProduct
+      );
+
+
+      /*
+        SAVE IT SO IT DOESN'T
+        DISAPPEAR AFTER REFRESH
+      */
+
+      saveProducts();
+
+
+      /*
+        RESET FORM
+      */
+
+      form.reset();
+
+
+      selectedImage = "";
+
+
+      if (imagePreview) {
+
+        imagePreview.src = "";
+
+        imagePreview.style.display =
+          "none";
+
+      }
+
+
+      const aiResult =
+        document.getElementById(
+          "aiResult"
+        );
+
+
+      if (aiResult) {
+
+        aiResult.innerHTML = "";
+
+      }
+
+
+      /*
+        UPDATE MARKETPLACE
+      */
+
+      render();
+
+
+      updateDashboard();
+
+
+      toast(
+        "Product added to SmithX marketplace"
+      );
+
+
+      /*
+        SHOW MARKETPLACE
+      */
+
+      document
+        .getElementById(
+          "market"
+        )
+        ?.scrollIntoView({
+          behavior: "smooth"
+        });
+
     }
+  );
 
-    products.unshift({
-      id: Date.now(),
-      name: name,
-      price: price,
-      image:
-        "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
-      desc: desc,
-      tagline: `${name} — quality made simple.`
-    });
-
-    form.reset();
-
-    const aiResult = document.getElementById("aiResult");
-
-    if (aiResult) {
-      aiResult.innerHTML = "";
-    }
-
-    render();
-    updateDashboard();
-
-    toast("Product added to marketplace");
-  });
 }
 
-/* -------------------------
+
+/* =========================
    SELLER DASHBOARD
-------------------------- */
+========================= */
 
 function createDashboard() {
-  if (document.getElementById("sellerDashboard")) {
+
+  if (
+    document.getElementById(
+      "sellerDashboard"
+    )
+  ) {
+
     return;
+
   }
 
-  const sellerSection = document.getElementById("seller");
 
-  if (!sellerSection) return;
+  const sellerSection =
+    document.getElementById(
+      "seller"
+    );
 
-  const dashboard = document.createElement("div");
 
-  dashboard.id = "sellerDashboard";
+  if (!sellerSection)
+    return;
+
+
+  const dashboard =
+    document.createElement(
+      "div"
+    );
+
+
+  dashboard.id =
+    "sellerDashboard";
+
 
   dashboard.innerHTML = `
+
     <div class="dashboard-header">
+
       <div>
-        <small>SELLER DASHBOARD</small>
-        <h2>Your SmithX business</h2>
+
+        <small>
+          SELLER DASHBOARD
+        </small>
+
+        <h2>
+          Your SmithX business
+        </h2>
+
       </div>
 
       <span class="dashboard-live">
         ● Demo mode
       </span>
+
     </div>
+
 
     <div class="dashboard-grid">
 
       <div class="dashboard-card">
-        <span>Products</span>
-        <strong id="dashProducts">0</strong>
-        <small>Listed on marketplace</small>
+
+        <span>
+          Products
+        </span>
+
+        <strong id="dashProducts">
+          0
+        </strong>
+
+        <small>
+          Listed on marketplace
+        </small>
+
       </div>
 
-      <div class="dashboard-card">
-        <span>Orders</span>
-        <strong id="dashOrders">0</strong>
-        <small>Demo orders received</small>
-      </div>
 
       <div class="dashboard-card">
-        <span>Revenue</span>
-        <strong id="dashRevenue">KES 0</strong>
-        <small>Demo sales revenue</small>
+
+        <span>
+          Orders
+        </span>
+
+        <strong id="dashOrders">
+          0
+        </strong>
+
+        <small>
+          Demo orders received
+        </small>
+
+      </div>
+
+
+      <div class="dashboard-card">
+
+        <span>
+          Revenue
+        </span>
+
+        <strong id="dashRevenue">
+          KES 0
+        </strong>
+
+        <small>
+          Demo sales revenue
+        </small>
+
       </div>
 
     </div>
+
 
     <div class="dashboard-insight">
-      <strong>✦ SmithX Business Insight</strong>
+
+      <strong>
+        ✦ SmithX Business Insight
+      </strong>
+
       <p id="dashboardInsight">
-        Add products and complete a demo checkout to see your business activity.
+        Add products and complete
+        a demo checkout to see
+        your business activity.
       </p>
+
     </div>
+
   `;
 
-  sellerSection.insertAdjacentElement("afterend", dashboard);
+
+  sellerSection
+    .insertAdjacentElement(
+      "afterend",
+      dashboard
+    );
+
 
   updateDashboard();
+
 }
 
+
 function updateDashboard() {
+
   const productsElement =
-    document.getElementById("dashProducts");
+    document.getElementById(
+      "dashProducts"
+    );
+
 
   const ordersElement =
-    document.getElementById("dashOrders");
+    document.getElementById(
+      "dashOrders"
+    );
+
 
   const revenueElement =
-    document.getElementById("dashRevenue");
+    document.getElementById(
+      "dashRevenue"
+    );
+
 
   if (productsElement) {
-    productsElement.textContent = products.length;
+
+    productsElement.textContent =
+      products.length;
+
   }
+
 
   if (ordersElement) {
-    ordersElement.textContent = orders.length;
+
+    ordersElement.textContent =
+      orders.length;
+
   }
+
 
   if (revenueElement) {
+
     revenueElement.textContent =
       `KES ${money(revenue)}`;
+
   }
 
+
   const insight =
-    document.getElementById("dashboardInsight");
+    document.getElementById(
+      "dashboardInsight"
+    );
+
 
   if (!insight) return;
 
+
   if (orders.length === 0) {
+
     insight.textContent =
       "Add products and complete a demo checkout to see your business activity.";
+
   } else {
+
     insight.textContent =
       `You have ${orders.length} demo order${orders.length === 1 ? "" : "s"} and KES ${money(revenue)} in demo revenue. SmithX can use this data to help sellers understand their business performance.`;
+
   }
+
 }
 
-/* -------------------------
+
+/* =========================
    EXTRA DESIGN
-------------------------- */
+========================= */
 
 function addNewStyles() {
-  if (document.getElementById("smithxExtraStyles")) {
+
+  if (
+    document.getElementById(
+      "smithxExtraStyles"
+    )
+  ) {
+
     return;
+
   }
 
-  const style = document.createElement("style");
 
-  style.id = "smithxExtraStyles";
+  const style =
+    document.createElement(
+      "style"
+    );
+
+
+  style.id =
+    "smithxExtraStyles";
+
 
   style.textContent = `
+
     .card .secondary,
     .card .primary {
       width: 100%;
@@ -562,7 +1384,6 @@ function addNewStyles() {
       z-index: 2;
       width: min(850px, 100%);
       max-height: 90vh;
-      overflow: auto;
       display: grid;
       grid-template-columns: 1fr 1fr;
       background: white;
@@ -615,7 +1436,6 @@ function addNewStyles() {
       background: white;
       font-size: 25px;
       cursor: pointer;
-      box-shadow: 0 5px 20px rgba(0,0,0,.12);
     }
 
     #sellerDashboard {
@@ -715,10 +1535,51 @@ function addNewStyles() {
       color: #4b5563;
     }
 
+    .image-label {
+      display: block;
+      color: #d1d5db;
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 5px;
+    }
+
+    #image {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #374151;
+      border-radius: 10px;
+      background: #1f2937;
+      color: white;
+      cursor: pointer;
+    }
+
+    #image::file-selector-button {
+      border: 0;
+      background: #2563eb;
+      color: white;
+      padding: 9px 14px;
+      border-radius: 7px;
+      margin-right: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .upload-preview {
+      display: none;
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-top: 5px;
+      border: 1px solid #374151;
+    }
+
     @media (max-width: 800px) {
 
       .product-modal {
         grid-template-columns: 1fr;
+        max-height: 90vh;
+        overflow-y: auto;
       }
 
       .product-modal > img {
@@ -747,16 +1608,23 @@ function addNewStyles() {
         padding: 55px 5%;
       }
     }
+
   `;
 
+
   document.head.appendChild(style);
+
 }
 
-/* -------------------------
-   START
-------------------------- */
+
+/* =========================
+   START SMITHX
+========================= */
 
 addNewStyles();
+
 createDashboard();
+
 render();
+
 updateCount();
