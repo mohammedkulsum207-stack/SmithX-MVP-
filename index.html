@@ -382,4 +382,345 @@
         </p>
 
 
-        <div class
+        <div class="dashboard-grid">
+
+          <div class="dashboard-stat">
+
+            <span>
+              Marketplace Products
+            </span>
+
+            <strong id="dashboardProducts">
+              6
+            </strong>
+
+          </div>
+
+
+          <div class="dashboard-stat">
+
+            <span>
+              Today's Users
+            </span>
+
+            <strong id="dashboardVisitors">
+              0
+            </strong>
+
+          </div>
+
+
+          <div class="dashboard-stat">
+
+            <span>
+              Demo Sales
+            </span>
+
+            <strong id="dashboardSales">
+              KES 0
+            </strong>
+
+          </div>
+
+
+          <div class="dashboard-stat">
+
+            <span>
+              Orders
+            </span>
+
+            <strong id="dashboardOrders">
+              0
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+          <h3>
+            Store Activity
+          </h3>
+
+          <br>
+
+
+          <div class="activity-list">
+
+            <div class="activity-item">
+
+              <span>
+                Marketplace products
+              </span>
+
+              <strong id="activityProducts">
+                6
+              </strong>
+
+            </div>
+
+
+            <div class="activity-item">
+
+              <span>
+                People who visited today
+              </span>
+
+              <strong id="activityVisitors">
+                0
+              </strong>
+
+            </div>
+
+
+            <div class="activity-item">
+
+              <span>
+                Total amount used
+              </span>
+
+              <strong id="activitySales">
+                KES 0
+              </strong>
+
+            </div>
+
+
+            <div class="activity-item">
+
+              <span>
+                Completed purchases
+              </span>
+
+              <strong id="activityOrders">
+                0
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <button
+            id="resetAnalytics"
+            class="reset-button"
+          >
+            Reset Demo Analytics
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         UPDATE HISTORY
+    ========================== -->
+
+    <section class="update-history">
+
+      <div class="update-history-card">
+
+        <div class="section-title">
+          SMITHX MVP
+        </div>
+
+        <p class="section-subtitle">
+          Version 1.5
+        </p>
+
+
+        <div class="update-version">
+
+          <div>
+
+            <strong>
+              v1.5 — Marketplace MVP
+            </strong>
+
+            <span>
+              24 September 2026
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="update-version">
+
+          <div>
+
+            <strong>
+              v1.4 — Seller Studio Improvements
+            </strong>
+
+            <span>
+              23 September 2026
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="update-version">
+
+          <div>
+
+            <strong>
+              v1.3 — Marketplace & Cart Improvements
+            </strong>
+
+            <span>
+              22 September 2026
+            </span>
+
+          </div>
+
+        </div>
+
+        <button
+          class="update-history-button"
+          onclick="toggleUpdateHistory()"
+        >
+          View Update History
+        </button>
+
+
+        <div
+          id="updateHistoryExtra"
+          class="hidden"
+        >
+
+          <br>
+
+          <p>
+            SMITHX continues to evolve as a working commerce
+            platform MVP. Future versions can introduce more
+            advanced automation, analytics, payments and
+            intelligent commerce capabilities.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       PRODUCT MODAL
+  ========================== -->
+
+  <div
+    id="productModal"
+    class="modal"
+  >
+
+    <div class="modal-content">
+
+      <button
+        class="modal-close"
+        onclick="closeProductModal()"
+      >
+        ×
+      </button>
+
+      <div
+        id="productModalContent"
+        class="product-modal-grid"
+      ></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       CART
+  ========================== -->
+
+  <aside
+    id="cartPanel"
+    class="cart-panel"
+  >
+
+    <div class="cart-header">
+
+      <h2>
+        Your Cart
+      </h2>
+
+      <button onclick="closeCart()">
+        ×
+      </button>
+
+    </div>
+
+
+    <div id="cartItems"></div>
+
+
+    <div class="cart-total">
+
+      <div class="cart-total-row">
+
+        <span>
+          Subtotal
+        </span>
+
+        <strong id="cartSubtotal">
+          KES 0
+        </strong>
+
+      </div>
+
+
+      <div class="cart-total-row">
+
+        <strong>
+          Total
+        </strong>
+
+        <strong id="cartTotal">
+          KES 0
+        </strong>
+
+      </div>
+
+
+      <button
+        id="checkoutButton"
+        class="checkout-button"
+      >
+        Demo Checkout
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =========================
+       TOAST
+  ========================== -->
+
+  <div
+    id="toast"
+    class="toast"
+  ></div>
+
+
+  <!-- JAVASCRIPT -->
+
+  <script src="app.js"></script>
+
+</body>
+</html>
