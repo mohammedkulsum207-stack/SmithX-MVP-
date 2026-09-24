@@ -3,105 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmithX — The Future of Commerce</title>
-  <!-- Global Styling Standard CSS Sheet -->
-  <link rel="stylesheet" href="style.css">
-  <!-- FontAwesome for UI vector icons -->
-  <link rel="stylesheet" href="https://cloudflare.com">
+  <title>SmithX Marketplace</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-  <!-- Premium Glass Navigation Bar -->
-  <header class="navbar">
-    <div class="nav-container">
-      <div class="brand">
-        <span class="brand-text">SMITH<span class="brand-sub">X</span></span>
-        <span class="badge">v2.0 Beta</span>
-      </div>
-      <div class="nav-actions">
-        <button class="btn-text">Explore Marketplace</button>
-        <button class="btn-nav">Start Selling</button>
-      </div>
-    </div>
+  <header>
+    <div class="logo">SMITH<span>X</span></div>
+
+    <button class="cart-btn" onclick="openCart()">
+      🛒 Cart
+      <span id="cartCount">0</span>
+    </button>
   </header>
 
-  <!-- Main Platform Layout -->
-  <main class="dashboard-grid">
-    
-    <!-- Left Column: Seller Studio & Analytics -->
-    <div class="left-panel-stack">
-      
-      <!-- Analytics Display Widget -->
-      <section class="glass-panel">
-        <h2 class="panel-title"><i class="fa-solid fa-chart-pie text-emerald"></i> Store Analytics</h2>
-        <div class="metrics-grid">
-          <div class="metric-box">
-            <span class="metric-label">Products</span>
-            <div id="analyticsProducts" class="metric-value">2</div>
-          </div>
-          <div class="metric-box">
-            <span class="metric-label">Today's Users</span>
-            <div class="metric-value text-glow">0</div>
-          </div>
-          <div class="metric-box">
-            <span class="metric-label">Demo Sales</span>
-            <div id="analyticsSales" class="metric-value text-emerald">KES 0</div>
-          </div>
-        </div>
-      </section>
 
-      <!-- Interactive Creation Panel -->
-      <section class="glass-panel">
-        <h2 class="panel-title"><i class="fa-solid fa-square-plus text-cyan"></i> Seller Studio</h2>
-        <form id="productForm" class="form-stack">
-          <div>
-            <label class="form-label">Product Name</label>
-            <input type="text" id="prodName" required placeholder="e.g., Samsung Galaxy S26 Ultra" class="form-input">
-          </div>
-          
-          <div>
-            <label class="form-label">Price (KES)</label>
-            <input type="number" id="prodPrice" required placeholder="169999" class="form-input">
-          </div>
+  <section class="hero">
+    <small>SMITHX MARKETPLACE</small>
 
-          <div>
-            <label class="form-label">Product Description</label>
-            <textarea id="prodDesc" rows="3" placeholder="Describe your product specs here..." class="form-textarea"></textarea>
-            <button type="button" id="aiBtn" class="btn-secondary ai-btn">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> AI Assistant Description
-            </button>
-          </div>
+    <h1>
+      Discover Products
+    </h1>
 
-          <div>
-            <label class="form-label">Image Web Links (One per line)</label>
-            <textarea id="prodImages" rows="2" placeholder="https://unsplash.com" class="form-textarea font-mono"></textarea>
-          </div>
+    <p>
+      Shop products from the SmithX marketplace.
+    </p>
+  </section>
 
-          <button type="submit" class="btn-primary">
-            <i class="fa-solid fa-rocket"></i> Publish Product
-          </button>
-        </form>
-      </section>
-    </div>
 
-    <!-- Right Column: Live Marketplace Inventory View -->
-    <div class="right-panel-stack">
-      <div class="section-header">
-        <h2 class="panel-title"><i class="fa-solid fa-shop text-emerald"></i> SmithX Marketplace</h2>
-        <div class="search-bar-wrapper">
-          <i class="fa-solid fa-magnifying-glass search-icon"></i>
-          <input type="text" placeholder="Search live products..." class="search-input">
-        </div>
-      </div>
-      
-      <div id="marketplaceGrid" class="marketplace-grid">
-        <!-- JavaScript loads beautiful cards here instantly -->
-      </div>
-    </div>
+  <main>
+
+    <div
+      id="products"
+      class="products"
+    ></div>
 
   </main>
 
-  <!-- Embedded Engine Script Connection Link -->
+
+  <!-- CART -->
+
+  <div
+    id="cartOverlay"
+    class="overlay"
+    onclick="closeCart()"
+  ></div>
+
+  <aside
+    id="cart"
+    class="cart"
+  >
+
+    <div class="cart-header">
+
+      <h2>
+        Shopping Cart
+      </h2>
+
+      <button
+        onclick="closeCart()"
+        class="close"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      id="cartItems"
+      class="cart-items"
+    ></div>
+
+
+    <div class="cart-bottom">
+
+      <div class="total">
+        <span>Total</span>
+
+        <strong>
+          KES <span id="cartTotal">0</span>
+        </strong>
+      </div>
+
+      <button
+        class="checkout"
+        onclick="checkout()"
+      >
+        Checkout
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <div
+    id="message"
+    class="message"
+  ></div>
+
+
   <script src="app.js"></script>
+
 </body>
 </html>
