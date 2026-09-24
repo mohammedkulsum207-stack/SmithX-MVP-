@@ -1369,3 +1369,22 @@ function initializeSmithX() {
 
 
 initializeSmithX();
+/* ================================
+   SMITHX UPDATE HISTORY
+================================ */
+
+function toggleUpdateHistory() {
+  const list = document.getElementById("updateList");
+
+  if (!list) return;
+
+  list.classList.toggle("show");
+
+  const button = document.querySelector(".update-toggle");
+
+  if (button) {
+    button.textContent = list.classList.contains("show")
+      ? "Hide Update History"
+      : "View Update History";
+  }
+}
