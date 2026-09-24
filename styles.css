@@ -824,3 +824,130 @@ button {
     width: 100%;
   }
 }
+/* ================================
+   SMITHX UPDATE HISTORY
+================================ */
+
+.update-history {
+  width: 100%;
+  padding: 40px 20px;
+  margin-top: 30px;
+}
+
+.update-history-card {
+  max-width: 900px;
+  margin: auto;
+  padding: 28px;
+  border: 1px solid rgba(0, 110, 255, 0.15);
+  border-radius: 24px;
+  background: linear-gradient(145deg, #ffffff, #f5f9ff);
+  box-shadow: 0 15px 45px rgba(0, 70, 160, 0.08);
+}
+
+.update-history-badge {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #eaf3ff;
+  color: #006eff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.update-history-card h2 {
+  margin: 14px 0 8px;
+  font-size: 28px;
+}
+
+.update-last {
+  color: #667085;
+  margin-bottom: 22px;
+}
+
+.update-last strong {
+  color: #111827;
+}
+
+.update-new {
+  padding: 18px;
+  border-radius: 18px;
+  background: #eef6ff;
+  border: 1px solid #d8eaff;
+}
+
+.update-new span {
+  display: block;
+  color: #006eff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  margin-bottom: 6px;
+}
+
+.update-new strong {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.update-new p {
+  margin: 0;
+  color: #667085;
+  line-height: 1.6;
+}
+
+.update-toggle {
+  margin-top: 18px;
+  padding: 11px 17px;
+  border: 0;
+  border-radius: 12px;
+  background: #006eff;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.update-list {
+  display: none;
+  margin-top: 18px;
+}
+
+.update-list.show {
+  display: block;
+}
+
+.update-item {
+  padding: 15px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.update-item strong {
+  color: #006eff;
+  margin-right: 10px;
+}
+
+.update-item span {
+  color: #667085;
+  font-size: 13px;
+}
+
+.update-item p {
+  margin: 7px 0 0;
+  color: #667085;
+}
+
+@media (max-width: 600px) {
+  .update-history {
+    padding: 30px 14px;
+  }
+
+  .update-history-card {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .update-history-card h2 {
+    font-size: 24px;
+  }
+}
