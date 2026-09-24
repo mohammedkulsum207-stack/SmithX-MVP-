@@ -1,137 +1,507 @@
-// Global State Inventory Database
-let marketplaceItems = [
+/* =================================
+   SMITHX PRODUCTS
+================================= */
+
+const products = [
+
   {
-    id: 101,
+    id: 1,
     name: "Samsung Galaxy S26 Ultra",
     price: 169999,
-    desc: "Experience AI features, next-gen 200MP camera matrices, and lightning productivity processing chips built seamlessly.",
-    images: [
-      "https://unsplash.com",
-      "https://unsplash.com"
-    ],
-    currentImgIndex: 0
+    description:
+      "Premium smartphone with powerful performance and advanced cameras.",
+    image:
+      "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=900&q=85"
   },
+
   {
-    id: 102,
-    name: "SmithX Smart Pods Pro",
-    price: 12500,
-    desc: "Intelligent ambient active cancellation profiles engineered completely tailored for pristine playback fidelity.",
-    images: [
-      "https://unsplash.com"
-    ],
-    currentImgIndex: 0
+    id: 2,
+    name: "Smart Wireless Headphones",
+    price: 4500,
+    description:
+      "Wireless headphones with clear sound and comfortable design.",
+    image:
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85"
+  },
+
+  {
+    id: 3,
+    name: "Minimal Desk Lamp",
+    price: 2800,
+    description:
+      "Modern desk lamp perfect for work, study and home spaces.",
+    image:
+      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=85"
+  },
+
+  {
+    id: 4,
+    name: "Everyday Travel Backpack",
+    price: 3500,
+    description:
+      "Practical backpack for work, school and everyday travel.",
+    image:
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85"
+  },
+
+  {
+    id: 5,
+    name: "Smart Watch",
+    price: 6500,
+    description:
+      "Modern smartwatch for staying connected and tracking activity.",
+    image:
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85"
+  },
+
+  {
+    id: 6,
+    name: "Premium Sneakers",
+    price: 7200,
+    description:
+      "Comfortable sneakers combining modern style and everyday performance.",
+    image:
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85"
   }
+
 ];
 
-let totalSalesCount = 0;
 
-// Dynamic Marketplace Grid Layout Compiler
-function renderMarketplace() {
-  const container = document.getElementById("marketplaceGrid");
-  if (!container) return;
-  
-  container.innerHTML = "";
-  
-  marketplaceItems.forEach(item => {
-    const fallbackImage = "https://unsplash.com";
-    const displayedImage = item.images[item.currentImgIndex] || fallbackImage;
-    
-    const cardHtml = `
-      <div class="product-card">
-        <div class="card-gallery">
-          <img src="${displayedImage}" alt="${item.name}">
-          ${item.images.length > 1 ? `
-            <button class="gallery-btn gallery-btn-left" onclick="slideGallery(\${item.id}, -1)">
-              <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <button class="gallery-btn gallery-btn-right" onclick="slideGallery(\${item.id}, 1)">
-              <i class="fa-solid fa-chevron-right"></i>
-            </button>
-          ` : ""}
-        </div>
-        <div class="card-info">
-          <div class="card-meta">
-            <h3>${item.name}</h3>
-            <p>${item.desc || 'No description provided.'}</p>
-          </div>
-          <div class="card-footer">
-            <span class="card-price">KES ${item.price.toLocaleString()}</span>
-            <button class="btn-buy" onclick="triggerPurchase(${item.price})">Buy Item</button>
-          </div>
-        </div>
-      </div>
-    `;
-    container.insertAdjacentHTML("beforeend", cardHtml);
-  });
+/* =================================
+   CART
+================================= */
 
-  // Keep numerical tracking displays synced up
-  document.getElementById("analyticsProducts").innerText = marketplaceItems.length;
+let cart = [];
+
+
+/* =================================
+   ELEMENTS
+================================= */
+
+const productsContainer =
+  document.getElementById("products");
+
+const cartItems =
+  document.getElementById("cartItems");
+
+const cartCount =
+  document.getElementById("cartCount");
+
+const cartTotal =
+  document.getElementById("cartTotal");
+
+const cartDrawer =
+  document.getElementById("cart");
+
+const overlay =
+  document.getElementById("cartOverlay");
+
+const message =
+  document.getElementById("message");
+
+
+/* =================================
+   DISPLAY PRODUCTS
+================================= */
+
+function displayProducts() {
+
+  productsContainer.innerHTML =
+    products.map(product => `
+
+      <article class="product">
+
+        <img
+          src="${product.image}"
+          alt="${product.name}"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            ${product.name}
+          </h3>
+
+          <p class="description">
+            ${product.description}
+          </p>
+
+          <div class="price">
+            KES ${formatMoney(product.price)}
+          </div>
+
+          <button
+            class="add-btn"
+            onclick="addToCart(${product.id})"
+          >
+            Add to Cart
+          </button>
+
+        </div>
+
+      </article>
+
+    `).join("");
+
 }
 
-// Slider Array Boundary Router logic
-window.slideGallery = function(itemId, offset) {
-  const element = marketplaceItems.find(p => p.id === itemId);
-  if (!element) return;
-  
-  element.currentImgIndex += offset;
-  
-  if (element.currentImgIndex >= element.images.length) {
-    element.currentImgIndex = 0;
-  } else if (element.currentImgIndex < 0) {
-    element.currentImgIndex = element.images.length - 1;
-  }
-  
-  renderMarketplace();
-};
 
-// Purchase simulation event engine hook
-window.triggerPurchase = function(amount) {
-  totalSalesCount += amount;
-  document.getElementById("analyticsSales").innerText = `KES ${totalSalesCount.toLocaleString()}`;
-};
+/* =================================
+   ADD TO CART
+================================= */
 
-// Intercept studio creation submissions to form dynamic item profiles
-document.getElementById("productForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  
-  const title = document.getElementById("prodName").value;
-  const valuation = parseFloat(document.getElementById("prodPrice").value) || 0;
-  const description = document.getElementById("prodDesc").value;
-  const linkText = document.getElementById("prodImages").value;
-  
-  // Clean raw links split entries cleanly
-  const loadedLinks = linkText.split("\n")
-    .map(url => url.trim())
-    .filter(url => url.length > 0);
+function addToCart(productId) {
 
-  const freshProduct = {
-    id: Date.now(),
-    name: title,
-    price: valuation,
-    desc: description,
-    images: loadedLinks.length > 0 ? loadedLinks : ["https://unsplash.com"],
-    currentImgIndex: 0
-  };
+  const product =
+    products.find(
+      item => item.id === productId
+    );
 
-  marketplaceItems.unshift(freshProduct);
-  renderMarketplace();
-  
-  // Flush form inputs immediately
-  this.reset();
-});
-
-// AI Assistant mock string template injector
-document.getElementById("aiBtn").addEventListener("click", function() {
-  const currentTitle = document.getElementById("prodName").value.trim();
-  const descArea = document.getElementById("prodDesc");
-  
-  if (!currentTitle) {
-    descArea.value = "AI Note: Please provide a Product Name first so I can tailor your text hook description!";
+  if (!product) {
     return;
   }
-  
-  descArea.value = `Premium edition ${currentTitle}. Engineered for elite performance, intuitive controls, and smart commerce ecosystem utility. Includes official distribution manufacturer warranties.`;
-});
 
-// Initial boot mounting cycle
-renderMarketplace();
+
+  const existing =
+    cart.find(
+      item => item.id === productId
+    );
+
+
+  if (existing) {
+
+    existing.quantity++;
+
+  } else {
+
+    cart.push({
+
+      ...product,
+
+      quantity: 1
+
+    });
+
+  }
+
+
+  updateCart();
+
+  openCart();
+
+  showMessage(
+    product.name +
+    " added to cart"
+  );
+
+}
+
+
+/* =================================
+   UPDATE CART
+================================= */
+
+function updateCart() {
+
+  const quantity =
+    cart.reduce(
+      (sum, item) =>
+        sum + item.quantity,
+      0
+    );
+
+
+  const total =
+    cart.reduce(
+      (sum, item) =>
+        sum +
+        item.price *
+        item.quantity,
+      0
+    );
+
+
+  cartCount.textContent =
+    quantity;
+
+
+  cartTotal.textContent =
+    formatMoney(total);
+
+
+  if (cart.length === 0) {
+
+    cartItems.innerHTML = `
+
+      <div style="
+        text-align:center;
+        padding:50px 10px;
+        color:#687586;
+      ">
+
+        <h3>
+          Your cart is empty
+        </h3>
+
+        <p>
+          Add a product to get started.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  cartItems.innerHTML =
+    cart.map(item => `
+
+      <div class="cart-item">
+
+        <img
+          src="${item.image}"
+          alt="${item.name}"
+        >
+
+
+        <div>
+
+          <h4>
+            ${item.name}
+          </h4>
+
+          <div class="cart-price">
+            KES ${formatMoney(item.price)}
+          </div>
+
+
+          <div class="controls">
+
+            <button
+              onclick="changeQuantity(${item.id}, -1)"
+            >
+              −
+            </button>
+
+
+            <span>
+              ${item.quantity}
+            </span>
+
+
+            <button
+              onclick="changeQuantity(${item.id}, 1)"
+            >
+              +
+            </button>
+
+
+            <button
+              class="remove"
+              onclick="removeFromCart(${item.id})"
+            >
+              Remove
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =================================
+   CHANGE QUANTITY
+================================= */
+
+function changeQuantity(
+  productId,
+  amount
+) {
+
+  const item =
+    cart.find(
+      product =>
+        product.id === productId
+    );
+
+
+  if (!item) {
+    return;
+  }
+
+
+  item.quantity += amount;
+
+
+  if (item.quantity <= 0) {
+
+    cart =
+      cart.filter(
+        product =>
+          product.id !== productId
+      );
+
+  }
+
+
+  updateCart();
+
+}
+
+
+/* =================================
+   REMOVE
+================================= */
+
+function removeFromCart(productId) {
+
+  cart =
+    cart.filter(
+      product =>
+        product.id !== productId
+    );
+
+
+  updateCart();
+
+}
+
+
+/* =================================
+   OPEN CART
+================================= */
+
+function openCart() {
+
+  cartDrawer.classList.add("open");
+
+  overlay.classList.add("show");
+
+}
+
+
+/* =================================
+   CLOSE CART
+================================= */
+
+function closeCart() {
+
+  cartDrawer.classList.remove("open");
+
+  overlay.classList.remove("show");
+
+}
+
+
+/* =================================
+   CHECKOUT
+================================= */
+
+function checkout() {
+
+  if (cart.length === 0) {
+
+    showMessage(
+      "Your cart is empty."
+    );
+
+    return;
+
+  }
+
+
+  const total =
+    cart.reduce(
+      (sum, item) =>
+        sum +
+        item.price *
+        item.quantity,
+      0
+    );
+
+
+  /*
+    Demo checkout.
+    The customer has successfully
+    completed the purchase.
+  */
+
+  showMessage(
+    "Purchase completed — KES " +
+    formatMoney(total)
+  );
+
+
+  cart = [];
+
+
+  updateCart();
+
+  closeCart();
+
+}
+
+
+/* =================================
+   MONEY FORMAT
+================================= */
+
+function formatMoney(value) {
+
+  return Number(value)
+    .toLocaleString("en-KE");
+
+}
+
+
+/* =================================
+   MESSAGE
+================================= */
+
+let messageTimer;
+
+function showMessage(text) {
+
+  message.textContent =
+    text;
+
+  message.classList.add(
+    "show"
+  );
+
+
+  clearTimeout(
+    messageTimer
+  );
+
+
+  messageTimer =
+    setTimeout(
+      () => {
+
+        message.classList.remove(
+          "show"
+        );
+
+      },
+      2500
+    );
+
+}
+
+
+/* =================================
+   START
+================================= */
+
+displayProducts();
+
+updateCart();
