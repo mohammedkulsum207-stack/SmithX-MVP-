@@ -72,12 +72,16 @@ const defaultProducts = [
 let savedProducts = [];
 
 try {
+
   savedProducts =
     JSON.parse(
       localStorage.getItem("smithxProducts")
     ) || [];
+
 } catch (error) {
+
   savedProducts = [];
+
 }
 
 
@@ -85,15 +89,20 @@ try {
 
 const savedIds =
   new Set(
-    savedProducts.map(product => product.id)
+    savedProducts.map(
+      product => product.id
+    )
   );
 
 
 let products = [
+
   ...defaultProducts.filter(
     product => !savedIds.has(product.id)
   ),
+
   ...savedProducts
+
 ];
 
 
@@ -158,13 +167,16 @@ function toast(message) {
 
   if (!box) return;
 
-  box.textContent = message;
+  box.textContent =
+    message;
 
-  box.style.display = "block";
+  box.style.display =
+    "block";
 
   setTimeout(() => {
 
-    box.style.display = "none";
+    box.style.display =
+      "none";
 
   }, 2200);
 
@@ -207,7 +219,9 @@ if (imageInput) {
       }
 
 
-      if (!file.type.startsWith("image/")) {
+      if (
+        !file.type.startsWith("image/")
+      ) {
 
         toast(
           "Please select an image"
@@ -397,7 +411,9 @@ function openProduct(id) {
     modal.id =
       "productModal";
 
-    document.body.appendChild(modal);
+    document.body.appendChild(
+      modal
+    );
 
   }
 
@@ -434,8 +450,10 @@ function openProduct(id) {
         </h2>
 
         <p class="product-tagline">
-          ${product.tagline ||
-          "Quality made simple."}
+          ${
+            product.tagline ||
+            "Quality made simple."
+          }
         </p>
 
         <p class="muted">
@@ -478,7 +496,9 @@ function closeProduct() {
 
   if (modal) {
 
-    modal.classList.remove("show");
+    modal.classList.remove(
+      "show"
+    );
 
   }
 
@@ -664,8 +684,10 @@ function renderCart() {
     );
 
 
-  if (!items || !totalElement)
-    return;
+  if (
+    !items ||
+    !totalElement
+  ) return;
 
 
   if (cart.length === 0) {
@@ -727,10 +749,12 @@ function renderCart() {
         </div>
 
         <strong>
-          KES ${money(
-            item.price *
-            item.quantity
-          )}
+          KES ${
+            money(
+              item.price *
+              item.quantity
+            )
+          }
         </strong>
 
       </div>
@@ -824,7 +848,7 @@ function checkout() {
 
 
 /* =========================
-   AI ASSISTANT
+   AI SELLER STUDIO
 ========================= */
 
 function ai() {
@@ -844,6 +868,15 @@ function ai() {
     );
 
 
+  const desc =
+    document.getElementById("desc");
+
+  const aiBox =
+    document.getElementById(
+      "aiResult"
+    );
+
+
   if (!name) {
 
     toast(
@@ -855,776 +888,71 @@ function ai() {
   }
 
 
+  /* =========================
+     PRODUCT ANALYSIS
+  ========================== */
+
   const suggestedPrice =
-    price || 2500;
+    price > 0
+      ? Math.round(
+          price * 1.05 / 100
+        ) * 100
+      : 2500;
 
 
-  const desc =
-    document.getElementById(
-      "desc"
-    );
+  const tagline =
+    `${name} — quality made simple.`;
 
 
-  if (desc) {
+  const description =
+    `Discover ${name}, designed to combine practical everyday value with a clean, modern experience. A smart choice for customers looking for quality, convenience and reliability.`;
 
-    desc.value =
-      `Discover ${name}, designed to combine practical everyday value with a clean, modern experience. A great choice for customers looking for quality, convenience and reliability.`;
 
-  }
+  let category =
+    "General";
 
 
-  let aiBox =
-    document.getElementById(
-      "aiResult"
-    );
+  const lowerName =
+    name.toLowerCase();
 
-
-  if (!aiBox) {
-
-    aiBox =
-      document.createElement("div");
-
-    aiBox.id =
-      "aiResult";
-
-
-    const aiSection =
-      document.querySelector(
-        ".ai"
-      );
-
-
-    if (aiSection) {
-
-      aiSection.appendChild(
-        aiBox
-      );
-
-    }
-
-  }
-
-
-  aiBox.innerHTML = `
-
-    <div class="ai-result">
-
-      <strong>
-        ✦ SmithX AI Insights
-      </strong>
-
-      <p>
-        <b>Suggested tagline:</b>
-        ${name} — quality made simple.
-      </p>
-
-      <p>
-        <b>Suggested price:</b>
-        KES ${money(
-          suggestedPrice
-        )}
-      </p>
-
-      <p>
-        <b>Recommendation:</b>
-        Highlight the product's
-        convenience, quality and
-        everyday value.
-      </p>
-
-    </div>
-
-  `;
-
-
-  toast(
-    "SmithX AI generated product insights"
-  );
-
-}
-
-
-/* =========================
-   CREATE PRODUCT
-========================= */
-
-const form =
-  document.getElementById(
-    "form"
-  );
-
-
-if (form) {
-
-  form.addEventListener(
-    "submit",
-    function(e) {
-
-      e.preventDefault();
-
-
-      const name =
-        document
-          .getElementById("name")
-          .value
-          .trim();
-
-
-      const price =
-        Number(
-          document
-            .getElementById("price")
-            .value
-        );
-
-
-      const desc =
-        document
-          .getElementById("desc")
-          .value
-          .trim() ||
-        "A new product available on SmithX.";
-
-
-      if (!name || !price) {
-
-        toast(
-          "Enter a product name and price"
-        );
-
-        return;
-
-      }
-
-
-      const newProduct = {
-
-        id:
-          Date.now(),
-
-        name,
-
-        price,
-
-        category:
-          "Electronics",
-
-        image:
-          selectedImage ||
-          "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
-
-        desc,
-
-        tagline:
-          `${name} — quality made simple.`
-
-      };
-
-
-      /*
-        ADD PRODUCT TO THE EXISTING
-        MARKETPLACE
-      */
-
-      products.push(
-        newProduct
-      );
-
-
-      /*
-        SAVE IT SO IT DOESN'T
-        DISAPPEAR AFTER REFRESH
-      */
-
-      saveProducts();
-
-
-      /*
-        RESET FORM
-      */
-
-      form.reset();
-
-
-      selectedImage = "";
-
-
-      if (imagePreview) {
-
-        imagePreview.src = "";
-
-        imagePreview.style.display =
-          "none";
-
-      }
-
-
-      const aiResult =
-        document.getElementById(
-          "aiResult"
-        );
-
-
-      if (aiResult) {
-
-        aiResult.innerHTML = "";
-
-      }
-
-
-      /*
-        UPDATE MARKETPLACE
-      */
-
-      render();
-
-
-      updateDashboard();
-
-
-      toast(
-        "Product added to SmithX marketplace"
-      );
-
-
-      /*
-        SHOW MARKETPLACE
-      */
-
-      document
-        .getElementById(
-          "market"
-        )
-        ?.scrollIntoView({
-          behavior: "smooth"
-        });
-
-    }
-  );
-
-}
-
-
-/* =========================
-   SELLER DASHBOARD
-========================= */
-
-function createDashboard() {
 
   if (
-    document.getElementById(
-      "sellerDashboard"
-    )
+
+    lowerName.includes("phone") ||
+    lowerName.includes("samsung") ||
+    lowerName.includes("laptop") ||
+    lowerName.includes("watch") ||
+    lowerName.includes("headphone") ||
+    lowerName.includes("computer") ||
+    lowerName.includes("tablet") ||
+    lowerName.includes("earbuds")
+
   ) {
 
-    return;
+    category =
+      "Electronics";
 
   }
 
 
-  const sellerSection =
-    document.getElementById(
-      "seller"
-    );
+  else if (
 
+    lowerName.includes("shoe") ||
+    lowerName.includes("sneaker") ||
+    lowerName.includes("bag") ||
+    lowerName.includes("shirt") ||
+    lowerName.includes("jacket")
 
-  if (!sellerSection)
-    return;
-
-
-  const dashboard =
-    document.createElement(
-      "div"
-    );
-
-
-  dashboard.id =
-    "sellerDashboard";
-
-
-  dashboard.innerHTML = `
-
-    <div class="dashboard-header">
-
-      <div>
-
-        <small>
-          SELLER DASHBOARD
-        </small>
-
-        <h2>
-          Your SmithX business
-        </h2>
-
-      </div>
-
-      <span class="dashboard-live">
-        ● Demo mode
-      </span>
-
-    </div>
-
-
-    <div class="dashboard-grid">
-
-      <div class="dashboard-card">
-
-        <span>
-          Products
-        </span>
-
-        <strong id="dashProducts">
-          0
-        </strong>
-
-        <small>
-          Listed on marketplace
-        </small>
-
-      </div>
-
-
-      <div class="dashboard-card">
-
-        <span>
-          Orders
-        </span>
-
-        <strong id="dashOrders">
-          0
-        </strong>
-
-        <small>
-          Demo orders received
-        </small>
-
-      </div>
-
-
-      <div class="dashboard-card">
-
-        <span>
-          Revenue
-        </span>
-
-        <strong id="dashRevenue">
-          KES 0
-        </strong>
-
-        <small>
-          Demo sales revenue
-        </small>
-
-      </div>
-
-    </div>
-
-
-    <div class="dashboard-insight">
-
-      <strong>
-        ✦ SmithX Business Insight
-      </strong>
-
-      <p id="dashboardInsight">
-        Add products and complete
-        a demo checkout to see
-        your business activity.
-      </p>
-
-    </div>
-
-  `;
-
-
-  sellerSection
-    .insertAdjacentElement(
-      "afterend",
-      dashboard
-    );
-
-
-  updateDashboard();
-
-}
-
-
-function updateDashboard() {
-
-  const productsElement =
-    document.getElementById(
-      "dashProducts"
-    );
-
-
-  const ordersElement =
-    document.getElementById(
-      "dashOrders"
-    );
-
-
-  const revenueElement =
-    document.getElementById(
-      "dashRevenue"
-    );
-
-
-  if (productsElement) {
-
-    productsElement.textContent =
-      products.length;
-
-  }
-
-
-  if (ordersElement) {
-
-    ordersElement.textContent =
-      orders.length;
-
-  }
-
-
-  if (revenueElement) {
-
-    revenueElement.textContent =
-      `KES ${money(revenue)}`;
-
-  }
-
-
-  const insight =
-    document.getElementById(
-      "dashboardInsight"
-    );
-
-
-  if (!insight) return;
-
-
-  if (orders.length === 0) {
-
-    insight.textContent =
-      "Add products and complete a demo checkout to see your business activity.";
-
-  } else {
-
-    insight.textContent =
-      `You have ${orders.length} demo order${orders.length === 1 ? "" : "s"} and KES ${money(revenue)} in demo revenue. SmithX can use this data to help sellers understand their business performance.`;
-
-  }
-
-}
-
-
-/* =========================
-   EXTRA DESIGN
-========================= */
-
-function addNewStyles() {
-
-  if (
-    document.getElementById(
-      "smithxExtraStyles"
-    )
   ) {
 
-    return;
+    category =
+      "Fashion";
 
   }
 
 
-  const style =
-    document.createElement(
-      "style"
-    );
+  else if (
 
-
-  style.id =
-    "smithxExtraStyles";
-
-
-  style.textContent = `
-
-    .card .secondary,
-    .card .primary {
-      width: 100%;
-      margin: 5px 0;
-    }
-
-    .product-tagline {
-      color: #2563eb;
-      font-weight: 700;
-      margin: 10px 0 20px;
-    }
-
-    #productModal {
-      position: fixed;
-      inset: 0;
-      z-index: 500;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    #productModal.show {
-      display: flex;
-    }
-
-    .product-modal-backdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(17, 24, 39, 0.65);
-      backdrop-filter: blur(5px);
-    }
-
-    .product-modal {
-      position: relative;
-      z-index: 2;
-      width: min(850px, 100%);
-      max-height: 90vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      background: white;
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 30px 80px rgba(0,0,0,.25);
-    }
-
-    .product-modal > img {
-      width: 100%;
-      height: 100%;
-      min-height: 350px;
-      object-fit: cover;
-    }
-
-    .product-modal-content {
-      padding: 40px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .product-modal-content small {
-      color: #2563eb;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-    }
-
-    .product-modal-content h2 {
-      font-size: 34px;
-      line-height: 1.1;
-      margin: 12px 0;
-    }
-
-    .product-modal-price {
-      font-size: 25px;
-      font-weight: 800;
-      margin: 25px 0;
-    }
-
-    .product-modal-close {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      z-index: 5;
-      width: 38px;
-      height: 38px;
-      border: 0;
-      border-radius: 50%;
-      background: white;
-      font-size: 25px;
-      cursor: pointer;
-    }
-
-    #sellerDashboard {
-      padding: 70px 6%;
-      background: #f7f8fa;
-    }
-
-    .dashboard-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      margin-bottom: 25px;
-    }
-
-    .dashboard-header small {
-      color: #2563eb;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-    }
-
-    .dashboard-header h2 {
-      margin-top: 6px;
-      font-size: 34px;
-    }
-
-    .dashboard-live {
-      background: #dcfce7;
-      color: #166534;
-      padding: 8px 13px;
-      border-radius: 30px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .dashboard-card {
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 16px;
-      padding: 22px;
-    }
-
-    .dashboard-card span {
-      display: block;
-      color: #6b7280;
-      font-size: 14px;
-    }
-
-    .dashboard-card strong {
-      display: block;
-      font-size: 30px;
-      margin: 8px 0;
-    }
-
-    .dashboard-card small {
-      color: #9ca3af;
-    }
-
-    .dashboard-insight {
-      margin-top: 18px;
-      padding: 22px;
-      border-radius: 16px;
-      background: #eef2ff;
-      border: 1px solid #dbeafe;
-    }
-
-    .dashboard-insight strong {
-      color: #2563eb;
-    }
-
-    .dashboard-insight p {
-      color: #4b5563;
-      margin-top: 7px;
-    }
-
-    .ai-result {
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: 12px;
-      background: #eef2ff;
-      color: #374151;
-      border: 1px solid #dbeafe;
-    }
-
-    .ai-result strong {
-      color: #2563eb;
-    }
-
-    .ai-result p {
-      margin: 8px 0;
-      color: #4b5563;
-    }
-
-    .image-label {
-      display: block;
-      color: #d1d5db;
-      font-size: 14px;
-      font-weight: 700;
-      margin-top: 5px;
-    }
-
-    #image {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #374151;
-      border-radius: 10px;
-      background: #1f2937;
-      color: white;
-      cursor: pointer;
-    }
-
-    #image::file-selector-button {
-      border: 0;
-      background: #2563eb;
-      color: white;
-      padding: 9px 14px;
-      border-radius: 7px;
-      margin-right: 10px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .upload-preview {
-      display: none;
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-top: 5px;
-      border: 1px solid #374151;
-    }
-
-    @media (max-width: 800px) {
-
-      .product-modal {
-        grid-template-columns: 1fr;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-
-      .product-modal > img {
-        min-height: 220px;
-        max-height: 260px;
-      }
-
-      .product-modal-content {
-        padding: 25px;
-      }
-
-      .product-modal-content h2 {
-        font-size: 28px;
-      }
-
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .dashboard-header {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      #sellerDashboard {
-        padding: 55px 5%;
-      }
-    }
-
-  `;
-
-
-  document.head.appendChild(style);
-
-}
-
-
-/* =========================
-   START SMITHX
-========================= */
-
-addNewStyles();
-
-createDashboard();
-
-render();
-
-updateCount();
+    lowerName.includes("lamp") ||
+    lowerName.includes("chair") ||
+    lower
