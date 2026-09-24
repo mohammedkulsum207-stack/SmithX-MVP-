@@ -19,12 +19,17 @@
   </button>
 </header>
 
+
 <main>
 
   <!-- HERO -->
   <section class="hero">
+
     <div class="hero-content">
-      <div class="eyebrow">THE FUTURE OF COMMERCE</div>
+
+      <div class="eyebrow">
+        THE FUTURE OF COMMERCE
+      </div>
 
       <h1>
         Build. Sell.<br>
@@ -37,17 +42,28 @@
       </p>
 
       <div class="hero-buttons">
-        <button class="primary-btn" onclick="scrollToSection('marketplace')">
+
+        <button
+          class="primary-btn"
+          onclick="scrollToSection('marketplace')"
+        >
           Explore Marketplace
         </button>
 
-        <button class="secondary-btn" onclick="scrollToSection('seller')">
+        <button
+          class="secondary-btn"
+          onclick="scrollToSection('seller')"
+        >
           Start Selling
         </button>
+
       </div>
+
     </div>
 
+
     <div class="hero-stats">
+
       <div class="stat-card">
         <strong>AI POWERED</strong>
         <span>COMMERCE</span>
@@ -67,128 +83,325 @@
         <strong id="heroSales">KES 0</strong>
         <span>Demo Sales</span>
       </div>
+
     </div>
+
   </section>
+
 
 
   <!-- MARKETPLACE -->
   <section class="section" id="marketplace">
 
     <div class="section-heading">
+
       <div>
-        <span class="section-label">SMITHX MARKETPLACE</span>
-        <h2>Discover Products</h2>
-        <p>Shop products from the SmithX marketplace.</p>
+
+        <span class="section-label">
+          SMITHX MARKETPLACE
+        </span>
+
+        <h2>
+          Discover Products
+        </h2>
+
+        <p>
+          Shop products from the SmithX marketplace.
+        </p>
+
       </div>
+
     </div>
 
+
     <div class="search-box">
+
       <span>🔎</span>
+
       <input
         type="text"
         id="searchInput"
         placeholder="Search products..."
       >
+
     </div>
 
-    <div id="productsGrid" class="products-grid"></div>
 
-    <div id="noProducts" class="empty-state hidden">
+    <div
+      id="productsGrid"
+      class="products-grid"
+    ></div>
+
+
+    <div
+      id="noProducts"
+      class="empty-state hidden"
+    >
       No products found.
     </div>
 
   </section>
 
 
+
   <!-- SELLER STUDIO -->
-  <section class="section seller-section" id="seller">
+  <section
+    class="section seller-section"
+    id="seller"
+  >
 
     <div class="section-heading">
+
       <div>
-        <span class="section-label">SELLER STUDIO</span>
-        <h2>Create a Product</h2>
-        <p>Build your store and publish products to the marketplace.</p>
+
+        <span class="section-label">
+          SELLER STUDIO
+        </span>
+
+        <h2>
+          Create a Product
+        </h2>
+
+        <p>
+          Build your store and publish products
+          to the marketplace.
+        </p>
+
       </div>
+
     </div>
+
 
     <div class="seller-layout">
 
+
+      <!-- SELLER FORM -->
       <div class="seller-form card">
 
         <div class="form-group">
-          <label>Product Name</label>
+
+          <label>
+            Product Name
+          </label>
+
           <input
             id="productName"
             type="text"
             placeholder="e.g. Samsung Galaxy S26 Ultra"
           >
+
         </div>
 
+
         <div class="form-group">
-          <label>Price (KES)</label>
+
+          <label>
+            Price (KES)
+          </label>
+
           <input
             id="productPrice"
             type="number"
             placeholder="169999"
           >
+
         </div>
 
+
         <div class="form-group">
-          <label>Description</label>
+
+          <label>
+            Description
+          </label>
+
           <textarea
             id="productDescription"
             placeholder="Describe your product..."
           ></textarea>
+
         </div>
+
 
         <div class="form-group">
-          <label>Product Image</label>
 
-          <label class="upload-box">
-            <span>📷 Choose Product Image</span>
-            <input id="productImage" type="file" accept="image/*">
+          <label>
+            Product Image
           </label>
 
-          <div id="imagePreview" class="image-preview hidden">
-            <img id="previewImage" alt="Product preview">
+          <label class="upload-box">
+
+            <span>
+              📷 Choose Product Image
+            </span>
+
+            <input
+              id="productImage"
+              type="file"
+              accept="image/*"
+            >
+
+          </label>
+
+
+          <div
+            id="imagePreview"
+            class="image-preview hidden"
+          >
+
+            <img
+              id="previewImage"
+              alt="Product preview"
+            >
+
           </div>
+
         </div>
 
-        <button id="publishProduct" class="primary-btn full">
+
+        <button
+          id="publishProduct"
+          class="primary-btn full"
+        >
           ＋ Publish Product
         </button>
 
+
         <p class="product-limit">
-          You can add up to <strong>3 additional products</strong>.
+
+          You can add up to
+          <strong>3 additional products</strong>.
+
         </p>
 
       </div>
 
 
+
       <!-- AI ASSISTANT -->
       <div class="ai-card">
 
-        <div class="ai-icon">✦</div>
-
-        <h3>AI Seller Assistant</h3>
-
-        <p>
-          Create products faster and prepare your store
-          for intelligent commerce.
-        </p>
-
-        <div class="ai-features">
-          <div>✓ Product creation</div>
-          <div>✓ Product descriptions</div>
-          <div>✓ Image upload</div>
-          <div>✓ Marketplace publishing</div>
+        <div class="ai-icon">
+          ✦
         </div>
 
-        <button id="aiGenerate" class="ai-button">
-          ✦ Generate Product Details
-        </button>
 
-        <div id="aiResult" class="ai-result hidden"></div>
+        <h3>
+          AI Seller Assistant
+        </h3>
+
+
+        <p>
+          Tell SmithX what you are selling and
+          get intelligent product information,
+          selling points and price guidance.
+        </p>
+
+
+        <div class="ai-features">
+
+          <div>
+            ✓ Product recognition
+          </div>
+
+          <div>
+            ✓ Product intelligence
+          </div>
+
+          <div>
+            ✓ Professional description
+          </div>
+
+          <div>
+            ✓ Price guidance
+          </div>
+
+          <div>
+            ✓ Image upload
+          </div>
+
+          <div>
+            ✓ Marketplace publishing
+          </div>
+
+        </div>
+
+
+        <!-- AI INPUT -->
+        <div class="ai-input-area">
+
+          <label>
+            What are you selling?
+          </label>
+
+          <input
+            id="aiProductInput"
+            type="text"
+            placeholder="e.g. Porsche Cayenne"
+          >
+
+          <label>
+            Your current / intended price
+          </label>
+
+          <input
+            id="aiPriceInput"
+            type="number"
+            placeholder="e.g. 8500000"
+          >
+
+
+          <label class="ai-upload-box">
+
+            <span>
+              🖼️ Upload Product Image
+            </span>
+
+            <input
+              id="aiImageInput"
+              type="file"
+              accept="image/*"
+            >
+
+          </label>
+
+
+          <div
+            id="aiImagePreview"
+            class="ai-image-preview hidden"
+          >
+
+            <img
+              id="aiPreviewImage"
+              alt="AI product preview"
+            >
+
+          </div>
+
+
+          <button
+            id="aiGenerate"
+            class="ai-button"
+          >
+            ✦ Analyze Product
+          </button>
+
+        </div>
+
+
+        <!-- AI RESULT -->
+        <div
+          id="aiResult"
+          class="ai-result hidden"
+        ></div>
+
+
+        <!-- USE AI DETAILS -->
+        <button
+          id="useAIProduct"
+          class="secondary-btn full hidden"
+        >
+          Use AI Details in Product Form
+        </button>
 
       </div>
 
@@ -197,78 +410,181 @@
   </section>
 
 
+
   <!-- DASHBOARD -->
-  <section class="section dashboard-section" id="dashboard">
+  <section
+    class="section dashboard-section"
+    id="dashboard"
+  >
 
     <div class="section-heading">
+
       <div>
-        <span class="section-label">SELLER DASHBOARD</span>
-        <h2>Store Analytics</h2>
+
+        <span class="section-label">
+          SELLER DASHBOARD
+        </span>
+
+        <h2>
+          Store Analytics
+        </h2>
+
       </div>
+
     </div>
+
 
     <div class="analytics-grid">
 
       <div class="analytics-card">
-        <span>Products</span>
-        <strong id="dashboardProducts">6</strong>
-        <small>Products in marketplace</small>
+
+        <span>
+          Products
+        </span>
+
+        <strong id="dashboardProducts">
+          6
+        </strong>
+
+        <small>
+          Products in marketplace
+        </small>
+
       </div>
 
-      <div class="analytics-card">
-        <span>Today's Users</span>
-        <strong id="dashboardUsers">0</strong>
-        <small>Demo users today</small>
-      </div>
 
       <div class="analytics-card">
-        <span>Demo Sales</span>
-        <strong id="dashboardSales">KES 0</strong>
-        <small>Total completed purchases</small>
+
+        <span>
+          Today's Users
+        </span>
+
+        <strong id="dashboardUsers">
+          0
+        </strong>
+
+        <small>
+          Demo users today
+        </small>
+
       </div>
 
+
       <div class="analytics-card">
-        <span>Orders</span>
-        <strong id="dashboardOrders">0</strong>
-        <small>Completed demo orders</small>
+
+        <span>
+          Demo Sales
+        </span>
+
+        <strong id="dashboardSales">
+          KES 0
+        </strong>
+
+        <small>
+          Total completed purchases
+        </small>
+
+      </div>
+
+
+      <div class="analytics-card">
+
+        <span>
+          Orders
+        </span>
+
+        <strong id="dashboardOrders">
+          0
+        </strong>
+
+        <small>
+          Completed demo orders
+        </small>
+
       </div>
 
     </div>
+
 
 
     <div class="activity card">
 
       <div class="activity-header">
+
         <div>
-          <h3>Store Activity</h3>
-          <p>Live demo marketplace activity</p>
+
+          <h3>
+            Store Activity
+          </h3>
+
+          <p>
+            Live demo marketplace activity
+          </p>
+
         </div>
 
-        <button id="resetAnalytics" class="danger-btn">
+
+        <button
+          id="resetAnalytics"
+          class="danger-btn"
+        >
           Reset Demo Analytics
         </button>
+
       </div>
+
 
       <div class="activity-grid">
 
         <div>
-          <span>Marketplace products</span>
-          <strong id="activityProducts">6</strong>
+
+          <span>
+            Marketplace products
+          </span>
+
+          <strong id="activityProducts">
+            6
+          </strong>
+
         </div>
 
-        <div>
-          <span>People who visited today</span>
-          <strong id="activityUsers">0</strong>
-        </div>
 
         <div>
-          <span>Total amount used</span>
-          <strong id="activitySales">KES 0</strong>
+
+          <span>
+            People who visited today
+          </span>
+
+          <strong id="activityUsers">
+            0
+          </strong>
+
         </div>
 
+
         <div>
-          <span>Completed purchases</span>
-          <strong id="activityOrders">0</strong>
+
+          <span>
+            Total amount used
+          </span>
+
+          <strong id="activitySales">
+            KES 0
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Completed purchases
+          </span>
+
+          <strong id="activityOrders">
+            0
+          </strong>
+
         </div>
 
       </div>
@@ -280,28 +596,55 @@
 </main>
 
 
-<!-- PRODUCT MODAL -->
-<div id="productModal" class="modal hidden">
 
-  <div class="modal-overlay" onclick="closeProductModal()"></div>
+<!-- PRODUCT MODAL -->
+<div
+  id="productModal"
+  class="modal hidden"
+>
+
+  <div
+    class="modal-overlay"
+    onclick="closeProductModal()"
+  ></div>
+
 
   <div class="product-modal">
 
-    <button class="close-btn" onclick="closeProductModal()">×</button>
+    <button
+      class="close-btn"
+      onclick="closeProductModal()"
+    >
+      ×
+    </button>
 
-    <img id="modalImage" alt="Product">
+
+    <img
+      id="modalImage"
+      alt="Product"
+    >
+
 
     <div class="modal-content">
 
-      <span class="section-label">SMITHX PRODUCT</span>
+      <span class="section-label">
+        SMITHX PRODUCT
+      </span>
 
       <h2 id="modalName"></h2>
 
-      <div id="modalPrice" class="modal-price"></div>
+      <div
+        id="modalPrice"
+        class="modal-price"
+      ></div>
 
       <p id="modalDescription"></p>
 
-      <button id="modalAdd" class="primary-btn full">
+
+      <button
+        id="modalAdd"
+        class="primary-btn full"
+      >
         Add to Cart
       </button>
 
@@ -312,28 +655,63 @@
 </div>
 
 
+
 <!-- CART -->
-<div id="cartDrawer" class="cart-drawer">
+<div
+  id="cartDrawer"
+  class="cart-drawer"
+>
 
   <div class="cart-header">
+
     <div>
-      <span class="section-label">YOUR CART</span>
-      <h2>Shopping Cart</h2>
+
+      <span class="section-label">
+        YOUR CART
+      </span>
+
+      <h2>
+        Shopping Cart
+      </h2>
+
     </div>
 
-    <button id="closeCart" class="close-btn">×</button>
+
+    <button
+      id="closeCart"
+      class="close-btn"
+    >
+      ×
+    </button>
+
   </div>
 
-  <div id="cartItems" class="cart-items"></div>
+
+  <div
+    id="cartItems"
+    class="cart-items"
+  ></div>
+
 
   <div class="cart-footer">
 
     <div class="cart-total">
-      <span>Total</span>
-      <strong id="cartTotal">KES 0</strong>
+
+      <span>
+        Total
+      </span>
+
+      <strong id="cartTotal">
+        KES 0
+      </strong>
+
     </div>
 
-    <button id="checkoutButton" class="primary-btn full">
+
+    <button
+      id="checkoutButton"
+      class="primary-btn full"
+    >
       Demo Checkout
     </button>
 
@@ -341,64 +719,143 @@
 
 </div>
 
-<div id="cartOverlay" class="cart-overlay"></div>
+
+<div
+  id="cartOverlay"
+  class="cart-overlay"
+></div>
+
 
 
 <!-- TOAST -->
-<div id="toast" class="toast"></div>
+<div
+  id="toast"
+  class="toast"
+></div>
 
 
-<script src="app.js"></script>
-<script src="app.js"></script>
 
-<!-- SMITHX UPDATE HISTORY -->
-<section class="update-history" id="updateHistory">
+<!-- UPDATE HISTORY -->
+<section
+  class="update-history"
+  id="updateHistory"
+>
+
   <div class="update-history-card">
-    <div class="update-history-badge">SMITHX MVP</div>
 
-    <h2>Version 1.5</h2>
-
-    <p class="update-last">
-      Last updated:
-      <strong>24 September 2026 · 9:00 PM EAT</strong>
-    </p>
-
-    <div class="update-new">
-      <span>WHAT'S NEW</span>
-      <strong>AI Product Intelligence</strong>
-      <p>
-        SmithX is becoming smarter at understanding products,
-        explaining their features, and helping sellers price them.
-      </p>
+    <div class="update-history-badge">
+      SMITHX MVP
     </div>
 
-    <button class="update-toggle" onclick="toggleUpdateHistory()">
+
+    <h2>
+      Version 1.5
+    </h2>
+
+
+    <p class="update-last">
+
+      Last updated:
+
+      <strong>
+        24 September 2026 · 9:00 PM EAT
+      </strong>
+
+    </p>
+
+
+    <div class="update-new">
+
+      <span>
+        WHAT'S NEW
+      </span>
+
+      <strong>
+        AI Product Intelligence
+      </strong>
+
+      <p>
+        SmithX is becoming smarter at understanding
+        products, explaining their features,
+        and helping sellers price them.
+      </p>
+
+    </div>
+
+
+    <button
+      class="update-toggle"
+      onclick="toggleUpdateHistory()"
+    >
       View Update History
     </button>
 
-    <div class="update-list" id="updateList">
-      <div class="update-item">
-        <strong>v1.5</strong>
-        <span>24 Sep 2026</span>
-        <p>AI Product Intelligence introduced.</p>
-      </div>
+
+    <div
+      class="update-list"
+      id="updateList"
+    >
 
       <div class="update-item">
-        <strong>v1.4</strong>
-        <span>23 Sep 2026</span>
-        <p>Seller Studio improvements.</p>
+
+        <strong>
+          v1.5
+        </strong>
+
+        <span>
+          24 Sep 2026
+        </span>
+
+        <p>
+          AI Product Intelligence introduced.
+        </p>
+
       </div>
 
+
       <div class="update-item">
-        <strong>v1.3</strong>
-        <span>22 Sep 2026</span>
-        <p>Marketplace and cart improvements.</p>
+
+        <strong>
+          v1.4
+        </strong>
+
+        <span>
+          23 Sep 2026
+        </span>
+
+        <p>
+          Seller Studio improvements.
+        </p>
+
       </div>
+
+
+      <div class="update-item">
+
+        <strong>
+          v1.3
+        </strong>
+
+        <span>
+          22 Sep 2026
+        </span>
+
+        <p>
+          Marketplace and cart improvements.
+        </p>
+
+      </div>
+
     </div>
+
   </div>
+
 </section>
 
-</body>
-</html>
+
+
+<!-- LOAD JAVASCRIPT ONCE -->
+<script src="app.js"></script>
+
 </body>
 </html>
