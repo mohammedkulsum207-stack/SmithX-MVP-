@@ -1,668 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="description"
-    content="SmithX — AI-powered commerce."
-  >
-
-  <title>SmithX — AI-Powered Commerce</title>
-
-  <link
-    rel="stylesheet"
-    href="styles.css"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmithX — The Future of Commerce</title>
+  <!-- Global Styling Standard CSS Sheet -->
+  <link rel="stylesheet" href="style.css">
+  <!-- FontAwesome for UI vector icons -->
+  <link rel="stylesheet" href="https://cloudflare.com">
 </head>
-
-
 <body>
 
-
-  <!-- =========================
-       HEADER
-  ========================== -->
-
-  <header class="header">
-
-    <div class="logo">
-      SMITH<span>X</span>
+  <!-- Premium Glass Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <span class="brand-text">SMITH<span class="brand-sub">X</span></span>
+        <span class="badge">v2.0 Beta</span>
+      </div>
+      <div class="nav-actions">
+        <button class="btn-text">Explore Marketplace</button>
+        <button class="btn-nav">Start Selling</button>
+      </div>
     </div>
-
-    <nav>
-
-      <a href="#market">
-        Marketplace
-      </a>
-
-      <a href="#seller">
-        Seller
-      </a>
-
-      <a href="#about">
-        About
-      </a>
-
-    </nav>
-
-    <button
-      class="cart-button"
-      onclick="openCart()"
-    >
-      Cart
-      <span id="cartCount">0</span>
-    </button>
-
   </header>
 
-
-
-  <!-- =========================
-       HERO
-  ========================== -->
-
-  <section class="hero">
-
-    <div class="hero-content">
-
-      <small>
-        THE FUTURE OF COMMERCE
-      </small>
-
-      <h1>
-        Build. Sell.
-        <span>Grow.</span>
-      </h1>
-
-      <p>
-        SmithX helps entrepreneurs launch,
-        manage and grow online businesses
-        with intelligent commerce tools.
-      </p>
-
-      <div class="hero-buttons">
-
-        <a
-          href="#market"
-          class="primary-button"
-        >
-          Explore Marketplace
-        </a>
-
-        <a
-          href="#seller"
-          class="secondary-button"
-        >
-          Start Selling
-        </a>
-
-      </div>
-
-    </div>
-
-
-    <!-- HERO STATS -->
-
-    <div class="hero-card">
-
-      <small>
-        AI POWERED COMMERCE
-      </small>
-
-      <div class="hero-main-number">
-        <span id="heroProductCount">6</span>
-      </div>
-
-      <div class="hero-main-label">
-        Products
-      </div>
-
-
-      <div class="hero-stats">
-
-        <div>
-
-          <strong id="heroUsers">
-            0
-          </strong>
-
-          <span>
-            Today's Users
-          </span>
-
+  <!-- Main Platform Layout -->
+  <main class="dashboard-grid">
+    
+    <!-- Left Column: Seller Studio & Analytics -->
+    <div class="left-panel-stack">
+      
+      <!-- Analytics Display Widget -->
+      <section class="glass-panel">
+        <h2 class="panel-title"><i class="fa-solid fa-chart-pie text-emerald"></i> Store Analytics</h2>
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <span class="metric-label">Products</span>
+            <div id="analyticsProducts" class="metric-value">2</div>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Today's Users</span>
+            <div class="metric-value text-glow">0</div>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Demo Sales</span>
+            <div id="analyticsSales" class="metric-value text-emerald">KES 0</div>
+          </div>
         </div>
+      </section>
 
+      <!-- Interactive Creation Panel -->
+      <section class="glass-panel">
+        <h2 class="panel-title"><i class="fa-solid fa-square-plus text-cyan"></i> Seller Studio</h2>
+        <form id="productForm" class="form-stack">
+          <div>
+            <label class="form-label">Product Name</label>
+            <input type="text" id="prodName" required placeholder="e.g., Samsung Galaxy S26 Ultra" class="form-input">
+          </div>
+          
+          <div>
+            <label class="form-label">Price (KES)</label>
+            <input type="number" id="prodPrice" required placeholder="169999" class="form-input">
+          </div>
 
-        <div>
+          <div>
+            <label class="form-label">Product Description</label>
+            <textarea id="prodDesc" rows="3" placeholder="Describe your product specs here..." class="form-textarea"></textarea>
+            <button type="button" id="aiBtn" class="btn-secondary ai-btn">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> AI Assistant Description
+            </button>
+          </div>
 
-          <strong id="heroSales">
-            KES 0
-          </strong>
+          <div>
+            <label class="form-label">Image Web Links (One per line)</label>
+            <textarea id="prodImages" rows="2" placeholder="https://unsplash.com" class="form-textarea font-mono"></textarea>
+          </div>
 
-          <span>
-            Demo Sales
-          </span>
+          <button type="submit" class="btn-primary">
+            <i class="fa-solid fa-rocket"></i> Publish Product
+          </button>
+        </form>
+      </section>
+    </div>
 
+    <!-- Right Column: Live Marketplace Inventory View -->
+    <div class="right-panel-stack">
+      <div class="section-header">
+        <h2 class="panel-title"><i class="fa-solid fa-shop text-emerald"></i> SmithX Marketplace</h2>
+        <div class="search-bar-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" placeholder="Search live products..." class="search-input">
         </div>
-
       </div>
-
+      
+      <div id="marketplaceGrid" class="marketplace-grid">
+        <!-- JavaScript loads beautiful cards here instantly -->
+      </div>
     </div>
 
-  </section>
-
-
-
-  <!-- =========================
-       MARKETPLACE
-  ========================== -->
-
-  <section
-    id="market"
-    class="market-section"
-  >
-
-    <div class="section-heading">
-
-      <div>
-
-        <small>
-          SMITHX MARKETPLACE
-        </small>
-
-        <h2>
-          Discover Products
-        </h2>
-
-      </div>
-
-
-      <input
-        id="searchInput"
-        type="search"
-        placeholder="Search products..."
-      >
-
-    </div>
-
-
-    <div
-      id="productGrid"
-      class="product-grid"
-    ></div>
-
-  </section>
-
-
-
-  <!-- =========================
-       SELLER STUDIO
-  ========================== -->
-
-  <section
-    id="seller"
-    class="seller-section"
-  >
-
-    <div class="seller-intro">
-
-      <small>
-        SELLER STUDIO
-      </small>
-
-      <h2>
-        Create a Product
-      </h2>
-
-      <p>
-        Add your own products to the
-        SmithX marketplace.
-      </p>
-
-
-      <div class="feature-list">
-
-        <div>✓ Product creation</div>
-
-        <div>✓ Product descriptions</div>
-
-        <div>✓ Image upload</div>
-
-        <div>✓ Marketplace publishing</div>
-
-      </div>
-
-    </div>
-
-
-
-    <!-- PRODUCT FORM -->
-
-    <div class="seller-form-card">
-
-      <form id="productForm">
-
-        <label>
-          Product Name
-        </label>
-
-        <input
-          id="productName"
-          type="text"
-          placeholder="e.g. Samsung Galaxy S26 Ultra"
-          required
-        >
-
-
-        <label>
-          Price (KES)
-        </label>
-
-        <input
-          id="productPrice"
-          type="number"
-          placeholder="169999"
-          min="1"
-          required
-        >
-
-
-        <label>
-          Description
-        </label>
-
-        <textarea
-          id="productDescription"
-          placeholder="Describe your product..."
-          required
-        ></textarea>
-
-
-        <label>
-          Product Image
-        </label>
-
-        <input
-          id="productImage"
-          type="file"
-          accept="image/*"
-        >
-
-
-        <div
-          id="imagePreviewContainer"
-          class="image-preview-container"
-        >
-
-          <img
-            id="imagePreview"
-            alt="Image preview"
-          >
-
-        </div>
-
-
-        <button
-          type="submit"
-          class="primary-button full-button"
-        >
-          + Publish Product
-        </button>
-
-      </form>
-
-
-      <!-- AI -->
-
-      <div class="ai-box">
-
-        <div class="ai-title">
-          ✦ AI Seller Assistant
-        </div>
-
-        <p>
-          Create products faster and
-          prepare your store for
-          intelligent commerce.
-        </p>
-
-        <button
-          type="button"
-          class="ai-button"
-          onclick="generateDescription()"
-        >
-          Generate Description
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-
-  <!-- =========================
-       SELLER DASHBOARD
-  ========================== -->
-
-  <section
-    id="dashboard"
-    class="dashboard-section"
-  >
-
-    <div class="section-heading">
-
-      <div>
-
-        <small>
-          SELLER DASHBOARD
-        </small>
-
-        <h2>
-          Store Analytics
-        </h2>
-
-      </div>
-
-    </div>
-
-
-    <!-- DASHBOARD CARDS -->
-
-    <div class="dashboard-grid">
-
-
-      <div class="dashboard-card">
-
-        <strong id="dashboardProducts">
-          6
-        </strong>
-
-        <span>
-          Products
-        </span>
-
-        <small>
-          Products in marketplace
-        </small>
-
-      </div>
-
-
-
-      <div class="dashboard-card">
-
-        <strong id="dashboardUsers">
-          0
-        </strong>
-
-        <span>
-          Today's Users
-        </span>
-
-        <small>
-          Demo users today
-        </small>
-
-      </div>
-
-
-
-      <div class="dashboard-card">
-
-        <strong id="dashboardSales">
-          KES 0
-        </strong>
-
-        <span>
-          Demo Sales
-        </span>
-
-        <small>
-          Total completed purchases
-        </small>
-
-      </div>
-
-
-
-      <div class="dashboard-card">
-
-        <strong id="dashboardOrders">
-          0
-        </strong>
-
-        <span>
-          Orders
-        </span>
-
-        <small>
-          Completed demo orders
-        </small>
-
-      </div>
-
-    </div>
-
-
-
-    <!-- STORE ACTIVITY -->
-
-    <div class="activity-card">
-
-      <h3>
-        Store Activity
-      </h3>
-
-
-      <div class="activity-row">
-
-        <span>
-          Marketplace products
-        </span>
-
-        <strong id="activityProducts">
-          6
-        </strong>
-
-      </div>
-
-
-      <div class="activity-row">
-
-        <span>
-          People who visited today
-        </span>
-
-        <strong id="activityUsers">
-          0
-        </strong>
-
-      </div>
-
-
-      <div class="activity-row">
-
-        <span>
-          Total amount used
-        </span>
-
-        <strong id="activityAmount">
-          KES 0
-        </strong>
-
-      </div>
-
-
-      <div class="activity-row">
-
-        <span>
-          Completed purchases
-        </span>
-
-        <strong id="activityPurchases">
-          0
-        </strong>
-
-      </div>
-
-
-      <button
-        class="reset-button"
-        onclick="resetAnalytics()"
-      >
-        Reset Demo Analytics
-      </button>
-
-    </div>
-
-  </section>
-
-
-
-  <!-- =========================
-       ABOUT
-  ========================== -->
-
-  <section
-    id="about"
-    class="about-section"
-  >
-
-    <small>
-      ABOUT SMITHX
-    </small>
-
-    <h2>
-      The future of commerce.
-    </h2>
-
-    <p>
-      SmithX is an AI-powered commerce
-      platform designed to help sellers
-      launch, manage and grow online
-      businesses.
-    </p>
-
-  </section>
-
-
-
-  <!-- =========================
-       CART OVERLAY
-  ========================== -->
-
-  <div
-    id="cartOverlay"
-    class="cart-overlay"
-    onclick="closeCart()"
-  ></div>
-
-
-
-  <!-- =========================
-       CART DRAWER
-  ========================== -->
-
-  <aside
-    id="cartDrawer"
-    class="cart-drawer"
-  >
-
-    <div class="cart-header">
-
-      <h2>
-        Shopping Cart
-      </h2>
-
-      <button
-        onclick="closeCart()"
-        class="close-button"
-      >
-        ×
-      </button>
-
-    </div>
-
-
-    <div
-      id="cartItems"
-      class="cart-items"
-    ></div>
-
-
-    <div class="cart-bottom">
-
-      <div class="cart-total">
-
-        <span>
-          Total
-        </span>
-
-        <strong>
-          KES <span id="cartTotal">0</span>
-        </strong>
-
-      </div>
-
-
-      <button
-        class="primary-button full-button"
-        onclick="checkout()"
-      >
-        Demo Checkout
-      </button>
-
-    </div>
-
-  </aside>
-
-
-
-  <!-- =========================
-       PRODUCT MODAL
-  ========================== -->
-
-  <div
-    id="productModal"
-    class="product-modal"
-  >
-
-    <div class="product-modal-content">
-
-      <button
-        class="close-button modal-close"
-        onclick="closeProductModal()"
-      >
-        ×
-      </button>
-
-      <img
-        id="modalImage"
-        alt="Product"
-      >
-
-      <small id="modalCategory">
-        PRODUCT
-      </small>
-
-      <h2 id="modalName">
-        Product
-      </h2>
-
-      <div
-        id="modalPrice"
-        class="modal-price"
-      >
-        KES 0
-      </div>
-
-      <p id="
+  </main>
+
+  <!-- Embedded Engine Script Connection Link -->
+  <script src="app.js"></script>
+</body>
+</html>
