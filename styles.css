@@ -1,7 +1,3 @@
-/* =========================================================
-   SMITHX MVP — STYLES
-   ========================================================= */
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -38,22 +34,19 @@ img {
   display: none !important;
 }
 
-
-/* =========================================================
-   TOP BAR
-   ========================================================= */
+/* TOPBAR */
 
 .topbar {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.97);
+  background: rgba(255,255,255,.97);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid #e4e7ec;
 }
 
 .topbar-inner {
-  width: min(1180px, 92%);
+  width: min(1180px,92%);
   min-height: 70px;
   margin: auto;
   display: flex;
@@ -65,7 +58,6 @@ img {
 .logo {
   font-size: 23px;
   font-weight: 900;
-  letter-spacing: -0.7px;
   color: #07101f;
 }
 
@@ -75,7 +67,6 @@ img {
 
 .nav {
   display: flex;
-  align-items: center;
   gap: 5px;
 }
 
@@ -98,31 +89,20 @@ img {
   color: white !important;
 }
 
-
-/* =========================================================
-   HERO
-   ========================================================= */
+/* HERO */
 
 .hero {
   padding: 80px 0 70px;
   background:
-    radial-gradient(
-      circle at 85% 20%,
-      rgba(20, 99, 255, 0.14),
-      transparent 32%
-    ),
-    linear-gradient(
-      135deg,
-      #ffffff 0%,
-      #f1f6ff 100%
-    );
+    radial-gradient(circle at 85% 20%,rgba(20,99,255,.14),transparent 32%),
+    linear-gradient(135deg,#fff,#f1f6ff);
 }
 
 .hero-grid {
-  width: min(1180px, 92%);
+  width: min(1180px,92%);
   margin: auto;
   display: grid;
-  grid-template-columns: 1.25fr 0.75fr;
+  grid-template-columns: 1.25fr .75fr;
   gap: 50px;
   align-items: center;
 }
@@ -136,8 +116,8 @@ img {
 }
 
 .hero h1 {
-  font-size: clamp(44px, 7vw, 76px);
-  line-height: 0.96;
+  font-size: clamp(44px,7vw,76px);
+  line-height: .96;
   letter-spacing: -4px;
   color: #07101f;
   margin-bottom: 24px;
@@ -165,7 +145,6 @@ img {
   border-radius: 11px;
   padding: 13px 20px;
   font-weight: 800;
-  transition: 0.2s ease;
 }
 
 .primary-button {
@@ -176,7 +155,6 @@ img {
 
 .primary-button:hover {
   background: #0b4dcc;
-  transform: translateY(-1px);
 }
 
 .secondary-button {
@@ -185,22 +163,14 @@ img {
   color: #101828;
 }
 
-.secondary-button:hover {
-  border-color: #1463ff;
-  color: #1463ff;
-}
-
-
-/* =========================================================
-   HERO CARD
-   ========================================================= */
+/* HERO CARD */
 
 .hero-card {
   background: #07101f;
   color: white;
   padding: 30px;
   border-radius: 24px;
-  box-shadow: 0 22px 60px rgba(7, 16, 31, 0.18);
+  box-shadow: 0 22px 60px rgba(7,16,31,.18);
 }
 
 .hero-card-label {
@@ -213,13 +183,13 @@ img {
 
 .hero-stats {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2,1fr);
   gap: 13px;
 }
 
 .hero-stat {
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.08);
   border-radius: 15px;
   padding: 17px;
 }
@@ -227,7 +197,6 @@ img {
 .hero-stat strong {
   display: block;
   font-size: 22px;
-  margin-bottom: 3px;
 }
 
 .hero-stat span {
@@ -235,13 +204,10 @@ img {
   font-size: 12px;
 }
 
-
-/* =========================================================
-   SEARCH
-   ========================================================= */
+/* SEARCH */
 
 .search-box {
-  width: min(700px, 92%);
+  width: min(700px,92%);
   margin: -25px auto 45px;
   position: relative;
   z-index: 5;
@@ -254,25 +220,21 @@ img {
   border-radius: 15px;
   background: white;
   outline: none;
-  box-shadow: 0 12px 35px rgba(16, 24, 40, 0.08);
+  box-shadow: 0 12px 35px rgba(16,24,40,.08);
 }
 
 .search-box input:focus {
   border-color: #1463ff;
-  box-shadow: 0 0 0 4px rgba(20, 99, 255, 0.1);
 }
 
-
-/* =========================================================
-   SECTIONS
-   ========================================================= */
+/* SECTIONS */
 
 .section {
   padding: 70px 0;
 }
 
 .container {
-  width: min(1180px, 92%);
+  width: min(1180px,92%);
   margin: auto;
 }
 
@@ -287,10 +249,7 @@ img {
   margin-bottom: 30px;
 }
 
-
-/* =========================================================
-   MARKETPLACE
-   ========================================================= */
+/* MARKETPLACE */
 
 .marketplace {
   background: white;
@@ -298,7 +257,7 @@ img {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3,1fr);
   gap: 22px;
 }
 
@@ -307,12 +266,12 @@ img {
   background: white;
   border: 1px solid #e4e7ec;
   border-radius: 18px;
-  transition: 0.25s ease;
+  transition: .25s ease;
 }
 
 .product-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 18px 45px rgba(16, 24, 40, 0.1);
+  box-shadow: 0 18px 45px rgba(16,24,40,.1);
 }
 
 .product-image {
@@ -365,13 +324,7 @@ img {
   border: 1px solid #d0d5dd;
   border-radius: 10px;
   background: white;
-  color: #101828;
   font-weight: 800;
-}
-
-.product-actions button:hover {
-  border-color: #1463ff;
-  color: #1463ff;
 }
 
 .product-actions button:last-child {
@@ -380,14 +333,7 @@ img {
   color: white;
 }
 
-.product-actions button:last-child:hover {
-  background: #0b4dcc;
-}
-
-
-/* =========================================================
-   SELLER STUDIO
-   ========================================================= */
+/* SELLER */
 
 .seller-section {
   background: #f5f8fc;
@@ -441,21 +387,10 @@ img {
   outline: none;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: #1463ff;
-  box-shadow: 0 0 0 3px rgba(20, 99, 255, 0.08);
-}
-
 .form-group textarea {
   min-height: 110px;
   resize: vertical;
 }
-
-
-/* =========================================================
-   PRODUCT IMAGE UPLOAD
-   ========================================================= */
 
 .image-upload {
   padding: 20px;
@@ -463,13 +398,6 @@ img {
   border-radius: 13px;
   background: #f8fafc;
   text-align: center;
-}
-
-.image-upload input {
-  width: 100%;
-  border: 0;
-  padding: 0;
-  box-shadow: none;
 }
 
 .image-preview {
@@ -481,13 +409,7 @@ img {
   max-height: 220px;
   object-fit: contain;
   border-radius: 12px;
-  background: #eef2f7;
 }
-
-
-/* =========================================================
-   SELLER INFORMATION CARD
-   ========================================================= */
 
 .ai-icon {
   width: 45px;
@@ -528,11 +450,6 @@ img {
   font-size: 13px;
 }
 
-
-/* =========================================================
-   PUBLISH BUTTON
-   ========================================================= */
-
 .publish-button {
   width: 100%;
   padding: 14px;
@@ -547,10 +464,7 @@ img {
   background: #1463ff;
 }
 
-
-/* =========================================================
-   DASHBOARD
-   ========================================================= */
+/* DASHBOARD */
 
 .dashboard-section {
   background: white;
@@ -558,7 +472,7 @@ img {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4,1fr);
   gap: 16px;
   margin-bottom: 25px;
 }
@@ -590,7 +504,6 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 15px;
   padding: 15px;
   border-radius: 11px;
   background: #f8fafc;
@@ -606,26 +519,17 @@ img {
   border: 1px solid #d0d5dd;
   border-radius: 10px;
   background: white;
-  color: #344054;
   font-weight: 700;
 }
 
-.reset-button:hover {
-  color: #d92d20;
-  border-color: #d92d20;
-}
-
-
-/* =========================================================
-   PRODUCT MODAL
-   ========================================================= */
+/* MODAL */
 
 .modal {
   position: fixed;
   inset: 0;
   z-index: 2000;
   padding: 20px;
-  background: rgba(7, 16, 31, 0.65);
+  background: rgba(7,16,31,.65);
   display: none;
   align-items: center;
   justify-content: center;
@@ -637,25 +541,12 @@ img {
 
 .modal-content {
   position: relative;
-  width: min(900px, 100%);
+  width: min(900px,100%);
   max-height: 90vh;
   overflow-y: auto;
   padding: 25px;
   border-radius: 20px;
   background: white;
-}
-
-.modal-close {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  width: 38px;
-  height: 38px;
-  border: 0;
-  border-radius: 50%;
-  background: #f2f4f7;
-  font-size: 21px;
-  z-index: 2;
 }
 
 .product-modal-grid {
@@ -679,24 +570,21 @@ img {
   object-fit: contain;
 }
 
-
-/* =========================================================
-   CART
-   ========================================================= */
+/* CART */
 
 .cart-panel {
   position: fixed;
   top: 0;
   right: 0;
   z-index: 3000;
-  width: min(430px, 94%);
+  width: min(430px,94%);
   height: 100vh;
   padding: 25px;
   overflow-y: auto;
   background: white;
-  box-shadow: -15px 0 45px rgba(0, 0, 0, 0.15);
+  box-shadow: -15px 0 45px rgba(0,0,0,.15);
   transform: translateX(100%);
-  transition: 0.3s ease;
+  transition: .3s ease;
 }
 
 .cart-panel.active {
@@ -708,15 +596,6 @@ img {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 25px;
-}
-
-.cart-header button {
-  width: 35px;
-  height: 35px;
-  border: 0;
-  border-radius: 50%;
-  background: #f2f4f7;
-  font-size: 20px;
 }
 
 .cart-item {
@@ -750,7 +629,6 @@ img {
   background: transparent;
   color: #d92d20;
   font-size: 12px;
-  margin-top: 4px;
 }
 
 .cart-total {
@@ -761,7 +639,6 @@ img {
 
 .cart-total-row {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   margin-bottom: 9px;
 }
@@ -777,14 +654,7 @@ img {
   font-weight: 900;
 }
 
-.checkout-button:hover {
-  background: #0b4dcc;
-}
-
-
-/* =========================================================
-   UPDATE HISTORY
-   ========================================================= */
+/* UPDATE HISTORY */
 
 .update-history {
   padding: 55px 0;
@@ -792,7 +662,7 @@ img {
 }
 
 .update-history-card {
-  width: min(900px, 92%);
+  width: min(900px,92%);
   margin: auto;
   padding: 25px;
   border: 1px solid #e4e7ec;
@@ -812,34 +682,7 @@ img {
   border-bottom: 0;
 }
 
-.update-version strong {
-  display: block;
-  margin-bottom: 3px;
-}
-
-.update-version span {
-  color: #667085;
-  font-size: 13px;
-}
-
-.update-history-button {
-  margin-top: 15px;
-  padding: 10px 15px;
-  border: 1px solid #d0d5dd;
-  border-radius: 10px;
-  background: white;
-  font-weight: 800;
-}
-
-.update-history-button:hover {
-  border-color: #1463ff;
-  color: #1463ff;
-}
-
-
-/* =========================================================
-   TOAST
-   ========================================================= */
+/* TOAST */
 
 .toast {
   position: fixed;
@@ -851,68 +694,32 @@ img {
   background: #07101f;
   color: white;
   opacity: 0;
-  transform: translate(-50%, 120px);
-  transition: 0.3s ease;
+  transform: translate(-50%,120px);
+  transition: .3s ease;
 }
 
 .toast.show {
   opacity: 1;
-  transform: translate(-50%, 0);
+  transform: translate(-50%,0);
 }
 
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-footer {
-  padding: 35px 0;
-  background: #07101f;
-  color: white;
-}
-
-.footer-inner {
-  width: min(1180px, 92%);
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-footer p {
-  color: #98a2b3;
-  font-size: 13px;
-}
-
-
-/* =========================================================
-   TABLET
-   ========================================================= */
+/* MOBILE */
 
 @media (max-width: 900px) {
 
-  .hero-grid {
-    grid-template-columns: 1fr;
-  }
-
+  .hero-grid,
   .seller-grid {
     grid-template-columns: 1fr;
   }
 
   .products-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2,1fr);
   }
 
   .dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2,1fr);
   }
-
 }
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
 
 @media (max-width: 620px) {
 
@@ -922,10 +729,6 @@ footer p {
 
   .logo {
     font-size: 19px;
-  }
-
-  .nav {
-    gap: 2px;
   }
 
   .nav button {
@@ -973,17 +776,7 @@ footer p {
   .ai-features {
     grid-template-columns: 1fr;
   }
-
-  .footer-inner {
-    flex-direction: column;
-  }
-
 }
-
-
-/* =========================================================
-   SMALL PHONES
-   ========================================================= */
 
 @media (max-width: 400px) {
 
@@ -998,5 +791,4 @@ footer p {
   .product-actions {
     flex-direction: column;
   }
-
 }
