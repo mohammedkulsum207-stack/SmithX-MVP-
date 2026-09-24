@@ -17,9 +17,7 @@
   >
 </head>
 
-
 <body>
-
 
   <!-- =========================
        HEADER
@@ -30,7 +28,6 @@
     <div class="logo">
       Smith<span>X</span>
     </div>
-
 
     <nav>
 
@@ -48,13 +45,11 @@
 
     </nav>
 
-
     <button onclick="openCart()">
       Cart <b id="count">0</b>
     </button>
 
   </header>
-
 
 
   <!-- =========================
@@ -69,12 +64,10 @@
         THE FUTURE OF COMMERCE
       </small>
 
-
       <h1>
         Build. Sell.
         <span>Grow.</span>
       </h1>
-
 
       <p>
         SmithX is an AI-powered commerce
@@ -83,14 +76,12 @@
         and grow a business.
       </p>
 
-
       <a
         class="primary"
         href="#market"
       >
         Explore products
       </a>
-
 
       <a
         class="secondary"
@@ -100,7 +91,6 @@
       </a>
 
     </div>
-
 
     <div class="heroCard">
 
@@ -121,7 +111,6 @@
   </section>
 
 
-
   <!-- =========================
        MARKETPLACE
   ========================== -->
@@ -136,13 +125,11 @@
           MARKETPLACE
         </small>
 
-
         <h2>
           Featured products
         </h2>
 
       </div>
-
 
       <input
         id="search"
@@ -153,14 +140,12 @@
 
     </div>
 
-
     <div
       id="products"
       class="grid"
     ></div>
 
   </section>
-
 
 
   <!-- =========================
@@ -172,7 +157,6 @@
     class="seller"
   >
 
-
     <!-- SELLER INTRO -->
 
     <div>
@@ -181,11 +165,9 @@
         FOR SELLERS
       </small>
 
-
       <h2>
         Launch a product in minutes.
       </h2>
-
 
       <p>
         SmithX combines store creation
@@ -193,14 +175,39 @@
         sellers can focus on customers.
       </p>
 
-    </div>
+      <!-- NEW AI SELLER STUDIO INTRO -->
 
+      <div class="seller-ai-intro">
+
+        <strong>
+          ✦ SmithX AI Seller Studio
+        </strong>
+
+        <p>
+          Turn a simple product idea into
+          ready-to-sell marketplace content.
+        </p>
+
+        <div class="ai-feature-list">
+
+          <span>✦ Description</span>
+
+          <span>✦ Tagline</span>
+
+          <span>✦ Pricing insight</span>
+
+          <span>✦ Marketing idea</span>
+
+        </div>
+
+      </div>
+
+    </div>
 
 
     <!-- PRODUCT FORM -->
 
     <form id="form">
-
 
       <input
         id="name"
@@ -208,7 +215,6 @@
         placeholder="Product name"
         required
       >
-
 
       <input
         id="price"
@@ -218,12 +224,10 @@
         required
       >
 
-
       <textarea
         id="desc"
         placeholder="Product description"
       ></textarea>
-
 
 
       <!-- PRODUCT IMAGE -->
@@ -234,7 +238,6 @@
       >
         Product image
       </label>
-
 
       <input
         id="image"
@@ -252,7 +255,6 @@
       >
 
 
-
       <!-- ADD PRODUCT -->
 
       <button
@@ -265,34 +267,63 @@
     </form>
 
 
-
-    <!-- AI ASSISTANT -->
+    <!-- =========================
+         AI ASSISTANT
+    ========================== -->
 
     <div class="ai">
 
-      <b>
-        ✦ SmithX AI Assistant
-      </b>
+      <div class="ai-heading">
+
+        <div>
+
+          <b>
+            ✦ SmithX AI Seller Studio
+          </b>
+
+          <p>
+            Give SmithX your product name
+            and price. AI will help prepare
+            it for the marketplace.
+          </p>
+
+        </div>
+
+        <span class="ai-status">
+          AI READY
+        </span>
+
+      </div>
 
 
-      <p>
-        Generate a product description
-        from the product name.
-      </p>
+      <div class="ai-actions">
+
+        <button
+          type="button"
+          class="secondary"
+          onclick="ai()"
+        >
+          ✦ Generate with AI
+        </button>
+
+        <button
+          type="button"
+          class="ai-clear"
+          onclick="clearAI()"
+        >
+          Clear
+        </button>
+
+      </div>
 
 
-      <button
-        type="button"
-        class="secondary"
-        onclick="ai()"
-      >
-        Generate description
-      </button>
+      <!-- AI RESULTS APPEAR HERE -->
+
+      <div id="aiResult"></div>
 
     </div>
 
   </section>
-
 
 
   <!-- =========================
@@ -305,12 +336,10 @@
       ABOUT SMITHX
     </small>
 
-
     <h2>
       Commerce should be accessible
       to everyone.
     </h2>
-
 
     <p>
       SmithX is being built as a global
@@ -327,13 +356,11 @@
   </section>
 
 
-
   <!-- =========================
        CART
   ========================== -->
 
   <aside id="cart">
-
 
     <button
       class="close"
@@ -343,14 +370,11 @@
       ×
     </button>
 
-
     <h2>
       Your cart
     </h2>
 
-
     <div id="items"></div>
-
 
     <h3>
 
@@ -363,7 +387,6 @@
 
     </h3>
 
-
     <button
       class="primary wide"
       onclick="checkout()"
@@ -374,13 +397,11 @@
   </aside>
 
 
-
   <!-- =========================
        TOAST
   ========================== -->
 
   <div id="toast"></div>
-
 
 
   <!-- =========================
