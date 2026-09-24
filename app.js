@@ -1,24 +1,22 @@
 /* =========================================================
-   SMITHX MVP
-   Marketplace + Cart + Seller Studio + AI + Dashboard
+   SMITHX MVP — APP.JS
+   AI removed for current MVP
    ========================================================= */
 
 
 /* =========================================================
-   DEFAULT SIX PRODUCTS
-   These are ALWAYS available when the marketplace loads.
-   ========================================================= */
+   DEFAULT PRODUCTS
+========================================================= */
 
 const DEFAULT_PRODUCTS = [
-
   {
     id: "default-1",
     name: "Samsung Galaxy S26 Ultra",
     price: 169999,
     description:
-      "A premium flagship smartphone with powerful performance, advanced cameras and a large immersive display.",
+      "Premium flagship smartphone with advanced performance, display and camera technology.",
     image:
-      "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=900&q=85"
+      "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=900&q=80"
   },
 
   {
@@ -26,9 +24,9 @@ const DEFAULT_PRODUCTS = [
     name: "Smart Wireless Headphones",
     price: 4500,
     description:
-      "Wireless headphones designed for clear sound, comfortable listening and everyday entertainment.",
+      "Wireless headphones designed for clear sound, everyday comfort and convenient listening.",
     image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85"
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
   },
 
   {
@@ -36,9 +34,9 @@ const DEFAULT_PRODUCTS = [
     name: "Minimal Desk Lamp",
     price: 2800,
     description:
-      "A modern minimalist desk lamp that brings clean lighting and a stylish look to your workspace.",
+      "Modern desk lamp with a clean minimalist design for workspaces and study areas.",
     image:
-      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=85"
+      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80"
   },
 
   {
@@ -46,9 +44,9 @@ const DEFAULT_PRODUCTS = [
     name: "Everyday Travel Backpack",
     price: 3500,
     description:
-      "A practical everyday backpack with enough room for work, travel, school and daily essentials.",
+      "Practical everyday backpack designed for commuting, travel and carrying essential items.",
     image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85"
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80"
   },
 
   {
@@ -56,9 +54,9 @@ const DEFAULT_PRODUCTS = [
     name: "Smart Watch",
     price: 6500,
     description:
-      "A modern smart watch designed for notifications, activity tracking and everyday convenience.",
+      "Modern smartwatch combining useful everyday features with a clean wearable design.",
     image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85"
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
   },
 
   {
@@ -66,155 +64,376 @@ const DEFAULT_PRODUCTS = [
     name: "Premium Sneakers",
     price: 7200,
     description:
-      "Comfortable modern sneakers built for everyday movement with a clean premium design.",
+      "Comfortable modern sneakers designed for everyday wear and an active lifestyle.",
     image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85"
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
   }
-
 ];
 
 
 /* =========================================================
-   STORAGE
-   ========================================================= */
+   STORAGE KEYS
+========================================================= */
 
-const PRODUCTS_KEY = "smithx_custom_products_v2";
+const PRODUCT_KEY = "smithx_custom_products_v2";
 const CART_KEY = "smithx_cart_v2";
 const ANALYTICS_KEY = "smithx_analytics_v2";
 const VISITOR_KEY = "smithx_daily_visitor_v2";
 
 
 /* =========================================================
-   STATE
-   ========================================================= */
-
-let customProducts = loadCustomProducts();
-let cart = loadCart();
-let analytics = loadAnalytics();
-
-
-/* =========================================================
-   DOM
-   ========================================================= */
-
-const productsGrid = document.getElementById("productsGrid");
-const noProducts = document.getElementById("noProducts");
-
-const searchInput = document.getElementById("searchInput");
-
-const cartDrawer = document.getElementById("cartDrawer");
-const cartOverlay = document.getElementById("cartOverlay");
-
-const cartItems = document.getElementById("cartItems");
-const cartCount = document.getElementById("cartCount");
-const cartTotal = document.getElementById("cartTotal");
-
-const productImage = document.getElementById("productImage");
-const previewImage = document.getElementById("previewImage");
-const imagePreview = document.getElementById("imagePreview");
-
-const publishProductButton =
-  document.getElementById("publishProduct");
-
-const aiGenerateButton =
-  document.getElementById("aiGenerate");
-
-const aiResult =
-  document.getElementById("aiResult");
-
-
-/* =========================================================
    HELPERS
-   ========================================================= */
+========================================================= */
 
-function money(value) {
-  return "KES " + Number(value).toLocaleString("en-KE");
+function formatKES(value) {
+  const number = Number(value) || 0;
+
+  return (
+    "KES " +
+    number.toLocaleString("en-KE", {
+      maximumFractionDigits: 0
+    })
+  );
 }
 
 
-function getAllProducts() {
-  return [...DEFAULT_PRODUCTS, ...customProducts];
-}
-
-
-function scrollToSection(id) {
-  document.getElementById(id)?.scrollIntoView({
-    behavior: "smooth"
-  });
-}
-
-
-function showToast(message) {
-
-  const toast = document.getElementById("toast");
-
-  toast.textContent = message;
-  toast.classList.add("show");
-
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2500);
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 
 /* =========================================================
-   PRODUCT STORAGE
-   ========================================================= */
+   PRODUCTS
+========================================================= */
 
-function loadCustomProducts() {
-
+function getCustomProducts() {
   try {
-
-    const saved =
-      localStorage.getItem(PRODUCTS_KEY);
-
-    if (!saved) return [];
-
-    const parsed = JSON.parse(saved);
-
-    return Array.isArray(parsed) ? parsed : [];
-
-  } catch {
-
+    return JSON.parse(
+      localStorage.getItem(PRODUCT_KEY) || "[]"
+    );
+  } catch (error) {
     return [];
   }
 }
 
 
-function saveCustomProducts() {
-
+function saveCustomProducts(products) {
   localStorage.setItem(
-    PRODUCTS_KEY,
-    JSON.stringify(customProducts)
+    PRODUCT_KEY,
+    JSON.stringify(products)
+  );
+}
+
+
+function getAllProducts() {
+  return [
+    ...DEFAULT_PRODUCTS,
+    ...getCustomProducts()
+  ];
+}
+
+
+/* =========================================================
+   ANALYTICS
+========================================================= */
+
+function getAnalytics() {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem(ANALYTICS_KEY)
+    );
+
+    return {
+      sales: Number(saved?.sales) || 0,
+      orders: Number(saved?.orders) || 0
+    };
+
+  } catch (error) {
+
+    return {
+      sales: 0,
+      orders: 0
+    };
+  }
+}
+
+
+function saveAnalytics(data) {
+  localStorage.setItem(
+    ANALYTICS_KEY,
+    JSON.stringify(data)
   );
 }
 
 
 /* =========================================================
-   CART STORAGE
-   ========================================================= */
+   DAILY VISITOR
+========================================================= */
 
-function loadCart() {
+function registerDailyVisitor() {
+
+  const today =
+    new Date().toISOString().split("T")[0];
+
+  let data;
+
+  try {
+    data = JSON.parse(
+      localStorage.getItem(VISITOR_KEY) || "null"
+    );
+  } catch (error) {
+    data = null;
+  }
+
+
+  if (!data || data.date !== today) {
+
+    data = {
+      date: today,
+      count: 1
+    };
+
+    localStorage.setItem(
+      VISITOR_KEY,
+      JSON.stringify(data)
+    );
+
+    return;
+  }
+
+
+  /*
+    For this MVP we count the browser once per day.
+  */
+
+  if (!data.count) {
+    data.count = 1;
+
+    localStorage.setItem(
+      VISITOR_KEY,
+      JSON.stringify(data)
+    );
+  }
+}
+
+
+function getVisitorCount() {
 
   try {
 
-    const saved =
-      localStorage.getItem(CART_KEY);
+    const data = JSON.parse(
+      localStorage.getItem(VISITOR_KEY) || "null"
+    );
 
-    if (!saved) return [];
+    const today =
+      new Date().toISOString().split("T")[0];
 
-    const parsed = JSON.parse(saved);
+    if (data && data.date === today) {
+      return Number(data.count) || 0;
+    }
 
-    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {}
 
-  } catch {
+  return 0;
+}
+
+
+/* =========================================================
+   RENDER MARKETPLACE
+========================================================= */
+
+function renderProducts(products = getAllProducts()) {
+
+  const grid =
+    document.getElementById("productsGrid");
+
+  if (!grid) return;
+
+
+  if (!products.length) {
+
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;padding:30px;text-align:center;">
+        <h3>No products found</h3>
+        <p style="color:#667085;margin-top:8px;">
+          Try another search.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+
+  grid.innerHTML = products.map(product => {
+
+    const image =
+      product.image ||
+      "https://via.placeholder.com/700x500?text=SMITHX";
+
+
+    return `
+      <article class="product-card">
+
+        <div class="product-image">
+
+          <img
+            src="${escapeHTML(image)}"
+            alt="${escapeHTML(product.name)}"
+            loading="lazy"
+          >
+
+        </div>
+
+
+        <div class="product-content">
+
+          <h3>
+            ${escapeHTML(product.name)}
+          </h3>
+
+          <p class="product-description">
+            ${escapeHTML(product.description)}
+          </p>
+
+          <div class="product-price">
+            ${formatKES(product.price)}
+          </div>
+
+
+          <div class="product-actions">
+
+            <button
+              onclick="viewProduct('${product.id}')"
+            >
+              View
+            </button>
+
+            <button
+              onclick="addToCart('${product.id}')"
+            >
+              Add to Cart
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+    `;
+
+  }).join("");
+}
+
+
+/* =========================================================
+   PRODUCT MODAL
+========================================================= */
+
+function viewProduct(id) {
+
+  const product =
+    getAllProducts().find(
+      item => String(item.id) === String(id)
+    );
+
+  if (!product) return;
+
+
+  const modal =
+    document.getElementById("productModal");
+
+  const content =
+    document.getElementById("productModalContent");
+
+  if (!modal || !content) return;
+
+
+  content.innerHTML = `
+
+    <div class="product-modal-image">
+
+      <img
+        src="${escapeHTML(product.image)}"
+        alt="${escapeHTML(product.name)}"
+      >
+
+    </div>
+
+
+    <div>
+
+      <div class="ai-category">
+        SMITHX MARKETPLACE
+      </div>
+
+      <h2>
+        ${escapeHTML(product.name)}
+      </h2>
+
+      <br>
+
+      <div class="product-price">
+        ${formatKES(product.price)}
+      </div>
+
+      <p style="color:#667085;margin:18px 0;">
+        ${escapeHTML(product.description)}
+      </p>
+
+
+      <button
+        class="primary-button"
+        onclick="addToCart('${product.id}'); closeProductModal();"
+      >
+        Add to Cart
+      </button>
+
+    </div>
+
+  `;
+
+
+  modal.classList.add("active");
+}
+
+
+function closeProductModal() {
+
+  const modal =
+    document.getElementById("productModal");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+function getCart() {
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem(CART_KEY) || "[]"
+    );
+
+  } catch (error) {
 
     return [];
   }
 }
 
 
-function saveCart() {
+function saveCart(cart) {
 
   localStorage.setItem(
     CART_KEY,
@@ -223,313 +442,27 @@ function saveCart() {
 }
 
 
-/* =========================================================
-   ANALYTICS STORAGE
-   ========================================================= */
-
-function todayKey() {
-
-  const now = new Date();
-
-  return [
-    now.getFullYear(),
-    String(now.getMonth() + 1).padStart(2, "0"),
-    String(now.getDate()).padStart(2, "0")
-  ].join("-");
-}
-
-
-function loadAnalytics() {
-
-  try {
-
-    const saved =
-      localStorage.getItem(ANALYTICS_KEY);
-
-    if (!saved) {
-
-      return {
-        date: todayKey(),
-        users: 0,
-        sales: 0,
-        orders: 0
-      };
-
-    }
-
-    const data = JSON.parse(saved);
-
-    if (data.date !== todayKey()) {
-
-      return {
-        date: todayKey(),
-        users: 0,
-        sales: 0,
-        orders: 0
-      };
-
-    }
-
-    return {
-      date: todayKey(),
-      users: Number(data.users) || 0,
-      sales: Number(data.sales) || 0,
-      orders: Number(data.orders) || 0
-    };
-
-  } catch {
-
-    return {
-      date: todayKey(),
-      users: 0,
-      sales: 0,
-      orders: 0
-    };
-  }
-}
-
-
-function saveAnalytics() {
-
-  localStorage.setItem(
-    ANALYTICS_KEY,
-    JSON.stringify(analytics)
-  );
-}
-
-
-/* =========================================================
-   DAILY VISITOR
-   One visit per browser/device per day.
-   ========================================================= */
-
-function registerTodayUser() {
-
-  const today = todayKey();
-
-  const previous =
-    localStorage.getItem(VISITOR_KEY);
-
-  if (previous !== today) {
-
-    analytics.users++;
-
-    analytics.date = today;
-
-    saveAnalytics();
-
-    localStorage.setItem(
-      VISITOR_KEY,
-      today
-    );
-  }
-}
-
-
-/* =========================================================
-   RENDER PRODUCTS
-   ========================================================= */
-
-function renderProducts(searchTerm = "") {
-
-  const products = getAllProducts();
-
-  const term =
-    searchTerm.trim().toLowerCase();
-
-  const filtered = products.filter(product => {
-
-    if (!term) return true;
-
-    return (
-      product.name.toLowerCase().includes(term) ||
-      product.description.toLowerCase().includes(term)
-    );
-
-  });
-
-
-  productsGrid.innerHTML = "";
-
-
-  if (filtered.length === 0) {
-
-    noProducts.classList.remove("hidden");
-
-    return;
-  }
-
-  noProducts.classList.add("hidden");
-
-
-  filtered.forEach(product => {
-
-    const card =
-      document.createElement("article");
-
-    card.className = "product-card";
-
-    card.innerHTML = `
-
-      <div class="product-image">
-        <img
-          src="${escapeAttribute(product.image)}"
-          alt="${escapeAttribute(product.name)}"
-          loading="lazy"
-        >
-      </div>
-
-      <div class="product-info">
-
-        <h3>${escapeHTML(product.name)}</h3>
-
-        <p class="product-description">
-          ${escapeHTML(product.description)}
-        </p>
-
-        <div class="product-price">
-          ${money(product.price)}
-        </div>
-
-        <div class="product-actions">
-
-          <button
-            class="view-btn"
-            onclick="openProductModal('${product.id}')"
-          >
-            View
-          </button>
-
-          <button
-            class="add-btn"
-            onclick="addToCart('${product.id}')"
-          >
-            Add to Cart
-          </button>
-
-        </div>
-
-      </div>
-    `;
-
-    productsGrid.appendChild(card);
-  });
-
-
-  updateDashboard();
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-   ========================================================= */
-
-function escapeHTML(value) {
-
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-
-function escapeAttribute(value) {
-
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
-}
-
-
-/* =========================================================
-   PRODUCT MODAL
-   ========================================================= */
-
-let selectedModalProduct = null;
-
-
-function openProductModal(id) {
+function addToCart(id) {
 
   const product =
     getAllProducts().find(
-      item => item.id === id
+      item => String(item.id) === String(id)
     );
 
   if (!product) return;
 
-  selectedModalProduct = product;
 
-  document.getElementById("modalImage").src =
-    product.image;
-
-  document.getElementById("modalImage").alt =
-    product.name;
-
-  document.getElementById("modalName").textContent =
-    product.name;
-
-  document.getElementById("modalPrice").textContent =
-    money(product.price);
-
-  document.getElementById("modalDescription").textContent =
-    product.description;
-
-  document
-    .getElementById("productModal")
-    .classList.remove("hidden");
-}
-
-
-function closeProductModal() {
-
-  document
-    .getElementById("productModal")
-    .classList.add("hidden");
-
-  selectedModalProduct = null;
-}
-
-
-document.getElementById("modalAdd").addEventListener(
-  "click",
-  () => {
-
-    if (!selectedModalProduct) return;
-
-    addToCart(selectedModalProduct.id);
-
-    closeProductModal();
-  }
-);
-
-
-/* =========================================================
-   CART
-   ========================================================= */
-
-function addToCart(productId) {
-
-  const product =
-    getAllProducts().find(
-      item => item.id === productId
-    );
-
-  if (!product) return;
-
+  const cart = getCart();
 
   const existing =
     cart.find(
-      item => item.id === productId
+      item => String(item.id) === String(id)
     );
 
 
   if (existing) {
 
-    existing.quantity++;
+    existing.quantity += 1;
 
   } else {
 
@@ -541,483 +474,468 @@ function addToCart(productId) {
   }
 
 
-  saveCart();
+  saveCart(cart);
 
   renderCart();
 
-  openCart();
+  updateCartCount();
 
   showToast(
-    product.name + " added to cart"
+    `${product.name} added to cart`
   );
 }
 
 
-function increaseQuantity(productId) {
+function removeFromCart(id) {
 
-  const item =
-    cart.find(
-      product => product.id === productId
-    );
+  let cart = getCart();
 
-  if (!item) return;
+  cart = cart.filter(
+    item => String(item.id) !== String(id)
+  );
 
-  item.quantity++;
-
-  saveCart();
+  saveCart(cart);
 
   renderCart();
+
+  updateCartCount();
 }
 
 
-function decreaseQuantity(productId) {
+function changeQuantity(id, change) {
+
+  const cart = getCart();
 
   const item =
     cart.find(
-      product => product.id === productId
+      entry => String(entry.id) === String(id)
     );
 
   if (!item) return;
 
 
-  item.quantity--;
+  item.quantity += change;
 
 
   if (item.quantity <= 0) {
 
-    cart =
-      cart.filter(
-        product => product.id !== productId
-      );
+    removeFromCart(id);
+
+    return;
   }
 
 
-  saveCart();
+  saveCart(cart);
 
   renderCart();
+
+  updateCartCount();
 }
 
-
-function removeFromCart(productId) {
-
-  cart =
-    cart.filter(
-      item => item.id !== productId
-    );
-
-  saveCart();
-
-  renderCart();
-}
-
-
-/* =========================================================
-   CART RENDER
-   ========================================================= */
 
 function renderCart() {
 
-  cartItems.innerHTML = "";
+  const container =
+    document.getElementById("cartItems");
 
-  let total = 0;
-  let count = 0;
+  const subtotalElement =
+    document.getElementById("cartSubtotal");
 
+  const totalElement =
+    document.getElementById("cartTotal");
 
-  cart.forEach(item => {
-
-    const product =
-      getAllProducts().find(
-        p => p.id === item.id
-      );
-
-    if (!product) return;
+  if (!container) return;
 
 
-    const lineTotal =
-      product.price * item.quantity;
+  const cart = getCart();
 
-    total += lineTotal;
-
-    count += item.quantity;
+  const products = getAllProducts();
 
 
-    const row =
-      document.createElement("div");
+  if (!cart.length) {
 
-    row.className = "cart-item";
-
-    row.innerHTML = `
-
-      <img
-        src="${escapeAttribute(product.image)}"
-        alt="${escapeAttribute(product.name)}"
-      >
-
-      <div>
-
-        <h4>
-          ${escapeHTML(product.name)}
-        </h4>
-
-        <div class="cart-item-price">
-          ${money(lineTotal)}
-        </div>
-
-        <div class="quantity-controls">
-
-          <button
-            onclick="decreaseQuantity('${product.id}')"
-          >
-            −
-          </button>
-
-          <strong>${item.quantity}</strong>
-
-          <button
-            onclick="increaseQuantity('${product.id}')"
-          >
-            +
-          </button>
-
-          <button
-            class="remove-item"
-            onclick="removeFromCart('${product.id}')"
-          >
-            Remove
-          </button>
-
-        </div>
-
-      </div>
-    `;
-
-
-    cartItems.appendChild(row);
-
-  });
-
-
-  cartCount.textContent = count;
-
-  cartTotal.textContent = money(total);
-
-
-  if (cart.length === 0) {
-
-    cartItems.innerHTML = `
-      <div class="empty-state">
+    container.innerHTML = `
+      <div style="padding:25px 0;color:#667085;">
         Your cart is empty.
       </div>
     `;
+
+    if (subtotalElement) {
+      subtotalElement.textContent =
+        formatKES(0);
+    }
+
+    if (totalElement) {
+      totalElement.textContent =
+        formatKES(0);
+    }
+
+    return;
+  }
+
+
+  let subtotal = 0;
+
+
+  container.innerHTML =
+    cart.map(item => {
+
+      const product =
+        products.find(
+          p => String(p.id) === String(item.id)
+        );
+
+      if (!product) return "";
+
+
+      const lineTotal =
+        Number(product.price) *
+        Number(item.quantity);
+
+
+      subtotal += lineTotal;
+
+
+      return `
+
+        <div class="cart-item">
+
+          <img
+            src="${escapeHTML(product.image)}"
+            alt="${escapeHTML(product.name)}"
+          >
+
+
+          <div>
+
+            <h4>
+              ${escapeHTML(product.name)}
+            </h4>
+
+            <p>
+              ${formatKES(product.price)}
+            </p>
+
+
+            <div style="
+              display:flex;
+              gap:8px;
+              align-items:center;
+              margin-top:6px;
+            ">
+
+              <button
+                onclick="changeQuantity('${product.id}', -1)"
+                style="
+                  border:1px solid #d0d5dd;
+                  background:white;
+                  border-radius:6px;
+                  width:26px;
+                  height:26px;
+                "
+              >
+                −
+              </button>
+
+              <strong>
+                ${item.quantity}
+              </strong>
+
+              <button
+                onclick="changeQuantity('${product.id}', 1)"
+                style="
+                  border:1px solid #d0d5dd;
+                  background:white;
+                  border-radius:6px;
+                  width:26px;
+                  height:26px;
+                "
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div style="text-align:right;">
+
+            <strong>
+              ${formatKES(lineTotal)}
+            </strong>
+
+            <br>
+
+            <button
+              class="cart-remove"
+              onclick="removeFromCart('${product.id}')"
+            >
+              Remove
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+
+  if (subtotalElement) {
+
+    subtotalElement.textContent =
+      formatKES(subtotal);
+
+  }
+
+
+  if (totalElement) {
+
+    totalElement.textContent =
+      formatKES(subtotal);
+
   }
 }
 
 
-/* =========================================================
-   CART OPEN/CLOSE
-   ========================================================= */
+function updateCartCount() {
+
+  const cart =
+    getCart();
+
+  const count =
+    cart.reduce(
+      (total, item) =>
+        total + Number(item.quantity || 0),
+      0
+    );
+
+
+  const element =
+    document.getElementById("cartCount");
+
+  if (element) {
+    element.textContent = count;
+  }
+}
+
 
 function openCart() {
 
-  cartDrawer.classList.add("open");
+  const panel =
+    document.getElementById("cartPanel");
 
-  cartOverlay.classList.add("active");
+  if (panel) {
+    panel.classList.add("active");
+  }
+
+  renderCart();
 }
 
 
 function closeCart() {
 
-  cartDrawer.classList.remove("open");
+  const panel =
+    document.getElementById("cartPanel");
 
-  cartOverlay.classList.remove("active");
+  if (panel) {
+    panel.classList.remove("active");
+  }
 }
-
-
-document
-  .getElementById("openCart")
-  .addEventListener("click", openCart);
-
-
-document
-  .getElementById("closeCart")
-  .addEventListener("click", closeCart);
-
-
-cartOverlay.addEventListener(
-  "click",
-  closeCart
-);
 
 
 /* =========================================================
    CHECKOUT
-   ========================================================= */
-
-document
-  .getElementById("checkoutButton")
-  .addEventListener("click", checkout);
-
+========================================================= */
 
 function checkout() {
 
-  if (cart.length === 0) {
+  const cart =
+    getCart();
 
-    showToast("Your cart is empty.");
+  if (!cart.length) {
+
+    showToast(
+      "Your cart is empty"
+    );
 
     return;
   }
 
 
-  let total = 0;
+  const products =
+    getAllProducts();
+
+
+  let orderTotal = 0;
 
 
   cart.forEach(item => {
 
     const product =
-      getAllProducts().find(
-        p => p.id === item.id
+      products.find(
+        p => String(p.id) === String(item.id)
       );
 
     if (product) {
 
-      total +=
-        product.price *
-        item.quantity;
+      orderTotal +=
+        Number(product.price) *
+        Number(item.quantity);
+
     }
+
   });
 
 
-  analytics.sales += total;
-
-  analytics.orders++;
-
-  analytics.date = todayKey();
-
-  saveAnalytics();
+  const analytics =
+    getAnalytics();
 
 
-  cart = [];
+  analytics.sales +=
+    orderTotal;
 
-  saveCart();
+  analytics.orders +=
+    1;
+
+
+  saveAnalytics(analytics);
+
+
+  saveCart([]);
 
   renderCart();
 
-  updateDashboard();
+  updateCartCount();
 
-  closeCart();
+  updateDashboard();
 
 
   showToast(
-    "Demo checkout completed successfully."
+    "Demo checkout completed successfully"
   );
 
 
-  scrollToSection("dashboard");
+  closeCart();
 }
 
 
 /* =========================================================
-   IMAGE UPLOAD
-   Compress uploaded image before localStorage.
-   ========================================================= */
+   IMAGE COMPRESSION
+========================================================= */
 
-productImage.addEventListener(
-  "change",
-  event => {
+function compressImage(
+  file,
+  maxWidth = 1000,
+  quality = 0.82
+) {
 
-    const file =
-      event.target.files?.[0];
-
-    if (!file) return;
-
+  return new Promise((resolve, reject) => {
 
     const reader =
       new FileReader();
 
 
-    reader.onload = () => {
+    reader.onload = event => {
 
-      previewImage.src =
-        reader.result;
-
-      imagePreview.classList.remove(
-        "hidden"
-      );
-    };
+      const image =
+        new Image();
 
 
-    reader.readAsDataURL(file);
-  }
-);
+      image.onload = () => {
+
+        let width =
+          image.width;
+
+        let height =
+          image.height;
 
 
-/* =========================================================
-   COMPRESS IMAGE
-   Prevents localStorage from becoming too large.
-   ========================================================= */
+        if (width > maxWidth) {
 
-function compressImage(file) {
+          height =
+            height *
+            (maxWidth / width);
 
-  return new Promise(
-    (resolve, reject) => {
+          width =
+            maxWidth;
 
-      const reader =
-        new FileReader();
+        }
 
 
-      reader.onload = event => {
+        const canvas =
+          document.createElement("canvas");
 
-        const img =
-          new Image();
+        canvas.width =
+          width;
 
-
-        img.onload = () => {
-
-          const maxSize = 1200;
-
-          let width = img.width;
-          let height = img.height;
+        canvas.height =
+          height;
 
 
-          if (width > maxSize ||
-              height > maxSize) {
-
-            if (width > height) {
-
-              height =
-                height *
-                (maxSize / width);
-
-              width = maxSize;
-
-            } else {
-
-              width =
-                width *
-                (maxSize / height);
-
-              height = maxSize;
-            }
-          }
+        const context =
+          canvas.getContext("2d");
 
 
-          const canvas =
-            document.createElement("canvas");
-
-          canvas.width = width;
-          canvas.height = height;
-
-
-          const ctx =
-            canvas.getContext("2d");
+        context.drawImage(
+          image,
+          0,
+          0,
+          width,
+          height
+        );
 
 
-          ctx.drawImage(
-            img,
-            0,
-            0,
-            width,
-            height
-          );
+        resolve(
+          canvas.toDataURL(
+            "image/jpeg",
+            quality
+          )
+        );
 
-
-          resolve(
-            canvas.toDataURL(
-              "image/jpeg",
-              .78
-            )
-          );
-
-        };
-
-
-        img.onerror = reject;
-
-        img.src = event.target.result;
       };
 
 
-      reader.onerror = reject;
+      image.onerror =
+        reject;
 
-      reader.readAsDataURL(file);
-    }
-  );
+      image.src =
+        event.target.result;
+
+    };
+
+
+    reader.onerror =
+      reject;
+
+    reader.readAsDataURL(file);
+
+  });
 }
 
 
 /* =========================================================
-   PUBLISH PRODUCT
-   ========================================================= */
+   IMAGE UPLOAD PREVIEW
+========================================================= */
 
-publishProductButton.addEventListener(
-  "click",
-  publishProduct
-);
+let uploadedProductImage = "";
 
 
-async function publishProduct() {
-
-  if (customProducts.length >= 3) {
-
-    showToast(
-      "You have reached the 3 additional product limit."
-    );
-
-    return;
-  }
-
-
-  const name =
-    document
-      .getElementById("productName")
-      .value.trim();
-
-
-  const price =
-    Number(
-      document
-        .getElementById("productPrice")
-        .value
-    );
-
-
-  const description =
-    document
-      .getElementById("productDescription")
-      .value.trim();
-
+async function handleProductImage(event) {
 
   const file =
-    productImage.files?.[0];
+    event.target.files?.[0];
+
+  if (!file) return;
 
 
-  if (!name) {
+  if (!file.type.startsWith("image/")) {
 
-    showToast("Enter a product name.");
-
-    return;
-  }
-
-
-  if (!price || price <= 0) {
-
-    showToast("Enter a valid price.");
-
-    return;
-  }
-
-
-  if (!description) {
-
-    showToast("Enter a product description.");
-
-    return;
-  }
-
-
-  if (!file) {
-
-    showToast("Choose a product image.");
+    showToast(
+      "Please select an image file"
+    );
 
     return;
   }
@@ -1025,366 +943,671 @@ async function publishProduct() {
 
   try {
 
-    publishProductButton.disabled = true;
-
-    publishProductButton.textContent =
-      "Publishing...";
-
-
-    const image =
+    uploadedProductImage =
       await compressImage(file);
 
 
-    const newProduct = {
+    const previewBox =
+      document.getElementById("imagePreview");
 
-      id:
-        "custom-" +
-        Date.now(),
-
-      name,
-
-      price,
-
-      description,
-
-      image
-    };
+    const preview =
+      document.getElementById("previewImage");
 
 
-    customProducts.push(
-      newProduct
-    );
+    if (preview) {
+
+      preview.src =
+        uploadedProductImage;
+
+    }
 
 
-    saveCustomProducts();
+    if (previewBox) {
 
+      previewBox.classList.remove(
+        "hidden"
+      );
 
-    document
-      .getElementById("productName")
-      .value = "";
-
-    document
-      .getElementById("productPrice")
-      .value = "";
-
-    document
-      .getElementById("productDescription")
-      .value = "";
-
-    productImage.value = "";
-
-    imagePreview.classList.add(
-      "hidden"
-    );
-
-
-    renderProducts();
-
-    updateDashboard();
-
-
-    showToast(
-      "Product published to SmithX Marketplace!"
-    );
-
-
-    scrollToSection("marketplace");
-
+    }
 
   } catch (error) {
 
     console.error(error);
 
     showToast(
-      "Could not save the image. Try another image."
+      "Could not process image"
     );
 
-  } finally {
-
-    publishProductButton.disabled = false;
-
-    publishProductButton.textContent =
-      "＋ Publish Product";
   }
 }
 
 
 /* =========================================================
-   AI SELLER ASSISTANT
-   ========================================================= */
+   PUBLISH PRODUCT
+========================================================= */
 
-aiGenerateButton.addEventListener(
-  "click",
-  generateAIProduct
-);
-
-
-function generateAIProduct() {
+function publishProduct() {
 
   const name =
     document
       .getElementById("productName")
-      .value.trim();
-
-
-  if (!name) {
-
-    showToast(
-      "Enter a product name first."
-    );
-
-    return;
-  }
+      ?.value
+      .trim();
 
 
   const price =
     Number(
       document
         .getElementById("productPrice")
-        .value
+        ?.value
     );
 
 
-  const generatedDescription =
-    `${name} is a modern product designed to combine quality, convenience and everyday value. Perfect for customers looking for a reliable addition to their lifestyle.`;
+  const description =
+    document
+      .getElementById("productDescription")
+      ?.value
+      .trim();
 
 
-  const suggestedPrice =
-    price > 0
-      ? Math.round(price / 100) * 100
-      : 5000;
+  if (!name) {
+
+    showToast(
+      "Enter a product name"
+    );
+
+    return;
+  }
 
 
-  document
-    .getElementById("productDescription")
-    .value =
-      generatedDescription;
+  if (!price || price <= 0) {
+
+    showToast(
+      "Enter a valid price"
+    );
+
+    return;
+  }
 
 
-  aiResult.innerHTML = `
+  if (!description) {
 
-    <strong>AI Product Assistant</strong>
+    showToast(
+      "Enter a product description"
+    );
 
-    <p>
-      Suggested description generated for
-      <strong>${escapeHTML(name)}</strong>.
-    </p>
-
-    <p>
-      Suggested demo price:
-      <strong>${money(suggestedPrice)}</strong>
-    </p>
-
-  `;
+    return;
+  }
 
 
-  aiResult.classList.remove(
-    "hidden"
+  const customProducts =
+    getCustomProducts();
+
+
+  if (customProducts.length >= 3) {
+
+    showToast(
+      "The MVP allows up to 3 additional products"
+    );
+
+    return;
+  }
+
+
+  const product = {
+
+    id:
+      "custom-" +
+      Date.now(),
+
+    name,
+
+    price,
+
+    description,
+
+    image:
+      uploadedProductImage ||
+      "https://via.placeholder.com/700x500?text=SMITHX+PRODUCT"
+
+  };
+
+
+  customProducts.push(
+    product
   );
 
 
+  saveCustomProducts(
+    customProducts
+  );
+
+
+  /*
+    Reset form
+  */
+
+  document.getElementById(
+    "productName"
+  ).value = "";
+
+
+  document.getElementById(
+    "productPrice"
+  ).value = "";
+
+
+  document.getElementById(
+    "productDescription"
+  ).value = "";
+
+
+  document.getElementById(
+    "productImage"
+  ).value = "";
+
+
+  uploadedProductImage = "";
+
+
+  const previewBox =
+    document.getElementById(
+      "imagePreview"
+    );
+
+  if (previewBox) {
+
+    previewBox.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  renderProducts();
+
+  updateDashboard();
+
+
   showToast(
-    "AI product details generated."
+    "Product published successfully"
+  );
+
+
+  scrollToSection(
+    "market"
   );
 }
 
 
 /* =========================================================
    DASHBOARD
-   ========================================================= */
+========================================================= */
 
 function updateDashboard() {
 
+  const products =
+    getAllProducts();
+
+  const analytics =
+    getAnalytics();
+
+  const visitors =
+    getVisitorCount();
+
+
   const productCount =
-    getAllProducts().length;
+    products.length;
 
 
-  const users =
-    analytics.users;
+  /*
+    Hero
+  */
+
+  const heroProducts =
+    document.getElementById(
+      "heroProductCount"
+    );
+
+  const heroVisitors =
+    document.getElementById(
+      "heroVisitorCount"
+    );
+
+  const heroSales =
+    document.getElementById(
+      "heroSales"
+    );
+
+  const heroOrders =
+    document.getElementById(
+      "heroOrders"
+    );
 
 
-  const sales =
-    analytics.sales;
-
-
-  const orders =
-    analytics.orders;
-
-
-  document
-    .getElementById("heroProducts")
-    .textContent =
+  if (heroProducts)
+    heroProducts.textContent =
       productCount;
 
+  if (heroVisitors)
+    heroVisitors.textContent =
+      visitors;
 
-  document
-    .getElementById("heroUsers")
-    .textContent =
-      users;
+  if (heroSales)
+    heroSales.textContent =
+      formatKES(analytics.sales);
+
+  if (heroOrders)
+    heroOrders.textContent =
+      analytics.orders;
 
 
-  document
-    .getElementById("heroSales")
-    .textContent =
-      money(sales);
+  /*
+    Dashboard
+  */
+
+  const dashboardProducts =
+    document.getElementById(
+      "dashboardProducts"
+    );
+
+  const dashboardVisitors =
+    document.getElementById(
+      "dashboardVisitors"
+    );
+
+  const dashboardSales =
+    document.getElementById(
+      "dashboardSales"
+    );
+
+  const dashboardOrders =
+    document.getElementById(
+      "dashboardOrders"
+    );
 
 
-  document
-    .getElementById("dashboardProducts")
-    .textContent =
+  if (dashboardProducts)
+    dashboardProducts.textContent =
       productCount;
 
+  if (dashboardVisitors)
+    dashboardVisitors.textContent =
+      visitors;
 
-  document
-    .getElementById("dashboardUsers")
-    .textContent =
-      users;
+  if (dashboardSales)
+    dashboardSales.textContent =
+      formatKES(analytics.sales);
 
-
-  document
-    .getElementById("dashboardSales")
-    .textContent =
-      money(sales);
-
-
-  document
-    .getElementById("dashboardOrders")
-    .textContent =
-      orders;
+  if (dashboardOrders)
+    dashboardOrders.textContent =
+      analytics.orders;
 
 
-  document
-    .getElementById("activityProducts")
-    .textContent =
+  /*
+    Activity
+  */
+
+  const activityProducts =
+    document.getElementById(
+      "activityProducts"
+    );
+
+  const activityVisitors =
+    document.getElementById(
+      "activityVisitors"
+    );
+
+  const activitySales =
+    document.getElementById(
+      "activitySales"
+    );
+
+  const activityOrders =
+    document.getElementById(
+      "activityOrders"
+    );
+
+
+  if (activityProducts)
+    activityProducts.textContent =
       productCount;
 
+  if (activityVisitors)
+    activityVisitors.textContent =
+      visitors;
 
-  document
-    .getElementById("activityUsers")
-    .textContent =
-      users;
+  if (activitySales)
+    activitySales.textContent =
+      formatKES(analytics.sales);
 
-
-  document
-    .getElementById("activitySales")
-    .textContent =
-      money(sales);
-
-
-  document
-    .getElementById("activityOrders")
-    .textContent =
-      orders;
+  if (activityOrders)
+    activityOrders.textContent =
+      analytics.orders;
 }
 
 
 /* =========================================================
    RESET ANALYTICS
-   ========================================================= */
-
-document
-  .getElementById("resetAnalytics")
-  .addEventListener(
-    "click",
-    resetAnalytics
-  );
-
+========================================================= */
 
 function resetAnalytics() {
 
   const confirmed =
-    confirm(
-      "Reset today's SmithX demo analytics?"
+    window.confirm(
+      "Reset demo sales, orders and today's visitor count?"
     );
 
 
   if (!confirmed) return;
 
 
-  analytics = {
-
-    date: todayKey(),
-
-    users: 0,
-
-    sales: 0,
-
-    orders: 0
-  };
-
+  localStorage.removeItem(
+    ANALYTICS_KEY
+  );
 
   localStorage.removeItem(
     VISITOR_KEY
   );
 
 
-  saveAnalytics();
-
-  registerTodayUser();
+  registerDailyVisitor();
 
   updateDashboard();
 
 
   showToast(
-    "Demo analytics have been reset."
+    "Demo analytics reset"
   );
 }
 
 
 /* =========================================================
    SEARCH
-   ========================================================= */
+========================================================= */
 
-searchInput.addEventListener(
-  "input",
-  event => {
+function searchProducts(value) {
 
-    renderProducts(
-      event.target.value
+  const search =
+    String(value || "")
+      .trim()
+      .toLowerCase();
+
+
+  if (!search) {
+
+    renderProducts();
+
+    return;
+  }
+
+
+  const filtered =
+    getAllProducts().filter(product => {
+
+      const text =
+        `${product.name} ${product.description}`
+          .toLowerCase();
+
+      return text.includes(search);
+
+    });
+
+
+  renderProducts(
+    filtered
+  );
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function scrollToSection(id) {
+
+  const element =
+    document.getElementById(id);
+
+  if (!element) return;
+
+
+  element.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+
+/* =========================================================
+   UPDATE HISTORY
+========================================================= */
+
+function toggleUpdateHistory() {
+
+  const element =
+    document.getElementById(
+      "updateHistoryExtra"
     );
+
+  if (!element) return;
+
+
+  element.classList.toggle(
+    "hidden"
+  );
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+
+function showToast(message) {
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+  if (!toast) return;
+
+
+  toast.textContent =
+    message;
+
+
+  toast.classList.add(
+    "show"
+  );
+
+
+  clearTimeout(
+    toastTimer
+  );
+
+
+  toastTimer =
+    setTimeout(() => {
+
+      toast.classList.remove(
+        "show"
+      );
+
+    }, 2500);
+}
+
+
+/* =========================================================
+   EVENT LISTENERS
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    /*
+      Register today's browser visit.
+    */
+
+    registerDailyVisitor();
+
+
+    /*
+      Marketplace.
+    */
+
+    renderProducts();
+
+
+    /*
+      Cart.
+    */
+
+    renderCart();
+
+    updateCartCount();
+
+
+    /*
+      Dashboard.
+    */
+
+    updateDashboard();
+
+
+    /*
+      Search.
+    */
+
+    const searchInput =
+      document.getElementById(
+        "productSearch"
+      );
+
+
+    if (searchInput) {
+
+      searchInput.addEventListener(
+        "input",
+        event => {
+          searchProducts(
+            event.target.value
+          );
+        }
+      );
+
+    }
+
+
+    /*
+      Product image.
+    */
+
+    const productImage =
+      document.getElementById(
+        "productImage"
+      );
+
+
+    if (productImage) {
+
+      productImage.addEventListener(
+        "change",
+        handleProductImage
+      );
+
+    }
+
+
+    /*
+      Publish product.
+    */
+
+    const publishButton =
+      document.getElementById(
+        "publishProduct"
+      );
+
+
+    if (publishButton) {
+
+      publishButton.addEventListener(
+        "click",
+        publishProduct
+      );
+
+    }
+
+
+    /*
+      Checkout.
+    */
+
+    const checkoutButton =
+      document.getElementById(
+        "checkoutButton"
+      );
+
+
+    if (checkoutButton) {
+
+      checkoutButton.addEventListener(
+        "click",
+        checkout
+      );
+
+    }
+
+
+    /*
+      Reset analytics.
+    */
+
+    const resetButton =
+      document.getElementById(
+        "resetAnalytics"
+      );
+
+
+    if (resetButton) {
+
+      resetButton.addEventListener(
+        "click",
+        resetAnalytics
+      );
+
+    }
+
   }
 );
 
 
 /* =========================================================
-   START SMITHX
-   ========================================================= */
+   CLOSE MODAL WHEN CLICKING OUTSIDE
+========================================================= */
 
-function initializeSmithX() {
+document.addEventListener(
+  "click",
+  event => {
 
-  /*
-    IMPORTANT:
-    Render the six default products immediately.
-  */
-
-  registerTodayUser();
-
-  renderProducts();
-
-  renderCart();
-
-  updateDashboard();
-
-}
+    const modal =
+      document.getElementById(
+        "productModal"
+      );
 
 
-initializeSmithX();
-/* ================================
-   SMITHX UPDATE HISTORY
-================================ */
+    if (
+      modal &&
+      event.target === modal
+    ) {
 
-function toggleUpdateHistory() {
-  const list = document.getElementById("updateList");
+      closeProductModal();
 
-  if (!list) return;
+    }
 
-  list.classList.toggle("show");
-
-  const button = document.querySelector(".update-toggle");
-
-  if (button) {
-    button.textContent = list.classList.contains("show")
-      ? "Hide Update History"
-      : "View Update History";
   }
-}
+);
