@@ -1,175 +1,243 @@
 /* =========================================
    SMITHX MVP
-   Marketplace + Seller Studio + Cart
-========================================= */
+   ========================================= */
 
 
 /* =========================================
-   DEFAULT PRODUCTS
-========================================= */
+   SIX ORIGINAL PRODUCTS
+   ========================================= */
 
 const defaultProducts = [
-  {
-    id: 1,
-    name: "Samsung Galaxy S26 Ultra",
-    price: 169999,
-    description:
-      "Experience powerful performance, advanced cameras and a premium smartphone experience.",
-    category: "Electronics",
-    image:
-      "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1000&q=80"
-  },
 
   {
-    id: 2,
+    id: "smithx-1",
+
+    name: "Samsung Galaxy S26 Ultra",
+
+    price: 169999,
+
+    description:
+      "A premium smartphone with powerful performance, advanced cameras and a modern flagship design.",
+
+    category: "Electronics",
+
+    image:
+      "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=900&q=85"
+  },
+
+
+  {
+    id: "smithx-2",
+
     name: "Smart Wireless Headphones",
+
     price: 4500,
+
     description:
       "Wireless headphones with clear sound, comfortable design and long-lasting battery life.",
+
     category: "Electronics",
+
     image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80"
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85"
   },
 
+
   {
-    id: 3,
+    id: "smithx-3",
+
     name: "Minimal Desk Lamp",
+
     price: 2800,
+
     description:
-      "Modern minimalist desk lamp designed for comfortable work and study environments.",
+      "A modern minimalist desk lamp designed for work, study and stylish home spaces.",
+
     category: "Home",
+
     image:
-      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1000&q=80"
+      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=85"
   },
 
+
   {
-    id: 4,
+    id: "smithx-4",
+
     name: "Everyday Travel Backpack",
+
     price: 3500,
+
     description:
       "A practical everyday backpack with enough space for work, school and travel essentials.",
+
     category: "Fashion",
+
     image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1000&q=80"
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85"
   },
 
+
   {
-    id: 5,
+    id: "smithx-5",
+
     name: "Smart Watch",
+
     price: 6500,
+
     description:
       "A modern smartwatch designed to keep you connected while tracking your daily activity.",
+
     category: "Electronics",
+
     image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=80"
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85"
   },
 
+
   {
-    id: 6,
+    id: "smithx-6",
+
     name: "Premium Sneakers",
+
     price: 7200,
+
     description:
       "Comfortable premium sneakers combining modern style with everyday performance.",
+
     category: "Fashion",
+
     image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=80"
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85"
   }
+
 ];
 
 
-/* =========================================
-   STORAGE KEYS
-========================================= */
 
-const PRODUCTS_KEY = "smithx_saved_products";
-const ANALYTICS_KEY = "smithx_demo_analytics";
-const VISITOR_KEY = "smithx_demo_visitor";
+/* =========================================
+   STORAGE
+   ========================================= */
+
+const PRODUCTS_KEY =
+  "smithx_products_v2";
+
+const ANALYTICS_KEY =
+  "smithx_analytics_v2";
+
+const VISITOR_KEY =
+  "smithx_visitor_v2";
+
 
 
 /* =========================================
    STATE
-========================================= */
+   ========================================= */
 
-let products = loadProducts();
+let products =
+  loadProducts();
 
 let cart = [];
 
 let selectedImage = "";
 
-let analytics = loadAnalytics();
+let analytics =
+  loadAnalytics();
+
 
 
 /* =========================================
-   DOM
-========================================= */
+   ELEMENTS
+   ========================================= */
 
-const productsContainer =
-  document.getElementById("products");
+const productGrid =
+  document.getElementById(
+    "productGrid"
+  );
 
 const searchInput =
-  document.getElementById("search");
+  document.getElementById(
+    "searchInput"
+  );
 
-const form =
-  document.getElementById("form");
+const productForm =
+  document.getElementById(
+    "productForm"
+  );
 
-const imageInput =
-  document.getElementById("image");
+const productImage =
+  document.getElementById(
+    "productImage"
+  );
 
 const imagePreview =
-  document.getElementById("imagePreview");
+  document.getElementById(
+    "imagePreview"
+  );
 
-const cartPanel =
-  document.getElementById("cart");
+const imagePreviewContainer =
+  document.getElementById(
+    "imagePreviewContainer"
+  );
 
-const cartItems =
-  document.getElementById("items");
-
-const cartTotal =
-  document.getElementById("total");
-
-const cartCount =
-  document.getElementById("count");
-
-const toast =
-  document.getElementById("toast");
 
 
 /* =========================================
-   PRODUCTS
-========================================= */
+   LOAD PRODUCTS
+   ========================================= */
 
 function loadProducts() {
 
   try {
 
     const saved =
-      localStorage.getItem(PRODUCTS_KEY);
+      localStorage.getItem(
+        PRODUCTS_KEY
+      );
+
 
     if (saved) {
 
       const parsed =
         JSON.parse(saved);
 
+
       if (
         Array.isArray(parsed) &&
         parsed.length > 0
       ) {
+
         return parsed;
+
       }
+
     }
 
   } catch (error) {
 
     console.log(
-      "Could not load saved products.",
+      "Products could not be loaded.",
       error
     );
 
   }
 
+
+  /*
+    IMPORTANT:
+
+    If there are no saved products,
+    ALWAYS use the original six.
+  */
+
   return [...defaultProducts];
+
 }
 
+
+
+/* =========================================
+   SAVE PRODUCTS
+   ========================================= */
 
 function saveProducts() {
 
@@ -183,45 +251,54 @@ function saveProducts() {
   } catch (error) {
 
     console.log(
-      "Could not save products.",
+      "Products could not be saved.",
       error
     );
 
     showToast(
-      "Product could not be saved. Image may be too large."
+      "The image is too large to save."
     );
+
   }
+
 }
+
+
+
+/* =========================================
+   DATE
+   ========================================= */
+
+function today() {
+
+  const date =
+    new Date();
+
+  return (
+    date.getFullYear() +
+    "-" +
+    String(
+      date.getMonth() + 1
+    ).padStart(2, "0") +
+    "-" +
+    String(
+      date.getDate()
+    ).padStart(2, "0")
+  );
+
+}
+
 
 
 /* =========================================
    ANALYTICS
-========================================= */
+   ========================================= */
 
-function todayKey() {
-
-  const now = new Date();
-
-  const year =
-    now.getFullYear();
-
-  const month =
-    String(now.getMonth() + 1)
-      .padStart(2, "0");
-
-  const day =
-    String(now.getDate())
-      .padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
-
-function emptyAnalytics() {
+function newAnalytics() {
 
   return {
 
-    date: todayKey(),
+    date: today(),
 
     users: 0,
 
@@ -232,7 +309,9 @@ function emptyAnalytics() {
     amountUsed: 0
 
   };
+
 }
+
 
 
 function loadAnalytics() {
@@ -244,31 +323,32 @@ function loadAnalytics() {
         ANALYTICS_KEY
       );
 
+
     if (saved) {
 
-      const parsed =
+      const data =
         JSON.parse(saved);
 
+
       if (
-        parsed &&
-        parsed.date === todayKey()
+        data.date === today()
       ) {
 
         return {
 
-          date: parsed.date,
+          date: data.date,
 
           users:
-            Number(parsed.users) || 0,
+            Number(data.users) || 0,
 
           sales:
-            Number(parsed.sales) || 0,
+            Number(data.sales) || 0,
 
           orders:
-            Number(parsed.orders) || 0,
+            Number(data.orders) || 0,
 
           amountUsed:
-            Number(parsed.amountUsed) || 0
+            Number(data.amountUsed) || 0
 
         };
 
@@ -279,22 +359,27 @@ function loadAnalytics() {
   } catch (error) {
 
     console.log(
-      "Could not load analytics.",
+      "Analytics could not be loaded.",
       error
     );
 
   }
 
+
   const fresh =
-    emptyAnalytics();
+    newAnalytics();
+
 
   localStorage.setItem(
     ANALYTICS_KEY,
     JSON.stringify(fresh)
   );
 
+
   return fresh;
+
 }
+
 
 
 function saveAnalytics() {
@@ -303,30 +388,35 @@ function saveAnalytics() {
     ANALYTICS_KEY,
     JSON.stringify(analytics)
   );
+
 }
 
 
+
 /* =========================================
-   TODAY'S USERS
-========================================= */
+   COUNT TODAY'S UNIQUE VISITOR
+   ========================================= */
 
-function registerTodayUser() {
+function registerVisitor() {
 
-  const today =
-    todayKey();
+  const currentDay =
+    today();
 
-  const previousVisit =
+  const lastVisit =
     localStorage.getItem(
       VISITOR_KEY
     );
 
-  if (previousVisit !== today) {
+
+  if (
+    lastVisit !== currentDay
+  ) {
 
     analytics.users += 1;
 
     localStorage.setItem(
       VISITOR_KEY,
-      today
+      currentDay
     );
 
     saveAnalytics();
@@ -336,11 +426,12 @@ function registerTodayUser() {
 }
 
 
-/* =========================================
-   FORMAT MONEY
-========================================= */
 
-function formatMoney(value) {
+/* =========================================
+   MONEY
+   ========================================= */
+
+function money(value) {
 
   return Number(value || 0)
     .toLocaleString("en-KE");
@@ -348,53 +439,59 @@ function formatMoney(value) {
 }
 
 
+
 /* =========================================
-   RENDER MARKETPLACE
-========================================= */
+   RENDER PRODUCTS
+   ========================================= */
 
-function render() {
+function renderProducts() {
 
-  const query =
+  const search =
     searchInput
       ? searchInput.value
           .toLowerCase()
           .trim()
       : "";
 
+
   const filtered =
-    products.filter(product => {
+    products.filter(
+      product => {
 
-      const name =
-        product.name
-          .toLowerCase();
+        return (
 
-      const description =
-        (product.description || "")
-          .toLowerCase();
+          product.name
+            .toLowerCase()
+            .includes(search)
 
-      const category =
-        (product.category || "")
-          .toLowerCase();
+          ||
 
-      return (
-        name.includes(query) ||
-        description.includes(query) ||
-        category.includes(query)
-      );
+          product.description
+            .toLowerCase()
+            .includes(search)
 
-    });
+          ||
+
+          product.category
+            .toLowerCase()
+            .includes(search)
+
+        );
+
+      }
+    );
 
 
-  if (!productsContainer) {
+  if (!productGrid) {
     return;
   }
 
 
   if (filtered.length === 0) {
 
-    productsContainer.innerHTML = `
+    productGrid.innerHTML = `
 
-      <div class="empty-state">
+      <div class="empty-cart">
 
         <h3>
           No products found
@@ -408,134 +505,92 @@ function render() {
 
     `;
 
-    updateStats();
-
     return;
 
   }
 
 
-  productsContainer.innerHTML =
-    filtered.map(product => `
+  productGrid.innerHTML =
+    filtered.map(
+      product => `
 
-      <article class="card">
+        <article class="product-card">
 
-        <img
-          src="${escapeAttribute(product.image)}"
-          alt="${escapeAttribute(product.name)}"
-          onerror="this.src='${fallbackImage()}'"
-        >
+          <img
+            class="product-image"
+            src="${safe(product.image)}"
+            alt="${safe(product.name)}"
+          >
 
-        <div class="card-content">
 
-          <small>
-            ${escapeHTML(product.category || "General")}
-          </small>
+          <div class="product-info">
 
-          <h3>
-            ${escapeHTML(product.name)}
-          </h3>
+            <span class="product-category">
+              ${safe(product.category)}
+            </span>
 
-          <p>
-            ${escapeHTML(product.description || "")}
-          </p>
 
-          <div class="price">
-            KES ${formatMoney(product.price)}
+            <h3>
+              ${safe(product.name)}
+            </h3>
+
+
+            <p class="product-description">
+              ${safe(product.description)}
+            </p>
+
+
+            <div class="product-price">
+              KES ${money(product.price)}
+            </div>
+
+
+            <div class="product-actions">
+
+              <button
+                class="primary-button"
+                onclick="addToCart('${product.id}')"
+              >
+                Add to Cart
+              </button>
+
+
+              <button
+                class="view-button"
+                onclick="viewProduct('${product.id}')"
+              >
+                View
+              </button>
+
+            </div>
+
           </div>
 
-          <button
-            class="primary"
-            onclick="addToCart(${product.id})"
-          >
-            Add to cart
-          </button>
+        </article>
 
-          <button
-            class="secondary"
-            onclick="viewProduct(${product.id})"
-          >
-            View product
-          </button>
-
-        </div>
-
-      </article>
-
-    `).join("");
-
-  updateStats();
-}
+      `
+    ).join("");
 
 
-/* =========================================
-   STATS
-========================================= */
-
-function updateStats() {
-
-  const productCount =
-    document.getElementById(
-      "productCount"
-    );
-
-  const usersCount =
-    document.getElementById(
-      "usersCount"
-    );
-
-  const salesCount =
-    document.getElementById(
-      "salesCount"
-    );
-
-  const ordersCount =
-    document.getElementById(
-      "ordersCount"
-    );
-
-  if (productCount) {
-
-    productCount.textContent =
-      products.length;
-
-  }
-
-  if (usersCount) {
-
-    usersCount.textContent =
-      analytics.users;
-
-  }
-
-  if (salesCount) {
-
-    salesCount.textContent =
-      `KES ${formatMoney(analytics.sales)}`;
-
-  }
-
-  if (ordersCount) {
-
-    ordersCount.textContent =
-      analytics.orders;
-
-  }
+  updateDashboard();
 
 }
+
 
 
 /* =========================================
    ADD TO CART
-========================================= */
+   ========================================= */
 
-function addToCart(productId) {
+function addToCart(id) {
 
   const product =
     products.find(
       item =>
-        Number(item.id) === Number(productId)
+        String(item.id) ===
+        String(id)
     );
+
 
   if (!product) {
     return;
@@ -545,7 +600,8 @@ function addToCart(productId) {
   const existing =
     cart.find(
       item =>
-        Number(item.id) === Number(productId)
+        String(item.id) ===
+        String(id)
     );
 
 
@@ -569,19 +625,21 @@ function addToCart(productId) {
   updateCart();
 
   showToast(
-    `${product.name} added to cart`
+    product.name +
+    " added to cart"
   );
 
 }
 
 
+
 /* =========================================
    CART
-========================================= */
+   ========================================= */
 
 function updateCart() {
 
-  const quantity =
+  const count =
     cart.reduce(
       (total, item) =>
         total + item.quantity,
@@ -599,35 +657,42 @@ function updateCart() {
     );
 
 
-  if (cartCount) {
-
-    cartCount.textContent =
-      quantity;
-
-  }
+  document.getElementById(
+    "cartCount"
+  ).textContent =
+    count;
 
 
-  if (cartTotal) {
-
-    cartTotal.textContent =
-      formatMoney(total);
-
-  }
+  document.getElementById(
+    "cartTotal"
+  ).textContent =
+    money(total);
 
 
-  if (!cartItems) {
+  const container =
+    document.getElementById(
+      "cartItems"
+    );
+
+
+  if (!container) {
     return;
   }
 
 
   if (cart.length === 0) {
 
-    cartItems.innerHTML = `
+    container.innerHTML = `
 
       <div class="empty-cart">
 
+        <h3>
+          Your cart is empty
+        </h3>
+
         <p>
-          Your cart is empty.
+          Add products from the
+          marketplace.
         </p>
 
       </div>
@@ -639,98 +704,95 @@ function updateCart() {
   }
 
 
-  cartItems.innerHTML =
-    cart.map(item => `
+  container.innerHTML =
+    cart.map(
+      item => `
 
-      <div class="cart-item">
+        <div class="cart-item">
 
-        <img
-          src="${escapeAttribute(item.image)}"
-          alt="${escapeAttribute(item.name)}"
-          onerror="this.src='${fallbackImage()}'"
-        >
+          <img
+            class="cart-item-image"
+            src="${safe(item.image)}"
+            alt="${safe(item.name)}"
+          >
 
-        <div>
 
-          <h4>
-            ${escapeHTML(item.name)}
-          </h4>
+          <div>
 
-          <p>
-            KES ${formatMoney(item.price)}
-          </p>
+            <h4>
+              ${safe(item.name)}
+            </h4>
 
-          <div class="cart-controls">
 
-            <button
-              onclick="changeQuantity(${item.id}, -1)"
-            >
-              −
-            </button>
+            <div class="cart-item-price">
+              KES ${money(item.price)}
+            </div>
 
-            <span>
-              ${item.quantity}
-            </span>
 
-            <button
-              onclick="changeQuantity(${item.id}, 1)"
-            >
-              +
-            </button>
+            <div class="quantity-controls">
 
-            <button
-              onclick="removeFromCart(${item.id})"
-            >
-              ×
-            </button>
+              <button
+                onclick="changeQuantity('${item.id}', -1)"
+              >
+                −
+              </button>
+
+
+              <span>
+                ${item.quantity}
+              </span>
+
+
+              <button
+                onclick="changeQuantity('${item.id}', 1)"
+              >
+                +
+              </button>
+
+
+              <button
+                class="remove-button"
+                onclick="removeFromCart('${item.id}')"
+              >
+                Remove
+              </button>
+
+            </div>
 
           </div>
 
         </div>
 
-      </div>
-
-    `).join("");
-
-}
-
-
-function openCart() {
-
-  cartPanel.classList.add(
-    "open"
-  );
+      `
+    ).join("");
 
 }
 
 
-function closeCart() {
 
-  cartPanel.classList.remove(
-    "open"
-  );
-
-}
-
+/* =========================================
+   CHANGE QUANTITY
+   ========================================= */
 
 function changeQuantity(
-  productId,
-  change
+  id,
+  amount
 ) {
 
   const item =
     cart.find(
       product =>
-        Number(product.id) ===
-        Number(productId)
+        String(product.id) ===
+        String(id)
     );
+
 
   if (!item) {
     return;
   }
 
 
-  item.quantity += change;
+  item.quantity += amount;
 
 
   if (item.quantity <= 0) {
@@ -738,8 +800,8 @@ function changeQuantity(
     cart =
       cart.filter(
         product =>
-          Number(product.id) !==
-          Number(productId)
+          String(product.id) !==
+          String(id)
       );
 
   }
@@ -750,23 +812,68 @@ function changeQuantity(
 }
 
 
-function removeFromCart(productId) {
+
+/* =========================================
+   REMOVE
+   ========================================= */
+
+function removeFromCart(id) {
 
   cart =
     cart.filter(
       item =>
-        Number(item.id) !==
-        Number(productId)
+        String(item.id) !==
+        String(id)
     );
+
 
   updateCart();
 
 }
 
 
+
 /* =========================================
-   DEMO CHECKOUT
-========================================= */
+   OPEN CART
+   ========================================= */
+
+function openCart() {
+
+  document
+    .getElementById("cartDrawer")
+    .classList.add("open");
+
+
+  document
+    .getElementById("cartOverlay")
+    .classList.add("show");
+
+}
+
+
+
+/* =========================================
+   CLOSE CART
+   ========================================= */
+
+function closeCart() {
+
+  document
+    .getElementById("cartDrawer")
+    .classList.remove("open");
+
+
+  document
+    .getElementById("cartOverlay")
+    .classList.remove("show");
+
+}
+
+
+
+/* =========================================
+   CHECKOUT
+   ========================================= */
 
 function checkout() {
 
@@ -791,6 +898,10 @@ function checkout() {
     );
 
 
+  /*
+    Record the completed purchase.
+  */
+
   analytics.sales += total;
 
   analytics.amountUsed += total;
@@ -801,390 +912,553 @@ function checkout() {
   saveAnalytics();
 
 
+  /*
+    Empty cart after successful
+    demo checkout.
+  */
+
   cart = [];
+
 
   updateCart();
 
-  updateStats();
+  updateDashboard();
 
   closeCart();
 
 
   showToast(
-    `Demo purchase completed — KES ${formatMoney(total)}`
+    "Demo checkout completed!"
   );
 
 }
+
 
 
 /* =========================================
    IMAGE UPLOAD
-========================================= */
+   ========================================= */
 
-if (imageInput) {
+productImage.addEventListener(
+  "change",
+  function () {
 
-  imageInput.addEventListener(
-    "change",
-    function () {
-
-      const file =
-        this.files &&
-        this.files[0];
-
-      if (!file) {
-
-        selectedImage = "";
-
-        if (imagePreview) {
-
-          imagePreview.style.display =
-            "none";
-
-        }
-
-        return;
-
-      }
+    const file =
+      this.files[0];
 
 
-      if (!file.type.startsWith("image/")) {
+    if (!file) {
 
-        showToast(
-          "Please select an image."
-        );
+      selectedImage = "";
 
-        this.value = "";
+      imagePreviewContainer
+        .classList.remove("show");
 
-        return;
-
-      }
-
-
-      const reader =
-        new FileReader();
-
-
-      reader.onload =
-        function (event) {
-
-          selectedImage =
-            event.target.result;
-
-
-          if (imagePreview) {
-
-            imagePreview.src =
-              selectedImage;
-
-            imagePreview.style.display =
-              "block";
-
-          }
-
-        };
-
-
-      reader.readAsDataURL(file);
+      return;
 
     }
-  );
-
-}
 
 
-/* =========================================
-   CREATE PRODUCT
-========================================= */
+    if (
+      !file.type.startsWith(
+        "image/"
+      )
+    ) {
 
-if (form) {
+      showToast(
+        "Please choose an image."
+      );
 
-  form.addEventListener(
-    "submit",
-    function (event) {
+      this.value = "";
 
-      event.preventDefault();
+      return;
 
-
-      const name =
-        document
-          .getElementById("name")
-          .value
-          .trim();
+    }
 
 
-      const price =
-        Number(
-          document
-            .getElementById("price")
-            .value
-        );
+    const reader =
+      new FileReader();
 
 
-      const description =
-        document
-          .getElementById("desc")
-          .value
-          .trim();
+    reader.onload =
+      function (event) {
+
+        selectedImage =
+          event.target.result;
 
 
-      if (!name) {
-
-        showToast(
-          "Enter a product name."
-        );
-
-        return;
-
-      }
+        imagePreview.src =
+          selectedImage;
 
 
-      if (!price || price <= 0) {
-
-        showToast(
-          "Enter a valid price."
-        );
-
-        return;
-
-      }
-
-
-      const product = {
-
-        id:
-          Date.now(),
-
-        name,
-
-        price,
-
-        description:
-          description ||
-          "A new product published on SmithX.",
-
-        category:
-          "General",
-
-        image:
-          selectedImage ||
-          fallbackImage()
+        imagePreviewContainer
+          .classList.add("show");
 
       };
 
 
-      products.unshift(
-        product
-      );
+    reader.readAsDataURL(file);
 
+  }
+);
 
-      saveProducts();
-
-      render();
-
-
-      form.reset();
-
-      selectedImage = "";
-
-
-      if (imagePreview) {
-
-        imagePreview.src = "";
-
-        imagePreview.style.display =
-          "none";
-
-      }
-
-
-      showToast(
-        "Product published successfully."
-      );
-
-
-      document
-        .getElementById("market")
-        ?.scrollIntoView({
-          behavior: "smooth"
-        });
-
-    }
-  );
-
-}
 
 
 /* =========================================
-   AI SELLER ASSISTANT
-========================================= */
+   CREATE PRODUCT
+   ========================================= */
 
-function ai() {
+productForm.addEventListener(
+  "submit",
+  function (event) {
 
-  const nameInput =
-    document.getElementById(
-      "name"
+    event.preventDefault();
+
+
+    const name =
+      document
+        .getElementById(
+          "productName"
+        )
+        .value
+        .trim();
+
+
+    const price =
+      Number(
+        document
+          .getElementById(
+            "productPrice"
+          )
+          .value
+      );
+
+
+    const description =
+      document
+        .getElementById(
+          "productDescription"
+        )
+        .value
+        .trim();
+
+
+    if (!name) {
+
+      showToast(
+        "Enter a product name."
+      );
+
+      return;
+
+    }
+
+
+    if (
+      !price ||
+      price <= 0
+    ) {
+
+      showToast(
+        "Enter a valid price."
+      );
+
+      return;
+
+    }
+
+
+    if (!description) {
+
+      showToast(
+        "Enter a product description."
+      );
+
+      return;
+
+    }
+
+
+    /*
+      If the seller did not choose
+      an image, use a SmithX image
+      instead of leaving the card blank.
+    */
+
+    const image =
+      selectedImage ||
+      createProductPlaceholder(name);
+
+
+    const newProduct = {
+
+      id:
+        "custom-" +
+        Date.now(),
+
+      name,
+
+      price,
+
+      description,
+
+      category:
+        "Seller Product",
+
+      image
+
+    };
+
+
+    /*
+      Add the new product to the
+      marketplace.
+    */
+
+    products.push(
+      newProduct
     );
 
-  const descInput =
-    document.getElementById(
-      "desc"
+
+    saveProducts();
+
+
+    renderProducts();
+
+
+    updateDashboard();
+
+
+    /*
+      Clear the form.
+    */
+
+    productForm.reset();
+
+
+    selectedImage = "";
+
+
+    imagePreview.src = "";
+
+    imagePreviewContainer
+      .classList.remove("show");
+
+
+    showToast(
+      "Product published successfully!"
     );
 
-  if (!nameInput || !descInput) {
-    return;
+
+    /*
+      Take the seller back toward
+      the marketplace so they can
+      see the new product.
+    */
+
+    document
+      .getElementById("market")
+      .scrollIntoView({
+        behavior: "smooth"
+      });
+
   }
+);
 
+
+
+/* =========================================
+   AI DESCRIPTION
+   ========================================= */
+
+function generateDescription() {
 
   const name =
-    nameInput.value.trim();
+    document
+      .getElementById(
+        "productName"
+      )
+      .value
+      .trim();
+
+
+  const description =
+    document.getElementById(
+      "productDescription"
+    );
 
 
   if (!name) {
 
     showToast(
-      "Enter a product name first."
+      "Enter the product name first."
     );
-
-    nameInput.focus();
 
     return;
 
   }
 
 
-  descInput.value =
-    `${name} combines modern design, quality and everyday practicality to give customers a reliable product for their needs. Shop with confidence through SmithX.`;
+  description.value =
+    `${name} combines quality, modern design and everyday practicality to give customers a reliable product for their needs. Discover and shop this product through SmithX.`;
 
 
   showToast(
-    "AI product description generated."
+    "AI description generated."
   );
 
 }
 
 
-/* =========================================
-   PRODUCT DETAILS
-========================================= */
 
-function viewProduct(productId) {
+/* =========================================
+   PRODUCT MODAL
+   ========================================= */
+
+function viewProduct(id) {
 
   const product =
     products.find(
       item =>
-        Number(item.id) ===
-        Number(productId)
+        String(item.id) ===
+        String(id)
     );
+
 
   if (!product) {
     return;
   }
 
 
-  const existing =
-    document.querySelector(
-      ".product-modal"
+  document.getElementById(
+    "modalImage"
+  ).src =
+    product.image;
+
+
+  document.getElementById(
+    "modalCategory"
+  ).textContent =
+    product.category;
+
+
+  document.getElementById(
+    "modalName"
+  ).textContent =
+    product.name;
+
+
+  document.getElementById(
+    "modalPrice"
+  ).textContent =
+    "KES " +
+    money(product.price);
+
+
+  document.getElementById(
+    "modalDescription"
+  ).textContent =
+    product.description;
+
+
+  document.getElementById(
+    "modalAddButton"
+  ).onclick =
+    function () {
+
+      addToCart(product.id);
+
+      closeProductModal();
+
+    };
+
+
+  document
+    .getElementById(
+      "productModal"
+    )
+    .classList.add("show");
+
+}
+
+
+
+/* =========================================
+   CLOSE PRODUCT MODAL
+   ========================================= */
+
+function closeProductModal() {
+
+  document
+    .getElementById(
+      "productModal"
+    )
+    .classList.remove("show");
+
+}
+
+
+
+/* =========================================
+   DASHBOARD
+   ========================================= */
+
+function updateDashboard() {
+
+  /*
+    Product count
+  */
+
+  document.getElementById(
+    "heroProductCount"
+  ).textContent =
+    products.length;
+
+
+  document.getElementById(
+    "dashboardProducts"
+  ).textContent =
+    products.length;
+
+
+  document.getElementById(
+    "activityProducts"
+  ).textContent =
+    products.length;
+
+
+  /*
+    Today's users
+  */
+
+  document.getElementById(
+    "heroUsers"
+  ).textContent =
+    analytics.users;
+
+
+  document.getElementById(
+    "dashboardUsers"
+  ).textContent =
+    analytics.users;
+
+
+  document.getElementById(
+    "activityUsers"
+  ).textContent =
+    analytics.users;
+
+
+  /*
+    Sales
+  */
+
+  const sales =
+    "KES " +
+    money(analytics.sales);
+
+
+  document.getElementById(
+    "heroSales"
+  ).textContent =
+    sales;
+
+
+  document.getElementById(
+    "dashboardSales"
+  ).textContent =
+    sales;
+
+
+  /*
+    Orders
+  */
+
+  document.getElementById(
+    "dashboardOrders"
+  ).textContent =
+    analytics.orders;
+
+
+  document.getElementById(
+    "activityPurchases"
+  ).textContent =
+    analytics.orders;
+
+
+  /*
+    Total amount used
+  */
+
+  document.getElementById(
+    "activityAmount"
+  ).textContent =
+    "KES " +
+    money(analytics.amountUsed);
+
+}
+
+
+
+/* =========================================
+   RESET ANALYTICS
+   ========================================= */
+
+function resetAnalytics() {
+
+  const answer =
+    confirm(
+      "Reset today's SmithX demo analytics?"
     );
 
 
-  if (existing) {
-    existing.remove();
+  if (!answer) {
+    return;
   }
 
 
-  const modal =
-    document.createElement(
-      "div"
-    );
+  analytics =
+    newAnalytics();
 
 
-  modal.className =
-    "product-modal open";
+  saveAnalytics();
 
 
-  modal.innerHTML = `
+  /*
+    Remove today's visitor record
+    so the next fresh visit can be
+    counted again.
+  */
 
-    <div class="product-modal-box">
-
-      <button
-        class="close"
-        onclick="this.closest('.product-modal').remove()"
-      >
-        ×
-      </button>
-
-      <img
-        src="${escapeAttribute(product.image)}"
-        alt="${escapeAttribute(product.name)}"
-        onerror="this.src='${fallbackImage()}'"
-      >
-
-      <small>
-        ${escapeHTML(product.category || "General")}
-      </small>
-
-      <h2>
-        ${escapeHTML(product.name)}
-      </h2>
-
-      <div class="price">
-        KES ${formatMoney(product.price)}
-      </div>
-
-      <p>
-        ${escapeHTML(product.description || "")}
-      </p>
-
-      <br>
-
-      <button
-        class="primary wide"
-        onclick="
-          addToCart(${product.id});
-          this.closest('.product-modal').remove();
-        "
-      >
-        Add to cart
-      </button>
-
-    </div>
-
-  `;
-
-
-  modal.addEventListener(
-    "click",
-    function (event) {
-
-      if (event.target === modal) {
-
-        modal.remove();
-
-      }
-
-    }
+  localStorage.removeItem(
+    VISITOR_KEY
   );
 
 
-  document.body.appendChild(
-    modal
+  updateDashboard();
+
+
+  showToast(
+    "Demo analytics reset."
   );
 
 }
 
 
+
 /* =========================================
    TOAST
-========================================= */
+   ========================================= */
 
 let toastTimer;
 
 
 function showToast(message) {
 
-  if (!toast) {
-    return;
-  }
+  const toast =
+    document.getElementById(
+      "toast"
+    );
 
 
   toast.textContent =
@@ -1203,608 +1477,163 @@ function showToast(message) {
 
   toastTimer =
     setTimeout(
-      () => {
+      function () {
 
         toast.classList.remove(
           "show"
         );
 
       },
-      2800
+      2500
     );
 
 }
 
 
-/* =========================================
-   RESET DEMO ANALYTICS
-========================================= */
-
-function resetDemoAnalytics() {
-
-  const confirmed =
-    confirm(
-      "Reset today's demo analytics?"
-    );
-
-
-  if (!confirmed) {
-    return;
-  }
-
-
-  analytics =
-    emptyAnalytics();
-
-
-  saveAnalytics();
-
-
-  localStorage.removeItem(
-    VISITOR_KEY
-  );
-
-
-  updateStats();
-
-
-  showToast(
-    "Demo analytics reset."
-  );
-
-}
-
 
 /* =========================================
-   FALLBACK IMAGE
-========================================= */
+   PRODUCT IMAGE FALLBACK
+   ========================================= */
 
-function fallbackImage() {
+function createProductPlaceholder(
+  name
+) {
 
-  return `
-    data:image/svg+xml;charset=UTF-8,
-    ${encodeURIComponent(`
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="800"
+  const svg = `
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="900"
+      height="600"
+      viewBox="0 0 900 600"
+    >
+
+      <rect
+        width="900"
         height="600"
-        viewBox="0 0 800 600"
-      >
-        <rect
-          width="800"
-          height="600"
-          fill="#eef3f9"
-        />
+        fill="#edf3fb"
+      />
 
-        <text
-          x="400"
-          y="300"
-          text-anchor="middle"
-          dominant-baseline="middle"
-          font-family="Arial"
-          font-size="42"
-          font-weight="700"
-          fill="#1769ff"
-        >
-          SMITHX
-        </text>
-      </svg>
-    `)}
+      <text
+        x="450"
+        y="285"
+        text-anchor="middle"
+        font-family="Arial"
+        font-size="44"
+        font-weight="bold"
+        fill="#1769ff"
+      >
+        SMITHX
+      </text>
+
+      <text
+        x="450"
+        y="340"
+        text-anchor="middle"
+        font-family="Arial"
+        font-size="22"
+        fill="#52627a"
+      >
+        ${name}
+      </text>
+
+    </svg>
+
   `;
 
+
+  return (
+    "data:image/svg+xml;charset=UTF-8," +
+    encodeURIComponent(svg)
+  );
+
 }
 
 
-/* =========================================
-   SECURITY HELPERS
-========================================= */
 
-function escapeHTML(value) {
+/* =========================================
+   SECURITY
+   ========================================= */
+
+function safe(value) {
 
   return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-}
-
-
-function escapeAttribute(value) {
-
-  return escapeHTML(value);
-
-}
-
-
-/* =========================================
-   ADD DASHBOARD
-========================================= */
-
-function createDashboard() {
-
-  const existing =
-    document.getElementById(
-      "sellerDashboard"
-    );
-
-  if (existing) {
-    updateDashboard();
-    return;
-  }
-
-
-  const dashboard =
-    document.createElement(
-      "section"
-    );
-
-
-  dashboard.id =
-    "sellerDashboard";
-
-
-  dashboard.innerHTML = `
-
-    <div class="dashboard-header">
-
-      <small>
-        SELLER DASHBOARD
-      </small>
-
-      <h2>
-        Store Analytics
-      </h2>
-
-    </div>
-
-
-    <div class="dashboard-grid">
-
-      <div class="dashboard-card">
-
-        <strong id="productCount">
-          ${products.length}
-        </strong>
-
-        <span>
-          Products
-        </span>
-
-        <small>
-          Products in marketplace
-        </small>
-
-      </div>
-
-
-      <div class="dashboard-card">
-
-        <strong id="usersCount">
-          ${analytics.users}
-        </strong>
-
-        <span>
-          Today's Users
-        </span>
-
-        <small>
-          Demo users today
-        </small>
-
-      </div>
-
-
-      <div class="dashboard-card">
-
-        <strong id="salesCount">
-          KES ${formatMoney(analytics.sales)}
-        </strong>
-
-        <span>
-          Demo Sales
-        </span>
-
-        <small>
-          Total completed purchases
-        </small>
-
-      </div>
-
-
-      <div class="dashboard-card">
-
-        <strong id="ordersCount">
-          ${analytics.orders}
-        </strong>
-
-        <span>
-          Orders
-        </span>
-
-        <small>
-          Completed demo orders
-        </small>
-
-      </div>
-
-    </div>
-
-
-    <div class="activity">
-
-      <h3>
-        Store Activity
-      </h3>
-
-
-      <div class="activity-row">
-
-        <span>
-          Marketplace products
-        </span>
-
-        <strong>
-          ${products.length}
-        </strong>
-
-      </div>
-
-
-      <div class="activity-row">
-
-        <span>
-          People who visited today
-        </span>
-
-        <strong id="activityUsers">
-          ${analytics.users}
-        </strong>
-
-      </div>
-
-
-      <div class="activity-row">
-
-        <span>
-          Total amount used
-        </span>
-
-        <strong id="activityAmount">
-          KES ${formatMoney(analytics.amountUsed)}
-        </strong>
-
-      </div>
-
-
-      <div class="activity-row">
-
-        <span>
-          Completed purchases
-        </span>
-
-        <strong id="activityOrders">
-          ${analytics.orders}
-        </strong>
-
-      </div>
-
-
-      <button
-        class="reset-button"
-        onclick="resetDemoAnalytics()"
-      >
-        Reset Demo Analytics
-      </button>
-
-    </div>
-
-  `;
-
-
-  const seller =
-    document.getElementById(
-      "seller"
-    );
-
-
-  if (seller) {
-
-    seller.insertAdjacentElement(
-      "afterend",
-      dashboard
-    );
-
-  }
-
-}
-
-
-/* =========================================
-   UPDATE DASHBOARD
-========================================= */
-
-function updateDashboard() {
-
-  const productCount =
-    document.getElementById(
-      "productCount"
-    );
-
-  const usersCount =
-    document.getElementById(
-      "usersCount"
-    );
-
-  const salesCount =
-    document.getElementById(
-      "salesCount"
-    );
-
-  const ordersCount =
-    document.getElementById(
-      "ordersCount"
-    );
-
-  const activityUsers =
-    document.getElementById(
-      "activityUsers"
-    );
-
-  const activityAmount =
-    document.getElementById(
-      "activityAmount"
-    );
-
-  const activityOrders =
-    document.getElementById(
-      "activityOrders"
-    );
-
-
-  if (productCount) {
-
-    productCount.textContent =
-      products.length;
-
-  }
-
-
-  if (usersCount) {
-
-    usersCount.textContent =
-      analytics.users;
-
-  }
-
-
-  if (salesCount) {
-
-    salesCount.textContent =
-      `KES ${formatMoney(analytics.sales)}`;
-
-  }
-
-
-  if (ordersCount) {
-
-    ordersCount.textContent =
-      analytics.orders;
-
-  }
-
-
-  if (activityUsers) {
-
-    activityUsers.textContent =
-      analytics.users;
-
-  }
-
-
-  if (activityAmount) {
-
-    activityAmount.textContent =
-      `KES ${formatMoney(analytics.amountUsed)}`;
-
-  }
-
-
-  if (activityOrders) {
-
-    activityOrders.textContent =
-      analytics.orders;
-
-  }
-
-}
-
-
-/* =========================================
-   DASHBOARD STYLES
-========================================= */
-
-function addDashboardStyles() {
-
-  if (
-    document.getElementById(
-      "smithxDashboardStyles"
+    .replace(
+      /&/g,
+      "&amp;"
     )
-  ) {
-    return;
-  }
-
-
-  const style =
-    document.createElement(
-      "style"
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
     );
-
-
-  style.id =
-    "smithxDashboardStyles";
-
-
-  style.textContent = `
-
-    #sellerDashboard {
-      background: #f7f9fc;
-    }
-
-    .dashboard-header {
-      margin-bottom: 30px;
-    }
-
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .dashboard-card {
-      background: #ffffff;
-      border: 1px solid #e3e8ef;
-      border-radius: 18px;
-      padding: 25px;
-    }
-
-    .dashboard-card strong {
-      display: block;
-      color: #1769ff;
-      font-size: 28px;
-      margin-bottom: 7px;
-    }
-
-    .dashboard-card span {
-      display: block;
-      font-weight: 800;
-      font-size: 16px;
-      margin-bottom: 5px;
-    }
-
-    .dashboard-card small {
-      color: #64748b;
-      letter-spacing: 0;
-      font-weight: 500;
-    }
-
-    .activity {
-      margin-top: 25px;
-      padding: 25px;
-      background: #ffffff;
-      border: 1px solid #e3e8ef;
-      border-radius: 18px;
-    }
-
-    .activity h3 {
-      margin-bottom: 20px;
-    }
-
-    .activity-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 16px 0;
-      border-bottom: 1px solid #edf0f5;
-    }
-
-    .activity-row strong {
-      color: #1769ff;
-    }
-
-    .reset-button {
-      margin-top: 20px;
-      padding: 11px 16px;
-      border: 1px solid #dce2eb;
-      border-radius: 9px;
-      background: white;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .reset-button:hover {
-      border-color: #1769ff;
-      color: #1769ff;
-    }
-
-    .empty-state,
-    .empty-cart {
-      padding: 40px;
-      text-align: center;
-      background: white;
-      border-radius: 15px;
-      border: 1px solid #e4e9f1;
-    }
-
-    .card .secondary {
-      width: 100%;
-      margin: 10px 0 0;
-    }
-
-    @media (max-width: 900px) {
-      .dashboard-grid {
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 600px) {
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-  `;
-
-
-  document.head.appendChild(
-    style
-  );
 
 }
 
 
+
 /* =========================================
-   START SMITHX
-========================================= */
+   SEARCH
+   ========================================= */
 
-function startSmithX() {
+searchInput.addEventListener(
+  "input",
+  renderProducts
+);
 
-  addDashboardStyles();
 
-  createDashboard();
 
-  registerTodayUser();
+/* =========================================
+   INITIALIZE
+   ========================================= */
 
-  render();
+function initializeSmithX() {
+
+  /*
+    Count this browser as today's
+    visitor.
+  */
+
+  registerVisitor();
+
+
+  /*
+    Render the six products.
+  */
+
+  renderProducts();
+
+
+  /*
+    Render cart.
+  */
 
   updateCart();
 
-  updateStats();
+
+  /*
+    Render dashboard.
+  */
 
   updateDashboard();
 
 }
 
 
+
 /* =========================================
    START
-========================================= */
+   ========================================= */
 
-if (
-  document.readyState ===
-  "loading"
-) {
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    startSmithX
-  );
-
-} else {
-
-  startSmithX();
-
-}
+initializeSmithX();
