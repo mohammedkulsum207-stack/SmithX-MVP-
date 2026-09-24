@@ -1,958 +1,322 @@
-/* =========================
-   SMITHX PRODUCTS
-========================= */
-
-const defaultProducts = [
-  {
-    id: 1,
-    name: "Samsung Galaxy S26 Ultra",
-    price: 169999,
-    category: "Electronics",
-    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=800&q=80",
-    desc: "A premium flagship smartphone built for powerful performance, photography and everyday productivity.",
-    tagline: "Ultra performance. Built for more."
-  },
-
-  {
-    id: 2,
-    name: "Smart Wireless Headphones",
-    price: 4500,
-    category: "Electronics",
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
-    desc: "Immersive sound with a comfortable wireless design.",
-    tagline: "Your sound. Anywhere."
-  },
-
-  {
-    id: 3,
-    name: "Minimal Desk Lamp",
-    price: 2800,
-    category: "Home",
-    image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
-    desc: "A modern lamp designed for focused workspaces.",
-    tagline: "Light up your best ideas."
-  },
+<!doctype html>
 
-  {
-    id: 4,
-    name: "Everyday Travel Backpack",
-    price: 3500,
-    category: "Fashion",
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80",
-    desc: "A durable everyday backpack for work, school and travel.",
-    tagline: "Built for wherever you're going."
-  },
+<html lang="en">  <head>  
+  <meta charset="utf-8">  <meta
+name="viewport"
+content="width=device-width, initial-scale=1"
 
-  {
-    id: 5,
-    name: "Smart Watch",
-    price: 6500,
-    category: "Electronics",
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80",
-    desc: "A stylish smart watch designed to keep you connected throughout the day.",
-    tagline: "Stay connected. Stay moving."
-  },
+> 
 
-  {
-    id: 6,
-    name: "Premium Sneakers",
-    price: 7200,
-    category: "Fashion",
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
-    desc: "Comfortable everyday sneakers combining modern style and performance.",
-    tagline: "Move with confidence."
-  }
-];
+  <title>SmithX — AI-Powered Commerce</title>    <link  
+    rel="stylesheet"  
+    href="styles.css"  
+  >  
+</head>  <body>    <!-- =========================  
+       HEADER  
+  ========================== -->    <header>  <div class="logo">  
+  Smith<span>X</span>  
+</div>  
 
 
-/* =========================
-   LOAD SAVED PRODUCTS
-========================= */
+<nav>  
 
-let savedProducts = [];
+  <a href="#market">  
+    Marketplace  
+  </a>  
 
-try {
+  <a href="#seller">  
+    Seller  
+  </a>  
 
-  savedProducts =
-    JSON.parse(
-      localStorage.getItem("smithxProducts")
-    ) || [];
+  <a href="#about">  
+    About  
+  </a>  
 
-} catch (error) {
+</nav>  
 
-  savedProducts = [];
 
-}
+<button onclick="openCart()">  
+  Cart <b id="count">0</b>  
+</button>
 
+  </header>    <!-- =========================  
+       HERO  
+  ========================== -->    <section class="hero">  <div>  
 
-/* Remove duplicate default products */
+  <small>  
+    THE FUTURE OF COMMERCE  
+  </small>  
 
-const savedIds =
-  new Set(
-    savedProducts.map(
-      product => product.id
-    )
-  );
 
+  <h1>  
+    Build. Sell.  
+    <span>Grow.</span>  
+  </h1>  
 
-let products = [
 
-  ...defaultProducts.filter(
-    product => !savedIds.has(product.id)
-  ),
+  <p>  
+    SmithX is an AI-powered commerce  
+    platform designed to help anyone  
+    create a store, discover products  
+    and grow a business.  
+  </p>  
 
-  ...savedProducts
 
-];
+  <a  
+    class="primary"  
+    href="#market"  
+  >  
+    Explore products  
+  </a>  
 
 
-/* =========================
-   CART / ORDERS
-========================= */
+  <a  
+    class="secondary"  
+    href="#seller"  
+  >  
+    Start selling  
+  </a>  
 
-let cart = [];
+</div>  
 
-let orders = [];
 
-let revenue = 0;
+<div class="heroCard">  
 
-let selectedImage = "";
+  <strong>  
+    SX  
+  </strong>  
 
+  <p>  
+    AI-powered commerce  
+  </p>  
 
-/* =========================
-   SAVE PRODUCTS
-========================= */
+  <small>  
+    One platform. Every seller.  
+  </small>  
 
-function saveProducts() {
+</div>
 
-  try {
+  </section>    <!-- =========================  
+       MARKETPLACE  
+  ========================== -->    <section id="market">  <div class="heading">  
 
-    localStorage.setItem(
-      "smithxProducts",
-      JSON.stringify(products)
-    );
+  <div>  
 
-  } catch (error) {
+    <small>  
+      MARKETPLACE  
+    </small>  
 
-    console.log(
-      "Could not save products:",
-      error
-    );
 
-  }
+    <h2>  
+      Featured products  
+    </h2>  
 
-}
+  </div>  
 
 
-/* =========================
-   MONEY
-========================= */
+  <input  
+    id="search"  
+    type="search"  
+    placeholder="Search products"  
+    oninput="render()"  
+  >  
 
-function money(amount) {
+</div>  
 
-  return Number(amount)
-    .toLocaleString("en-KE");
 
-}
+<div  
+  id="products"  
+  class="grid"  
+></div>
 
+  </section>    <!-- =========================  
+       SELLER  
+  ========================== -->    <section  
+    id="seller"  
+    class="seller"  
+  >  <!-- SELLER INTRO -->  
 
-/* =========================
-   TOAST
-========================= */
+<div>  
 
-function toast(message) {
+  <small>  
+    FOR SELLERS  
+  </small>  
 
-  const box =
-    document.getElementById("toast");
 
-  if (!box) return;
+  <h2>  
+    Launch a product in minutes.  
+  </h2>  
 
-  box.textContent =
-    message;
 
-  box.style.display =
-    "block";
+  <p>  
+    SmithX combines store creation  
+    with intelligent assistance so  
+    sellers can focus on customers.  
+  </p>  
 
-  setTimeout(() => {
+</div>  
 
-    box.style.display =
-      "none";
 
-  }, 2200);
 
-}
+<!-- PRODUCT FORM -->  
 
+<form id="form">  
 
-/* =========================
-   IMAGE UPLOAD
-========================= */
 
-const imageInput =
-  document.getElementById("image");
+  <input  
+    id="name"  
+    type="text"  
+    placeholder="Product name"  
+    required  
+  >  
 
-const imagePreview =
-  document.getElementById("imagePreview");
 
+  <input  
+    id="price"  
+    type="number"  
+    min="1"  
+    placeholder="Price (KES)"  
+    required  
+  >  
 
-if (imageInput) {
 
-  imageInput.addEventListener(
-    "change",
-    function () {
+  <textarea  
+    id="desc"  
+    placeholder="Product description"  
+  ></textarea>  
 
-      const file =
-        this.files[0];
 
-      if (!file) {
 
-        selectedImage = "";
+  <!-- PRODUCT IMAGE -->  
 
-        if (imagePreview) {
+  <label  
+    class="image-label"  
+    for="image"  
+  >  
+    Product image  
+  </label>  
 
-          imagePreview.style.display =
-            "none";
 
-        }
+  <input  
+    id="image"  
+    type="file"  
+    accept="image/*"  
+  >  
 
-        return;
 
-      }
+  <!-- IMAGE PREVIEW -->  
 
+  <img  
+    id="imagePreview"  
+    class="upload-preview"  
+    alt="Product image preview"  
+  >  
 
-      if (
-        !file.type.startsWith("image/")
-      ) {
 
-        toast(
-          "Please select an image"
-        );
 
-        this.value = "";
+  <!-- ADD PRODUCT -->  
 
-        return;
+  <button  
+    class="primary"  
+    type="submit"  
+  >  
+    Add product  
+  </button>  
 
-      }
+</form>  
 
 
-      const reader =
-        new FileReader();
 
+<!-- AI ASSISTANT -->  
 
-      reader.onload =
-        function (event) {
+<div class="ai">  
 
-          selectedImage =
-            event.target.result;
+  <b>  
+    ✦ SmithX AI Assistant  
+  </b>  
 
 
-          if (imagePreview) {
+  <p>  
+    Generate a product description  
+    from the product name.  
+  </p>  
 
-            imagePreview.src =
-              selectedImage;
 
-            imagePreview.style.display =
-              "block";
+  <button  
+    type="button"  
+    class="secondary"  
+    onclick="ai()"  
+  >  
+    Generate description  
+  </button>  
 
-          }
+</div>
 
-        };
+  </section>    <!-- =========================  
+       ABOUT  
+  ========================== -->    <section id="about">  <small>  
+  ABOUT SMITHX  
+</small>  
 
 
-      reader.readAsDataURL(file);
+<h2>  
+  Commerce should be accessible  
+  to everyone.  
+</h2>  
 
-    }
-  );
 
-}
+<p>  
+  SmithX is being built as a global  
+  commerce platform combining  
+  e-commerce with intelligent  
+  automation. This MVP demonstrates  
+  the core buying and selling  
+  experience before advanced  
+  capabilities such as automated  
+  marketing, crypto payments and  
+  live auctions are introduced.  
+</p>
 
+  </section>    <!-- =========================  
+       CART  
+  ========================== -->    <aside id="cart">  <button  
+  class="close"  
+  onclick="closeCart()"  
+  aria-label="Close cart"  
+>  
+  ×  
+</button>  
 
-/* =========================
-   MARKETPLACE
-========================= */
 
-function render() {
+<h2>  
+  Your cart  
+</h2>  
 
-  const container =
-    document.getElementById("products");
 
-  const search =
-    document.getElementById("search");
+<div id="items"></div>  
 
 
-  if (!container) return;
+<h3>  
 
+  Total:  
+  KES  
 
-  const query =
-    (search?.value || "")
-      .toLowerCase()
-      .trim();
+  <span id="total">  
+    0  
+  </span>  
 
+</h3>  
 
-  const filtered =
-    products.filter(product =>
 
-      product.name
-        .toLowerCase()
-        .includes(query)
+<button  
+  class="primary wide"  
+  onclick="checkout()"  
+>  
+  Demo checkout  
+</button>
 
-    );
-
-
-  if (filtered.length === 0) {
-
-    container.innerHTML = `
-
-      <div style="
-        grid-column:1/-1;
-        padding:40px;
-        text-align:center
-      ">
-
-        <h3>
-          No products found
-        </h3>
-
-        <p class="muted">
-          Try another search.
-        </p>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  container.innerHTML =
-
-    filtered.map(product => `
-
-      <article class="card">
-
-        <img
-          src="${product.image}"
-          alt="${product.name}"
-          class="product-image"
-          onerror="this.style.display='none'"
-        >
-
-        <div class="card-body">
-
-          <small style="
-            color:#2563eb;
-            font-weight:700;
-          ">
-            ${product.category || "General"}
-          </small>
-
-          <h3>
-            ${product.name}
-          </h3>
-
-          <p class="muted">
-            ${product.desc}
-          </p>
-
-          <div class="price">
-            KES ${money(product.price)}
-          </div>
-
-          <button
-            class="secondary"
-            onclick="openProduct(${product.id})"
-          >
-            View product
-          </button>
-
-          <button
-            class="primary"
-            onclick="addToCart(${product.id})"
-          >
-            Add to cart
-          </button>
-
-        </div>
-
-      </article>
-
-    `).join("");
-
-}
-
-
-/* =========================
-   PRODUCT DETAILS
-========================= */
-
-function openProduct(id) {
-
-  const product =
-    products.find(
-      p => p.id === id
-    );
-
-
-  if (!product) return;
-
-
-  let modal =
-    document.getElementById(
-      "productModal"
-    );
-
-
-  if (!modal) {
-
-    modal =
-      document.createElement("div");
-
-    modal.id =
-      "productModal";
-
-    document.body.appendChild(
-      modal
-    );
-
-  }
-
-
-  modal.innerHTML = `
-
-    <div
-      class="product-modal-backdrop"
-      onclick="closeProduct()"
-    ></div>
-
-    <div class="product-modal">
-
-      <button
-        class="product-modal-close"
-        onclick="closeProduct()"
-      >
-        ×
-      </button>
-
-      <img
-        src="${product.image}"
-        alt="${product.name}"
-      >
-
-      <div class="product-modal-content">
-
-        <small>
-          SMITHX MARKETPLACE
-        </small>
-
-        <h2>
-          ${product.name}
-        </h2>
-
-        <p class="product-tagline">
-          ${
-            product.tagline ||
-            "Quality made simple."
-          }
-        </p>
-
-        <p class="muted">
-          ${product.desc}
-        </p>
-
-        <div class="product-modal-price">
-          KES ${money(product.price)}
-        </div>
-
-        <button
-          class="primary"
-          onclick="
-            addToCart(${product.id});
-            closeProduct();
-          "
-        >
-          Add to cart
-        </button>
-
-      </div>
-
-    </div>
-
-  `;
-
-
-  modal.classList.add("show");
-
-}
-
-
-function closeProduct() {
-
-  const modal =
-    document.getElementById(
-      "productModal"
-    );
-
-
-  if (modal) {
-
-    modal.classList.remove(
-      "show"
-    );
-
-  }
-
-}
-
-
-/* =========================
-   CART
-========================= */
-
-function addToCart(id) {
-
-  const product =
-    products.find(
-      p => p.id === id
-    );
-
-
-  if (!product) return;
-
-
-  const existing =
-    cart.find(
-      item => item.id === id
-    );
-
-
-  if (existing) {
-
-    existing.quantity++;
-
-  } else {
-
-    cart.push({
-
-      ...product,
-
-      quantity: 1
-
-    });
-
-  }
-
-
-  updateCount();
-
-  renderCart();
-
-  toast(
-    "Added to cart"
-  );
-
-}
-
-
-function updateCount() {
-
-  const count =
-    document.getElementById(
-      "count"
-    );
-
-
-  if (!count) return;
-
-
-  const quantity =
-    cart.reduce(
-      (sum, item) =>
-        sum + item.quantity,
-      0
-    );
-
-
-  count.textContent =
-    quantity;
-
-}
-
-
-function openCart() {
-
-  document
-    .getElementById("cart")
-    ?.classList.add("open");
-
-  renderCart();
-
-}
-
-
-function closeCart() {
-
-  document
-    .getElementById("cart")
-    ?.classList.remove("open");
-
-}
-
-
-function increase(id) {
-
-  const item =
-    cart.find(
-      p => p.id === id
-    );
-
-
-  if (item) {
-
-    item.quantity++;
-
-  }
-
-
-  updateCount();
-
-  renderCart();
-
-}
-
-
-function decrease(id) {
-
-  const item =
-    cart.find(
-      p => p.id === id
-    );
-
-
-  if (!item) return;
-
-
-  item.quantity--;
-
-
-  if (item.quantity <= 0) {
-
-    cart =
-      cart.filter(
-        p => p.id !== id
-      );
-
-  }
-
-
-  updateCount();
-
-  renderCart();
-
-}
-
-
-function removeItem(id) {
-
-  cart =
-    cart.filter(
-      p => p.id !== id
-    );
-
-
-  updateCount();
-
-  renderCart();
-
-  toast(
-    "Product removed"
-  );
-
-}
-
-
-function renderCart() {
-
-  const items =
-    document.getElementById(
-      "items"
-    );
-
-  const totalElement =
-    document.getElementById(
-      "total"
-    );
-
-
-  if (
-    !items ||
-    !totalElement
-  ) return;
-
-
-  if (cart.length === 0) {
-
-    items.innerHTML =
-      "<p class='muted'>Your cart is empty.</p>";
-
-    totalElement.textContent =
-      "0";
-
-    return;
-
-  }
-
-
-  items.innerHTML =
-
-    cart.map(item => `
-
-      <div class="cart-item">
-
-        <div>
-
-          <strong>
-            ${item.name}
-          </strong>
-
-          <p class="muted">
-            KES ${money(item.price)} each
-          </p>
-
-          <div>
-
-            <button
-              onclick="decrease(${item.id})"
-            >
-              −
-            </button>
-
-            <strong style="margin:0 10px">
-              ${item.quantity}
-            </strong>
-
-            <button
-              onclick="increase(${item.id})"
-            >
-              +
-            </button>
-
-            <button
-              onclick="removeItem(${item.id})"
-              style="margin-left:10px"
-            >
-              Remove
-            </button>
-
-          </div>
-
-        </div>
-
-        <strong>
-          KES ${
-            money(
-              item.price *
-              item.quantity
-            )
-          }
-        </strong>
-
-      </div>
-
-    `).join("");
-
-
-  const total =
-    cart.reduce(
-      (sum, item) =>
-        sum +
-        item.price *
-        item.quantity,
-      0
-    );
-
-
-  totalElement.textContent =
-    money(total);
-
-}
-
-
-/* =========================
-   CHECKOUT
-========================= */
-
-function checkout() {
-
-  if (cart.length === 0) {
-
-    toast(
-      "Your cart is empty"
-    );
-
-    return;
-
-  }
-
-
-  const total =
-    cart.reduce(
-      (sum, item) =>
-        sum +
-        item.price *
-        item.quantity,
-      0
-    );
-
-
-  const quantity =
-    cart.reduce(
-      (sum, item) =>
-        sum + item.quantity,
-      0
-    );
-
-
-  orders.push({
-
-    total,
-
-    quantity,
-
-    date:
-      new Date()
-        .toLocaleDateString()
-
-  });
-
-
-  revenue += total;
-
-
-  updateDashboard();
-
-
-  toast(
-    `Demo checkout — KES ${money(total)}`
-  );
-
-
-  cart = [];
-
-
-  updateCount();
-
-  renderCart();
-
-}
-
-
-/* =========================
-   AI SELLER STUDIO
-========================= */
-
-function ai() {
-
-  const name =
-    document
-      .getElementById("name")
-      ?.value
-      .trim();
-
-
-  const price =
-    Number(
-      document
-        .getElementById("price")
-        ?.value || 0
-    );
-
-
-  const desc =
-    document.getElementById("desc");
-
-  const aiBox =
-    document.getElementById(
-      "aiResult"
-    );
-
-
-  if (!name) {
-
-    toast(
-      "Enter a product name first"
-    );
-
-    return;
-
-  }
-
-
-  /* =========================
-     PRODUCT ANALYSIS
-  ========================== */
-
-  const suggestedPrice =
-    price > 0
-      ? Math.round(
-          price * 1.05 / 100
-        ) * 100
-      : 2500;
-
-
-  const tagline =
-    `${name} — quality made simple.`;
-
-
-  const description =
-    `Discover ${name}, designed to combine practical everyday value with a clean, modern experience. A smart choice for customers looking for quality, convenience and reliability.`;
-
-
-  let category =
-    "General";
-
-
-  const lowerName =
-    name.toLowerCase();
-
-
-  if (
-
-    lowerName.includes("phone") ||
-    lowerName.includes("samsung") ||
-    lowerName.includes("laptop") ||
-    lowerName.includes("watch") ||
-    lowerName.includes("headphone") ||
-    lowerName.includes("computer") ||
-    lowerName.includes("tablet") ||
-    lowerName.includes("earbuds")
-
-  ) {
-
-    category =
-      "Electronics";
-
-  }
-
-
-  else if (
-
-    lowerName.includes("shoe") ||
-    lowerName.includes("sneaker") ||
-    lowerName.includes("bag") ||
-    lowerName.includes("shirt") ||
-    lowerName.includes("jacket")
-
-  ) {
-
-    category =
-      "Fashion";
-
-  }
-
-
-  else if (
-
-    lowerName.includes("lamp") ||
-    lowerName.includes("chair") ||
-    lower
+  </aside>    <!-- =========================  
+       TOAST  
+  ========================== -->    <div id="toast"></div>    <!-- =========================  
+       JAVASCRIPT  
+  ========================== -->    <script src="app.js"></script>  </body>  </html>
