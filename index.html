@@ -2,1075 +2,471 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="description"
-    content="SMITHX — AI-powered commerce for sellers and buyers."
-  >
-
-  <title>SMITHX — Shop • Buy • Grow</title>
-
-  <link
-    rel="stylesheet"
-    href="styles.css"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SM1THX — AI-powered commerce for sellers and buyers.">
+  <title>SM1THX — Shop • Buy • Grow</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
-  <!-- =====================================================
-       TOP NAVIGATION
-  ====================================================== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="#home" class="smithx-brand" aria-label="SM1THX Home">
+      <img src="assets/smithx-logo.jpg" class="smithx-logo-image" alt="SM1THX logo">
+      <span class="smithx-brand-text">
+        <strong>SM1TH<span>X</span></strong>
+        <small>SHOP • BUY • GROW</small>
+      </span>
+    </a>
 
-  <header class="topbar">
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#market">Marketplace</a>
+      <a href="#seller">Sell</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#updates">Updates</a>
+    </nav>
 
-    <div class="topbar-inner">
+    <button type="button" class="cart-button" onclick="openCart()" aria-label="Open shopping cart">
+      🛒
+      <span id="cartCount" class="cart-count">0</span>
+    </button>
+  </div>
+</header>
 
-      <a
-        href="#home"
-        class="smithx-brand"
-        aria-label="SMITHX Home"
-      >
+<main>
 
-        <img
-          src="assets/smithx-logo.jpg"
-          class="smithx-logo-image"
-          alt="SMITHX logo"
-        >
+<section id="home" class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <p class="hero-eyebrow">THE FUTURE OF COMMERCE</p>
+      <h1>Build. <span>Sell.</span> Grow.</h1>
+      <p class="hero-description">
+        SM1THX gives sellers the tools to launch, manage and grow online businesses while giving buyers a smarter way to discover products.
+      </p>
 
-        <span class="smithx-brand-text">
-
-          <strong>
-            SMITH<span>X</span>
-          </strong>
-
-          <small>
-            SHOP • BUY • GROW
-          </small>
-
-        </span>
-
-      </a>
-
-
-      <nav class="nav-links">
-
-        <a href="#home">
-          Home
-        </a>
-
-        <a href="#market">
-          Marketplace
-        </a>
-
-        <a href="#seller">
-          Sell
-        </a>
-
-        <a href="#dashboard">
-          Dashboard
-        </a>
-
-        <a href="#updates">
-          Updates
-        </a>
-
-      </nav>
-
-
-      <button
-        type="button"
-        class="cart-button"
-        onclick="openCart()"
-        aria-label="Open shopping cart"
-      >
-
-        🛒
-
-        <span
-          id="cartCount"
-          class="cart-count"
-        >
-          0
-        </span>
-
-      </button>
-
+      <div class="hero-actions">
+        <button type="button" class="primary-button" onclick="scrollToSection('market')">
+          Explore Marketplace
+        </button>
+        <button type="button" class="secondary-button" onclick="scrollToSection('seller')">
+          Start Selling
+        </button>
+      </div>
     </div>
 
-  </header>
-
-
-  <!-- =====================================================
-       HERO
-  ====================================================== -->
-
-  <main>
-
-    <section
-      id="home"
-      class="hero"
-    >
-
-      <div class="hero-inner">
-
-        <div class="hero-copy">
-
-          <p class="hero-eyebrow">
-            THE FUTURE OF COMMERCE
-          </p>
-
-          <h1>
-            Build.
-            <span>Sell.</span>
-            Grow.
-          </h1>
-
-          <p class="hero-description">
-            SMITHX gives sellers the tools to launch,
-            manage and grow online businesses while giving
-            buyers a smarter way to discover products.
-          </p>
-
-
-          <div class="hero-actions">
-
-            <button
-              type="button"
-              class="primary-button"
-              onclick="scrollToSection('market')"
-            >
-              Explore Marketplace
-            </button>
-
-            <button
-              type="button"
-              class="secondary-button"
-              onclick="scrollToSection('seller')"
-            >
-              Start Selling
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="hero-panel">
-
-          <div class="hero-panel-card">
-
-            <span>
-              SMITHX
-            </span>
-
-            <strong>
-              AI-POWERED
-              COMMERCE
-            </strong>
-
-            <p>
-              One platform for discovering,
-              selling and growing.
-            </p>
-
-          </div>
-
-        </div>
-
+    <div class="hero-panel">
+      <div class="hero-panel-card">
+        <span>SM1THX</span>
+        <strong>AI-POWERED COMMERCE</strong>
+        <p>One platform for discovering, selling and growing.</p>
       </div>
+    </div>
+  </div>
+</section>
 
-    </section>
+<section id="market" class="section marketplace-section">
+  <div class="section-inner">
+    <div class="section-heading">
+      <p class="section-eyebrow">DISCOVER</p>
+      <h2>SM1THX Marketplace</h2>
+      <p>Discover products from the growing SM1THX marketplace.</p>
+    </div>
 
-
-    <!-- =====================================================
-         MARKETPLACE
-    ====================================================== -->
-
-    <section
-      id="market"
-      class="section marketplace-section"
-    >
-
-      <div class="section-inner">
-
-        <div class="section-heading">
-
-          <p class="section-eyebrow">
-            DISCOVER
-          </p>
-
-          <h2>
-            SMITHX Marketplace
-          </h2>
-
-          <p>
-            Discover products from the growing
-            SMITHX marketplace.
-          </p>
-
-        </div>
-
-
-        <div class="marketplace-tools">
-
-          <div class="search-box">
-
-            <input
-              id="productSearch"
-              type="search"
-              placeholder="Search products..."
-              aria-label="Search products"
-            >
-
-          </div>
-
-
-          <button
-            type="button"
-            class="secondary-button"
-            onclick="openCart()"
-          >
-            View Cart
-          </button>
-
-        </div>
-
-
-        <div
-          id="productsGrid"
-          class="products-grid"
+    <div class="marketplace-tools">
+      <div class="search-box">
+        <input
+          id="productSearch"
+          type="search"
+          placeholder="Search products..."
+          aria-label="Search products"
         >
-
-          <!-- Products are rendered by app.js -->
-
-        </div>
-
       </div>
 
-    </section>
-
-
-    <!-- =====================================================
-         SELLER STUDIO
-    ====================================================== -->
-
-    <section
-      id="seller"
-      class="section seller-section"
-    >
-
-      <div class="section-inner">
-
-        <div class="section-heading">
-
-          <p class="section-eyebrow">
-            SELLER STUDIO
-          </p>
-
-          <h2>
-            Build Your Store
-          </h2>
-
-          <p>
-            Create a product and publish it directly
-            to the SMITHX marketplace.
-          </p>
-
-        </div>
-
-
-        <div class="seller-layout">
-
-
-          <!-- PRODUCT FORM -->
-
-          <div class="seller-card">
-
-            <h3>
-              Create Product
-            </h3>
-
-            <p class="muted">
-              Add your product details below.
-            </p>
-
-
-            <div class="form-group">
-
-              <label for="productName">
-                Product Name
-              </label>
-
-              <input
-                id="productName"
-                type="text"
-                placeholder="e.g. Samsung Galaxy S26 Ultra"
-              >
-
-            </div>
-
-
-            <div class="form-group">
-
-              <label for="productPrice">
-                Price
-              </label>
-
-              <input
-                id="productPrice"
-                type="number"
-                min="1"
-                placeholder="169999"
-              >
-
-            </div>
-
-
-            <div class="form-group">
-
-              <label for="productDescription">
-                Description
-              </label>
-
-              <textarea
-                id="productDescription"
-                rows="5"
-                placeholder="Describe your product..."
-              ></textarea>
-
-            </div>
-
-
-            <div class="form-group">
-
-              <label for="productImage">
-                Product Image
-              </label>
-
-              <input
-                id="productImage"
-                type="file"
-                accept="image/*"
-                onchange="handleProductImage(event)"
-              >
-
-            </div>
-
-
-            <div
-              id="imagePreview"
-              class="image-preview hidden"
-            >
-
-              <img
-                id="previewImage"
-                src=""
-                alt="Product preview"
-              >
-
-            </div>
-
-
-            <button
-              type="button"
-              class="primary-button full-width"
-              onclick="publishProduct()"
-            >
-              Publish Product
-            </button>
-
-          </div>
-
-
-          <!-- SELLER INFO -->
-
-          <div class="seller-info-card">
-
-            <p class="hero-eyebrow">
-              AI-POWERED SELLING
-            </p>
-
-            <h3>
-              Your business,
-              powered by SMITHX.
-            </h3>
-
-            <p>
-              SMITHX is being built to help sellers
-              launch faster, understand their customers
-              and grow their businesses using intelligent
-              technology.
-            </p>
-
-
-            <div class="feature-list">
-
-              <div class="feature-item">
-
-                <strong>
-                  Easy product creation
-                </strong>
-
-                <span>
-                  Create and publish products quickly.
-                </span>
-
-              </div>
-
-
-              <div class="feature-item">
-
-                <strong>
-                  Marketplace visibility
-                </strong>
-
-                <span>
-                  Put your products in front of buyers.
-                </span>
-
-              </div>
-
-
-              <div class="feature-item">
-
-                <strong>
-                  Seller analytics
-                </strong>
-
-                <span>
-                  Track products, orders and revenue.
-                </span>
-
-              </div>
-
-
-              <div class="feature-item">
-
-                <strong>
-                  AI-powered future
-                </strong>
-
-                <span>
-                  More intelligent seller tools are coming.
-                </span>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         DASHBOARD
-    ====================================================== -->
-
-    <section
-      id="dashboard"
-      class="section dashboard-section"
-    >
-
-      <div class="section-inner">
-
-        <div class="section-heading">
-
-          <p class="section-eyebrow">
-            SELLER DASHBOARD
-          </p>
-
-          <h2>
-            Your Business Overview
-          </h2>
-
-          <p>
-            Demo analytics showing how the SMITHX
-            seller dashboard can work.
-          </p>
-
-        </div>
-
-
-        <div class="dashboard-grid">
-
-
-          <div class="dashboard-card">
-
-            <span>
-              Products
-            </span>
-
-            <strong id="dashboardProducts">
-              0
-            </strong>
-
-          </div>
-
-
-          <div class="dashboard-card">
-
-            <span>
-              Orders
-            </span>
-
-            <strong id="dashboardOrders">
-              0
-            </strong>
-
-          </div>
-
-
-          <div class="dashboard-card">
-
-            <span>
-              Revenue
-            </span>
-
-            <strong id="dashboardRevenue">
-              KES 0
-            </strong>
-
-          </div>
-
-
-          <div class="dashboard-card">
-
-            <span>
-              Today's Visitors
-            </span>
-
-            <strong id="dashboardVisitors">
-              0
-            </strong>
-
-          </div>
-
-        </div>
-
-
-        <div class="dashboard-actions">
-
-          <button
-            type="button"
-            class="secondary-button"
-            onclick="resetAnalytics()"
+      <button type="button" class="secondary-button" onclick="openCart()">
+        View Cart
+      </button>
+    </div>
+
+    <div id="productsGrid" class="products-grid"></div>
+  </div>
+</section>
+
+<section id="seller" class="section seller-section">
+  <div class="section-inner">
+
+    <div class="section-heading">
+      <p class="section-eyebrow">SELLER STUDIO</p>
+      <h2>Build Your Store</h2>
+      <p>Create a product and publish it directly to the SM1THX marketplace.</p>
+    </div>
+
+    <div class="seller-layout">
+
+      <div class="seller-card">
+        <h3>Create Product</h3>
+        <p class="muted">Add your product details below.</p>
+
+        <div class="form-group">
+          <label for="productName">Product Name</label>
+          <input
+            id="productName"
+            type="text"
+            placeholder="e.g. Samsung Galaxy S26 Ultra"
           >
-            Reset Demo Analytics
-          </button>
-
         </div>
 
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         PLATFORM FEATURES
-    ====================================================== -->
-
-    <section
-      id="features"
-      class="section"
-    >
-
-      <div class="section-inner">
-
-        <div class="section-heading">
-
-          <p class="section-eyebrow">
-            THE SMITHX VISION
-          </p>
-
-          <h2>
-            More Than An Online Store
-          </h2>
-
-          <p>
-            SMITHX is being built as an intelligent
-            commerce ecosystem.
-          </p>
-
+        <div class="form-group">
+          <label for="productPrice">Price</label>
+          <input
+            id="productPrice"
+            type="number"
+            min="1"
+            placeholder="169999"
+          >
         </div>
 
-
-        <div class="feature-grid">
-
-
-          <div class="feature-card">
-
-            <div class="feature-icon">
-              AI
-            </div>
-
-            <h3>
-              AI Seller Assistant
-            </h3>
-
-            <p>
-              Intelligent tools designed to help sellers
-              make better business decisions.
-            </p>
-
-          </div>
-
-
-          <div class="feature-card">
-
-            <div class="feature-icon">
-              ↗
-            </div>
-
-            <h3>
-              Growth Tools
-            </h3>
-
-            <p>
-              Marketing, pricing, SEO and analytics
-              designed around seller growth.
-            </p>
-
-          </div>
-
-
-          <div class="feature-card">
-
-            <div class="feature-icon">
-              ₿
-            </div>
-
-            <h3>
-              Modern Payments
-            </h3>
-
-            <p>
-              Future plans include flexible fiat and
-              digital payment options.
-            </p>
-
-          </div>
-
-
-          <div class="feature-card">
-
-            <div class="feature-icon">
-              🌍
-            </div>
-
-            <h3>
-              Global Commerce
-            </h3>
-
-            <p>
-              Starting locally and designed with
-              global expansion in mind.
-            </p>
-
-          </div>
-
+        <div class="form-group">
+          <label for="productDescription">Description</label>
+          <textarea
+            id="productDescription"
+            rows="5"
+            placeholder="Describe your product..."
+          ></textarea>
         </div>
 
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         ABOUT SMITHX
-    ====================================================== -->
-
-    <section
-      id="about"
-      class="section about-section"
-    >
-
-      <div class="section-inner">
-
-        <div class="about-card">
-
-          <div>
-
-            <p class="section-eyebrow">
-              ABOUT SMITHX
-            </p>
-
-            <h2>
-              Building The Future
-              Of Commerce
-            </h2>
-
-          </div>
-
-
-          <div>
-
-            <p>
-              SMITHX started with a simple idea:
-              make it easier for people to build,
-              sell and grow online.
-            </p>
-
-            <p>
-              This MVP is an early demonstration of
-              that vision — combining marketplace
-              technology, seller tools and the foundation
-              for future AI-powered commerce.
-            </p>
-
-          </div>
-
+        <div class="form-group">
+          <label for="productImage">Product Image</label>
+          <input
+            id="productImage"
+            type="file"
+            accept="image/*"
+            onchange="handleProductImage(event)"
+          >
         </div>
 
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         UPDATES
-         HIDDEN BY DEFAULT
-    ====================================================== -->
-
-    <section
-      class="section"
-      id="updates"
-    >
-
-      <div class="section-inner">
-
-        <div class="section-heading">
-
-          <p class="section-eyebrow">
-            BUILDING IN PUBLIC
-          </p>
-
-          <h2>
-            SMITHX Updates
-          </h2>
-
-          <p>
-            See what has been improved and added to SmithX.
-          </p>
-
+        <div id="imagePreview" class="image-preview hidden">
+          <img id="previewImage" src="" alt="Product preview">
         </div>
-
 
         <button
           type="button"
-          class="btn btn-secondary"
-          id="updatesToggle"
-          onclick="toggleUpdateHistory()"
+          class="primary-button full-width"
+          onclick="publishProduct()"
         >
-          View Updates
+          Publish Product
         </button>
+      </div>
 
+      <div class="seller-info-card">
+        <p class="hero-eyebrow">AI-POWERED SELLING</p>
 
-        <div
-          id="updateHistory"
-          class="update-history"
-          style="display: none;"
-        >
+        <h3>Your business, powered by SM1THX.</h3>
 
-          <div class="card">
+        <p>
+          SM1THX is being built to help sellers launch faster, understand their customers and grow their businesses using intelligent technology.
+        </p>
 
+        <div class="feature-list">
 
-            <div class="update-item">
+          <div class="feature-item">
+            <strong>Easy product creation</strong>
+            <span>Create and publish products quickly.</span>
+          </div>
 
-              <strong>
-                SMITHX MVP launched
-              </strong>
+          <div class="feature-item">
+            <strong>Marketplace visibility</strong>
+            <span>Put your products in front of buyers.</span>
+          </div>
 
-              <p>
-                Initial marketplace experience with
-                products, search, product details,
-                cart and demo checkout.
-              </p>
+          <div class="feature-item">
+            <strong>Seller analytics</strong>
+            <span>Track products, orders and revenue.</span>
+          </div>
 
-            </div>
-
-
-            <div class="update-item">
-
-              <strong>
-                Seller Studio added
-              </strong>
-
-              <p>
-                Sellers can create products and publish
-                them directly to the marketplace.
-              </p>
-
-            </div>
-
-
-            <div class="update-item">
-
-              <strong>
-                Product image uploads added
-              </strong>
-
-              <p>
-                Sellers can upload product images when
-                creating products.
-              </p>
-
-            </div>
-
-
-            <div class="update-item">
-
-              <strong>
-                Dashboard improvements
-              </strong>
-
-              <p>
-                Added seller statistics for products,
-                orders, revenue and visitors.
-              </p>
-
-            </div>
-
-
-            <div class="update-item">
-
-              <strong>
-                SMITHX branding updated
-              </strong>
-
-              <p>
-                Updated the platform with the new SMITHX
-                logo and SHOP • BUY • GROW branding.
-              </p>
-
-            </div>
-
-
+          <div class="feature-item">
+            <strong>AI-powered future</strong>
+            <span>More intelligent seller tools are coming.</span>
           </div>
 
         </div>
-
       </div>
 
-    </section>
+    </div>
+  </div>
+</section>
 
+<section id="dashboard" class="section dashboard-section">
+  <div class="section-inner">
 
-  </main>
+    <div class="section-heading">
+      <p class="section-eyebrow">SELLER DASHBOARD</p>
+      <h2>Your Business Overview</h2>
+      <p>Demo analytics showing how the SM1THX seller dashboard can work.</p>
+    </div>
 
+    <div class="dashboard-grid">
 
-  <!-- =====================================================
-       PRODUCT MODAL
-  ====================================================== -->
+      <div class="dashboard-card">
+        <span>Products</span>
+        <strong id="dashboardProducts">0</strong>
+      </div>
 
-  <div
-    id="productModal"
-    class="modal"
-    aria-hidden="true"
-  >
+      <div class="dashboard-card">
+        <span>Orders</span>
+        <strong id="dashboardOrders">0</strong>
+      </div>
 
-    <div class="modal-content">
+      <div class="dashboard-card">
+        <span>Revenue</span>
+        <strong id="dashboardRevenue">KES 0</strong>
+      </div>
 
+      <div class="dashboard-card">
+        <span>Today's Visitors</span>
+        <strong id="dashboardVisitors">0</strong>
+      </div>
+
+    </div>
+
+    <div class="dashboard-actions">
       <button
         type="button"
-        class="modal-close"
-        onclick="closeProductModal()"
-        aria-label="Close product"
+        class="secondary-button"
+        onclick="resetAnalytics()"
       >
-        ×
+        Reset Demo Analytics
       </button>
-
-
-      <div id="productModalContent">
-
-        <!-- Product details inserted by app.js -->
-
-      </div>
-
     </div>
 
   </div>
+</section>
 
+<section id="features" class="section">
+  <div class="section-inner">
 
-  <!-- =====================================================
-       CART PANEL
-  ====================================================== -->
+    <div class="section-heading">
+      <p class="section-eyebrow">THE SM1THX VISION</p>
+      <h2>More Than An Online Store</h2>
+      <p>SM1THX is being built as an intelligent commerce ecosystem.</p>
+    </div>
 
-  <aside
-    id="cartPanel"
-    class="cart-panel"
-    aria-label="Shopping cart"
-  >
+    <div class="feature-grid">
 
-    <div class="cart-panel-header">
+      <div class="feature-card">
+        <div class="feature-icon">AI</div>
+        <h3>AI Seller Assistant</h3>
+        <p>Intelligent tools designed to help sellers make better business decisions.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">↗</div>
+        <h3>Growth Tools</h3>
+        <p>Marketing, pricing, SEO and analytics designed around seller growth.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">₿</div>
+        <h3>Modern Payments</h3>
+        <p>Future plans include flexible fiat and digital payment options.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h3>Global Commerce</h3>
+        <p>Starting locally and designed with global expansion in mind.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="about" class="section about-section">
+  <div class="section-inner">
+
+    <div class="about-card">
 
       <div>
+        <p class="section-eyebrow">ABOUT SM1THX</p>
+        <h2>Building The Future Of Commerce</h2>
+      </div>
 
-        <p class="section-eyebrow">
-          SMITHX
+      <div>
+        <p>
+          SM1THX started with a simple idea: make it easier for people to build, sell and grow online.
         </p>
 
-        <h2>
-          Your Cart
-        </h2>
-
+        <p>
+          This MVP is an early demonstration of that vision — combining marketplace technology, seller tools and the foundation for future AI-powered commerce.
+        </p>
       </div>
 
+    </div>
+  </div>
+</section>
 
-      <button
-        type="button"
-        class="modal-close"
-        onclick="closeCart()"
-        aria-label="Close cart"
-      >
-        ×
-      </button>
+<section class="section" id="updates">
+  <div class="section-inner">
 
+    <div class="section-heading">
+      <p class="section-eyebrow">BUILDING IN PUBLIC</p>
+      <h2>SM1THX Updates</h2>
+      <p>See what has been improved and added to SM1THX.</p>
     </div>
 
+    <button
+      type="button"
+      class="btn btn-secondary"
+      id="updatesToggle"
+      onclick="toggleUpdateHistory()"
+    >
+      View Updates
+    </button>
 
     <div
-      id="cartItems"
-      class="cart-items"
+      id="updateHistory"
+      class="update-history"
+      style="display: none;"
     >
+      <div class="card">
 
-      <!-- Cart items inserted by app.js -->
-
-    </div>
-
-
-    <div class="cart-summary">
-
-      <div class="cart-summary-row">
-
-        <span>
-          Subtotal
-        </span>
-
-        <strong id="cartSubtotal">
-          KES 0
-        </strong>
-
-      </div>
-
-
-      <div class="cart-summary-row total-row">
-
-        <span>
-          Total
-        </span>
-
-        <strong id="cartTotal">
-          KES 0
-        </strong>
-
-      </div>
-
-
-      <button
-        type="button"
-        class="primary-button full-width"
-        onclick="checkout()"
-      >
-        Demo Checkout
-      </button>
-
-    </div>
-
-  </aside>
-
-
-  <!-- =====================================================
-       TOAST
-  ====================================================== -->
-
-  <div
-    id="toast"
-    class="toast"
-    role="status"
-    aria-live="polite"
-  ></div>
-
-
-  <!-- =====================================================
-       FOOTER
-  ====================================================== -->
-
-  <footer class="footer">
-
-    <div class="footer-inner">
-
-      <div class="footer-brand">
-
-        <img
-          src="assets/smithx-logo.jpg"
-          class="smithx-logo-image"
-          alt="SMITHX logo"
-        >
-
-        <div>
-
-          <strong>
-            SMITH<span>X</span>
-          </strong>
-
+        <div class="update-item">
+          <strong>SM1THX MVP launched</strong>
           <p>
-            SHOP • BUY • GROW
+            Initial marketplace experience with products, search, product details, cart and demo checkout.
           </p>
+        </div>
 
+        <div class="update-item">
+          <strong>Seller Studio added</strong>
+          <p>
+            Sellers can create products and publish them directly to the marketplace.
+          </p>
+        </div>
+
+        <div class="update-item">
+          <strong>Product image uploads added</strong>
+          <p>
+            Sellers can upload product images when creating products.
+          </p>
+        </div>
+
+        <div class="update-item">
+          <strong>Dashboard improvements</strong>
+          <p>
+            Added seller statistics for products, orders, revenue and visitors.
+          </p>
+        </div>
+
+        <div class="update-item">
+          <strong>SM1THX branding updated</strong>
+          <p>
+            Updated the platform with the new SM1THX logo and SHOP • BUY • GROW branding.
+          </p>
         </div>
 
       </div>
-
-
-      <div class="footer-links">
-
-        <a href="#home">
-          Home
-        </a>
-
-        <a href="#market">
-          Marketplace
-        </a>
-
-        <a href="#seller">
-          Sell
-        </a>
-
-        <a href="#dashboard">
-          Dashboard
-        </a>
-
-        <a href="#updates">
-          Updates
-        </a>
-
-      </div>
-
-
-      <p class="footer-copy">
-        © 2026 SMITHX. Built for the future of commerce.
-      </p>
-
     </div>
 
-  </footer>
+  </div>
+</section>
 
+</main>
 
-  <!-- =====================================================
-       JAVASCRIPT
-  ====================================================== -->
+<div id="productModal" class="modal" aria-hidden="true">
+  <div class="modal-content">
 
-  <script src="app.js"></script>
+    <button
+      type="button"
+      class="modal-close"
+      onclick="closeProductModal()"
+      aria-label="Close product"
+    >
+      ×
+    </button>
+
+    <div id="productModalContent"></div>
+
+  </div>
+</div>
+
+<aside id="cartPanel" class="cart-panel" aria-label="Shopping cart">
+
+  <div class="cart-panel-header">
+    <div>
+      <p class="section-eyebrow">SM1THX</p>
+      <h2>Your Cart</h2>
+    </div>
+
+    <button
+      type="button"
+      class="modal-close"
+      onclick="closeCart()"
+      aria-label="Close cart"
+    >
+      ×
+    </button>
+  </div>
+
+  <div id="cartItems" class="cart-items"></div>
+
+  <div class="cart-summary">
+
+    <div class="cart-summary-row">
+      <span>Subtotal</span>
+      <strong id="cartSubtotal">KES 0</strong>
+    </div>
+
+    <div class="cart-summary-row total-row">
+      <span>Total</span>
+      <strong id="cartTotal">KES 0</strong>
+    </div>
+
+    <button
+      type="button"
+      class="primary-button full-width"
+      onclick="checkout()"
+    >
+      Demo Checkout
+    </button>
+
+  </div>
+</aside>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<footer class="footer">
+  <div class="footer-inner">
+
+    <div class="footer-brand">
+      <img
+        src="assets/smithx-logo.jpg"
+        class="smithx-logo-image"
+        alt="SM1THX logo"
+      >
+
+      <div>
+        <strong>SM1TH<span>X</span></strong>
+        <p>SHOP • BUY • GROW</p>
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <a href="#home">Home</a>
+      <a href="#market">Marketplace</a>
+      <a href="#seller">Sell</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#updates">Updates</a>
+    </div>
+
+    <p class="footer-copy">
+      © 2026 SM1THX. Built for the future of commerce.
+    </p>
+
+  </div>
+</footer>
+
+<script src="app.js"></script>
 
 </body>
 </html>
