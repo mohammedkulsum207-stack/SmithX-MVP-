@@ -2190,3 +2190,316 @@ window.toggleUpdateHistory =
 
 window.scrollToSection =
   scrollToSection;
+/* =========================================================
+   SM1THX 🛒 — CART + LOGIN RELIABILITY PATCH
+========================================================= */
+
+(function () {
+  "use strict";
+
+  /* ---------- CART ---------- */
+
+  function reliableOpenCart() {
+    const panel = document.getElementById("cartPanel");
+
+    if (!panel) {
+      console.error("SM1THX: cartPanel not found.");
+      return;
+    }
+
+    panel.classList.add("active");
+    panel.classList.add("open");
+
+    if (typeof renderCart === "function") {
+      renderCart();
+    }
+
+    if (typeof updateCartCount === "function") {
+      updateCartCount();
+    }
+
+    panel.setAttribute("aria-hidden", "false");
+  }
+
+  function reliableCloseCart() {
+    const panel = document.getElementById("cartPanel");
+
+    if (!panel) return;
+
+    panel.classList.remove("active");
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden", "true");
+  }
+
+  window.openCart = reliableOpenCart;
+  window.closeCart = reliableCloseCart;
+
+
+  /* ---------- LOGIN ---------- */
+
+  function reliableOpenLogin() {
+    const overlay =
+      document.getElementById("loginOverlay");
+
+    if (!overlay) {
+      console.error("SM1THX: loginOverlay not found.");
+      return;
+    }
+
+    overlay.classList.add("active");
+    overlay.classList.add("show");
+    overlay.setAttribute("aria-hidden", "false");
+
+    const loginSection =
+      document.getElementById("loginFormSection");
+
+    const registerSection =
+      document.getElementById("registerFormSection");
+
+    if (loginSection) {
+      loginSection.style.display = "block";
+    }
+
+    if (registerSection) {
+      registerSection.style.display = "none";
+    }
+
+    setTimeout(function () {
+      document
+        .getElementById("loginEmail")
+        ?.focus();
+    }, 100);
+  }
+
+  function reliableCloseLogin() {
+    const overlay =
+      document.getElementById("loginOverlay");
+
+    if (!overlay) return;
+
+    overlay.classList.remove("active");
+    overlay.classList.remove("show");
+    overlay.setAttribute("aria-hidden", "true");
+  }
+
+  window.openLogin = reliableOpenLogin;
+  window.closeLogin = reliableCloseLogin;
+
+
+  /* ---------- LOGIN FORM ---------- */
+
+  document.addEventListener(
+    "submit",
+    function (event) {
+      const form = event.target;
+
+      if (!form) return;
+
+
+      /* LOGIN */
+
+      if (form.id === "loginForm") {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const email =
+          document
+            .getElementById("loginEmail")
+            ?.value
+            .trim()
+            .toLowerCase();
+
+        const password =
+          document
+            .getElementById("loginPassword")
+            ?.value || "";
+
+        if (!email) {
+          showToast("Please enter your email.");
+          return;
+        }
+
+        if (!password) {
+          showToast("Please enter your password.");
+          return;
+        }
+
+        let user = getDemoUser();
+
+        if (!user) {
+          showToast("Create your account first.");
+
+          const loginSection =
+            document.getElementById("loginFormSection");
+
+          const registerSection =
+            document.getElementById(
+              "registerFormSection"
+            );
+
+          if (loginSection) {
+            loginSection.style.display = "none";
+          }
+
+          if (registerSection) {
+            registerSection.style.display = "block";
+          }
+
+          const registerEmail =
+            document.getElementById("registerEmail");
+
+          if (registerEmail) {
+            registerEmail.value = email;
+          }
+
+          return;
+        }
+
+        if (user.email !== email) {
+          showToast("Email does not match your account.");
+          return;
+        }
+
+        user.loggedIn = true;
+
+        localStorage.setItem(
+          "smithx_demo_user_v1",
+          JSON.stringify(user)
+        );
+
+        if (typeof updateLoginButton === "function") {
+          updateLoginButton();
+        }
+
+        reliableCloseLogin();
+
+        showToast(
+          `Welcome back, ${user.name}!`
+        );
+
+        return;
+      }
+
+
+      /* REGISTER */
+
+      if (form.id === "registerForm") {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        const name =
+          document
+            .getElementById("registerName")
+            ?.value
+            .trim();
+
+        const email =
+          document
+            .getElementById("registerEmail")
+            ?.value
+            .trim()
+            .toLowerCase();
+
+        const password =
+          document
+            .getElementById("registerPassword")
+            ?.value || "";
+
+        const accountType =
+          document
+            .getElementById("accountType")
+            ?.value || "buyer";
+
+        if (!name) {
+          showToast("Please enter your name.");
+          return;
+        }
+
+        if (!email) {
+          showToast("Please enter your email.");
+          return;
+        }
+
+        if (password.length < 4) {
+          showToast(
+            "Password must contain at least 4 characters."
+          );
+          return;
+        }
+
+        const user = {
+          name: name,
+          email: email,
+          password: password,
+          accountType: accountType,
+          loggedIn: true,
+          createdAt: new Date().toISOString()
+        };
+
+        localStorage.setItem(
+          "smithx_demo_user_v1",
+          JSON.stringify(user)
+        );
+
+        if (typeof updateLoginButton === "function") {
+          updateLoginButton();
+        }
+
+        reliableCloseLogin();
+
+        showToast(
+          `Welcome to SM1THX 🛒, ${name}!`
+        );
+      }
+    },
+    true
+  );
+
+
+  /* ---------- FORCE BUTTON CONNECTIONS ---------- */
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+      const cartButtons =
+        document.querySelectorAll(
+          ".cart-button"
+        );
+
+      cartButtons.forEach(function (button) {
+        button.onclick = reliableOpenCart;
+      });
+
+      const loginButton =
+        document.getElementById(
+          "loginNavButton"
+        );
+
+      if (loginButton) {
+        loginButton.onclick =
+          reliableOpenLogin;
+      }
+
+      const cartClose =
+        document.querySelector(
+          ".cart-close"
+        );
+
+      if (cartClose) {
+        cartClose.onclick =
+          reliableCloseCart;
+      }
+
+      const loginClose =
+        document.querySelector(
+          "#loginOverlay .modal-close"
+        );
+
+      if (loginClose) {
+        loginClose.onclick =
+          reliableCloseLogin;
+      }
+    }
+  );
+
+})();
