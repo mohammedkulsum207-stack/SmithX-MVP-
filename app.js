@@ -1,80 +1,68 @@
 /* =========================================================
    SMITHX MVP — APP.JS
-   Version 2.0
-   Safe marketplace category + demo login update
+   Version 3.0
    ========================================================= */
 
+"use strict";
+
+/* =========================================================
+   DEFAULT PRODUCTS
+   ========================================================= */
 
 const DEFAULT_PRODUCTS = [
-
   {
-    id: "s26-ultra",
+    id: "default-1",
     name: "Samsung Galaxy S26 Ultra",
     price: 169999,
     category: "Electronics",
-    description:
-      "Premium Samsung smartphone with advanced performance, camera technology and a large high-resolution display.",
-    image:
-      "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=85"
+    description: "Premium flagship smartphone with advanced performance, camera technology and a modern design.",
+    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80"
   },
-
   {
-    id: "wireless-headphones",
+    id: "default-2",
     name: "Smart Wireless Headphones",
     price: 4500,
     category: "Electronics",
-    description:
-      "Comfortable wireless headphones with immersive sound and a modern everyday design.",
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85"
+    description: "Wireless headphones with a comfortable design and immersive sound.",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
   },
-
   {
-    id: "desk-lamp",
+    id: "default-3",
     name: "Minimal Desk Lamp",
     price: 2800,
     category: "Home",
-    description:
-      "Modern minimalist desk lamp designed for workspaces, study areas and home offices.",
-    image:
-      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=85"
+    description: "Clean modern desk lamp designed for workspaces, bedrooms and study areas.",
+    image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80"
   },
-
   {
-    id: "travel-backpack",
+    id: "default-4",
     name: "Everyday Travel Backpack",
     price: 3500,
     category: "Accessories",
-    description:
-      "Practical everyday backpack with a clean design for travel, school and work.",
-    image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85"
+    description: "Lightweight everyday backpack for school, work, travel and daily use.",
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80"
   },
-
   {
-    id: "smart-watch",
+    id: "default-5",
     name: "Smart Watch",
     price: 6500,
     category: "Electronics",
-    description:
-      "Modern smartwatch designed for everyday activity tracking, notifications and convenience.",
-    image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85"
+    description: "Modern smartwatch for everyday activity tracking, notifications and convenience.",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
   },
-
   {
-    id: "premium-sneakers",
+    id: "default-6",
     name: "Premium Sneakers",
     price: 7200,
     category: "Fashion",
-    description:
-      "Modern everyday sneakers combining comfort, style and a clean premium look.",
-    image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85"
+    description: "Modern everyday sneakers combining comfort, style and versatility.",
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
   }
-
 ];
 
+/* =========================================================
+   CATEGORIES
+   ========================================================= */
 
 const CATEGORIES = [
   "All",
@@ -85,1773 +73,812 @@ const CATEGORIES = [
   "Accessories"
 ];
 
+/* =========================================================
+   STORAGE KEYS
+   ========================================================= */
 
 const STORAGE = {
-
   products: "smithx_custom_products_v2",
-
   cart: "smithx_cart_v2",
-
   analytics: "smithx_analytics_v2",
-
   visitor: "smithx_daily_visitor_v2"
-
 };
 
+const DEMO_USER_KEY = "smithx_demo_user_v1";
 
 /* =========================================================
-   DEMO LOGIN STORAGE
-========================================================= */
+   GLOBAL STATE
+   ========================================================= */
 
-const DEMO_USER_KEY =
-  "smithx_demo_user_v1";
-
+let currentCategory = "All";
+let currentSearch = "";
+let currentProductId = null;
 
 /* =========================================================
-   UTILITIES
-========================================================= */
+   BASIC HELPERS
+   ========================================================= */
 
-function formatKES(amount) {
+function formatKES(value) {
+  const number = Number(value) || 0;
 
-  return (
-    "KES " +
-    Number(amount || 0).toLocaleString("en-KE")
-  );
-
+  return new Intl.NumberFormat("en-KE", {
+    style: "currency",
+    currency: "KES",
+    maximumFractionDigits: 0
+  }).format(number);
 }
-
 
 function escapeHTML(value) {
-
   return String(value ?? "")
-
     .replace(/&/g, "&amp;")
-
     .replace(/</g, "&lt;")
-
     .replace(/>/g, "&gt;")
-
     .replace(/"/g, "&quot;")
-
     .replace(/'/g, "&#039;");
-
 }
 
+function safeJSONParse(value, fallback) {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
 
 /* =========================================================
-   PRODUCTS
-========================================================= */
+   PRODUCT STORAGE
+   ========================================================= */
 
 function getCustomProducts() {
-
-  try {
-
-    const products = JSON.parse(
-      localStorage.getItem(STORAGE.products) || "[]"
-    );
-
-    return Array.isArray(products) ? products : [];
-
-  } catch {
-
-    return [];
-
-  }
-
+  return safeJSONParse(
+    localStorage.getItem(STORAGE.products),
+    []
+  );
 }
 
-
 function saveCustomProducts(products) {
-
   localStorage.setItem(
     STORAGE.products,
     JSON.stringify(products)
   );
-
 }
-
 
 function getAllProducts() {
-
   return [
-
     ...DEFAULT_PRODUCTS,
-
     ...getCustomProducts()
-
   ];
-
 }
 
+/* =========================================================
+   CART STORAGE
+   ========================================================= */
+
+function getCart() {
+  return safeJSONParse(
+    localStorage.getItem(STORAGE.cart),
+    []
+  );
+}
+
+function saveCart(cart) {
+  localStorage.setItem(
+    STORAGE.cart,
+    JSON.stringify(cart)
+  );
+}
 
 /* =========================================================
    ANALYTICS
-========================================================= */
+   ========================================================= */
 
 function getAnalytics() {
-
-  try {
-
-    return JSON.parse(
-      localStorage.getItem(
-        STORAGE.analytics
-      ) ||
-      '{"sales":0,"orders":0}'
-    );
-
-  } catch {
-
-    return {
-      sales: 0,
-      orders: 0
-    };
-
-  }
-
+  return safeJSONParse(
+    localStorage.getItem(STORAGE.analytics),
+    {
+      visitors: 0,
+      orders: 0,
+      revenue: 0,
+      productViews: 0
+    }
+  );
 }
 
-
 function saveAnalytics(data) {
-
   localStorage.setItem(
     STORAGE.analytics,
     JSON.stringify(data)
   );
-
 }
 
+function trackEvent(type, amount = 0) {
+  const analytics = getAnalytics();
 
-function getTodayKey() {
-
-  return new Date()
-    .toISOString()
-    .slice(0, 10);
-
-}
-
-
-function registerDailyVisitor() {
-
-  const today = getTodayKey();
-
-  let visitorData;
-
-  try {
-
-    visitorData = JSON.parse(
-      localStorage.getItem(
-        STORAGE.visitor
-      ) || "null"
-    );
-
-  } catch {
-
-    visitorData = null;
-
+  if (type === "visitor") {
+    analytics.visitors += 1;
   }
 
-
-  if (
-    !visitorData ||
-    visitorData.date !== today
-  ) {
-
-    visitorData = {
-
-      date: today,
-
-      count: 1
-
-    };
-
-    localStorage.setItem(
-      STORAGE.visitor,
-      JSON.stringify(visitorData)
-    );
-
-    return 1;
-
+  if (type === "order") {
+    analytics.orders += 1;
+    analytics.revenue += Number(amount) || 0;
   }
 
-
-  return Number(
-    visitorData.count || 0
-  );
-
-}
-
-
-function getDailyVisitors() {
-
-  try {
-
-    const data = JSON.parse(
-      localStorage.getItem(
-        STORAGE.visitor
-      ) || "null"
-    );
-
-    if (
-      !data ||
-      data.date !== getTodayKey()
-    ) {
-
-      return 0;
-
-    }
-
-    return Number(
-      data.count || 0
-    );
-
-  } catch {
-
-    return 0;
-
+  if (type === "productView") {
+    analytics.productViews += 1;
   }
 
+  saveAnalytics(analytics);
+
+  updateDashboard();
 }
 
+function trackDailyVisitor() {
+  const today = new Date().toISOString().split("T")[0];
+  const previous = localStorage.getItem(STORAGE.visitor);
+
+  if (previous !== today) {
+    localStorage.setItem(STORAGE.visitor, today);
+    trackEvent("visitor");
+  }
+}
 
 /* =========================================================
-   CATEGORY CONTROLS
-========================================================= */
+   CATEGORY FILTER
+   ========================================================= */
 
-let activeCategory = "All";
+function setupCategories() {
+  const container =
+    document.getElementById("categoryFilters");
 
+  if (!container) return;
 
-function setupCategoryFilter() {
-
-  const marketplaceTools =
-    document.querySelector(
-      ".marketplace-tools"
-    );
-
-  if (!marketplaceTools) return;
-
-  if (
-    document.getElementById(
-      "categoryFilter"
-    )
-  ) {
-
-    return;
-
-  }
-
-  const wrapper =
-    document.createElement("div");
-
-  wrapper.className =
-    "category-filter-wrapper";
-
-  wrapper.innerHTML = `
-
-    <label
-      for="categoryFilter"
-      class="category-filter-label"
+  container.innerHTML = CATEGORIES.map(category => `
+    <button
+      type="button"
+      class="category-btn ${category === currentCategory ? "active" : ""}"
+      data-category="${escapeHTML(category)}"
     >
-      Category
-    </label>
+      ${escapeHTML(category)}
+    </button>
+  `).join("");
 
-    <select
-      id="categoryFilter"
-      class="category-filter"
-      aria-label="Filter products by category"
-    >
+  container.querySelectorAll(".category-btn")
+    .forEach(button => {
+      button.addEventListener("click", () => {
+        currentCategory =
+          button.dataset.category || "All";
 
-      ${CATEGORIES.map(
-        category => `
+        container.querySelectorAll(".category-btn")
+          .forEach(btn => btn.classList.remove("active"));
 
-        <option value="${escapeHTML(category)}">
-          ${escapeHTML(category)}
-        </option>
+        button.classList.add("active");
 
-      `
-      ).join("")}
-
-    </select>
-
-  `;
-
-  marketplaceTools.appendChild(
-    wrapper
-  );
-
-
-  const select =
-    document.getElementById(
-      "categoryFilter"
-    );
-
-
-  if (select) {
-
-    select.addEventListener(
-      "change",
-      event => {
-
-        activeCategory =
-          event.target.value || "All";
-
-        const searchInput =
-          document.getElementById(
-            "productSearch"
-          );
-
-        renderProducts(
-          searchInput
-            ? searchInput.value
-            : ""
-        );
-
-      }
-    );
-
-  }
-
+        renderProducts();
+      });
+    });
 }
 
+/* =========================================================
+   SELLER CATEGORY
+   ========================================================= */
 
 function setupSellerCategory() {
+  const select =
+    document.getElementById("productCategory");
 
-  const descriptionInput =
-    document.getElementById(
-      "productDescription"
-    );
+  if (!select) return;
 
-  if (!descriptionInput) return;
-
-  if (
-    document.getElementById(
-      "productCategory"
-    )
-  ) {
-
-    return;
-
-  }
-
-
-  const formGroup =
-    document.createElement("div");
-
-  formGroup.className =
-    "form-group";
-
-
-  formGroup.innerHTML = `
-
-    <label
-      for="productCategory"
-    >
-      Category
-    </label>
-
-    <select
-      id="productCategory"
-      class="seller-category-select"
-    >
-
-      ${CATEGORIES
-        .filter(
-          category =>
-            category !== "All"
-        )
-        .map(
-          category => `
-
-          <option value="${escapeHTML(category)}">
-            ${escapeHTML(category)}
-          </option>
-
-        `
-        )
-        .join("")}
-
-    </select>
-
-  `;
-
-
-  descriptionInput
-    .closest(".form-group")
-    ?.after(formGroup);
-
+  select.innerHTML = CATEGORIES
+    .filter(category => category !== "All")
+    .map(category => `
+      <option value="${escapeHTML(category)}">
+        ${escapeHTML(category)}
+      </option>
+    `)
+    .join("");
 }
 
-
 /* =========================================================
-   RENDER PRODUCTS
-========================================================= */
+   PRODUCT RENDERING
+   ========================================================= */
 
-function renderProducts(
-  searchTerm = ""
-) {
-
+function renderProducts() {
   const grid =
-    document.getElementById(
-      "productsGrid"
-    );
+    document.getElementById("productsGrid");
 
   if (!grid) return;
 
+  const search =
+    currentSearch.trim().toLowerCase();
 
-  const products =
-    getAllProducts();
+  const products = getAllProducts().filter(product => {
+    const matchesCategory =
+      currentCategory === "All" ||
+      product.category === currentCategory;
 
+    const searchableText = `
+      ${product.name}
+      ${product.description}
+      ${product.category}
+    `.toLowerCase();
 
-  const term =
-    String(searchTerm)
-      .trim()
-      .toLowerCase();
+    const matchesSearch =
+      !search ||
+      searchableText.includes(search);
 
+    return matchesCategory && matchesSearch;
+  });
 
-  const filteredProducts =
-    products.filter(product => {
-
-      const productCategory =
-        product.category ||
-        "Accessories";
-
-
-      const categoryMatches =
-        activeCategory === "All" ||
-        productCategory ===
-          activeCategory;
-
-
-      if (!categoryMatches) {
-
-        return false;
-
-      }
-
-
-      if (!term) {
-
-        return true;
-
-      }
-
-
-      return (
-
-        String(product.name)
-          .toLowerCase()
-          .includes(term)
-
-        ||
-
-        String(product.description)
-          .toLowerCase()
-          .includes(term)
-
-        ||
-
-        String(productCategory)
-          .toLowerCase()
-          .includes(term)
-
-      );
-
-    });
-
-
-  if (
-    filteredProducts.length === 0
-  ) {
-
+  if (!products.length) {
     grid.innerHTML = `
+      <div class="empty-state">
+        <h3>No products found</h3>
+        <p>Try another search or category.</p>
+      </div>
+    `;
+    return;
+  }
 
-      <div style="
-        grid-column:1/-1;
-        text-align:center;
-        padding:50px 20px;
-        color:#667085;
-      ">
+  grid.innerHTML = products.map(product => `
+    <article class="product-card">
+      <button
+        type="button"
+        class="product-image-button"
+        onclick="openProductModal('${escapeHTML(product.id)}')"
+        aria-label="View ${escapeHTML(product.name)}"
+      >
+        <img
+          src="${escapeHTML(product.image)}"
+          alt="${escapeHTML(product.name)}"
+          loading="lazy"
+          onerror="this.src='https://via.placeholder.com/800x600?text=SmithX+Product'"
+        >
+      </button>
 
-        <h3>
-          No products found
-        </h3>
+      <div class="product-card-body">
+        <span class="product-category">
+          ${escapeHTML(product.category)}
+        </span>
+
+        <h3>${escapeHTML(product.name)}</h3>
 
         <p>
-          Try another search or category.
+          ${escapeHTML(product.description)}
         </p>
 
+        <div class="product-card-bottom">
+          <strong>${formatKES(product.price)}</strong>
+
+          <button
+            type="button"
+            class="primary-button small-button"
+            onclick="addToCart('${escapeHTML(product.id)}')"
+          >
+            Add to cart
+          </button>
+        </div>
       </div>
-
-    `;
-
-
-    updateProductStats();
-
-    return;
-
-  }
-
-
-  grid.innerHTML =
-
-    filteredProducts
-
-      .map(product => {
-
-        const category =
-          product.category ||
-          "Accessories";
-
-
-        return `
-
-        <article class="product-card">
-
-          <div class="product-image">
-
-            <img
-              src="${escapeHTML(
-                product.image
-              )}"
-              alt="${escapeHTML(
-                product.name
-              )}"
-              loading="lazy"
-              onerror="this.style.display='none'"
-            >
-
-          </div>
-
-
-          <div class="product-content">
-
-            <span class="product-category">
-              ${escapeHTML(
-                category
-              )}
-            </span>
-
-
-            <h3>
-              ${escapeHTML(
-                product.name
-              )}
-            </h3>
-
-
-            <p class="product-description">
-              ${escapeHTML(
-                product.description
-              )}
-            </p>
-
-
-            <div class="product-price">
-              ${formatKES(
-                product.price
-              )}
-            </div>
-
-
-            <div class="product-actions">
-
-              <button
-                type="button"
-                onclick="viewProduct('${escapeHTML(
-                  product.id
-                )}')"
-              >
-                View
-              </button>
-
-
-              <button
-                type="button"
-                onclick="addToCart('${escapeHTML(
-                  product.id
-                )}')"
-              >
-                Add to Cart
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-      `;
-
-      })
-
-      .join("");
-
-
-  updateProductStats();
-
+    </article>
+  `).join("");
 }
-
-
-/* =========================================================
-   PRODUCT STATS
-========================================================= */
-
-function updateProductStats() {
-
-  const products =
-    getAllProducts();
-
-
-  const productCount =
-    document.getElementById(
-      "productCount"
-    );
-
-
-  const totalProducts =
-    document.getElementById(
-      "totalProducts"
-    );
-
-
-  if (productCount) {
-
-    productCount.textContent =
-      products.length;
-
-  }
-
-
-  if (totalProducts) {
-
-    totalProducts.textContent =
-      products.length;
-
-  }
-
-}
-
 
 /* =========================================================
    PRODUCT MODAL
-========================================================= */
+   ========================================================= */
 
-function viewProduct(productId) {
-
+function openProductModal(productId) {
   const product =
-    getAllProducts()
-      .find(
-        item =>
-          item.id === productId
-      );
-
+    getAllProducts().find(item => item.id === productId);
 
   if (!product) return;
 
+  currentProductId = productId;
 
   const modal =
-    document.getElementById(
-      "productModal"
-    );
-
+    document.getElementById("productModal");
 
   const content =
-    document.getElementById(
-      "productModalContent"
-    );
-
+    document.getElementById("productModalContent");
 
   if (!modal || !content) return;
 
-
-  const category =
-    product.category ||
-    "Accessories";
-
-
   content.innerHTML = `
-
-    <div class="product-modal-grid">
+    <div class="product-modal-layout">
 
       <div class="product-modal-image">
-
         <img
-          src="${escapeHTML(
-            product.image
-          )}"
-          alt="${escapeHTML(
-            product.name
-          )}"
+          src="${escapeHTML(product.image)}"
+          alt="${escapeHTML(product.name)}"
+          onerror="this.src='https://via.placeholder.com/800x600?text=SmithX+Product'"
         >
-
       </div>
 
-
-      <div>
-
-        <p class="hero-eyebrow">
-          SMITHX MARKETPLACE
-        </p>
-
+      <div class="product-modal-info">
 
         <span class="product-category">
-          ${escapeHTML(
-            category
-          )}
+          ${escapeHTML(product.category)}
         </span>
 
+        <h2>${escapeHTML(product.name)}</h2>
 
-        <h2>
-          ${escapeHTML(
-            product.name
-          )}
-        </h2>
-
-
-        <div class="product-price">
-          ${formatKES(
-            product.price
-          )}
+        <div class="modal-price">
+          ${formatKES(product.price)}
         </div>
 
-
-        <p style="
-          color:#667085;
-          margin:20px 0;
-        ">
-          ${escapeHTML(
-            product.description
-          )}
+        <p>
+          ${escapeHTML(product.description)}
         </p>
 
-
         <button
-          class="primary-button"
           type="button"
-          onclick="
-            addToCart('${escapeHTML(
-              product.id
-            )}');
-            closeProductModal();
-          "
+          class="primary-button"
+          onclick="addToCart('${escapeHTML(product.id)}'); closeProductModal();"
         >
-          Add to Cart
+          Add to cart
         </button>
 
       </div>
 
     </div>
-
   `;
-
 
   modal.classList.add("active");
 
-
-  modal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
+  trackEvent("productView");
 }
-
 
 function closeProductModal() {
-
   const modal =
-    document.getElementById(
-      "productModal"
-    );
+    document.getElementById("productModal");
 
+  if (modal) {
+    modal.classList.remove("active");
+  }
 
-  if (!modal) return;
-
-
-  modal.classList.remove(
-    "active"
-  );
-
-
-  modal.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
+  currentProductId = null;
 }
-
 
 /* =========================================================
    CART
-========================================================= */
-
-function getCart() {
-
-  try {
-
-    return JSON.parse(
-      localStorage.getItem(
-        STORAGE.cart
-      ) || "[]"
-    );
-
-  } catch {
-
-    return [];
-
-  }
-
-}
-
-
-function saveCart(cart) {
-
-  localStorage.setItem(
-    STORAGE.cart,
-    JSON.stringify(cart)
-  );
-
-}
-
-
-/* =========================================================
-   ADD TO CART
-========================================================= */
+   ========================================================= */
 
 function addToCart(productId) {
-
   const product =
-    getAllProducts()
-      .find(
-        item =>
-          item.id === productId
-      );
+    getAllProducts().find(item => item.id === productId);
 
+  if (!product) return;
 
-  if (!product) {
-
-    showToast(
-      "Product could not be found."
-    );
-
-    return;
-
-  }
-
-
-  const cart =
-    getCart();
-
+  const cart = getCart();
 
   const existing =
-    cart.find(
-      item =>
-        item.id === productId
-    );
-
+    cart.find(item => item.id === productId);
 
   if (existing) {
-
-    existing.quantity =
-      Number(
-        existing.quantity || 0
-      ) + 1;
-
+    existing.quantity += 1;
   } else {
-
     cart.push({
-
-      id: productId,
-
+      id: product.id,
       quantity: 1
-
     });
-
   }
 
+  saveCart(cart);
+
+  renderCart();
+  updateCartCount();
+
+  showToast(`${product.name} added to cart.`);
+}
+
+function removeFromCart(productId) {
+  let cart = getCart();
+
+  cart = cart.filter(
+    item => item.id !== productId
+  );
 
   saveCart(cart);
 
-
-  updateCartCount();
-
   renderCart();
-
-
-  showToast(
-    `${product.name} added to cart`
-  );
-
+  updateCartCount();
 }
 
-
-/* =========================================================
-   REMOVE
-========================================================= */
-
-function removeFromCart(
-  productId
-) {
-
-  const cart =
-    getCart()
-      .filter(
-        item =>
-          item.id !== productId
-      );
-
-
-  saveCart(cart);
-
-
-  renderCart();
-
-  updateCartCount();
-
-
-  showToast(
-    "Product removed from cart."
-  );
-
-}
-
-
-/* =========================================================
-   QUANTITY
-========================================================= */
-
-function changeQuantity(
-  productId,
-  amount
-) {
-
-  const cart =
-    getCart();
-
+function changeCartQuantity(productId, amount) {
+  const cart = getCart();
 
   const item =
-    cart.find(
-      cartItem =>
-        cartItem.id === productId
-    );
-
+    cart.find(cartItem => cartItem.id === productId);
 
   if (!item) return;
 
-
-  item.quantity =
-    Number(
-      item.quantity || 0
-    ) +
-    Number(
-      amount || 0
-    );
-
+  item.quantity += amount;
 
   if (item.quantity <= 0) {
-
-    const updatedCart =
-      cart.filter(
-        cartItem =>
-          cartItem.id !== productId
-      );
-
-
-    saveCart(
-      updatedCart
-    );
-
-  } else {
-
-    saveCart(cart);
-
+    removeFromCart(productId);
+    return;
   }
 
+  saveCart(cart);
 
   renderCart();
-
   updateCartCount();
-
 }
 
-
-/* =========================================================
-   RENDER CART
-========================================================= */
-
 function renderCart() {
-
   const container =
-    document.getElementById(
-      "cartItems"
-    );
-
+    document.getElementById("cartItems");
 
   const subtotalElement =
-    document.getElementById(
-      "cartSubtotal"
-    );
-
+    document.getElementById("cartSubtotal");
 
   const totalElement =
-    document.getElementById(
-      "cartTotal"
-    );
-
+    document.getElementById("cartTotal");
 
   if (!container) return;
 
+  const cart = getCart();
 
-  const cart =
-    getCart();
-
-
-  const products =
-    getAllProducts();
-
-
-  if (cart.length === 0) {
-
+  if (!cart.length) {
     container.innerHTML = `
-
-      <div style="
-        padding:35px 10px;
-        text-align:center;
-        color:#667085;
-      ">
-
-        <h3>
-          Your cart is empty
-        </h3>
-
-        <p>
-          Add products from the marketplace.
-        </p>
-
+      <div class="empty-cart">
+        <div class="empty-cart-icon">🛒</div>
+        <h3>Your cart is empty</h3>
+        <p>Add products from the marketplace.</p>
       </div>
-
     `;
 
-
     if (subtotalElement) {
-
-      subtotalElement.textContent =
-        formatKES(0);
-
+      subtotalElement.textContent = formatKES(0);
     }
-
 
     if (totalElement) {
-
-      totalElement.textContent =
-        formatKES(0);
-
+      totalElement.textContent = formatKES(0);
     }
 
-
     return;
-
   }
 
+  let subtotal = 0;
 
-  let total = 0;
+  container.innerHTML = cart.map(item => {
+    const product =
+      getAllProducts().find(
+        productItem => productItem.id === item.id
+      );
 
+    if (!product) return "";
 
-  container.innerHTML =
+    const quantity =
+      Number(item.quantity) || 1;
 
-    cart
+    const lineTotal =
+      Number(product.price) * quantity;
 
-      .map(item => {
+    subtotal += lineTotal;
 
-        const product =
-          products.find(
-            p =>
-              p.id === item.id
-          );
+    return `
+      <div class="cart-item">
 
+        <img
+          src="${escapeHTML(product.image)}"
+          alt="${escapeHTML(product.name)}"
+          onerror="this.src='https://via.placeholder.com/200x150?text=SmithX'"
+        >
 
-        if (!product) return "";
+        <div class="cart-item-info">
 
+          <h4>${escapeHTML(product.name)}</h4>
 
-        const quantity =
-          Number(
-            item.quantity || 0
-          );
+          <strong>
+            ${formatKES(product.price)}
+          </strong>
 
+          <div class="cart-quantity">
 
-        const itemTotal =
-          Number(
-            product.price
-          ) *
-          quantity;
-
-
-        total += itemTotal;
-
-
-        return `
-
-          <div class="cart-item">
-
-            <img
-              src="${escapeHTML(
-                product.image
-              )}"
-              alt="${escapeHTML(
-                product.name
-              )}"
+            <button
+              type="button"
+              onclick="changeCartQuantity('${escapeHTML(product.id)}', -1)"
             >
+              −
+            </button>
 
+            <span>${quantity}</span>
 
-            <div>
-
-              <h4>
-                ${escapeHTML(
-                  product.name
-                )}
-              </h4>
-
-
-              <p>
-                ${formatKES(
-                  product.price
-                )}
-              </p>
-
-
-              <div style="
-                display:flex;
-                align-items:center;
-                gap:8px;
-                margin-top:8px;
-              ">
-
-                <button
-                  type="button"
-                  onclick="
-                    changeQuantity(
-                      '${escapeHTML(
-                        product.id
-                      )}',
-                      -1
-                    )
-                  "
-                >
-                  −
-                </button>
-
-
-                <strong>
-                  ${quantity}
-                </strong>
-
-
-                <button
-                  type="button"
-                  onclick="
-                    changeQuantity(
-                      '${escapeHTML(
-                        product.id
-                      )}',
-                      1
-                    )
-                  "
-                >
-                  +
-                </button>
-
-              </div>
-
-
-              <button
-                type="button"
-                class="cart-remove"
-                onclick="
-                  removeFromCart(
-                    '${escapeHTML(
-                      product.id
-                    )}'
-                  )
-                "
-              >
-                Remove
-              </button>
-
-            </div>
-
-
-            <strong>
-              ${formatKES(
-                itemTotal
-              )}
-            </strong>
+            <button
+              type="button"
+              onclick="changeCartQuantity('${escapeHTML(product.id)}', 1)"
+            >
+              +
+            </button>
 
           </div>
 
-        `;
+          <button
+            type="button"
+            class="remove-cart-item"
+            onclick="removeFromCart('${escapeHTML(product.id)}')"
+          >
+            Remove
+          </button>
 
-      })
+        </div>
 
-      .join("");
-
+      </div>
+    `;
+  }).join("");
 
   if (subtotalElement) {
-
     subtotalElement.textContent =
-      formatKES(total);
-
+      formatKES(subtotal);
   }
-
 
   if (totalElement) {
-
     totalElement.textContent =
-      formatKES(total);
-
+      formatKES(subtotal);
   }
-
 }
 
-
-/* =========================================================
-   CART COUNT
-========================================================= */
-
 function updateCartCount() {
+  const element =
+    document.getElementById("cartCount");
 
-  const cart =
-    getCart();
+  if (!element) return;
 
-
-  const count =
-    cart.reduce(
-      (
-        sum,
-        item
-      ) =>
-        sum +
-        Number(
-          item.quantity || 0
-        ),
+  const total =
+    getCart().reduce(
+      (sum, item) =>
+        sum + (Number(item.quantity) || 0),
       0
     );
 
-
-  const elements =
-    document.querySelectorAll(
-      "#cartCount, .cart-count"
-    );
-
-
-  elements.forEach(
-    element => {
-
-      element.textContent =
-        count;
-
-    }
-  );
-
+  element.textContent = total;
 }
-
-
-/* =========================================================
-   OPEN CART
-========================================================= */
 
 function openCart() {
-
   const panel =
-    document.getElementById(
-      "cartPanel"
-    );
-
-
-  if (!panel) {
-
-    console.error(
-      "SMITHX: Cart panel not found."
-    );
-
-    return;
-
-  }
-
-
-  renderCart();
-
-  updateCartCount();
-
-
-  panel.classList.add(
-    "active"
-  );
-
-}
-
-
-/* =========================================================
-   CLOSE CART
-========================================================= */
-
-function closeCart() {
-
-  const panel =
-    document.getElementById(
-      "cartPanel"
-    );
-
+    document.getElementById("cartPanel");
 
   if (!panel) return;
 
+  panel.classList.add("active");
 
-  panel.classList.remove(
-    "active"
-  );
-
+  renderCart();
 }
 
+function closeCart() {
+  const panel =
+    document.getElementById("cartPanel");
+
+  if (panel) {
+    panel.classList.remove("active");
+  }
+}
 
 /* =========================================================
-   CHECKOUT
-========================================================= */
+   DEMO CHECKOUT
+   ========================================================= */
 
-function checkout() {
+function demoCheckout() {
+  const cart = getCart();
 
-  const cart =
-    getCart();
-
-
-  if (cart.length === 0) {
-
-    showToast(
-      "Your cart is empty."
-    );
-
+  if (!cart.length) {
+    showToast("Your cart is empty.");
     return;
-
   }
-
-
-  const products =
-    getAllProducts();
-
 
   let total = 0;
 
+  cart.forEach(item => {
+    const product =
+      getAllProducts().find(
+        productItem => productItem.id === item.id
+      );
 
-  cart.forEach(
-    item => {
-
-      const product =
-        products.find(
-          p =>
-            p.id === item.id
-        );
-
-
-      if (product) {
-
-        total +=
-          Number(
-            product.price
-          ) *
-          Number(
-            item.quantity || 0
-          );
-
-      }
-
+    if (product) {
+      total +=
+        Number(product.price) *
+        Number(item.quantity || 1);
     }
-  );
+  });
 
+  trackEvent("order", total);
 
-  if (total <= 0) {
-
-    showToast(
-      "Unable to calculate your order."
-    );
-
-    return;
-
-  }
-
-
-  const analytics =
-    getAnalytics();
-
-
-  analytics.sales =
-    Number(
-      analytics.sales || 0
-    ) +
-    total;
-
-
-  analytics.orders =
-    Number(
-      analytics.orders || 0
-    ) +
-    1;
-
-
-  saveAnalytics(
-    analytics
-  );
-
-
-  localStorage.removeItem(
-    STORAGE.cart
-  );
-
+  localStorage.removeItem(STORAGE.cart);
 
   renderCart();
-
   updateCartCount();
 
-  updateDashboard();
-
-
   showToast(
-    "Demo checkout completed successfully."
+    "Demo checkout complete. Thank you for testing SmithX!"
   );
-
-
-  setTimeout(
-    () => {
-
-      closeCart();
-
-    },
-    1200
-  );
-
 }
-
 
 /* =========================================================
-   IMAGE UPLOAD
-========================================================= */
+   IMAGE COMPRESSION
+   ========================================================= */
 
-function compressImage(
-  file,
-  maxWidth = 900,
-  quality = 0.78
-) {
-
-  return new Promise(
-    (
-      resolve,
-      reject
-    ) => {
-
-      const reader =
-        new FileReader();
-
-
-      reader.onload =
-        event => {
-
-          const image =
-            new Image();
-
-
-          image.onload =
-            () => {
-
-              const scale =
-                Math.min(
-                  1,
-                  maxWidth /
-                    image.width
-                );
-
-
-              const canvas =
-                document.createElement(
-                  "canvas"
-                );
-
-
-              canvas.width =
-                Math.round(
-                  image.width *
-                  scale
-                );
-
-
-              canvas.height =
-                Math.round(
-                  image.height *
-                  scale
-                );
-
-
-              const ctx =
-                canvas.getContext(
-                  "2d"
-                );
-
-
-              ctx.drawImage(
-                image,
-                0,
-                0,
-                canvas.width,
-                canvas.height
-              );
-
-
-              resolve(
-                canvas.toDataURL(
-                  "image/jpeg",
-                  quality
-                )
-              );
-
-            };
-
-
-          image.onerror =
-            reject;
-
-
-          image.src =
-            event.target.result;
-
-        };
-
-
-      reader.onerror =
-        reject;
-
-
-      reader.readAsDataURL(
-        file
-      );
-
+function compressImage(file, maxWidth = 1200, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    if (!file) {
+      reject(new Error("No image selected."));
+      return;
     }
-  );
 
+    const reader = new FileReader();
+
+    reader.onload = event => {
+      const img = new Image();
+
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          const ratio = maxWidth / width;
+
+          width = maxWidth;
+          height = Math.round(height * ratio);
+        }
+
+        const canvas =
+          document.createElement("canvas");
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const context =
+          canvas.getContext("2d");
+
+        context.drawImage(
+          img,
+          0,
+          0,
+          width,
+          height
+        );
+
+        resolve(
+          canvas.toDataURL(
+            "image/jpeg",
+            quality
+          )
+        );
+      };
+
+      img.onerror = reject;
+      img.src = event.target.result;
+    };
+
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
+/* =========================================================
+   IMAGE PREVIEW
+   ========================================================= */
 
-async function handleProductImage(
-  event
-) {
+function setupImagePreview() {
+  const input =
+    document.getElementById("productImage");
 
-  const file =
-    event.target.files &&
-    event.target.files[0];
+  const preview =
+    document.getElementById("imagePreview");
 
+  const previewImage =
+    document.getElementById("previewImage");
 
-  if (!file) return;
-
-
-  if (
-    !file.type.startsWith(
-      "image/"
-    )
-  ) {
-
-    showToast(
-      "Please choose an image file."
-    );
-
+  if (!input || !preview || !previewImage) {
     return;
-
   }
 
+  input.addEventListener("change", () => {
+    const file = input.files?.[0];
 
-  try {
-
-    const compressed =
-      await compressImage(
-        file
-      );
-
-
-    const preview =
-      document.getElementById(
-        "previewImage"
-      );
-
-
-    const previewBox =
-      document.getElementById(
-        "imagePreview"
-      );
-
-
-    if (preview) {
-
-      preview.src =
-        compressed;
-
+    if (!file) {
+      preview.style.display = "none";
+      previewImage.src = "";
+      return;
     }
 
+    const reader = new FileReader();
 
-    if (previewBox) {
+    reader.onload = event => {
+      previewImage.src = event.target.result;
+      preview.style.display = "block";
+    };
 
-      previewBox.classList.remove(
-        "hidden"
-      );
-
-    }
-
-
-    event.target.dataset.image =
-      compressed;
-
-
-  } catch (error) {
-
-    console.error(error);
-
-
-    showToast(
-      "Could not process this image."
-    );
-
-  }
-
+    reader.readAsDataURL(file);
+  });
 }
-
 
 /* =========================================================
    PUBLISH PRODUCT
-========================================================= */
+   ========================================================= */
 
-function publishProduct() {
+async function publishProduct(event) {
+  if (event) {
+    event.preventDefault();
+  }
 
   const nameInput =
-    document.getElementById(
-      "productName"
-    );
-
+    document.getElementById("productName");
 
   const priceInput =
-    document.getElementById(
-      "productPrice"
-    );
-
+    document.getElementById("productPrice");
 
   const descriptionInput =
-    document.getElementById(
-      "productDescription"
-    );
-
-
-  const imageInput =
-    document.getElementById(
-      "productImage"
-    );
-
+    document.getElementById("productDescription");
 
   const categoryInput =
-    document.getElementById(
-      "productCategory"
-    );
+    document.getElementById("productCategory");
 
+  const imageInput =
+    document.getElementById("productImage");
 
   if (
     !nameInput ||
     !priceInput ||
-    !descriptionInput ||
-    !imageInput
+    !descriptionInput
   ) {
-
     return;
-
   }
-
 
   const name =
     nameInput.value.trim();
 
-
   const price =
-    Number(
-      priceInput.value
-    );
-
+    Number(priceInput.value);
 
   const description =
     descriptionInput.value.trim();
 
-
-  const image =
-    imageInput.dataset.image ||
-    "";
-
-
   const category =
-    categoryInput
-      ? categoryInput.value
-      : "Accessories";
-
+    categoryInput?.value || "Electronics";
 
   if (!name) {
-
-    showToast(
-      "Enter a product name."
-    );
-
+    showToast("Please enter a product name.");
     return;
-
   }
-
 
   if (!price || price <= 0) {
-
-    showToast(
-      "Enter a valid price."
-    );
-
+    showToast("Please enter a valid price.");
     return;
-
   }
-
 
   if (!description) {
-
-    showToast(
-      "Enter a product description."
-    );
-
+    showToast("Please add a product description.");
     return;
-
   }
-
-
-  if (!image) {
-
-    showToast(
-      "Choose a product image."
-    );
-
-    return;
-
-  }
-
 
   const customProducts =
     getCustomProducts();
 
-
-  if (
-    customProducts.length >= 3
-  ) {
-
+  if (customProducts.length >= 3) {
     showToast(
-      "Seller Studio limit reached: 3 additional products."
+      "Demo limit reached. You can publish up to 3 custom products."
     );
-
     return;
-
   }
 
+  let image =
+    "https://via.placeholder.com/900x700?text=SmithX+Product";
+
+  if (imageInput?.files?.[0]) {
+    try {
+      image =
+        await compressImage(
+          imageInput.files[0]
+        );
+    } catch {
+      showToast(
+        "Could not process the product image."
+      );
+      return;
+    }
+  }
 
   const product = {
-
     id:
       "custom-" +
       Date.now() +
@@ -1861,1042 +888,798 @@ function publishProduct() {
         .slice(2, 8),
 
     name,
-
     price,
-
     category,
-
     description,
-
     image
-
   };
 
+  customProducts.push(product);
 
-  customProducts.push(
-    product
-  );
-
-
-  saveCustomProducts(
-    customProducts
-  );
-
+  saveCustomProducts(customProducts);
 
   nameInput.value = "";
-
   priceInput.value = "";
-
   descriptionInput.value = "";
 
-  imageInput.value = "";
-
-
-  if (categoryInput) {
-
-    categoryInput.value =
-      "Electronics";
-
+  if (imageInput) {
+    imageInput.value = "";
   }
-
-
-  delete imageInput.dataset.image;
-
 
   const preview =
-    document.getElementById(
-      "previewImage"
-    );
+    document.getElementById("imagePreview");
 
-
-  const previewBox =
-    document.getElementById(
-      "imagePreview"
-    );
-
+  const previewImage =
+    document.getElementById("previewImage");
 
   if (preview) {
-
-    preview.src = "";
-
+    preview.style.display = "none";
   }
 
-
-  if (previewBox) {
-
-    previewBox.classList.add(
-      "hidden"
-    );
-
+  if (previewImage) {
+    previewImage.src = "";
   }
-
 
   renderProducts();
-
   updateDashboard();
 
-
   showToast(
-    "Product published to the marketplace."
+    "Product published successfully!"
   );
-
 
   document
     .getElementById("market")
     ?.scrollIntoView({
       behavior: "smooth"
     });
-
 }
-
 
 /* =========================================================
    DASHBOARD
-========================================================= */
+   ========================================================= */
 
 function updateDashboard() {
-
   const products =
     getAllProducts();
-
 
   const analytics =
     getAnalytics();
 
+  const dashboardProducts =
+    document.getElementById("dashboardProducts");
 
-  const visitors =
-    getDailyVisitors();
+  const dashboardOrders =
+    document.getElementById("dashboardOrders");
 
+  const dashboardRevenue =
+    document.getElementById("dashboardRevenue");
 
-  const productCount =
-    document.getElementById(
-      "dashboardProducts"
-    );
+  const dashboardVisitors =
+    document.getElementById("dashboardVisitors");
 
-
-  const ordersCount =
-    document.getElementById(
-      "dashboardOrders"
-    );
-
-
-  const revenue =
-    document.getElementById(
-      "dashboardRevenue"
-    );
-
-
-  const visitorsElement =
-    document.getElementById(
-      "dashboardVisitors"
-    );
-
-
-  if (productCount) {
-
-    productCount.textContent =
+  if (dashboardProducts) {
+    dashboardProducts.textContent =
       products.length;
-
   }
 
-
-  if (ordersCount) {
-
-    ordersCount.textContent =
-      Number(
-        analytics.orders || 0
-      );
-
+  if (dashboardOrders) {
+    dashboardOrders.textContent =
+      analytics.orders;
   }
 
-
-  if (revenue) {
-
-    revenue.textContent =
-      formatKES(
-        analytics.sales || 0
-      );
-
+  if (dashboardRevenue) {
+    dashboardRevenue.textContent =
+      formatKES(analytics.revenue);
   }
 
-
-  if (visitorsElement) {
-
-    visitorsElement.textContent =
-      visitors;
-
+  if (dashboardVisitors) {
+    dashboardVisitors.textContent =
+      analytics.visitors;
   }
-
-
-  updateProductStats();
-
 }
 
-
-/* =========================================================
-   RESET ANALYTICS
-========================================================= */
-
 function resetAnalytics() {
-
-  const confirmed =
-    window.confirm(
-      "Reset demo sales and order analytics?"
-    );
-
-
-  if (!confirmed) return;
-
-
-  saveAnalytics({
-
-    sales: 0,
-
-    orders: 0
-
-  });
-
+  localStorage.removeItem(STORAGE.analytics);
 
   updateDashboard();
 
-
   showToast(
-    "Dashboard analytics reset."
+    "Demo analytics have been reset."
   );
-
 }
-
 
 /* =========================================================
    UPDATES
-========================================================= */
+   ========================================================= */
 
-function toggleUpdateHistory() {
+function setupUpdatesToggle() {
+  const button =
+    document.getElementById("updatesToggle");
 
   const history =
-    document.getElementById(
-      "updateHistory"
-    );
+    document.getElementById("updateHistory");
 
+  if (!button || !history) return;
 
-  const button =
-    document.getElementById(
-      "updatesToggle"
-    );
-
-
-  if (!history || !button) {
-
-    return;
-
-  }
-
-
-  const isHidden =
-    history.style.display ===
-      "none" ||
-    history.style.display ===
-      "";
-
-
-  if (isHidden) {
+  button.addEventListener("click", () => {
+    const hidden =
+      history.style.display === "none" ||
+      history.style.display === "";
 
     history.style.display =
-      "block";
-
-
-    button.textContent =
-      "Hide Updates";
-
-  } else {
-
-    history.style.display =
-      "none";
-
+      hidden ? "block" : "none";
 
     button.textContent =
-      "View Updates";
-
-  }
-
+      hidden ? "Hide updates" : "View updates";
+  });
 }
-
 
 /* =========================================================
    NAVIGATION
-========================================================= */
+   ========================================================= */
 
-function scrollToSection(id) {
+function setupNavigation() {
+  document
+    .querySelectorAll('a[href^="#"]')
+    .forEach(link => {
+      link.addEventListener("click", event => {
+        const targetId =
+          link.getAttribute("href");
 
-  const element =
-    document.getElementById(id);
+        if (
+          !targetId ||
+          targetId === "#"
+        ) {
+          return;
+        }
 
+        const target =
+          document.querySelector(targetId);
 
-  if (!element) return;
+        if (!target) return;
 
+        event.preventDefault();
 
-  element.scrollIntoView({
-
-    behavior: "smooth",
-
-    block: "start"
-
-  });
-
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      });
+    });
 }
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-let toastTimer = null;
-
-
-function showToast(message) {
-
-  const toast =
-    document.getElementById(
-      "toast"
-    );
-
-
-  if (!toast) {
-
-    return;
-
-  }
-
-
-  toast.textContent =
-    message;
-
-
-  toast.classList.add(
-    "show"
-  );
-
-
-  clearTimeout(
-    toastTimer
-  );
-
-
-  toastTimer =
-    setTimeout(
-      () => {
-
-        toast.classList.remove(
-          "show"
-        );
-
-      },
-      3000
-    );
-
-}
-
 
 /* =========================================================
    SEARCH
-========================================================= */
+   ========================================================= */
 
 function setupSearch() {
-
   const searchInput =
-    document.getElementById(
-      "productSearch"
-    );
+    document.getElementById("productSearch");
 
-
-  if (!searchInput) {
-
-    return;
-
-  }
-
+  if (!searchInput) return;
 
   searchInput.addEventListener(
     "input",
-    event => {
+    () => {
+      currentSearch =
+        searchInput.value || "";
 
-      renderProducts(
-        event.target.value
-      );
-
+      renderProducts();
     }
   );
-
 }
-
 
 /* =========================================================
-   MODAL
-========================================================= */
+   TOAST
+   ========================================================= */
 
-function setupModalClosing() {
+function showToast(message) {
+  const toast =
+    document.getElementById("toast");
 
-  const modal =
-    document.getElementById(
-      "productModal"
-    );
+  if (!toast) return;
 
+  toast.textContent = message;
+  toast.classList.add("show");
 
-  if (!modal) return;
-
-
-  modal.addEventListener(
-    "click",
-    event => {
-
-      if (
-        event.target === modal
-      ) {
-
-        closeProductModal();
-
-      }
-
-    }
+  clearTimeout(
+    showToast.timeout
   );
 
+  showToast.timeout =
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2800);
 }
-
-
-/* =========================================================
-   ESCAPE KEY
-========================================================= */
-
-function setupKeyboardControls() {
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key ===
-        "Escape"
-      ) {
-
-        closeProductModal();
-
-        closeCart();
-
-        closeLogin();
-
-      }
-
-    }
-  );
-
-}
-
 
 /* =========================================================
    DEMO LOGIN SYSTEM
-========================================================= */
+   ========================================================= */
 
 function getDemoUser() {
-
-  try {
-
-    return JSON.parse(
-      localStorage.getItem(
-        DEMO_USER_KEY
-      ) || "null"
-    );
-
-  } catch {
-
-    return null;
-
-  }
-
+  return safeJSONParse(
+    localStorage.getItem(DEMO_USER_KEY),
+    null
+  );
 }
 
-
 function saveDemoUser(user) {
-
   localStorage.setItem(
     DEMO_USER_KEY,
     JSON.stringify(user)
   );
-
 }
 
+/* =========================================================
+   OPEN LOGIN
+   ========================================================= */
 
 function openLogin() {
-
   const overlay =
-    document.getElementById(
-      "loginOverlay"
-    );
-
+    document.getElementById("loginOverlay");
 
   if (!overlay) return;
 
+  overlay.classList.add("active");
+
+  document.body.classList.add(
+    "login-open"
+  );
 
   showLoginForm();
 
-  overlay.classList.add(
-    "active"
-  );
-
-
-  const email =
-    document.getElementById(
-      "loginEmail"
-    );
-
-
-  if (email) {
-
-    setTimeout(
-      () => email.focus(),
-      100
-    );
-
-  }
-
+  setTimeout(() => {
+    document
+      .getElementById("loginEmail")
+      ?.focus();
+  }, 150);
 }
 
+/* =========================================================
+   CLOSE LOGIN
+   ========================================================= */
 
 function closeLogin() {
-
   const overlay =
-    document.getElementById(
-      "loginOverlay"
-    );
-
+    document.getElementById("loginOverlay");
 
   if (!overlay) return;
 
+  overlay.classList.remove("active");
 
-  overlay.classList.remove(
-    "active"
+  document.body.classList.remove(
+    "login-open"
   );
-
 }
 
+/* =========================================================
+   LOGIN / REGISTER TABS
+   ========================================================= */
 
 function showLoginForm() {
-
-  const login =
+  const loginSection =
     document.getElementById(
       "loginFormSection"
     );
 
-
-  const register =
+  const registerSection =
     document.getElementById(
       "registerFormSection"
     );
 
-
-  if (login) {
-
-    login.style.display =
+  if (loginSection) {
+    loginSection.style.display =
       "block";
-
   }
 
-
-  if (register) {
-
-    register.style.display =
+  if (registerSection) {
+    registerSection.style.display =
       "none";
-
   }
-
 }
-
 
 function showRegisterForm() {
-
-  const login =
+  const loginSection =
     document.getElementById(
       "loginFormSection"
     );
 
-
-  const register =
+  const registerSection =
     document.getElementById(
       "registerFormSection"
     );
 
-
-  if (login) {
-
-    login.style.display =
+  if (loginSection) {
+    loginSection.style.display =
       "none";
-
   }
 
-
-  if (register) {
-
-    register.style.display =
+  if (registerSection) {
+    registerSection.style.display =
       "block";
-
   }
-
 }
 
+/* =========================================================
+   PASSWORD VISIBILITY
+   ========================================================= */
 
-function togglePassword(
-  inputId,
-  button
-) {
-
+function togglePassword(inputId, button) {
   const input =
-    document.getElementById(
-      inputId
-    );
+    document.getElementById(inputId);
 
+  if (!input) return;
 
-  if (!input || !button) return;
+  if (input.type === "password") {
+    input.type = "text";
 
-
-  if (
-    input.type ===
-    "password"
-  ) {
-
-    input.type =
-      "text";
-
-    button.textContent =
-      "Hide";
-
+    if (button) {
+      button.textContent = "Hide";
+    }
   } else {
+    input.type = "password";
 
-    input.type =
-      "password";
-
-    button.textContent =
-      "Show";
-
+    if (button) {
+      button.textContent = "Show";
+    }
   }
-
 }
 
+/* =========================================================
+   DEMO REGISTER
+   ========================================================= */
 
-function demoRegister() {
+function demoRegister(event) {
+  if (event) {
+    event.preventDefault();
+  }
 
   const name =
-    document.getElementById(
-      "registerName"
-    )?.value.trim();
-
+    document
+      .getElementById("registerName")
+      ?.value
+      .trim();
 
   const email =
-    document.getElementById(
-      "registerEmail"
-    )?.value.trim();
-
+    document
+      .getElementById("registerEmail")
+      ?.value
+      .trim()
+      .toLowerCase();
 
   const password =
-    document.getElementById(
-      "registerPassword"
-    )?.value;
-
+    document
+      .getElementById("registerPassword")
+      ?.value;
 
   const accountType =
-    document.getElementById(
-      "accountType"
-    )?.value;
+    document
+      .getElementById("accountType")
+      ?.value || "Seller";
 
-
-  if (
-    !name ||
-    !email ||
-    !password
-  ) {
-
-    showToast(
-      "Please complete all required fields."
-    );
-
+  if (!name) {
+    showToast("Please enter your name.");
     return;
-
   }
 
-
-  if (
-    password.length < 4
-  ) {
-
-    showToast(
-      "Demo password must contain at least 4 characters."
-    );
-
+  if (!email) {
+    showToast("Please enter your email.");
     return;
-
   }
 
+  if (!password || password.length < 4) {
+    showToast(
+      "Password must contain at least 4 characters."
+    );
+    return;
+  }
+
+  /*
+    DEMO ONLY:
+    The password is intentionally NOT stored.
+    This is not real production authentication.
+  */
 
   const user = {
-
     name,
-
     email,
-
-    accountType:
-      accountType ||
-      "buyer",
-
-    loggedIn: true
-
+    accountType,
+    loggedIn: true,
+    createdAt: new Date().toISOString()
   };
-
 
   saveDemoUser(user);
 
+  updateLoginButton();
 
   closeLogin();
 
-  updateLoginButton();
-
-
   showToast(
-    `Welcome to SMITHX, ${name}!`
+    `Welcome to SmithX, ${name}!`
   );
-
-
-  const nameInput =
-    document.getElementById(
-      "registerName"
-    );
-
-
-  const emailInput =
-    document.getElementById(
-      "registerEmail"
-    );
-
-
-  const passwordInput =
-    document.getElementById(
-      "registerPassword"
-    );
-
-
-  if (nameInput) {
-
-    nameInput.value = "";
-
-  }
-
-
-  if (emailInput) {
-
-    emailInput.value = "";
-
-  }
-
-
-  if (passwordInput) {
-
-    passwordInput.value = "";
-
-  }
-
-
-  showLoginForm();
-
 }
 
+/* =========================================================
+   DEMO LOGIN
+   ========================================================= */
 
-function demoLogin() {
+function demoLogin(event) {
+  if (event) {
+    event.preventDefault();
+  }
 
   const email =
-    document.getElementById(
-      "loginEmail"
-    )?.value.trim();
+    document
+      .getElementById("loginEmail")
+      ?.value
+      .trim()
+      .toLowerCase();
 
+  const password =
+    document
+      .getElementById("loginPassword")
+      ?.value;
+
+  const user =
+    getDemoUser();
 
   if (!email) {
-
     showToast(
       "Please enter your email."
     );
-
     return;
-
   }
 
-
-  const existingUser =
-    getDemoUser();
-
-
-  if (!existingUser) {
-
+  if (!password) {
     showToast(
-      "Create a demo account first."
+      "Please enter your password."
+    );
+    return;
+  }
+
+  if (!user) {
+    showToast(
+      "No demo account found. Create an account first."
     );
 
     showRegisterForm();
 
-    return;
+    const registerEmail =
+      document.getElementById(
+        "registerEmail"
+      );
 
+    if (registerEmail) {
+      registerEmail.value = email;
+    }
+
+    return;
   }
 
-
-  if (
-    email.toLowerCase() !==
-    String(
-      existingUser.email
-    ).toLowerCase()
-  ) {
-
+  if (user.email !== email) {
     showToast(
       "Email does not match the demo account."
     );
-
     return;
-
   }
 
+  user.loggedIn = true;
 
-  existingUser.loggedIn =
-    true;
+  saveDemoUser(user);
 
-
-  saveDemoUser(
-    existingUser
-  );
-
+  updateLoginButton();
 
   closeLogin();
 
-  updateLoginButton();
-
-
   showToast(
-    `Welcome back, ${existingUser.name}!`
+    `Welcome back, ${user.name}!`
   );
-
 }
 
+/* =========================================================
+   LOGOUT
+   ========================================================= */
 
 function logoutDemoUser() {
-
-  const existingUser =
+  const user =
     getDemoUser();
 
+  if (!user) return;
 
-  if (existingUser) {
+  user.loggedIn = false;
 
-    existingUser.loggedIn =
-      false;
-
-
-    saveDemoUser(
-      existingUser
-    );
-
-  }
-
+  saveDemoUser(user);
 
   updateLoginButton();
-
 
   showToast(
     "You have been logged out."
   );
-
 }
 
+/* =========================================================
+   LOGIN BUTTON
+   ========================================================= */
 
 function updateLoginButton() {
-
-  const existingUser =
-    getDemoUser();
-
+  /*
+    IMPORTANT:
+    We use ONE button only.
+    This prevents duplicate login buttons
+    and keeps the button visible on mobile.
+  */
 
   let loginButton =
     document.getElementById(
       "smithxLoginButton"
     );
 
+  /*
+    Compatibility with the previous HTML
+    in case the old ID still exists.
+  */
 
   if (!loginButton) {
-
-    const nav =
-      document.querySelector(
-        ".nav-links"
-      );
-
-
-    if (!nav) return;
-
-
     loginButton =
-      document.createElement(
-        "button"
+      document.getElementById(
+        "loginNavButton"
       );
-
-
-    loginButton.id =
-      "smithxLoginButton";
-
-
-    loginButton.type =
-      "button";
-
-
-    loginButton.className =
-      "nav-login-btn";
-
-
-    nav.appendChild(
-      loginButton
-    );
-
   }
 
+  if (!loginButton) return;
 
-  if (
-    existingUser &&
-    existingUser.loggedIn
-  ) {
+  const user =
+    getDemoUser();
 
+  if (user && user.loggedIn) {
     loginButton.textContent =
-      `👤 ${existingUser.name}`;
-
+      `👤 ${user.name}`;
 
     loginButton.onclick =
       logoutDemoUser;
 
-
     loginButton.title =
       "Click to logout";
 
+    loginButton.setAttribute(
+      "aria-label",
+      `Logout ${user.name}`
+    );
   } else {
-
     loginButton.textContent =
       "Login";
-
 
     loginButton.onclick =
       openLogin;
 
-
     loginButton.title =
       "Login to SmithX";
 
+    loginButton.setAttribute(
+      "aria-label",
+      "Login to SmithX"
+    );
   }
-
 }
 
-
 /* =========================================================
-   LOGIN OVERLAY CONTROLS
-========================================================= */
+   LOGIN CONTROLS
+   ========================================================= */
 
 function setupLoginControls() {
-
   const overlay =
     document.getElementById(
       "loginOverlay"
     );
 
+  const loginForm =
+    document.getElementById(
+      "loginForm"
+    );
 
-  if (!overlay) return;
+  const registerForm =
+    document.getElementById(
+      "registerForm"
+    );
 
+  if (loginForm) {
+    loginForm.addEventListener(
+      "submit",
+      demoLogin
+    );
+  }
 
-  overlay.addEventListener(
-    "click",
-    event => {
+  if (registerForm) {
+    registerForm.addEventListener(
+      "submit",
+      demoRegister
+    );
+  }
 
-      if (
-        event.target ===
-        overlay
-      ) {
+  /*
+    Clicking the dark area outside
+    the login card closes the popup.
+  */
 
-        closeLogin();
-
+  if (overlay) {
+    overlay.addEventListener(
+      "click",
+      event => {
+        if (event.target === overlay) {
+          closeLogin();
+        }
       }
+    );
+  }
 
-    }
-  );
+  /*
+    Prevent clicks inside the login card
+    from closing the popup.
+  */
 
+  const loginCard =
+    document.querySelector(
+      ".login-card"
+    );
+
+  if (loginCard) {
+    loginCard.addEventListener(
+      "click",
+      event => {
+        event.stopPropagation();
+      }
+    );
+  }
 }
 
+/* =========================================================
+   AUTOMATIC LOGIN POPUP
+   ========================================================= */
+
+function showAutomaticLogin() {
+  const user =
+    getDemoUser();
+
+  /*
+    If the visitor is already logged in,
+    do not show the popup.
+  */
+
+  if (
+    user &&
+    user.loggedIn
+  ) {
+    return;
+  }
+
+  /*
+    Small delay gives the SmithX page
+    time to render before the popup appears.
+  */
+
+  setTimeout(() => {
+    openLogin();
+  }, 500);
+}
 
 /* =========================================================
-   INITIALIZE
-========================================================= */
+   KEYBOARD CONTROLS
+   ========================================================= */
+
+function setupKeyboardControls() {
+  document.addEventListener(
+    "keydown",
+    event => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      closeProductModal();
+      closeCart();
+      closeLogin();
+    }
+  );
+}
+
+/* =========================================================
+   INITIALIZATION
+   ========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   () => {
 
-    registerDailyVisitor();
-
-
-    setupCategoryFilter();
-
-
+    /* Product marketplace */
+    setupCategories();
     setupSellerCategory();
-
-
     renderProducts();
 
-
+    /* Cart */
     renderCart();
-
-
     updateCartCount();
 
+    /* Seller image upload */
+    setupImagePreview();
 
-    updateDashboard();
-
-
+    /* Search */
     setupSearch();
 
+    /* Navigation */
+    setupNavigation();
 
-    setupModalClosing();
+    /* Updates */
+    setupUpdatesToggle();
 
+    /* Analytics */
+    trackDailyVisitor();
+    updateDashboard();
 
-    setupKeyboardControls();
-
-
+    /* Login */
     setupLoginControls();
-
-
     updateLoginButton();
 
+    /*
+      Automatically open login for
+      visitors who are not logged in.
+    */
+    showAutomaticLogin();
 
-    /* Updates hidden initially */
-
-    const updateHistory =
-      document.getElementById(
-        "updateHistory"
-      );
-
-
-    const updateButton =
-      document.getElementById(
-        "updatesToggle"
-      );
-
-
-    if (updateHistory) {
-
-      updateHistory.style.display =
-        "none";
-
-    }
-
-
-    if (updateButton) {
-
-      updateButton.textContent =
-        "View Updates";
-
-    }
-
+    /* Keyboard */
+    setupKeyboardControls();
   }
 );
+
+/* =========================================================
+   GLOBAL FUNCTIONS
+   ========================================================= */
+
+window.openLogin = openLogin;
+window.closeLogin = closeLogin;
+
+window.showLoginForm =
+  showLoginForm;
+
+window.showRegisterForm =
+  showRegisterForm;
+
+window.togglePassword =
+  togglePassword;
+
+window.demoLogin =
+  demoLogin;
+
+window.demoRegister =
+  demoRegister;
+
+window.logoutDemoUser =
+  logoutDemoUser;
+
+window.addToCart =
+  addToCart;
+
+window.removeFromCart =
+  removeFromCart;
+
+window.changeCartQuantity =
+  changeCartQuantity;
+
+window.openCart =
+  openCart;
+
+window.closeCart =
+  closeCart;
+
+window.demoCheckout =
+  demoCheckout;
+
+window.openProductModal =
+  openProductModal;
+
+window.closeProductModal =
+  closeProductModal;
+
+window.publishProduct =
+  publishProduct;
+
+window.resetAnalytics =
+  resetAnalytics;
