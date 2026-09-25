@@ -1,1703 +1,1488 @@
-/* =========================================================
-   SMITHX MVP — STYLES
-   ========================================================= */
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #101828;
-  background: #ffffff;
-  line-height: 1.6;
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-img {
-  max-width: 100%;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-
-/* =========================================================
-   TOPBAR
-========================================================= */
-
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 5000;
-  background: rgba(255, 255, 255, 0.96);
-  border-bottom: 1px solid #eaecf0;
-  backdrop-filter: blur(12px);
-}
-
-.topbar-inner {
-  width: min(1180px, calc(100% - 32px));
-  min-height: 82px;
-  margin: auto;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 24px;
-}
-
-.smithx-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-.smithx-logo-image {
-  width: 76px;
-  height: 76px;
-  flex: 0 0 76px;
-  object-fit: contain;
-  display: block;
-  border-radius: 12px;
-}
-
-.smithx-brand-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.smithx-brand-text strong {
-  font-size: 22px;
-  letter-spacing: 1px;
-}
-
-.smithx-brand-text strong span,
-.footer-brand strong span {
-  color: #1769ff;
-}
-
-.smithx-brand-text small {
-  color: #667085;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.nav-links a {
-  color: #475467;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.nav-links a:hover {
-  color: #1769ff;
-}
-
-.nav-login-btn {
-  min-height: 40px;
-  padding: 0 16px;
-
-  border: 1px solid #1769ff;
-  border-radius: 9px;
-
-  background: #ffffff;
-  color: #1769ff;
-
-  font-weight: 800;
-  transition: 0.2s ease;
-}
-
-.nav-login-btn:hover {
-  background: #1769ff;
-  color: #ffffff;
-}
-
-.cart-button {
-  position: relative;
-  border: 0;
-  background: transparent;
-  font-size: 25px;
-  padding: 8px;
-  color: #101828;
-}
-
-.cart-count {
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  min-width: 20px;
-  height: 20px;
-  padding: 0 5px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-  background: #1769ff;
-  color: #ffffff;
-
-  font-size: 11px;
-  font-weight: 800;
-}
-
-
-/* =========================================================
-   GENERAL
-========================================================= */
-
-.section {
-  padding: 90px 0;
-}
-
-.section-inner {
-  width: min(1180px, calc(100% - 32px));
-  margin: auto;
-}
-
-.section-heading {
-  max-width: 720px;
-  margin-bottom: 38px;
-}
-
-.section-eyebrow,
-.hero-eyebrow {
-  margin: 0 0 10px;
-  color: #1769ff;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-}
-
-.section-heading h2 {
-  margin: 0 0 12px;
-  font-size: clamp(32px, 5vw, 48px);
-  line-height: 1.1;
-}
-
-.section-heading p {
-  margin: 0;
-  color: #667085;
-}
-
-
-/* =========================================================
-   HERO
-========================================================= */
-
-.hero {
-  padding: 100px 0 90px;
-
-  background:
-    radial-gradient(
-      circle at 85% 20%,
-      rgba(23, 105, 255, 0.12),
-      transparent 32%
-    ),
-    #f8fbff;
-}
-
-.hero-inner {
-  width: min(1180px, calc(100% - 32px));
-  margin: auto;
-
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-
-  align-items: center;
-  gap: 60px;
-}
-
-.hero-copy h1 {
-  margin: 0 0 22px;
-
-  font-size: clamp(54px, 8vw, 92px);
-  line-height: 0.95;
-  letter-spacing: -4px;
-}
-
-.hero-copy h1 span {
-  color: #1769ff;
-}
-
-.hero-description {
-  max-width: 650px;
-  margin: 0 0 30px;
-
-  color: #667085;
-  font-size: 18px;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.hero-panel {
-  min-height: 360px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-panel-card {
-  width: min(380px, 100%);
-  padding: 42px;
-
-  border: 1px solid #dbe6ff;
-  border-radius: 28px;
-
-  background: #ffffff;
-
-  box-shadow: 0 25px 70px rgba(16, 24, 40, 0.10);
-  text-align: center;
-}
-
-.hero-panel-card span {
-  display: block;
-  color: #1769ff;
-  font-weight: 800;
-  letter-spacing: 2px;
-}
-
-.hero-panel-card strong {
-  display: block;
-  margin: 18px 0;
-  font-size: 34px;
-  line-height: 1.1;
-}
-
-.hero-panel-card p {
-  margin: 0;
-  color: #667085;
-}
-
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-.primary-button,
-.secondary-button,
-.btn {
-  min-height: 46px;
-  padding: 11px 18px;
-
-  border-radius: 10px;
-  font-weight: 800;
-  transition: 0.2s ease;
-}
-
-.primary-button {
-  border: 1px solid #1769ff;
-  background: #1769ff;
-  color: #ffffff;
-}
-
-.primary-button:hover {
-  background: #0f55d8;
-  border-color: #0f55d8;
-  transform: translateY(-1px);
-}
-
-.secondary-button,
-.btn-secondary {
-  border: 1px solid #d0d5dd;
-  background: #ffffff;
-  color: #101828;
-}
-
-.secondary-button:hover,
-.btn-secondary:hover {
-  background: #f2f4f7;
-}
-
-.full-width {
-  width: 100%;
-}
-
-
-/* =========================================================
-   MARKETPLACE
-========================================================= */
-
-.marketplace-section {
-  background: #ffffff;
-}
-
-.marketplace-tools {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 30px;
-}
-
-.search-box {
-  flex: 1;
-}
-
-.search-box input {
-  width: 100%;
-  min-height: 48px;
-  padding: 0 16px;
-
-  border: 1px solid #d0d5dd;
-  border-radius: 10px;
-  outline: none;
-}
-
-.search-box input:focus {
-  border-color: #1769ff;
-  box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
-}
-
-
-/* =========================================================
-   MARKETPLACE CATEGORIES
-========================================================= */
-
-.category-filter-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  min-width: 180px;
-}
-
-.category-filter-label {
-  color: #667085;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
-
-.category-filter,
-.seller-category-select {
-  width: 100%;
-  min-height: 48px;
-  padding: 0 14px;
-
-  border: 1px solid #d0d5dd;
-  border-radius: 10px;
-
-  background: #ffffff;
-  color: #101828;
-
-  outline: none;
-  font-weight: 600;
-}
-
-.category-filter:focus,
-.seller-category-select:focus {
-  border-color: #1769ff;
-  box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
-}
-
-.product-category {
-  display: inline-block;
-  margin-bottom: 9px;
-  padding: 4px 9px;
-
-  border-radius: 999px;
-  background: #eaf2ff;
-  color: #1769ff;
-
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-}
-
-
-/* =========================================================
-   PRODUCTS
-========================================================= */
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
-}
-
-.product-card {
-  overflow: hidden;
-
-  border: 1px solid #eaecf0;
-  border-radius: 18px;
-
-  background: #ffffff;
-
-  box-shadow: 0 8px 30px rgba(16, 24, 40, 0.06);
-
-  transition: 0.2s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 15px 40px rgba(16, 24, 40, 0.10);
-}
-
-.product-image {
-  height: 245px;
-  background: #f2f4f7;
-  overflow: hidden;
-}
-
-.product-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.product-content {
-  padding: 20px;
-}
-
-.product-content h3 {
-  margin: 0 0 8px;
-  font-size: 19px;
-}
-
-.product-description {
-  min-height: 48px;
-  margin: 0 0 14px;
-
-  color: #667085;
-  font-size: 14px;
-}
-
-.product-price {
-  margin-bottom: 14px;
-  color: #1769ff;
-  font-size: 20px;
-  font-weight: 900;
-}
-
-.product-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.product-actions button {
-  flex: 1;
-  min-height: 44px;
-  padding: 10px 14px;
-
-  border-radius: 10px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.product-actions button:first-child {
-  background: #ffffff;
-  color: #101828;
-  border: 1px solid #d0d5dd;
-}
-
-.product-actions button:first-child:hover {
-  background: #f5f7fa;
-}
-
-.product-actions button:last-child {
-  background: #1769ff;
-  color: #ffffff;
-  border: 1px solid #1769ff;
-}
-
-.product-actions button:last-child:hover {
-  background: #0f55d8;
-  border-color: #0f55d8;
-}
-
-
-/* =========================================================
-   SELLER
-========================================================= */
-
-.seller-section {
-  background: #f8fbff;
-}
-
-.seller-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
-}
-
-.seller-card,
-.seller-info-card,
-.card,
-.about-card {
-  border: 1px solid #eaecf0;
-  border-radius: 20px;
-  background: #ffffff;
-  padding: 28px;
-  box-shadow: 0 8px 30px rgba(16, 24, 40, 0.05);
-}
-
-.seller-card h3,
-.seller-info-card h3 {
-  margin-top: 0;
-  font-size: 26px;
-}
-
-.muted {
-  color: #667085;
-}
-
-.form-group {
-  margin-top: 18px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 7px;
-  font-size: 14px;
-  font-weight: 800;
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-  width: 100%;
-  padding: 13px;
-
-  border: 1px solid #d0d5dd;
-  border-radius: 10px;
-
-  outline: none;
-  resize: vertical;
-}
-
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-  border-color: #1769ff;
-  box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
-}
-
-.seller-card .primary-button {
-  margin-top: 20px;
-}
-
-.image-preview {
-  margin-top: 15px;
-}
-
-.image-preview img {
-  width: 160px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.feature-list {
-  display: grid;
-  gap: 14px;
-  margin-top: 25px;
-}
-
-.feature-item {
-  padding: 16px;
-  border-radius: 12px;
-  background: #f8fafc;
-}
-
-.feature-item strong,
-.feature-item span {
-  display: block;
-}
-
-.feature-item span {
-  margin-top: 4px;
-  color: #667085;
-  font-size: 14px;
-}
-
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-}
-
-.dashboard-card {
-  padding: 24px;
-
-  border: 1px solid #eaecf0;
-  border-radius: 16px;
-
-  background: #ffffff;
-
-  box-shadow: 0 8px 25px rgba(16, 24, 40, 0.05);
-}
-
-.dashboard-card span {
-  display: block;
-  margin-bottom: 8px;
-  color: #667085;
-  font-size: 14px;
-}
-
-.dashboard-card strong {
-  font-size: 27px;
-}
-
-.dashboard-actions {
-  margin-top: 22px;
-}
-
-
-/* =========================================================
-   FEATURES
-========================================================= */
-
-.feature-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-}
-
-.feature-card {
-  padding: 25px;
-
-  border: 1px solid #eaecf0;
-  border-radius: 18px;
-
-  background: #ffffff;
-}
-
-.feature-icon {
-  width: 48px;
-  height: 48px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin-bottom: 18px;
-
-  border-radius: 12px;
-
-  background: #eaf2ff;
-  color: #1769ff;
-
-  font-weight: 900;
-}
-
-.feature-card h3 {
-  margin: 0 0 8px;
-}
-
-.feature-card p {
-  margin: 0;
-  color: #667085;
-  font-size: 14px;
-}
-
-
-/* =========================================================
-   ABOUT
-========================================================= */
-
-.about-section {
-  background: #f8fbff;
-}
-
-.about-card {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 50px;
-}
-
-.about-card h2 {
-  margin: 0;
-  font-size: clamp(32px, 5vw, 50px);
-  line-height: 1.05;
-}
-
-.about-card p {
-  color: #667085;
-}
-
-
-/* =========================================================
-   UPDATES
-========================================================= */
-
-.update-history {
-  margin-top: 22px;
-}
-
-.update-item {
-  padding: 20px 0;
-  border-bottom: 1px solid #eaecf0;
-}
-
-.update-item:last-child {
-  border-bottom: 0;
-}
-
-.update-item strong {
-  display: block;
-  margin-bottom: 6px;
-}
-
-.update-item p {
-  margin: 0;
-  color: #667085;
-}
-
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-.modal {
-  position: fixed;
-  inset: 0;
-  z-index: 9000;
-
-  display: none;
-  align-items: center;
-  justify-content: center;
-
-  padding: 20px;
-
-  background: rgba(16, 24, 40, 0.55);
-}
-
-.modal.active {
-  display: flex;
-}
-
-.modal-content {
-  position: relative;
-
-  width: min(850px, 100%);
-  max-height: 90vh;
-
-  overflow-y: auto;
-
-  padding: 30px;
-  border-radius: 20px;
-
-  background: #ffffff;
-}
-
-.modal-close {
-  border: 0;
-  background: transparent;
-  color: #344054;
-  font-size: 30px;
-  cursor: pointer;
-}
-
-.modal-content > .modal-close {
-  position: absolute;
-  top: 15px;
-  right: 18px;
-}
-
-.product-modal-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  align-items: center;
-}
-
-.product-modal-image img {
-  width: 100%;
-  max-height: 450px;
-  object-fit: cover;
-  border-radius: 15px;
-}
-
-
-/* =========================================================
-   CART
-========================================================= */
-
-.cart-panel {
-  position: fixed;
-
-  top: 0;
-  right: 0;
-
-  width: min(430px, 100%);
-  height: 100vh;
-
-  z-index: 99999;
-
-  display: flex;
-  flex-direction: column;
-
-  background: #ffffff;
-
-  transform: translateX(110%);
-  transition: transform 0.3s ease;
-
-  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.15);
-
-  overflow: hidden;
-}
-
-.cart-panel.active {
-  transform: translateX(0);
-}
-
-.cart-panel-header {
-  flex: 0 0 auto;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: 22px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.cart-panel-header h2 {
-  margin: 0;
-}
-
-.cart-items {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-}
-
-.cart-item {
-  display: grid;
-  grid-template-columns: 70px 1fr auto;
-  gap: 12px;
-  align-items: start;
-
-  padding: 15px 0;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.cart-item img {
-  width: 70px;
-  height: 70px;
-  object-fit: cover;
-  border-radius: 10px;
-  background: #f3f4f6;
-}
-
-.cart-item h4 {
-  margin: 0 0 5px;
-}
-
-.cart-item p {
-  margin: 0;
-  color: #667085;
-}
-
-.cart-item button {
-  cursor: pointer;
-}
-
-.cart-remove {
-  margin-top: 8px;
-  padding: 0;
-
-  border: 0;
-  background: transparent;
-  color: #d92d20;
-
-  font-weight: 700;
-}
-
-.cart-summary {
-  flex: 0 0 auto;
-
-  padding: 20px;
-
-  border-top: 1px solid #e5e7eb;
-  background: #ffffff;
-}
-
-.cart-summary-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  margin-bottom: 12px;
-}
-
-.total-row {
-  margin-bottom: 18px;
-  font-size: 20px;
-}
-
-.cart-summary .primary-button {
-  width: 100%;
-  min-height: 48px;
-
-  background: #1769ff;
-  color: #ffffff;
-
-  border: 0;
-  border-radius: 10px;
-
-  font-weight: 800;
-}
-
-
-/* =========================================================
-   SMITHX DEMO LOGIN
-========================================================= */
-
-.login-overlay {
-  position: fixed;
-  inset: 0;
-
-  z-index: 12000;
-
-  display: none;
-  align-items: center;
-  justify-content: center;
-
-  padding: 20px;
-
-  background: rgba(8, 20, 40, 0.72);
-
-  backdrop-filter: blur(8px);
-}
-
-.login-overlay.active {
-  display: flex;
-}
-
-.login-card {
-  position: relative;
-
-  width: min(100%, 430px);
-  max-height: 92vh;
-
-  overflow-y: auto;
-
-  padding: 32px;
-
-  border-radius: 20px;
-
-  background: #ffffff;
-
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
-
-  animation: smithxLoginIn 0.25s ease;
-}
-
-@keyframes smithxLoginIn {
-  from {
-    opacity: 0;
-    transform: translateY(18px) scale(0.98);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.login-close {
-  position: absolute;
-
-  top: 14px;
-  right: 16px;
-
-  width: 36px;
-  height: 36px;
-
-  border: 0;
-  border-radius: 50%;
-
-  background: #f2f4f7;
-  color: #101828;
-
-  font-size: 24px;
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-.login-close:hover {
-  background: #e4e7ec;
-}
-
-.login-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  margin-bottom: 28px;
-  padding-right: 35px;
-}
-
-.login-brand img {
-  width: 58px;
-  height: 58px;
-
-  object-fit: contain;
-  border-radius: 10px;
-}
-
-.login-brand strong {
-  display: block;
-  color: #101828;
-  font-size: 22px;
-  letter-spacing: 1px;
-}
-
-.login-brand strong span {
-  color: #1769ff;
-}
-
-.login-brand small {
-  display: block;
-
-  margin-top: 3px;
-
-  color: #667085;
-
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
-.login-card h2 {
-  margin: 0 0 7px;
-  color: #101828;
-  font-size: 28px;
-}
-
-.login-subtitle {
-  margin: 0 0 24px;
-  color: #667085;
-}
-
-.login-form-group {
-  margin-bottom: 17px;
-}
-
-.login-form-group label {
-  display: block;
-
-  margin-bottom: 7px;
-
-  color: #344054;
-
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.login-form-group input,
-.login-form-group select {
-  width: 100%;
-  min-height: 48px;
-
-  box-sizing: border-box;
-
-  padding: 0 14px;
-
-  border: 1px solid #d0d5dd;
-  border-radius: 10px;
-
-  background: #ffffff;
-  color: #101828;
-
-  outline: none;
-}
-
-.login-form-group input:focus,
-.login-form-group select:focus {
-  border-color: #1769ff;
-  box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SM1THX 🛒 — AI-powered commerce for sellers and buyers.">
+  <title>SM1THX 🛒 — Shop • Buy • Grow</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+
+    <a href="#home" class="smithx-brand" aria-label="SM1THX 🛒 Home">
+      <img
+        src="assets/smithx-logo.jpg"
+        class="smithx-logo-image"
+        alt="SM1THX 🛒 logo"
+      >
+
+      <span class="smithx-brand-text">
+        <strong>SM1THX 🛒</strong>
+        <small>SHOP • BUY • GROW</small>
+      </span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#market">Marketplace</a>
+      <a href="#seller">Sell</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#updates">Updates</a>
+    </nav>
 
-.password-wrapper {
-  position: relative;
-}
+    <button
+      type="button"
+      class="nav-login-btn"
+      id="loginNavButton"
+      onclick="openLogin()"
+    >
+      Login
+    </button>
 
-.password-wrapper input {
-  padding-right: 70px;
-}
+    <button
+      type="button"
+      class="cart-button"
+      onclick="openCart()"
+      aria-label="Open shopping cart"
+    >
+      🛒
+      <span id="cartCount" class="cart-count">0</span>
+    </button>
 
-.password-toggle {
-  position: absolute;
+  </div>
+</header>
 
-  top: 50%;
-  right: 10px;
 
-  transform: translateY(-50%);
+<main>
 
-  border: 0;
-  background: transparent;
-  color: #1769ff;
+<!-- =====================================================
+     HERO
+===================================================== -->
 
-  font-size: 12px;
-  font-weight: 800;
+<section id="home" class="hero">
 
-  cursor: pointer;
-}
+  <div class="hero-inner">
 
-.remember-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+    <div class="hero-copy">
 
-  margin: 5px 0 18px;
+      <p class="hero-eyebrow">
+        THE FUTURE OF COMMERCE
+      </p>
 
-  color: #475467;
-  font-size: 13px;
-}
+      <h1>
+        Build. <span>Sell.</span> Grow.
+      </h1>
 
-.remember-row input {
-  width: auto;
-  min-height: auto;
-  accent-color: #1769ff;
-}
-
-.login-main-btn {
-  width: 100%;
-  min-height: 50px;
-}
-
-.login-link-btn {
-  display: block;
-
-  width: 100%;
-  margin-top: 15px;
+      <p class="hero-description">
+        SM1THX 🛒 gives sellers the tools to launch,
+        manage and grow online businesses while giving
+        buyers a smarter way to discover products.
+      </p>
 
-  border: 0;
-  background: transparent;
-  color: #1769ff;
-
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.login-link-btn:hover {
-  text-decoration: underline;
-}
-
-.demo-login-note {
-  margin: 18px 0 0;
-
-  color: #98a2b3;
-
-  font-size: 11px;
-  line-height: 1.5;
-
-  text-align: center;
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast {
-  position: fixed;
-
-  left: 50%;
-  bottom: 25px;
-
-  z-index: 13000;
-
-  transform: translate(-50%, 120px);
-
-  padding: 13px 18px;
-
-  border-radius: 10px;
-
-  background: #101828;
-  color: #ffffff;
-
-  font-size: 14px;
-
-  opacity: 0;
-  pointer-events: none;
-
-  transition: 0.3s ease;
-}
-
-.toast.show {
-  transform: translate(-50%, 0);
-  opacity: 1;
-}
+      <div class="hero-actions">
 
+        <button
+          type="button"
+          class="primary-button"
+          onclick="scrollToSection('market')"
+        >
+          Explore Marketplace
+        </button>
 
-/* =========================================================
-   FOOTER
-========================================================= */
+        <button
+          type="button"
+          class="secondary-button"
+          onclick="scrollToSection('seller')"
+        >
+          Start Selling
+        </button>
 
-.footer {
-  padding: 45px 0;
-  background: #101828;
-  color: #ffffff;
-}
-
-.footer-inner {
-  width: min(1180px, calc(100% - 32px));
-  margin: auto;
-}
+      </div>
 
-.footer-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+    </div>
 
-.footer-brand .smithx-logo-image {
-  width: 55px;
-  height: 55px;
-  flex-basis: 55px;
-}
-
-.footer-brand strong {
-  font-size: 20px;
-}
+    <div class="hero-panel">
 
-.footer-brand p {
-  margin: 0;
-  color: #98a2b3;
+      <div class="hero-panel-card">
 
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
+        <span>SM1THX 🛒</span>
 
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin: 25px 0;
-}
+        <strong>
+          AI-POWERED COMMERCE
+        </strong>
 
-.footer-links a {
-  color: #d0d5dd;
-  font-size: 14px;
-}
+        <p>
+          One platform for discovering,
+          selling and growing.
+        </p>
 
-.footer-links a:hover {
-  color: #ffffff;
-}
+      </div>
 
-.footer-copy {
-  margin: 0;
-  color: #98a2b3;
-  font-size: 13px;
-}
+    </div>
 
+  </div>
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+</section>
 
-@media (max-width: 950px) {
 
-  /*
-     Keep the Login button visible on phones.
-     Hide only the normal navigation links.
-  */
+<!-- =====================================================
+     MARKETPLACE
+===================================================== -->
 
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+<section id="market" class="section marketplace-section">
 
-  .nav-links a {
-    display: none;
-  }
+  <div class="section-inner">
 
-  .nav-login-btn {
-    display: inline-flex;
+    <div class="section-heading">
 
-    align-items: center;
-    justify-content: center;
+      <p class="section-eyebrow">
+        DISCOVER
+      </p>
 
-    min-height: 38px;
-    padding: 0 13px;
+      <h2>
+        SM1THX 🛒 Marketplace
+      </h2>
 
-    white-space: nowrap;
+      <p>
+        Discover products from the growing
+        SM1THX 🛒 marketplace.
+      </p>
 
-    font-size: 13px;
-  }
+    </div>
 
-  .hero-inner {
-    grid-template-columns: 1fr;
-  }
 
-  .hero-panel {
-    min-height: auto;
-  }
+    <div class="marketplace-tools">
 
-  .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+      <div class="search-box">
 
-  .seller-layout {
-    grid-template-columns: 1fr;
-  }
+        <input
+          id="productSearch"
+          type="search"
+          placeholder="Search products..."
+          aria-label="Search products"
+        >
 
-  .dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+      </div>
 
-  .feature-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+      <button
+        type="button"
+        class="secondary-button"
+        onclick="openCart()"
+      >
+        View Cart
+      </button>
 
-  .about-card {
-    grid-template-columns: 1fr;
-  }
-}
+    </div>
 
 
-@media (max-width: 620px) {
+    <div id="categoryFilters" class="category-filters"></div>
 
-  .topbar-inner {
-    min-height: 82px;
 
-    width: min(100% - 16px, 1180px);
+    <div id="productsGrid" class="products-grid">
 
-    gap: 8px;
-  }
+      <!-- Samsung Galaxy -->
 
-  .smithx-logo-image {
-    width: 58px;
-    height: 58px;
+      <article class="product-card">
 
-    flex-basis: 58px;
+        <button
+          type="button"
+          class="product-image-button"
+          onclick="openProductModal('default-1')"
+        >
 
-    border-radius: 10px;
-  }
+          <img
+            src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80"
+            alt="Samsung Galaxy S26 Ultra"
+            loading="lazy"
+          >
 
-  .smithx-brand {
-    gap: 7px;
-  }
+        </button>
 
-  .smithx-brand-text strong {
-    font-size: 17px;
-  }
+        <div class="product-card-body">
 
-  .smithx-brand-text small {
-    font-size: 7px;
-  }
+          <span class="product-category">
+            Electronics
+          </span>
 
-  .nav-login-btn {
-    min-height: 36px;
-    padding: 0 11px;
-    font-size: 12px;
-  }
+          <h3>
+            Samsung Galaxy S26 Ultra
+          </h3>
 
-  .cart-button {
-    font-size: 22px;
-    padding: 6px;
-  }
+          <p>
+            Premium flagship smartphone with advanced
+            performance, camera technology and a modern design.
+          </p>
 
-  .hero {
-    padding: 70px 0;
-  }
+          <div class="product-card-bottom">
 
-  .hero-copy h1 {
-    letter-spacing: -2px;
-  }
+            <strong>
+              KES 169,999
+            </strong>
 
-  .section {
-    padding: 65px 0;
-  }
+            <button
+              type="button"
+              class="primary-button small-button"
+              onclick="addToCart('default-1')"
+            >
+              Add to cart
+            </button>
 
-  .products-grid {
-    grid-template-columns: 1fr;
-  }
+          </div>
 
-  .marketplace-tools {
-    flex-direction: column;
-  }
+        </div>
 
-  .category-filter-wrapper {
-    width: 100%;
-    min-width: 0;
-  }
+      </article>
 
-  .dashboard-grid {
-    grid-template-columns: 1fr 1fr;
-  }
 
-  .feature-grid {
-    grid-template-columns: 1fr;
-  }
+      <!-- Headphones -->
 
-  .product-actions {
-    flex-direction: row;
-  }
+      <article class="product-card">
 
-  .product-modal-grid {
-    grid-template-columns: 1fr;
-  }
+        <button
+          type="button"
+          class="product-image-button"
+          onclick="openProductModal('default-2')"
+        >
 
-  .cart-panel {
-    width: 100%;
-  }
-
-  .cart-item {
-    grid-template-columns: 60px 1fr;
-  }
-
-  .cart-item > strong {
-    grid-column: 2;
-  }
-
-  .cart-item img {
-    width: 60px;
-    height: 60px;
-  }
-
-  .login-card {
-    padding: 25px 20px;
-    border-radius: 17px;
-  }
-
-  .login-card h2 {
-    font-size: 24px;
-  }
-
-  .login-brand img {
-    width: 52px;
-    height: 52px;
-  }
-
-}
-
-
-@media (max-width: 400px) {
-
-  .topbar-inner {
-    gap: 5px;
-  }
-
-  .smithx-logo-image {
-    width: 52px;
-    height: 52px;
-
-    flex-basis: 52px;
-  }
-
-  .smithx-brand-text strong {
-    font-size: 15px;
-  }
-
-  .smithx-brand-text small {
-    display: none;
-  }
-
-  .nav-login-btn {
-    min-height: 34px;
-    padding: 0 9px;
-    font-size: 11px;
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-actions {
-    flex-direction: column;
-  }
-
-  .hero-actions button {
-    width: 100%;
-  }
-
-  .product-actions {
-    flex-direction: column;
-  }
-
-  .login-card {
-    padding: 22px 16px;
-  }
-
-}
-/* =========================================================
-   SMITHX — PRODUCT CARD DISPLAY FIX
-   ========================================================= */
-
-#productsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  width: 100%;
-}
-
-.product-card {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 18px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-  min-width: 0;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.13);
-}
-
-.product-image-button {
-  display: block;
-  width: 100%;
-  height: 230px;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  background: #f8fafc;
-  cursor: pointer;
-  overflow: hidden;
-}
-
-.product-image-button img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.25s ease;
-}
-
-.product-image-button:hover img {
-  transform: scale(1.04);
-}
-
-.product-card-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 18px;
-}
-
-.product-category {
-  display: inline-block;
-  margin-bottom: 8px;
-  color: #2563eb;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.product-card-body h3 {
-  margin: 0 0 8px;
-  color: #111827;
-  font-size: 18px;
-  line-height: 1.3;
-}
-
-.product-card-body p {
-  margin: 0 0 18px;
-  color: #6b7280;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.product-card-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: auto;
-}
-
-.product-card-bottom strong {
-  color: #111827;
-  font-size: 17px;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.product-card-bottom .small-button {
-  min-height: 40px;
-  padding: 0 14px;
-  white-space: nowrap;
-}
-
-/* Tablet */
-@media (max-width: 950px) {
-  #productsGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* Phone */
-@media (max-width: 620px) {
-  #productsGrid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .product-image-button {
-    height: 240px;
-  }
-
-  .product-card-body {
-    padding: 16px;
-  }
-}
-
-/* Small phone */
-@media (max-width: 400px) {
-  .product-image-button {
-    height: 220px;
-  }
-
-  .product-card-bottom {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .product-card-bottom .small-button {
-    width: 100%;
-  }
-}
+          <img
+            src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
+            alt="Smart Wireless Headphones"
+            loading="lazy"
+          >
+
+        </button>
+
+        <div class="product-card-body">
+
+          <span class="product-category">
+            Electronics
+          </span>
+
+          <h3>
+            Smart Wireless Headphones
+          </h3>
+
+          <p>
+            Wireless headphones with a comfortable design
+            and immersive sound.
+          </p>
+
+          <div class="product-card-bottom">
+
+            <strong>
+              KES 4,500
+            </strong>
+
+            <button
+              type="button"
+              class="primary-button small-button"
+              onclick="addToCart('default-2')"
+            >
+              Add to cart
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- Desk Lamp -->
+
+      <article class="product-card">
+
+        <button
+          type="button"
+          class="product-image-button"
+          onclick="openProductModal('default-3')"
+        >
+
+          <img
+            src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80"
+            alt="Minimal Desk Lamp"
+            loading="lazy"
+          >
+
+        </button>
+
+        <div class="product-card-body">
+
+          <span class="product-category">
+            Home
+          </span>
+
+          <h3>
+            Minimal Desk Lamp
+          </h3>
+
+          <p>
+            Clean modern desk lamp designed for workspaces,
+            bedrooms and study areas.
+          </p>
+
+          <div class="product-card-bottom">
+
+            <strong>
+              KES 2,800
+            </strong>
+
+            <button
+              type="button"
+              class="primary-button small-button"
+              onclick="addToCart('default-3')"
+            >
+              Add to cart
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- Backpack -->
+
+      <article class="product-card">
+
+        <button
+          type="button"
+          class="product-image-button"
+          onclick="openProductModal('default-4')"
+        >
+
+          <img
+            src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80"
+            alt="Everyday Travel Backpack"
+            loading="lazy"
+          >
+
+        </button>
+
+        <div class="product-card-body">
+
+          <span class="product-category">
+            Accessories
+          </span>
+
+          <h3>
+            Everyday Travel Backpack
+          </h3>
+
+          <p>
+            Lightweight everyday backpack for school,
+            work, travel and daily use.
+          </p>
+
+          <div class="product-card-bottom">
+
+            <strong>
+              KES 3,500
+            </strong>
+
+            <button
+              type="button"
+              class="primary-button small-button"
+              onclick="addToCart('default-4')"
+            >
+              Add to cart
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- Smart Watch -->
+
+      <article class="product-card">
+
+        <button
+          type="button"
+          class="product-image-button"
+          onclick="openProductModal('default-5')"
+        >
+
+          <img
+            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
+            alt="Smart Watch"
+            loading="lazy"
+          >
+
+        </button>
+
+        <div class="product-card-body">
+
+          <span class="product-category">
+            Electronics
+          </span>
+
+          <h3>
+            Smart Watch
+          </h3>
+
+          <p>
+            Modern smartwatch for everyday activity tracking,
+            notifications and convenience.
+          </p>
+
+          <div class="product-card-bottom">
+
+            <strong>
+              KES 6,500
+            </strong>
+
+            <button
+              type="button"
+              class="primary-button small-button"
+              onclick="addToCart('default-5')"
+            >
+              Add to cart
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- Sneakers -->
+
+      <article class="product-card">
+
+        <button
+          type="button"
+          class="product-image-button"
+          onclick="openProductModal('default-6')"
+        >
+
+          <img
+            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
+            alt="Premium Sneakers"
+            loading="lazy"
+          >
+
+        </button>
+
+        <div class="product-card-body">
+
+          <span class="product-category">
+            Fashion
+          </span>
+
+          <h3>
+            Premium Sneakers
+          </h3>
+
+          <p>
+            Modern everyday sneakers combining comfort,
+            style and versatility.
+          </p>
+
+          <div class="product-card-bottom">
+
+            <strong>
+              KES 7,200
+            </strong>
+
+            <button
+              type="button"
+              class="primary-button small-button"
+              onclick="addToCart('default-6')"
+            >
+              Add to cart
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     SELLER STUDIO
+===================================================== -->
+
+<section id="seller" class="section seller-section">
+
+  <div class="section-inner">
+
+    <div class="section-heading">
+
+      <p class="section-eyebrow">
+        SELLER STUDIO
+      </p>
+
+      <h2>
+        Build Your Store
+      </h2>
+
+      <p>
+        Create a product and publish it directly
+        to the SM1THX 🛒 marketplace.
+      </p>
+
+    </div>
+
+
+    <div class="seller-layout">
+
+      <div class="seller-card">
+
+        <h3>
+          Create Product
+        </h3>
+
+        <p class="muted">
+          Add your product details below.
+        </p>
+
+
+        <div class="form-group">
+
+          <label for="productName">
+            Product Name
+          </label>
+
+          <input
+            id="productName"
+            type="text"
+            placeholder="e.g. Samsung Galaxy S26 Ultra"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="productPrice">
+            Price
+          </label>
+
+          <input
+            id="productPrice"
+            type="number"
+            min="1"
+            placeholder="169999"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="productCategory">
+            Category
+          </label>
+
+          <select id="productCategory"></select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="productDescription">
+            Description
+          </label>
+
+          <textarea
+            id="productDescription"
+            rows="5"
+            placeholder="Describe your product..."
+          ></textarea>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="productImage">
+            Product Image
+          </label>
+
+          <input
+            id="productImage"
+            type="file"
+            accept="image/*"
+          >
+
+        </div>
+
+
+        <div
+          id="imagePreview"
+          class="image-preview hidden"
+        >
+
+          <img
+            id="previewImage"
+            src=""
+            alt="Product preview"
+          >
+
+        </div>
+
+
+        <button
+          type="button"
+          class="primary-button full-width"
+          onclick="publishProduct()"
+        >
+          Publish Product
+        </button>
+
+      </div>
+
+
+      <div class="seller-info-card">
+
+        <p class="hero-eyebrow">
+          AI-POWERED SELLING
+        </p>
+
+        <h3>
+          Your business, powered by SM1THX 🛒.
+        </h3>
+
+        <p>
+          SM1THX 🛒 is being built to help sellers
+          launch faster, understand their customers
+          and grow their businesses using intelligent technology.
+        </p>
+
+        <div class="feature-list">
+
+          <div class="feature-item">
+            <strong>Easy product creation</strong>
+            <span>Create and publish products quickly.</span>
+          </div>
+
+          <div class="feature-item">
+            <strong>Marketplace visibility</strong>
+            <span>Put your products in front of buyers.</span>
+          </div>
+
+          <div class="feature-item">
+            <strong>Seller analytics</strong>
+            <span>Track products, orders and revenue.</span>
+          </div>
+
+          <div class="feature-item">
+            <strong>AI-powered future</strong>
+            <span>More intelligent seller tools are coming.</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<section id="dashboard" class="section dashboard-section">
+
+  <div class="section-inner">
+
+    <div class="section-heading">
+
+      <p class="section-eyebrow">
+        SELLER DASHBOARD
+      </p>
+
+      <h2>
+        Your Business Overview
+      </h2>
+
+      <p>
+        Demo analytics showing how the
+        SM1THX 🛒 seller dashboard can work.
+      </p>
+
+    </div>
+
+
+    <div class="dashboard-grid">
+
+      <div class="dashboard-card">
+        <span>Products</span>
+        <strong id="dashboardProducts">6</strong>
+      </div>
+
+      <div class="dashboard-card">
+        <span>Orders</span>
+        <strong id="dashboardOrders">0</strong>
+      </div>
+
+      <div class="dashboard-card">
+        <span>Revenue</span>
+        <strong id="dashboardRevenue">KES 0</strong>
+      </div>
+
+      <div class="dashboard-card">
+        <span>Today's Visitors</span>
+        <strong id="dashboardVisitors">0</strong>
+      </div>
+
+    </div>
+
+
+    <div class="dashboard-actions">
+
+      <button
+        type="button"
+        class="secondary-button"
+        onclick="resetAnalytics()"
+      >
+        Reset Demo Analytics
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     FEATURES
+===================================================== -->
+
+<section id="features" class="section">
+
+  <div class="section-inner">
+
+    <div class="section-heading">
+
+      <p class="section-eyebrow">
+        THE SM1THX 🛒 VISION
+      </p>
+
+      <h2>
+        More Than An Online Store
+      </h2>
+
+      <p>
+        SM1THX 🛒 is being built as an intelligent
+        commerce ecosystem.
+      </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          AI
+        </div>
+
+        <h3>
+          AI Seller Assistant
+        </h3>
+
+        <p>
+          Intelligent tools designed to help sellers
+          make better business decisions.
+        </p>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          ↗
+        </div>
+
+        <h3>
+          Growth Tools
+        </h3>
+
+        <p>
+          Marketing, pricing, SEO and analytics
+          designed around seller growth.
+        </p>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          ₿
+        </div>
+
+        <h3>
+          Modern Payments
+        </h3>
+
+        <p>
+          Future plans include flexible fiat
+          and digital payment options.
+        </p>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-icon">
+          🌍
+        </div>
+
+        <h3>
+          Global Commerce
+        </h3>
+
+        <p>
+          Starting locally and designed with
+          global expansion in mind.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+
+<section id="about" class="section about-section">
+
+  <div class="section-inner">
+
+    <div class="about-card">
+
+      <div>
+
+        <p class="section-eyebrow">
+          ABOUT SM1THX 🛒
+        </p>
+
+        <h2>
+          Building The Future Of Commerce
+        </h2>
+
+      </div>
+
+      <div>
+
+        <p>
+          SM1THX 🛒 started with a simple idea:
+          make it easier for people to build,
+          sell and grow online.
+        </p>
+
+        <p>
+          This MVP is an early demonstration of
+          that vision — combining marketplace
+          technology, seller tools and the foundation
+          for future AI-powered commerce.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     UPDATES
+===================================================== -->
+
+<section id="updates" class="section">
+
+  <div class="section-inner">
+
+    <div class="section-heading">
+
+      <p class="section-eyebrow">
+        BUILDING IN PUBLIC
+      </p>
+
+      <h2>
+        SM1THX 🛒 Updates
+      </h2>
+
+      <p>
+        See what has been improved and added to SM1THX 🛒.
+      </p>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="secondary-button"
+      id="updatesToggle"
+      onclick="toggleUpdateHistory()"
+    >
+      View Updates
+    </button>
+
+
+    <div
+      id="updateHistory"
+      class="update-history"
+      style="display:none;"
+    >
+
+      <div class="card">
+
+        <div class="update-item">
+
+          <strong>
+            SM1THX 🛒 MVP launched
+          </strong>
+
+          <p>
+            Initial marketplace experience with products,
+            search, product details, cart and demo checkout.
+          </p>
+
+        </div>
+
+
+        <div class="update-item">
+
+          <strong>
+            Seller Studio added
+          </strong>
+
+          <p>
+            Sellers can create products and publish
+            them directly to the marketplace.
+          </p>
+
+        </div>
+
+
+        <div class="update-item">
+
+          <strong>
+            Product image uploads added
+          </strong>
+
+          <p>
+            Sellers can upload product images when
+            creating products.
+          </p>
+
+        </div>
+
+
+        <div class="update-item">
+
+          <strong>
+            Dashboard improvements
+          </strong>
+
+          <p>
+            Added seller statistics for products,
+            orders, revenue and visitors.
+          </p>
+
+        </div>
+
+
+        <div class="update-item">
+
+          <strong>
+            SM1THX 🛒 branding updated
+          </strong>
+
+          <p>
+            Updated the platform with the new
+            SM1THX 🛒 logo and SHOP • BUY • GROW branding.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<!-- =====================================================
+     PRODUCT MODAL
+===================================================== -->
+
+<div
+  id="productModal"
+  class="modal"
+  aria-hidden="true"
+>
+
+  <div class="modal-content">
+
+    <button
+      type="button"
+      class="modal-close"
+      onclick="closeProductModal()"
+      aria-label="Close product"
+    >
+      ×
+    </button>
+
+    <div id="productModalContent"></div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     CART
+===================================================== -->
+
+<aside
+  id="cartPanel"
+  class="cart-panel"
+  aria-label="Shopping cart"
+>
+
+  <div class="cart-panel-header">
+
+    <div>
+
+      <p class="section-eyebrow">
+        SM1THX 🛒
+      </p>
+
+      <h2>
+        Your Cart
+      </h2>
+
+    </div>
+
+    <button
+      type="button"
+      class="modal-close"
+      onclick="closeCart()"
+      aria-label="Close cart"
+    >
+      ×
+    </button>
+
+  </div>
+
+
+  <div id="cartItems" class="cart-items"></div>
+
+
+  <div class="cart-summary">
+
+    <div class="cart-summary-row">
+
+      <span>
+        Subtotal
+      </span>
+
+      <strong id="cartSubtotal">
+        KES 0
+      </strong>
+
+    </div>
+
+
+    <div class="cart-summary-row total-row">
+
+      <span>
+        Total
+      </span>
+
+      <strong id="cartTotal">
+        KES 0
+      </strong>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="primary-button full-width"
+      onclick="demoCheckout()"
+    >
+      Demo Checkout
+    </button>
+
+  </div>
+
+</aside>
+
+
+<!-- =====================================================
+     LOGIN / REGISTER
+===================================================== -->
+
+<div
+  id="loginOverlay"
+  class="login-overlay"
+  aria-hidden="true"
+>
+
+  <div class="login-card">
+
+    <button
+      type="button"
+      class="modal-close"
+      onclick="closeLogin()"
+      aria-label="Close login"
+    >
+      ×
+    </button>
+
+
+    <div id="loginFormSection">
+
+      <div class="login-header">
+
+        <p class="section-eyebrow">
+          WELCOME BACK
+        </p>
+
+        <h2>
+          Login to SM1THX 🛒
+        </h2>
+
+        <p>
+          Access your seller dashboard and account.
+        </p>
+
+      </div>
+
+
+      <form id="loginForm">
+
+        <div class="form-group">
+
+          <label for="loginEmail">
+            Email
+          </label>
+
+          <input
+            id="loginEmail"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="loginPassword">
+            Password
+          </label>
+
+          <div class="password-field">
+
+            <input
+              id="loginPassword"
+              type="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            >
+
+            <button
+              type="button"
+              class="password-toggle"
+              onclick="togglePassword('loginPassword', this)"
+              aria-label="Show password"
+            >
+              👁
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <label class="checkbox-row">
+
+          <input
+            id="rememberUser"
+            type="checkbox"
+          >
+
+          <span>
+            Remember me
+          </span>
+
+        </label>
+
+
+        <button
+          type="submit"
+          class="primary-button full-width"
+        >
+          Login
+        </button>
+
+      </form>
+
+
+      <p class="login-switch">
+
+        Don't have an account?
+
+        <button
+          type="button"
+          onclick="showRegisterForm()"
+        >
+          Create account
+        </button>
+
+      </p>
+
+    </div>
+
+
+    <div
+      id="registerFormSection"
+      style="display:none;"
+    >
+
+      <div class="login-header">
+
+        <p class="section-eyebrow">
+          JOIN SM1THX 🛒
+        </p>
+
+        <h2>
+          Create your account
+        </h2>
+
+        <p>
+          Start exploring or selling on SM1THX 🛒.
+        </p>
+
+      </div>
+
+
+      <form id="registerForm">
+
+        <div class="form-group">
+
+          <label for="registerName">
+            Full Name
+          </label>
+
+          <input
+            id="registerName"
+            type="text"
+            placeholder="Your name"
+            autocomplete="name"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="registerEmail">
+            Email
+          </label>
+
+          <input
+            id="registerEmail"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="registerPassword">
+            Password
+          </label>
+
+          <div class="password-field">
+
+            <input
+              id="registerPassword"
+              type="password"
+              placeholder="Create a password"
+              autocomplete="new-password"
+              required
+            >
+
+            <button
+              type="button"
+              class="password-toggle"
+              onclick="togglePassword('registerPassword', this)"
+              aria-label="Show password"
+            >
+              👁
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="accountType">
+            Account Type
+          </label>
+
+          <select id="accountType">
+
+            <option value="buyer">
+              Buyer
+            </option>
+
+            <option value="seller">
+              Seller
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="primary-button full-width"
+        >
+          Create Account
+        </button>
+
+      </form>
+
+
+      <p class="login-switch">
+
+        Already have an account?
+
+        <button
+          type="button"
+          onclick="showLoginForm()"
+        >
+          Login
+        </button>
+
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+  id="toast"
+  class="toast"
+  role="status"
+  aria-live="polite"
+></div>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+  <div class="footer-inner">
+
+    <div class="footer-brand">
+
+      <img
+        src="assets/smithx-logo.jpg"
+        class="smithx-logo-image"
+        alt="SM1THX 🛒 logo"
+      >
+
+      <div>
+
+        <strong>
+          SM1THX 🛒
+        </strong>
+
+        <p>
+          SHOP • BUY • GROW
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="footer-links">
+
+      <a href="#home">Home</a>
+      <a href="#market">Marketplace</a>
+      <a href="#seller">Sell</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#updates">Updates</a>
+
+    </div>
+
+
+    <p class="footer-copy">
+      © 2026 SM1THX 🛒. Built for the future of commerce.
+    </p>
+
+  </div>
+
+</footer>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
