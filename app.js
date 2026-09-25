@@ -1,14 +1,11 @@
 /* =========================================================
    SMITHX MVP — APP.JS
-   Version 1.7
+   Version 1.8
    ========================================================= */
 
 
-/* =========================================================
-   DEFAULT PRODUCTS
-========================================================= */
-
 const DEFAULT_PRODUCTS = [
+
   {
     id: "s26-ultra",
     name: "Samsung Galaxy S26 Ultra",
@@ -68,36 +65,51 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85"
   }
+
 ];
 
 
 const STORAGE = {
+
   products: "smithx_custom_products_v2",
+
   cart: "smithx_cart_v2",
+
   analytics: "smithx_analytics_v2",
+
   visitor: "smithx_daily_visitor_v2"
+
 };
 
 
 /* =========================================================
-   HELPERS
+   UTILITIES
 ========================================================= */
 
 function formatKES(amount) {
+
   return (
     "KES " +
     Number(amount || 0).toLocaleString("en-KE")
   );
+
 }
 
 
 function escapeHTML(value) {
+
   return String(value ?? "")
+
     .replace(/&/g, "&amp;")
+
     .replace(/</g, "&lt;")
+
     .replace(/>/g, "&gt;")
+
     .replace(/"/g, "&quot;")
+
     .replace(/'/g, "&#039;");
+
 }
 
 
@@ -106,29 +118,42 @@ function escapeHTML(value) {
 ========================================================= */
 
 function getCustomProducts() {
+
   try {
+
     return JSON.parse(
       localStorage.getItem(STORAGE.products) || "[]"
     );
+
   } catch {
+
     return [];
+
   }
+
 }
 
 
 function saveCustomProducts(products) {
+
   localStorage.setItem(
     STORAGE.products,
     JSON.stringify(products)
   );
+
 }
 
 
 function getAllProducts() {
+
   return [
+
     ...DEFAULT_PRODUCTS,
+
     ...getCustomProducts()
+
   ];
+
 }
 
 
@@ -137,56 +162,75 @@ function getAllProducts() {
 ========================================================= */
 
 function getAnalytics() {
+
   try {
+
     return JSON.parse(
       localStorage.getItem(STORAGE.analytics) ||
       '{"sales":0,"orders":0}'
     );
+
   } catch {
+
     return {
       sales: 0,
       orders: 0
     };
+
   }
+
 }
 
 
 function saveAnalytics(data) {
+
   localStorage.setItem(
     STORAGE.analytics,
     JSON.stringify(data)
   );
+
 }
 
 
-/* =========================================================
-   DAILY VISITORS
-========================================================= */
-
 function getTodayKey() {
+
   return new Date()
     .toISOString()
     .slice(0, 10);
+
 }
 
 
 function registerDailyVisitor() {
+
   const today = getTodayKey();
 
-  let visitorData = null;
+  let visitorData;
 
   try {
+
     visitorData = JSON.parse(
       localStorage.getItem(STORAGE.visitor) || "null"
     );
+
   } catch {
+
     visitorData = null;
+
   }
 
-  if (!visitorData || visitorData.date !== today) {
+
+  if (
+    !visitorData ||
+    visitorData.date !== today
+  ) {
+
     visitorData = {
+
       date: today,
+
       count: 1
+
     };
 
     localStorage.setItem(
@@ -195,32 +239,49 @@ function registerDailyVisitor() {
     );
 
     return 1;
+
   }
 
-  return Number(visitorData.count || 0);
+
+  return Number(
+    visitorData.count || 0
+  );
+
 }
 
 
 function getDailyVisitors() {
+
   try {
+
     const data = JSON.parse(
       localStorage.getItem(STORAGE.visitor) || "null"
     );
 
-    if (!data || data.date !== getTodayKey()) {
+    if (
+      !data ||
+      data.date !== getTodayKey()
+    ) {
+
       return 0;
+
     }
 
-    return Number(data.count || 0);
+    return Number(
+      data.count || 0
+    );
 
   } catch {
+
     return 0;
+
   }
+
 }
 
 
 /* =========================================================
-   MARKETPLACE
+   RENDER PRODUCTS
 ========================================================= */
 
 function renderProducts(searchTerm = "") {
@@ -230,36 +291,45 @@ function renderProducts(searchTerm = "") {
 
   if (!grid) return;
 
+
   const products =
     getAllProducts();
+
 
   const term =
     String(searchTerm)
       .trim()
       .toLowerCase();
 
+
   const filteredProducts =
     products.filter(product => {
 
-      if (!term) {
-        return true;
-      }
+      if (!term) return true;
 
       return (
+
         String(product.name)
           .toLowerCase()
-          .includes(term) ||
+          .includes(term)
+
+        ||
 
         String(product.description)
           .toLowerCase()
           .includes(term)
+
       );
+
     });
 
 
-  if (filteredProducts.length === 0) {
+  if (
+    filteredProducts.length === 0
+  ) {
 
     grid.innerHTML = `
+
       <div style="
         grid-column:1/-1;
         text-align:center;
@@ -267,21 +337,27 @@ function renderProducts(searchTerm = "") {
         color:#667085;
       ">
 
-        <h3>No products found</h3>
+        <h3>
+          No products found
+        </h3>
 
         <p>
           Try another search.
         </p>
 
       </div>
+
     `;
 
     return;
+
   }
 
 
   grid.innerHTML =
+
     filteredProducts
+
       .map(product => `
 
         <article class="product-card">
@@ -304,9 +380,11 @@ function renderProducts(searchTerm = "") {
               ${escapeHTML(product.name)}
             </h3>
 
+
             <p class="product-description">
               ${escapeHTML(product.description)}
             </p>
+
 
             <div class="product-price">
               ${formatKES(product.price)}
@@ -337,9 +415,12 @@ function renderProducts(searchTerm = "") {
         </article>
 
       `)
+
       .join("");
 
+
   updateProductStats();
+
 }
 
 
@@ -352,21 +433,30 @@ function updateProductStats() {
   const products =
     getAllProducts();
 
+
   const productCount =
     document.getElementById("productCount");
+
 
   const totalProducts =
     document.getElementById("totalProducts");
 
+
   if (productCount) {
+
     productCount.textContent =
       products.length;
+
   }
 
+
   if (totalProducts) {
+
     totalProducts.textContent =
       products.length;
+
   }
+
 }
 
 
@@ -380,15 +470,19 @@ function viewProduct(productId) {
     getAllProducts()
       .find(item => item.id === productId);
 
+
   if (!product) return;
+
 
   const modal =
     document.getElementById("productModal");
+
 
   const content =
     document.getElementById(
       "productModalContent"
     );
+
 
   if (!modal || !content) return;
 
@@ -414,10 +508,7 @@ function viewProduct(productId) {
         </p>
 
 
-        <h2 style="
-          font-size:32px;
-          margin-bottom:12px;
-        ">
+        <h2>
           ${escapeHTML(product.name)}
         </h2>
 
@@ -449,23 +540,36 @@ function viewProduct(productId) {
       </div>
 
     </div>
+
   `;
 
 
   modal.classList.add("active");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
 }
 
 
 function closeProductModal() {
 
   const modal =
-    document.getElementById(
-      "productModal"
-    );
+    document.getElementById("productModal");
 
-  if (modal) {
-    modal.classList.remove("active");
-  }
+
+  if (!modal) return;
+
+
+  modal.classList.remove("active");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
 }
 
 
@@ -476,12 +580,17 @@ function closeProductModal() {
 function getCart() {
 
   try {
+
     return JSON.parse(
       localStorage.getItem(STORAGE.cart) || "[]"
     );
+
   } catch {
+
     return [];
+
   }
+
 }
 
 
@@ -491,8 +600,13 @@ function saveCart(cart) {
     STORAGE.cart,
     JSON.stringify(cart)
   );
+
 }
 
+
+/* =========================================================
+   ADD TO CART
+========================================================= */
 
 function addToCart(productId) {
 
@@ -500,7 +614,16 @@ function addToCart(productId) {
     getAllProducts()
       .find(item => item.id === productId);
 
-  if (!product) return;
+
+  if (!product) {
+
+    showToast(
+      "Product could not be found."
+    );
+
+    return;
+
+  }
 
 
   const cart =
@@ -508,16 +631,24 @@ function addToCart(productId) {
 
 
   const existing =
-    cart.find(item => item.id === productId);
+    cart.find(
+      item => item.id === productId
+    );
 
 
   if (existing) {
-    existing.quantity += 1;
+
+    existing.quantity =
+      Number(existing.quantity || 0) + 1;
+
   } else {
 
     cart.push({
-      id: product.id,
+
+      id: productId,
+
       quantity: 1
+
     });
 
   }
@@ -525,29 +656,50 @@ function addToCart(productId) {
 
   saveCart(cart);
 
-  renderCart();
 
   updateCartCount();
+
+  renderCart();
+
 
   showToast(
     `${product.name} added to cart`
   );
+
 }
 
+
+/* =========================================================
+   REMOVE
+========================================================= */
 
 function removeFromCart(productId) {
 
   const cart =
     getCart()
-      .filter(item => item.id !== productId);
+      .filter(
+        item => item.id !== productId
+      );
+
 
   saveCart(cart);
+
 
   renderCart();
 
   updateCartCount();
+
+
+  showToast(
+    "Product removed from cart."
+  );
+
 }
 
+
+/* =========================================================
+   QUANTITY
+========================================================= */
 
 function changeQuantity(
   productId,
@@ -557,26 +709,31 @@ function changeQuantity(
   const cart =
     getCart();
 
+
   const item =
     cart.find(
       cartItem =>
         cartItem.id === productId
     );
 
+
   if (!item) return;
 
 
-  item.quantity += amount;
+  item.quantity =
+    Number(item.quantity || 0) +
+    Number(amount || 0);
 
 
   if (item.quantity <= 0) {
 
-    saveCart(
+    const updatedCart =
       cart.filter(
         cartItem =>
           cartItem.id !== productId
-      )
-    );
+      );
+
+    saveCart(updatedCart);
 
   } else {
 
@@ -588,8 +745,13 @@ function changeQuantity(
   renderCart();
 
   updateCartCount();
+
 }
 
+
+/* =========================================================
+   RENDER CART
+========================================================= */
 
 function renderCart() {
 
@@ -598,21 +760,25 @@ function renderCart() {
       "cartItems"
     );
 
+
   const subtotalElement =
     document.getElementById(
       "cartSubtotal"
     );
+
 
   const totalElement =
     document.getElementById(
       "cartTotal"
     );
 
+
   if (!container) return;
 
 
   const cart =
     getCart();
+
 
   const products =
     getAllProducts();
@@ -621,6 +787,7 @@ function renderCart() {
   if (cart.length === 0) {
 
     container.innerHTML = `
+
       <div style="
         padding:35px 10px;
         text-align:center;
@@ -636,19 +803,28 @@ function renderCart() {
         </p>
 
       </div>
+
     `;
 
+
     if (subtotalElement) {
+
       subtotalElement.textContent =
         formatKES(0);
+
     }
+
 
     if (totalElement) {
+
       totalElement.textContent =
         formatKES(0);
+
     }
 
+
     return;
+
   }
 
 
@@ -656,127 +832,143 @@ function renderCart() {
 
 
   container.innerHTML =
-    cart.map(item => {
 
-      const product =
-        products.find(
-          p => p.id === item.id
-        );
+    cart
 
-      if (!product) return "";
+      .map(item => {
 
-
-      const quantity =
-        Number(item.quantity || 0);
+        const product =
+          products.find(
+            p => p.id === item.id
+          );
 
 
-      const itemTotal =
-        Number(product.price) *
-        quantity;
+        if (!product) return "";
 
 
-      total += itemTotal;
+        const quantity =
+          Number(item.quantity || 0);
 
 
-      return `
-
-        <div class="cart-item">
-
-          <img
-            src="${escapeHTML(product.image)}"
-            alt="${escapeHTML(product.name)}"
-          >
+        const itemTotal =
+          Number(product.price) *
+          quantity;
 
 
-          <div>
-
-            <h4>
-              ${escapeHTML(product.name)}
-            </h4>
-
-            <p>
-              ${formatKES(product.price)}
-            </p>
+        total += itemTotal;
 
 
-            <div style="
-              display:flex;
-              align-items:center;
-              gap:8px;
-              margin-top:7px;
-            ">
+        return `
+
+          <div class="cart-item">
+
+            <img
+              src="${escapeHTML(product.image)}"
+              alt="${escapeHTML(product.name)}"
+            >
+
+
+            <div>
+
+              <h4>
+                ${escapeHTML(product.name)}
+              </h4>
+
+
+              <p>
+                ${formatKES(product.price)}
+              </p>
+
+
+              <div style="
+                display:flex;
+                align-items:center;
+                gap:8px;
+                margin-top:8px;
+              ">
+
+                <button
+                  type="button"
+                  onclick="
+                    changeQuantity(
+                      '${escapeHTML(product.id)}',
+                      -1
+                    )
+                  "
+                >
+                  −
+                </button>
+
+
+                <strong>
+                  ${quantity}
+                </strong>
+
+
+                <button
+                  type="button"
+                  onclick="
+                    changeQuantity(
+                      '${escapeHTML(product.id)}',
+                      1
+                    )
+                  "
+                >
+                  +
+                </button>
+
+              </div>
+
 
               <button
                 type="button"
+                class="cart-remove"
                 onclick="
-                  changeQuantity(
-                    '${escapeHTML(product.id)}',
-                    -1
+                  removeFromCart(
+                    '${escapeHTML(product.id)}'
                   )
                 "
               >
-                −
-              </button>
-
-
-              <strong>
-                ${quantity}
-              </strong>
-
-
-              <button
-                type="button"
-                onclick="
-                  changeQuantity(
-                    '${escapeHTML(product.id)}',
-                    1
-                  )
-                "
-              >
-                +
+                Remove
               </button>
 
             </div>
 
 
-            <button
-              type="button"
-              class="cart-remove"
-              onclick="
-                removeFromCart(
-                  '${escapeHTML(product.id)}'
-                )
-              "
-            >
-              Remove
-            </button>
+            <strong>
+              ${formatKES(itemTotal)}
+            </strong>
 
           </div>
 
+        `;
 
-          <strong>
-            ${formatKES(itemTotal)}
-          </strong>
+      })
 
-        </div>
-
-      `;
-
-    }).join("");
+      .join("");
 
 
   if (subtotalElement) {
+
     subtotalElement.textContent =
       formatKES(total);
+
   }
 
 
   if (totalElement) {
+
     totalElement.textContent =
       formatKES(total);
+
   }
+
 }
 
+
+/* =========================================================
+   CART COUNT
+========================================================= */
 
 function updateCartCount() {
 
@@ -800,10 +992,18 @@ function updateCartCount() {
 
 
   elements.forEach(element => {
-    element.textContent = count;
+
+    element.textContent =
+      count;
+
   });
+
 }
 
+
+/* =========================================================
+   OPEN CART
+========================================================= */
 
 function openCart() {
 
@@ -812,13 +1012,31 @@ function openCart() {
       "cartPanel"
     );
 
-  if (panel) {
-    panel.classList.add("active");
+
+  if (!panel) {
+
+    console.error(
+      "SMITHX: Cart panel not found."
+    );
+
+    return;
+
   }
 
+
   renderCart();
+
+  updateCartCount();
+
+
+  panel.classList.add("active");
+
 }
 
+
+/* =========================================================
+   CLOSE CART
+========================================================= */
 
 function closeCart() {
 
@@ -827,9 +1045,12 @@ function closeCart() {
       "cartPanel"
     );
 
-  if (panel) {
-    panel.classList.remove("active");
-  }
+
+  if (!panel) return;
+
+
+  panel.classList.remove("active");
+
 }
 
 
@@ -850,6 +1071,7 @@ function checkout() {
     );
 
     return;
+
   }
 
 
@@ -867,15 +1089,27 @@ function checkout() {
         p => p.id === item.id
       );
 
+
     if (product) {
 
       total +=
         Number(product.price) *
-        Number(item.quantity);
+        Number(item.quantity || 0);
 
     }
 
   });
+
+
+  if (total <= 0) {
+
+    showToast(
+      "Unable to calculate your order."
+    );
+
+    return;
+
+  }
 
 
   const analytics =
@@ -910,6 +1144,14 @@ function checkout() {
   showToast(
     "Demo checkout completed successfully."
   );
+
+
+  setTimeout(() => {
+
+    closeCart();
+
+  }, 1200);
+
 }
 
 
@@ -1011,12 +1253,11 @@ function compressImage(
 
     }
   );
+
 }
 
 
-async function handleProductImage(
-  event
-) {
+async function handleProductImage(event) {
 
   const file =
     event.target.files &&
@@ -1033,6 +1274,7 @@ async function handleProductImage(
     );
 
     return;
+
   }
 
 
@@ -1055,14 +1297,19 @@ async function handleProductImage(
 
 
     if (preview) {
-      preview.src = compressed;
+
+      preview.src =
+        compressed;
+
     }
 
 
     if (previewBox) {
+
       previewBox.classList.remove(
         "hidden"
       );
+
     }
 
 
@@ -1074,15 +1321,18 @@ async function handleProductImage(
 
     console.error(error);
 
+
     showToast(
       "Could not process this image."
     );
+
   }
+
 }
 
 
 /* =========================================================
-   SELLER STUDIO
+   PUBLISH PRODUCT
 ========================================================= */
 
 function publishProduct() {
@@ -1117,7 +1367,9 @@ function publishProduct() {
     !descriptionInput ||
     !imageInput
   ) {
+
     return;
+
   }
 
 
@@ -1144,6 +1396,7 @@ function publishProduct() {
     );
 
     return;
+
   }
 
 
@@ -1154,6 +1407,7 @@ function publishProduct() {
     );
 
     return;
+
   }
 
 
@@ -1164,6 +1418,7 @@ function publishProduct() {
     );
 
     return;
+
   }
 
 
@@ -1174,6 +1429,7 @@ function publishProduct() {
     );
 
     return;
+
   }
 
 
@@ -1188,6 +1444,7 @@ function publishProduct() {
     );
 
     return;
+
   }
 
 
@@ -1230,6 +1487,7 @@ function publishProduct() {
 
   imageInput.value = "";
 
+
   delete imageInput.dataset.image;
 
 
@@ -1246,14 +1504,18 @@ function publishProduct() {
 
 
   if (preview) {
+
     preview.src = "";
+
   }
 
 
   if (previewBox) {
+
     previewBox.classList.add(
       "hidden"
     );
+
   }
 
 
@@ -1272,6 +1534,7 @@ function publishProduct() {
     ?.scrollIntoView({
       behavior: "smooth"
     });
+
 }
 
 
@@ -1284,8 +1547,10 @@ function updateDashboard() {
   const products =
     getAllProducts();
 
+
   const analytics =
     getAnalytics();
+
 
   const visitors =
     getDailyVisitors();
@@ -1296,15 +1561,18 @@ function updateDashboard() {
       "dashboardProducts"
     );
 
+
   const ordersCount =
     document.getElementById(
       "dashboardOrders"
     );
 
+
   const revenue =
     document.getElementById(
       "dashboardRevenue"
     );
+
 
   const visitorsElement =
     document.getElementById(
@@ -1313,32 +1581,43 @@ function updateDashboard() {
 
 
   if (productCount) {
+
     productCount.textContent =
       products.length;
+
   }
 
 
   if (ordersCount) {
+
     ordersCount.textContent =
-      Number(analytics.orders || 0);
+      Number(
+        analytics.orders || 0
+      );
+
   }
 
 
   if (revenue) {
+
     revenue.textContent =
       formatKES(
         analytics.sales || 0
       );
+
   }
 
 
   if (visitorsElement) {
+
     visitorsElement.textContent =
       visitors;
+
   }
 
 
   updateProductStats();
+
 }
 
 
@@ -1353,12 +1632,16 @@ function resetAnalytics() {
       "Reset demo sales and order analytics?"
     );
 
+
   if (!confirmed) return;
 
 
   saveAnalytics({
+
     sales: 0,
+
     orders: 0
+
   });
 
 
@@ -1368,12 +1651,12 @@ function resetAnalytics() {
   showToast(
     "Dashboard analytics reset."
   );
+
 }
 
 
 /* =========================================================
-   UPDATE HISTORY
-   HIDDEN BY DEFAULT
+   UPDATES
 ========================================================= */
 
 function toggleUpdateHistory() {
@@ -1383,6 +1666,7 @@ function toggleUpdateHistory() {
       "updateHistory"
     );
 
+
   const button =
     document.getElementById(
       "updatesToggle"
@@ -1390,7 +1674,9 @@ function toggleUpdateHistory() {
 
 
   if (!history || !button) {
+
     return;
+
   }
 
 
@@ -1404,6 +1690,7 @@ function toggleUpdateHistory() {
     history.style.display =
       "block";
 
+
     button.textContent =
       "Hide Updates";
 
@@ -1412,10 +1699,12 @@ function toggleUpdateHistory() {
     history.style.display =
       "none";
 
+
     button.textContent =
       "View Updates";
 
   }
+
 }
 
 
@@ -1433,9 +1722,13 @@ function scrollToSection(id) {
 
 
   element.scrollIntoView({
+
     behavior: "smooth",
+
     block: "start"
+
   });
+
 }
 
 
@@ -1455,7 +1748,9 @@ function showToast(message) {
 
 
   if (!toast) {
+
     return;
+
   }
 
 
@@ -1481,6 +1776,7 @@ function showToast(message) {
       );
 
     }, 3000);
+
 }
 
 
@@ -1497,7 +1793,9 @@ function setupSearch() {
 
 
   if (!searchInput) {
+
     return;
+
   }
 
 
@@ -1511,11 +1809,12 @@ function setupSearch() {
 
     }
   );
+
 }
 
 
 /* =========================================================
-   MODAL CLICK OUTSIDE
+   MODAL
 ========================================================= */
 
 function setupModalClosing() {
@@ -1536,16 +1835,45 @@ function setupModalClosing() {
       if (
         event.target === modal
       ) {
+
         closeProductModal();
+
       }
 
     }
   );
+
 }
 
 
 /* =========================================================
-   INITIALIZE SMITHX
+   ESCAPE KEY
+========================================================= */
+
+function setupKeyboardControls() {
+
+  document.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Escape"
+      ) {
+
+        closeProductModal();
+
+        closeCart();
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   INITIALIZE
 ========================================================= */
 
 document.addEventListener(
@@ -1566,14 +1894,16 @@ document.addEventListener(
 
     setupModalClosing();
 
+    setupKeyboardControls();
 
-    /* Keep update history hidden
-       when the page first loads */
+
+    /* Updates hidden initially */
 
     const updateHistory =
       document.getElementById(
         "updateHistory"
       );
+
 
     const updateButton =
       document.getElementById(
@@ -1582,14 +1912,18 @@ document.addEventListener(
 
 
     if (updateHistory) {
+
       updateHistory.style.display =
         "none";
+
     }
 
 
     if (updateButton) {
+
       updateButton.textContent =
         "View Updates";
+
     }
 
   }
