@@ -1,6 +1,7 @@
 /* =========================================================
    SM1THX 🛒 — APP.JS
-   MVP VERSION 4.0
+   MVP VERSION 5.0
+   CART + LOGIN RELIABILITY UPDATE
 ========================================================= */
 
 "use strict";
@@ -170,7 +171,7 @@ function getAllProducts() {
 
 
 /* =========================================================
-   CART
+   CART STORAGE
 ========================================================= */
 
 function getCart() {
@@ -268,7 +269,9 @@ function setupCategories() {
       <button
         type="button"
         class="category-filter ${
-          category === currentCategory ? "active" : ""
+          category === currentCategory
+            ? "active"
+            : ""
         }"
         data-category="${escapeHTML(category)}"
       >
@@ -279,23 +282,20 @@ function setupCategories() {
   container
     .querySelectorAll(".category-filter")
     .forEach(button => {
-
       button.addEventListener("click", () => {
-
         currentCategory =
           button.dataset.category || "All";
 
         container
           .querySelectorAll(".category-filter")
-          .forEach(item =>
-            item.classList.remove("active")
-          );
+          .forEach(item => {
+            item.classList.remove("active");
+          });
 
         button.classList.add("active");
 
         renderProducts();
       });
-
     });
 }
 
@@ -323,7 +323,6 @@ function setupSellerCategory() {
 ========================================================= */
 
 function renderProducts() {
-
   const grid =
     document.getElementById("productsGrid");
 
@@ -334,18 +333,15 @@ function renderProducts() {
 
   const products =
     getAllProducts().filter(product => {
-
       const matchesCategory =
         currentCategory === "All" ||
         product.category === currentCategory;
 
-      const searchable =
-        `
+      const searchable = `
         ${product.name}
         ${product.description}
         ${product.category}
-        `
-        .toLowerCase();
+      `.toLowerCase();
 
       const matchesSearch =
         !search ||
@@ -357,9 +353,7 @@ function renderProducts() {
       );
     });
 
-
   if (!products.length) {
-
     grid.innerHTML = `
       <div class="empty-state">
         <h3>No products found</h3>
@@ -372,10 +366,8 @@ function renderProducts() {
     return;
   }
 
-
   grid.innerHTML =
     products.map(product => `
-
       <article class="product-card">
 
         <button
@@ -383,16 +375,13 @@ function renderProducts() {
           class="product-image-button"
           onclick="openProductModal('${escapeHTML(product.id)}')"
         >
-
           <img
             src="${escapeHTML(product.image)}"
             alt="${escapeHTML(product.name)}"
             loading="lazy"
             onerror="this.src='https://via.placeholder.com/900x700?text=SM1THX+Product'"
           >
-
         </button>
-
 
         <div class="product-card-body">
 
@@ -400,23 +389,19 @@ function renderProducts() {
             ${escapeHTML(product.category)}
           </span>
 
-
           <h3>
             ${escapeHTML(product.name)}
           </h3>
 
-
           <p>
             ${escapeHTML(product.description)}
           </p>
-
 
           <div class="product-card-bottom">
 
             <strong>
               ${formatKES(product.price)}
             </strong>
-
 
             <button
               type="button"
@@ -431,7 +416,6 @@ function renderProducts() {
         </div>
 
       </article>
-
     `).join("");
 }
 
@@ -441,7 +425,6 @@ function renderProducts() {
 ========================================================= */
 
 function openProductModal(productId) {
-
   const product =
     getAllProducts().find(
       item => item.id === productId
@@ -459,21 +442,16 @@ function openProductModal(productId) {
 
   if (!modal || !content) return;
 
-
   content.innerHTML = `
-
     <div class="product-modal-layout">
 
       <div class="product-modal-image">
-
         <img
           src="${escapeHTML(product.image)}"
           alt="${escapeHTML(product.name)}"
           onerror="this.src='https://via.placeholder.com/900x700?text=SM1THX+Product'"
         >
-
       </div>
-
 
       <div class="product-modal-info">
 
@@ -507,35 +485,31 @@ function openProductModal(productId) {
       </div>
 
     </div>
-
   `;
 
-
   modal.classList.add("active");
+  modal.setAttribute("aria-hidden", "false");
 
   trackEvent("productView");
 }
 
 
 function closeProductModal() {
-
   const modal =
-    document.getElementById(
-      "productModal"
-    );
+    document.getElementById("productModal");
 
-  if (modal) {
-    modal.classList.remove("active");
-  }
+  if (!modal) return;
+
+  modal.classList.remove("active");
+  modal.setAttribute("aria-hidden", "true");
 }
 
 
 /* =========================================================
-   CART FUNCTIONS
+   CART
 ========================================================= */
 
 function addToCart(productId) {
-
   const product =
     getAllProducts().find(
       item => item.id === productId
@@ -550,16 +524,15 @@ function addToCart(productId) {
       item => item.id === productId
     );
 
-
   if (existing) {
-    existing.quantity += 1;
+    existing.quantity =
+      Number(existing.quantity || 0) + 1;
   } else {
     cart.push({
       id: productId,
       quantity: 1
     });
   }
-
 
   saveCart(cart);
 
@@ -573,7 +546,6 @@ function addToCart(productId) {
 
 
 function removeFromCart(productId) {
-
   const cart =
     getCart().filter(
       item => item.id !== productId
@@ -590,7 +562,6 @@ function changeCartQuantity(
   productId,
   amount
 ) {
-
   const cart = getCart();
 
   const item =
@@ -601,7 +572,9 @@ function changeCartQuantity(
 
   if (!item) return;
 
-  item.quantity += amount;
+  item.quantity =
+    Number(item.quantity || 0) +
+    Number(amount || 0);
 
   if (item.quantity <= 0) {
     removeFromCart(productId);
@@ -616,15 +589,12 @@ function changeCartQuantity(
 
 
 /* =========================================================
-   RENDER CART
+   CART RENDER
 ========================================================= */
 
 function renderCart() {
-
   const container =
-    document.getElementById(
-      "cartItems"
-    );
+    document.getElementById("cartItems");
 
   const subtotalElement =
     document.getElementById(
@@ -638,12 +608,9 @@ function renderCart() {
 
   if (!container) return;
 
-
   const cart = getCart();
 
-
   if (!cart.length) {
-
     container.innerHTML = `
       <div class="empty-state">
 
@@ -675,9 +642,7 @@ function renderCart() {
     return;
   }
 
-
   let subtotal = 0;
-
 
   container.innerHTML =
     cart.map(item => {
@@ -690,18 +655,17 @@ function renderCart() {
 
       if (!product) return "";
 
-
       const quantity =
-        Number(item.quantity) || 1;
-
+        Math.max(
+          1,
+          Number(item.quantity) || 1
+        );
 
       subtotal +=
         Number(product.price) *
         quantity;
 
-
       return `
-
         <div class="cart-item">
 
           <img
@@ -709,7 +673,6 @@ function renderCart() {
             alt="${escapeHTML(product.name)}"
             onerror="this.src='https://via.placeholder.com/200x150?text=SM1THX'"
           >
-
 
           <div>
 
@@ -720,7 +683,6 @@ function renderCart() {
             <p>
               ${formatKES(product.price)}
             </p>
-
 
             <div
               style="
@@ -761,7 +723,6 @@ function renderCart() {
 
             </div>
 
-
             <button
               type="button"
               style="
@@ -784,11 +745,8 @@ function renderCart() {
           </div>
 
         </div>
-
       `;
-
     }).join("");
-
 
   if (subtotalElement) {
     subtotalElement.textContent =
@@ -803,7 +761,6 @@ function renderCart() {
 
 
 function updateCartCount() {
-
   const element =
     document.getElementById(
       "cartCount"
@@ -811,22 +768,52 @@ function updateCartCount() {
 
   if (!element) return;
 
-
   const count =
     getCart().reduce(
       (total, item) =>
         total +
-        (Number(item.quantity) || 0),
+        Math.max(
+          0,
+          Number(item.quantity) || 0
+        ),
       0
     );
-
 
   element.textContent = count;
 }
 
 
-function openCart() {
+/* =========================================================
+   RELIABLE CART OPEN / CLOSE
+========================================================= */
 
+function openCart() {
+  const panel =
+    document.getElementById(
+      "cartPanel"
+    );
+
+  if (!panel) {
+    console.error(
+      "SM1THX: cartPanel not found."
+    );
+    return;
+  }
+
+  panel.classList.add("active");
+  panel.classList.add("open");
+
+  panel.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  renderCart();
+  updateCartCount();
+}
+
+
+function closeCart() {
   const panel =
     document.getElementById(
       "cartPanel"
@@ -834,22 +821,13 @@ function openCart() {
 
   if (!panel) return;
 
-  panel.classList.add("active");
+  panel.classList.remove("active");
+  panel.classList.remove("open");
 
-  renderCart();
-}
-
-
-function closeCart() {
-
-  const panel =
-    document.getElementById(
-      "cartPanel"
-    );
-
-  if (panel) {
-    panel.classList.remove("active");
-  }
+  panel.setAttribute(
+    "aria-hidden",
+    "true"
+  );
 }
 
 
@@ -858,7 +836,6 @@ function closeCart() {
 ========================================================= */
 
 function demoCheckout() {
-
   const cart = getCart();
 
   if (!cart.length) {
@@ -868,12 +845,9 @@ function demoCheckout() {
     return;
   }
 
-
   let total = 0;
 
-
   cart.forEach(item => {
-
     const product =
       getAllProducts().find(
         productItem =>
@@ -883,26 +857,24 @@ function demoCheckout() {
     if (product) {
       total +=
         Number(product.price) *
-        Number(item.quantity || 1);
+        Math.max(
+          1,
+          Number(item.quantity) || 1
+        );
     }
-
   });
-
 
   trackEvent(
     "order",
     total
   );
 
-
   localStorage.removeItem(
     STORAGE.cart
   );
 
-
   renderCart();
   updateCartCount();
-
 
   showToast(
     "Demo checkout complete. Thank you for testing SM1THX 🛒!"
@@ -915,7 +887,6 @@ function demoCheckout() {
 ========================================================= */
 
 function setupImagePreview() {
-
   const input =
     document.getElementById(
       "productImage"
@@ -931,7 +902,6 @@ function setupImagePreview() {
       "previewImage"
     );
 
-
   if (
     !input ||
     !preview ||
@@ -939,7 +909,6 @@ function setupImagePreview() {
   ) {
     return;
   }
-
 
   input.addEventListener(
     "change",
@@ -957,13 +926,22 @@ function setupImagePreview() {
         return;
       }
 
+      if (!file.type.startsWith("image/")) {
+        showToast(
+          "Please choose an image file."
+        );
+
+        input.value = "";
+        preview.style.display =
+          "none";
+
+        return;
+      }
 
       const reader =
         new FileReader();
 
-
       reader.onload = event => {
-
         previewImage.src =
           event.target.result;
 
@@ -971,9 +949,13 @@ function setupImagePreview() {
           "block";
       };
 
+      reader.onerror = () => {
+        showToast(
+          "Could not preview the image."
+        );
+      };
 
       reader.readAsDataURL(file);
-
     }
   );
 }
@@ -988,19 +970,16 @@ function compressImage(
   maxWidth = 1200,
   quality = 0.82
 ) {
-
   return new Promise(
     (resolve, reject) => {
 
       const reader =
         new FileReader();
 
-
       reader.onload = event => {
 
         const img =
           new Image();
-
 
         img.onload = () => {
 
@@ -1009,7 +988,6 @@ function compressImage(
 
           let height =
             img.height;
-
 
           if (width > maxWidth) {
 
@@ -1024,22 +1002,27 @@ function compressImage(
               );
           }
 
-
           const canvas =
             document.createElement(
               "canvas"
             );
 
-
           canvas.width = width;
           canvas.height = height;
-
 
           const context =
             canvas.getContext(
               "2d"
             );
 
+          if (!context) {
+            reject(
+              new Error(
+                "Canvas unavailable"
+              )
+            );
+            return;
+          }
 
           context.drawImage(
             img,
@@ -1049,7 +1032,6 @@ function compressImage(
             height
           );
 
-
           resolve(
             canvas.toDataURL(
               "image/jpeg",
@@ -1058,17 +1040,25 @@ function compressImage(
           );
         };
 
-
-        img.onerror =
-          reject;
+        img.onerror = () => {
+          reject(
+            new Error(
+              "Image could not load"
+            )
+          );
+        };
 
         img.src =
           event.target.result;
       };
 
-
-      reader.onerror =
-        reject;
+      reader.onerror = () => {
+        reject(
+          new Error(
+            "File could not be read"
+          )
+        );
+      };
 
       reader.readAsDataURL(file);
     }
@@ -1083,11 +1073,9 @@ function compressImage(
 async function publishProduct(
   event
 ) {
-
   if (event) {
     event.preventDefault();
   }
-
 
   const nameInput =
     document.getElementById(
@@ -1114,7 +1102,6 @@ async function publishProduct(
       "productImage"
     );
 
-
   if (
     !nameInput ||
     !priceInput ||
@@ -1122,7 +1109,6 @@ async function publishProduct(
   ) {
     return;
   }
-
 
   const name =
     nameInput.value.trim();
@@ -1137,7 +1123,6 @@ async function publishProduct(
   const description =
     descriptionInput.value.trim();
 
-
   if (!name) {
     showToast(
       "Please enter a product name."
@@ -1145,9 +1130,8 @@ async function publishProduct(
     return;
   }
 
-
   if (
-    !price ||
+    !Number.isFinite(price) ||
     price <= 0
   ) {
     showToast(
@@ -1156,7 +1140,6 @@ async function publishProduct(
     return;
   }
 
-
   if (!description) {
     showToast(
       "Please add a product description."
@@ -1164,39 +1147,27 @@ async function publishProduct(
     return;
   }
 
-
   let image =
     "https://via.placeholder.com/900x700?text=SM1THX+Product";
 
-
-  if (
-    imageInput?.files?.[0]
-  ) {
-
+  if (imageInput?.files?.[0]) {
     try {
-
       image =
         await compressImage(
           imageInput.files[0]
         );
-
     } catch {
-
       showToast(
         "Could not process the product image."
       );
-
       return;
     }
   }
 
-
   const customProducts =
     getCustomProducts();
 
-
   const product = {
-
     id:
       "custom-" +
       Date.now() +
@@ -1212,26 +1183,21 @@ async function publishProduct(
     image
   };
 
-
   customProducts.push(
     product
   );
-
 
   saveCustomProducts(
     customProducts
   );
 
-
   nameInput.value = "";
   priceInput.value = "";
   descriptionInput.value = "";
 
-
   if (imageInput) {
     imageInput.value = "";
   }
-
 
   const preview =
     document.getElementById(
@@ -1243,26 +1209,21 @@ async function publishProduct(
       "previewImage"
     );
 
-
   if (preview) {
     preview.style.display =
       "none";
   }
 
-
   if (previewImage) {
     previewImage.src = "";
   }
 
-
   renderProducts();
   updateDashboard();
-
 
   showToast(
     "Product published successfully!"
   );
-
 
   document
     .getElementById("market")
@@ -1277,13 +1238,11 @@ async function publishProduct(
 ========================================================= */
 
 function updateDashboard() {
-
   const products =
     getAllProducts();
 
   const analytics =
     getAnalytics();
-
 
   const productsElement =
     document.getElementById(
@@ -1305,18 +1264,15 @@ function updateDashboard() {
       "dashboardVisitors"
     );
 
-
   if (productsElement) {
     productsElement.textContent =
       products.length;
   }
 
-
   if (ordersElement) {
     ordersElement.textContent =
       analytics.orders;
   }
-
 
   if (revenueElement) {
     revenueElement.textContent =
@@ -1324,7 +1280,6 @@ function updateDashboard() {
         analytics.revenue
       );
   }
-
 
   if (visitorsElement) {
     visitorsElement.textContent =
@@ -1334,7 +1289,6 @@ function updateDashboard() {
 
 
 function resetAnalytics() {
-
   localStorage.removeItem(
     STORAGE.analytics
   );
@@ -1352,7 +1306,6 @@ function resetAnalytics() {
 ========================================================= */
 
 function toggleUpdateHistory() {
-
   const history =
     document.getElementById(
       "updateHistory"
@@ -1363,20 +1316,16 @@ function toggleUpdateHistory() {
       "updatesToggle"
     );
 
-
   if (!history) return;
-
 
   const hidden =
     history.style.display === "none" ||
     history.style.display === "";
 
-
   history.style.display =
     hidden
       ? "block"
       : "none";
-
 
   if (button) {
     button.textContent =
@@ -1388,7 +1337,6 @@ function toggleUpdateHistory() {
 
 
 function setupUpdatesToggle() {
-
   const button =
     document.getElementById(
       "updatesToggle"
@@ -1396,11 +1344,11 @@ function setupUpdatesToggle() {
 
   if (!button) return;
 
-
-  button.addEventListener(
-    "click",
-    toggleUpdateHistory
-  );
+  /*
+    The HTML already has onclick.
+    We intentionally do not add another
+    click listener here.
+  */
 }
 
 
@@ -1409,7 +1357,6 @@ function setupUpdatesToggle() {
 ========================================================= */
 
 function setupSearch() {
-
   const input =
     document.getElementById(
       "productSearch"
@@ -1417,11 +1364,9 @@ function setupSearch() {
 
   if (!input) return;
 
-
   input.addEventListener(
     "input",
     () => {
-
       currentSearch =
         input.value || "";
 
@@ -1436,12 +1381,10 @@ function setupSearch() {
 ========================================================= */
 
 function scrollToSection(id) {
-
   const element =
     document.getElementById(id);
 
   if (!element) return;
-
 
   element.scrollIntoView({
     behavior: "smooth",
@@ -1451,7 +1394,6 @@ function scrollToSection(id) {
 
 
 function setupNavigation() {
-
   document
     .querySelectorAll(
       'a[href^="#"]'
@@ -1474,27 +1416,21 @@ function setupNavigation() {
             return;
           }
 
-
           const target =
             document.querySelector(
               id
             );
 
-
           if (!target) return;
 
-
           event.preventDefault();
-
 
           target.scrollIntoView({
             behavior: "smooth",
             block: "start"
           });
-
         }
       );
-
     });
 }
 
@@ -1504,14 +1440,12 @@ function setupNavigation() {
 ========================================================= */
 
 function showToast(message) {
-
   const toast =
     document.getElementById(
       "toast"
     );
 
   if (!toast) return;
-
 
   toast.textContent =
     message;
@@ -1520,11 +1454,9 @@ function showToast(message) {
     "show"
   );
 
-
   clearTimeout(
     showToast.timeout
   );
-
 
   showToast.timeout =
     setTimeout(
@@ -1543,7 +1475,6 @@ function showToast(message) {
 ========================================================= */
 
 function getDemoUser() {
-
   return safeJSONParse(
     localStorage.getItem(
       DEMO_USER_KEY
@@ -1554,7 +1485,6 @@ function getDemoUser() {
 
 
 function saveDemoUser(user) {
-
   localStorage.setItem(
     DEMO_USER_KEY,
     JSON.stringify(user)
@@ -1563,41 +1493,48 @@ function saveDemoUser(user) {
 
 
 /* =========================================================
-   OPEN / CLOSE LOGIN
+   RELIABLE LOGIN OPEN / CLOSE
 ========================================================= */
 
 function openLogin() {
-
   const overlay =
     document.getElementById(
       "loginOverlay"
     );
 
-  if (!overlay) return;
-
+  if (!overlay) {
+    console.error(
+      "SM1THX: loginOverlay not found."
+    );
+    return;
+  }
 
   overlay.classList.add(
     "active"
   );
 
+  overlay.classList.add(
+    "show"
+  );
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "false"
+  );
 
   showLoginForm();
 
-
   setTimeout(() => {
-
     document
       .getElementById(
         "loginEmail"
       )
       ?.focus();
-
-  }, 150);
+  }, 100);
 }
 
 
 function closeLogin() {
-
   const overlay =
     document.getElementById(
       "loginOverlay"
@@ -1605,9 +1542,17 @@ function closeLogin() {
 
   if (!overlay) return;
 
-
   overlay.classList.remove(
     "active"
+  );
+
+  overlay.classList.remove(
+    "show"
+  );
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "true"
   );
 }
 
@@ -1617,7 +1562,6 @@ function closeLogin() {
 ========================================================= */
 
 function showLoginForm() {
-
   const login =
     document.getElementById(
       "loginFormSection"
@@ -1628,12 +1572,10 @@ function showLoginForm() {
       "registerFormSection"
     );
 
-
   if (login) {
     login.style.display =
       "block";
   }
-
 
   if (register) {
     register.style.display =
@@ -1643,7 +1585,6 @@ function showLoginForm() {
 
 
 function showRegisterForm() {
-
   const login =
     document.getElementById(
       "loginFormSection"
@@ -1654,12 +1595,10 @@ function showRegisterForm() {
       "registerFormSection"
     );
 
-
   if (login) {
     login.style.display =
       "none";
   }
-
 
   if (register) {
     register.style.display =
@@ -1676,7 +1615,6 @@ function togglePassword(
   inputId,
   button
 ) {
-
   const input =
     document.getElementById(
       inputId
@@ -1684,21 +1622,18 @@ function togglePassword(
 
   if (!input) return;
 
-
   if (
     input.type ===
     "password"
   ) {
-
-    input.type = "text";
+    input.type =
+      "text";
 
     if (button) {
       button.textContent =
         "Hide";
     }
-
   } else {
-
     input.type =
       "password";
 
@@ -1715,11 +1650,9 @@ function togglePassword(
 ========================================================= */
 
 function demoRegister(event) {
-
   if (event) {
     event.preventDefault();
   }
-
 
   const name =
     document
@@ -1728,7 +1661,6 @@ function demoRegister(event) {
       )
       ?.value
       .trim();
-
 
   const email =
     document
@@ -1739,19 +1671,16 @@ function demoRegister(event) {
       .trim()
       .toLowerCase();
 
-
   const password =
     document.getElementById(
       "registerPassword"
-    )?.value;
-
+    )?.value || "";
 
   const accountType =
     document.getElementById(
       "accountType"
     )?.value ||
     "buyer";
-
 
   if (!name) {
     showToast(
@@ -1760,7 +1689,6 @@ function demoRegister(event) {
     return;
   }
 
-
   if (!email) {
     showToast(
       "Please enter your email."
@@ -1768,41 +1696,36 @@ function demoRegister(event) {
     return;
   }
 
-
   if (
-    !password ||
     password.length < 4
   ) {
-
     showToast(
       "Password must contain at least 4 characters."
     );
-
     return;
   }
 
-
+  /*
+    Demo authentication only.
+    This is intentionally localStorage-based
+    for the MVP and is NOT production security.
+  */
   const user = {
-
     name,
     email,
+    password,
     accountType,
     loggedIn: true,
-
     createdAt:
       new Date().toISOString()
   };
-
 
   saveDemoUser(
     user
   );
 
-
   updateLoginButton();
-
   closeLogin();
-
 
   showToast(
     `Welcome to SM1THX 🛒, ${name}!`
@@ -1815,11 +1738,9 @@ function demoRegister(event) {
 ========================================================= */
 
 function demoLogin(event) {
-
   if (event) {
     event.preventDefault();
   }
-
 
   const email =
     document
@@ -1830,14 +1751,12 @@ function demoLogin(event) {
       .trim()
       .toLowerCase();
 
-
   const password =
     document
       .getElementById(
         "loginPassword"
       )
-      ?.value;
-
+      ?.value || "";
 
   if (!email) {
     showToast(
@@ -1846,7 +1765,6 @@ function demoLogin(event) {
     return;
   }
 
-
   if (!password) {
     showToast(
       "Please enter your password."
@@ -1854,60 +1772,57 @@ function demoLogin(event) {
     return;
   }
 
-
   const user =
     getDemoUser();
 
-
   if (!user) {
-
     showToast(
       "Create a demo account first."
     );
 
     showRegisterForm();
 
-
     const registerEmail =
       document.getElementById(
         "registerEmail"
       );
-
 
     if (registerEmail) {
       registerEmail.value =
         email;
     }
 
-
     return;
   }
-
 
   if (
     user.email !== email
   ) {
-
     showToast(
-      "Email does not match the demo account."
+      "Email does not match your demo account."
     );
-
     return;
   }
 
+  if (
+    user.password &&
+    user.password !== password
+  ) {
+    showToast(
+      "Incorrect password."
+    );
+    return;
+  }
 
-  user.loggedIn = true;
-
+  user.loggedIn =
+    true;
 
   saveDemoUser(
     user
   );
 
-
   updateLoginButton();
-
   closeLogin();
-
 
   showToast(
     `Welcome back, ${user.name}!`
@@ -1920,24 +1835,19 @@ function demoLogin(event) {
 ========================================================= */
 
 function logoutDemoUser() {
-
   const user =
     getDemoUser();
 
   if (!user) return;
 
-
   user.loggedIn =
     false;
-
 
   saveDemoUser(
     user
   );
 
-
   updateLoginButton();
-
 
   showToast(
     "You have been logged out."
@@ -1950,7 +1860,6 @@ function logoutDemoUser() {
 ========================================================= */
 
 function updateLoginButton() {
-
   const button =
     document.getElementById(
       "loginNavButton"
@@ -1958,16 +1867,13 @@ function updateLoginButton() {
 
   if (!button) return;
 
-
   const user =
     getDemoUser();
-
 
   if (
     user &&
     user.loggedIn
   ) {
-
     button.textContent =
       `👤 ${user.name}`;
 
@@ -1976,9 +1882,7 @@ function updateLoginButton() {
 
     button.title =
       "Click to logout";
-
   } else {
-
     button.textContent =
       "Login";
 
@@ -1996,56 +1900,45 @@ function updateLoginButton() {
 ========================================================= */
 
 function setupLoginControls() {
-
   const overlay =
     document.getElementById(
       "loginOverlay"
     );
-
 
   const loginForm =
     document.getElementById(
       "loginForm"
     );
 
-
   const registerForm =
     document.getElementById(
       "registerForm"
     );
 
-
   if (loginForm) {
-
     loginForm.addEventListener(
       "submit",
       demoLogin
     );
   }
 
-
   if (registerForm) {
-
     registerForm.addEventListener(
       "submit",
       demoRegister
     );
   }
 
-
   if (overlay) {
-
     overlay.addEventListener(
       "click",
       event => {
-
         if (
           event.target ===
           overlay
         ) {
           closeLogin();
         }
-
       }
     );
   }
@@ -2053,11 +1946,103 @@ function setupLoginControls() {
 
 
 /* =========================================================
-   KEYBOARD
+   FORCE BUTTON CONNECTIONS
+========================================================= */
+
+function setupReliableControls() {
+
+  /* ---------- CART BUTTONS ---------- */
+
+  document
+    .querySelectorAll(
+      ".cart-button"
+    )
+    .forEach(button => {
+
+      button.onclick =
+        openCart;
+
+    });
+
+
+  /* ---------- LOGIN BUTTON ---------- */
+
+  const loginButton =
+    document.getElementById(
+      "loginNavButton"
+    );
+
+  if (loginButton) {
+
+    const user =
+      getDemoUser();
+
+    if (
+      user &&
+      user.loggedIn
+    ) {
+      loginButton.onclick =
+        logoutDemoUser;
+    } else {
+      loginButton.onclick =
+        openLogin;
+    }
+
+  }
+
+
+  /* ---------- CART CLOSE ---------- */
+
+  const cartPanel =
+    document.getElementById(
+      "cartPanel"
+    );
+
+  if (cartPanel) {
+
+    const closeButtons =
+      cartPanel.querySelectorAll(
+        ".modal-close"
+      );
+
+    closeButtons.forEach(
+      button => {
+        button.onclick =
+          closeCart;
+      }
+    );
+
+  }
+
+
+  /* ---------- LOGIN CLOSE ---------- */
+
+  const loginOverlay =
+    document.getElementById(
+      "loginOverlay"
+    );
+
+  if (loginOverlay) {
+
+    const closeButton =
+      loginOverlay.querySelector(
+        ".modal-close"
+      );
+
+    if (closeButton) {
+      closeButton.onclick =
+        closeLogin;
+    }
+
+  }
+}
+
+
+/* =========================================================
+   KEYBOARD CONTROLS
 ========================================================= */
 
 function setupKeyboardControls() {
-
   document.addEventListener(
     "keydown",
     event => {
@@ -2069,13 +2054,67 @@ function setupKeyboardControls() {
         return;
       }
 
-
       closeProductModal();
       closeCart();
       closeLogin();
 
     }
   );
+}
+
+
+/* =========================================================
+   OUTSIDE CLICK / BACKDROP CONTROLS
+========================================================= */
+
+function setupBackdropControls() {
+
+  const productModal =
+    document.getElementById(
+      "productModal"
+    );
+
+  if (productModal) {
+
+    productModal.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target ===
+          productModal
+        ) {
+          closeProductModal();
+        }
+
+      }
+    );
+
+  }
+
+
+  const loginOverlay =
+    document.getElementById(
+      "loginOverlay"
+    );
+
+  if (loginOverlay) {
+
+    loginOverlay.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target ===
+          loginOverlay
+        ) {
+          closeLogin();
+        }
+
+      }
+    );
+
+  }
 }
 
 
@@ -2093,11 +2132,9 @@ document.addEventListener(
 
     renderProducts();
 
-
     renderCart();
 
     updateCartCount();
-
 
     setupImagePreview();
 
@@ -2107,18 +2144,19 @@ document.addEventListener(
 
     setupUpdatesToggle();
 
+    setupLoginControls();
+
+    setupReliableControls();
+
+    setupKeyboardControls();
+
+    setupBackdropControls();
 
     trackDailyVisitor();
 
     updateDashboard();
 
-
-    setupLoginControls();
-
     updateLoginButton();
-
-
-    setupKeyboardControls();
 
   }
 );
@@ -2152,7 +2190,6 @@ window.demoRegister =
 window.logoutDemoUser =
   logoutDemoUser;
 
-
 window.addToCart =
   addToCart;
 
@@ -2171,13 +2208,11 @@ window.closeCart =
 window.demoCheckout =
   demoCheckout;
 
-
 window.openProductModal =
   openProductModal;
 
 window.closeProductModal =
   closeProductModal;
-
 
 window.publishProduct =
   publishProduct;
@@ -2190,316 +2225,12 @@ window.toggleUpdateHistory =
 
 window.scrollToSection =
   scrollToSection;
-/* =========================================================
-   SM1THX 🛒 — CART + LOGIN RELIABILITY PATCH
-========================================================= */
 
-(function () {
-  "use strict";
+window.renderCart =
+  renderCart;
 
-  /* ---------- CART ---------- */
+window.updateCartCount =
+  updateCartCount;
 
-  function reliableOpenCart() {
-    const panel = document.getElementById("cartPanel");
-
-    if (!panel) {
-      console.error("SM1THX: cartPanel not found.");
-      return;
-    }
-
-    panel.classList.add("active");
-    panel.classList.add("open");
-
-    if (typeof renderCart === "function") {
-      renderCart();
-    }
-
-    if (typeof updateCartCount === "function") {
-      updateCartCount();
-    }
-
-    panel.setAttribute("aria-hidden", "false");
-  }
-
-  function reliableCloseCart() {
-    const panel = document.getElementById("cartPanel");
-
-    if (!panel) return;
-
-    panel.classList.remove("active");
-    panel.classList.remove("open");
-    panel.setAttribute("aria-hidden", "true");
-  }
-
-  window.openCart = reliableOpenCart;
-  window.closeCart = reliableCloseCart;
-
-
-  /* ---------- LOGIN ---------- */
-
-  function reliableOpenLogin() {
-    const overlay =
-      document.getElementById("loginOverlay");
-
-    if (!overlay) {
-      console.error("SM1THX: loginOverlay not found.");
-      return;
-    }
-
-    overlay.classList.add("active");
-    overlay.classList.add("show");
-    overlay.setAttribute("aria-hidden", "false");
-
-    const loginSection =
-      document.getElementById("loginFormSection");
-
-    const registerSection =
-      document.getElementById("registerFormSection");
-
-    if (loginSection) {
-      loginSection.style.display = "block";
-    }
-
-    if (registerSection) {
-      registerSection.style.display = "none";
-    }
-
-    setTimeout(function () {
-      document
-        .getElementById("loginEmail")
-        ?.focus();
-    }, 100);
-  }
-
-  function reliableCloseLogin() {
-    const overlay =
-      document.getElementById("loginOverlay");
-
-    if (!overlay) return;
-
-    overlay.classList.remove("active");
-    overlay.classList.remove("show");
-    overlay.setAttribute("aria-hidden", "true");
-  }
-
-  window.openLogin = reliableOpenLogin;
-  window.closeLogin = reliableCloseLogin;
-
-
-  /* ---------- LOGIN FORM ---------- */
-
-  document.addEventListener(
-    "submit",
-    function (event) {
-      const form = event.target;
-
-      if (!form) return;
-
-
-      /* LOGIN */
-
-      if (form.id === "loginForm") {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        const email =
-          document
-            .getElementById("loginEmail")
-            ?.value
-            .trim()
-            .toLowerCase();
-
-        const password =
-          document
-            .getElementById("loginPassword")
-            ?.value || "";
-
-        if (!email) {
-          showToast("Please enter your email.");
-          return;
-        }
-
-        if (!password) {
-          showToast("Please enter your password.");
-          return;
-        }
-
-        let user = getDemoUser();
-
-        if (!user) {
-          showToast("Create your account first.");
-
-          const loginSection =
-            document.getElementById("loginFormSection");
-
-          const registerSection =
-            document.getElementById(
-              "registerFormSection"
-            );
-
-          if (loginSection) {
-            loginSection.style.display = "none";
-          }
-
-          if (registerSection) {
-            registerSection.style.display = "block";
-          }
-
-          const registerEmail =
-            document.getElementById("registerEmail");
-
-          if (registerEmail) {
-            registerEmail.value = email;
-          }
-
-          return;
-        }
-
-        if (user.email !== email) {
-          showToast("Email does not match your account.");
-          return;
-        }
-
-        user.loggedIn = true;
-
-        localStorage.setItem(
-          "smithx_demo_user_v1",
-          JSON.stringify(user)
-        );
-
-        if (typeof updateLoginButton === "function") {
-          updateLoginButton();
-        }
-
-        reliableCloseLogin();
-
-        showToast(
-          `Welcome back, ${user.name}!`
-        );
-
-        return;
-      }
-
-
-      /* REGISTER */
-
-      if (form.id === "registerForm") {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
-        const name =
-          document
-            .getElementById("registerName")
-            ?.value
-            .trim();
-
-        const email =
-          document
-            .getElementById("registerEmail")
-            ?.value
-            .trim()
-            .toLowerCase();
-
-        const password =
-          document
-            .getElementById("registerPassword")
-            ?.value || "";
-
-        const accountType =
-          document
-            .getElementById("accountType")
-            ?.value || "buyer";
-
-        if (!name) {
-          showToast("Please enter your name.");
-          return;
-        }
-
-        if (!email) {
-          showToast("Please enter your email.");
-          return;
-        }
-
-        if (password.length < 4) {
-          showToast(
-            "Password must contain at least 4 characters."
-          );
-          return;
-        }
-
-        const user = {
-          name: name,
-          email: email,
-          password: password,
-          accountType: accountType,
-          loggedIn: true,
-          createdAt: new Date().toISOString()
-        };
-
-        localStorage.setItem(
-          "smithx_demo_user_v1",
-          JSON.stringify(user)
-        );
-
-        if (typeof updateLoginButton === "function") {
-          updateLoginButton();
-        }
-
-        reliableCloseLogin();
-
-        showToast(
-          `Welcome to SM1THX 🛒, ${name}!`
-        );
-      }
-    },
-    true
-  );
-
-
-  /* ---------- FORCE BUTTON CONNECTIONS ---------- */
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-      const cartButtons =
-        document.querySelectorAll(
-          ".cart-button"
-        );
-
-      cartButtons.forEach(function (button) {
-        button.onclick = reliableOpenCart;
-      });
-
-      const loginButton =
-        document.getElementById(
-          "loginNavButton"
-        );
-
-      if (loginButton) {
-        loginButton.onclick =
-          reliableOpenLogin;
-      }
-
-      const cartClose =
-        document.querySelector(
-          ".cart-close"
-        );
-
-      if (cartClose) {
-        cartClose.onclick =
-          reliableCloseCart;
-      }
-
-      const loginClose =
-        document.querySelector(
-          "#loginOverlay .modal-close"
-        );
-
-      if (loginClose) {
-        loginClose.onclick =
-          reliableCloseLogin;
-      }
-    }
-  );
-
-})();
+window.renderProducts =
+  renderProducts;
