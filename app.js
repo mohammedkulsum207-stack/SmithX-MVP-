@@ -1,6 +1,6 @@
 /* =========================================================
    SMITHX MVP — APP.JS
-   Version 1.6
+   Version 1.7
    ========================================================= */
 
 
@@ -340,6 +340,33 @@ function renderProducts(searchTerm = "") {
       .join("");
 
   updateProductStats();
+}
+
+
+/* =========================================================
+   PRODUCT STATS
+========================================================= */
+
+function updateProductStats() {
+
+  const products =
+    getAllProducts();
+
+  const productCount =
+    document.getElementById("productCount");
+
+  const totalProducts =
+    document.getElementById("totalProducts");
+
+  if (productCount) {
+    productCount.textContent =
+      products.length;
+  }
+
+  if (totalProducts) {
+    totalProducts.textContent =
+      products.length;
+  }
 }
 
 
@@ -687,13 +714,6 @@ function renderCart() {
                     -1
                   )
                 "
-                style="
-                  width:27px;
-                  height:27px;
-                  border:1px solid #d0d5dd;
-                  background:white;
-                  border-radius:6px;
-                "
               >
                 −
               </button>
@@ -711,13 +731,6 @@ function renderCart() {
                     '${escapeHTML(product.id)}',
                     1
                   )
-                "
-                style="
-                  width:27px;
-                  height:27px;
-                  border:1px solid #d0d5dd;
-                  background:white;
-                  border-radius:6px;
                 "
               >
                 +
@@ -1186,7 +1199,7 @@ function publishProduct() {
       "-" +
       Math.random()
         .toString(36)
-        .slice(2,8),
+        .slice(2, 8),
 
     name,
 
@@ -1266,112 +1279,66 @@ function publishProduct() {
    DASHBOARD
 ========================================================= */
 
-function updateProductStats() {
-
-  const count =
-    getAllProducts().length;
-
-
-  const heroProducts =
-    document.getElementById(
-      "heroProductCount"
-    );
-
-
-  const dashboardProducts =
-    document.getElementById(
-      "dashboardProducts"
-    );
-
-
-  const activityProducts =
-    document.getElementById(
-      "activityProducts"
-    );
-
-
-  if (heroProducts) {
-    heroProducts.textContent =
-      count;
-  }
-
-
-  if (dashboardProducts) {
-    dashboardProducts.textContent =
-      count;
-  }
-
-
-  if (activityProducts) {
-    activityProducts.textContent =
-      count;
-  }
-}
-
-
 function updateDashboard() {
+
+  const products =
+    getAllProducts();
 
   const analytics =
     getAnalytics();
-
 
   const visitors =
     getDailyVisitors();
 
 
-  const products =
-    getAllProducts().length;
+  const productCount =
+    document.getElementById(
+      "dashboardProducts"
+    );
+
+  const ordersCount =
+    document.getElementById(
+      "dashboardOrders"
+    );
+
+  const revenue =
+    document.getElementById(
+      "dashboardRevenue"
+    );
+
+  const visitorsElement =
+    document.getElementById(
+      "dashboardVisitors"
+    );
 
 
-  const sales =
-    Number(analytics.sales || 0);
+  if (productCount) {
+    productCount.textContent =
+      products.length;
+  }
 
 
-  const orders =
-    Number(analytics.orders || 0);
+  if (ordersCount) {
+    ordersCount.textContent =
+      Number(analytics.orders || 0);
+  }
 
 
-  const values = {
-
-    heroProductCount: products,
-
-    heroVisitorCount: visitors,
-
-    heroSales: formatKES(sales),
-
-    heroOrders: orders,
-
-    dashboardProducts: products,
-
-    dashboardVisitors: visitors,
-
-    dashboardSales: formatKES(sales),
-
-    dashboardOrders: orders,
-
-    activityProducts: products,
-
-    activityVisitors: visitors,
-
-    activitySales: formatKES(sales),
-
-    activityOrders: orders
-
-  };
+  if (revenue) {
+    revenue.textContent =
+      formatKES(
+        analytics.sales || 0
+      );
+  }
 
 
-  Object.entries(values)
-    .forEach(([id, value]) => {
+  if (visitorsElement) {
+    visitorsElement.textContent =
+      visitors;
+  }
 
-      const element =
-        document.getElementById(id);
 
-      if (element) {
-        element.textContent =
-          value;
-      }
-
-    });
+  updateProductStats();
 }
 
 
@@ -1383,9 +1350,8 @@ function resetAnalytics() {
 
   const confirmed =
     window.confirm(
-      "Reset all demo sales and order analytics?"
+      "Reset demo sales and order analytics?"
     );
-
 
   if (!confirmed) return;
 
@@ -1400,8 +1366,56 @@ function resetAnalytics() {
 
 
   showToast(
-    "Demo analytics have been reset."
+    "Dashboard analytics reset."
   );
+}
+
+
+/* =========================================================
+   UPDATE HISTORY
+   HIDDEN BY DEFAULT
+========================================================= */
+
+function toggleUpdateHistory() {
+
+  const history =
+    document.getElementById(
+      "updateHistory"
+    );
+
+  const button =
+    document.getElementById(
+      "updatesToggle"
+    );
+
+
+  if (!history || !button) {
+    return;
+  }
+
+
+  const isHidden =
+    history.style.display === "none" ||
+    history.style.display === "";
+
+
+  if (isHidden) {
+
+    history.style.display =
+      "block";
+
+    button.textContent =
+      "Hide Updates";
+
+  } else {
+
+    history.style.display =
+      "none";
+
+    button.textContent =
+      "View Updates";
+
+  }
 }
 
 
@@ -1409,42 +1423,19 @@ function resetAnalytics() {
    NAVIGATION
 ========================================================= */
 
-function scrollToSection(sectionId) {
+function scrollToSection(id) {
 
-  const section =
-    document.getElementById(
-      sectionId
-    );
+  const element =
+    document.getElementById(id);
 
 
-  if (!section) return;
+  if (!element) return;
 
 
-  section.scrollIntoView({
+  element.scrollIntoView({
     behavior: "smooth",
     block: "start"
   });
-}
-
-
-/* =========================================================
-   UPDATE HISTORY
-========================================================= */
-
-function toggleUpdateHistory() {
-
-  const history =
-    document.getElementById(
-      "updateHistoryExtra"
-    );
-
-
-  if (!history) return;
-
-
-  history.classList.toggle(
-    "hidden"
-  );
 }
 
 
@@ -1463,7 +1454,9 @@ function showToast(message) {
     );
 
 
-  if (!toast) return;
+  if (!toast) {
+    return;
+  }
 
 
   toast.textContent =
@@ -1487,60 +1480,72 @@ function showToast(message) {
         "show"
       );
 
-    }, 2800);
+    }, 3000);
 }
 
 
 /* =========================================================
-   CLOSE MODALS WITH ESC
+   SEARCH
 ========================================================= */
 
-document.addEventListener(
-  "keydown",
-  event => {
+function setupSearch() {
 
-    if (event.key !== "Escape") {
-      return;
-    }
+  const searchInput =
+    document.getElementById(
+      "productSearch"
+    );
 
 
-    closeProductModal();
-
-    closeCart();
-
+  if (!searchInput) {
+    return;
   }
-);
 
 
-/* =========================================================
-   CLICK OUTSIDE PRODUCT MODAL
-========================================================= */
+  searchInput.addEventListener(
+    "input",
+    event => {
 
-document.addEventListener(
-  "click",
-  event => {
-
-    const modal =
-      document.getElementById(
-        "productModal"
+      renderProducts(
+        event.target.value
       );
 
-
-    if (
-      modal &&
-      event.target === modal
-    ) {
-
-      closeProductModal();
-
     }
-
-  }
-);
+  );
+}
 
 
 /* =========================================================
-   INITIALIZATION
+   MODAL CLICK OUTSIDE
+========================================================= */
+
+function setupModalClosing() {
+
+  const modal =
+    document.getElementById(
+      "productModal"
+    );
+
+
+  if (!modal) return;
+
+
+  modal.addEventListener(
+    "click",
+    event => {
+
+      if (
+        event.target === modal
+      ) {
+        closeProductModal();
+      }
+
+    }
+  );
+}
+
+
+/* =========================================================
+   INITIALIZE SMITHX
 ========================================================= */
 
 document.addEventListener(
@@ -1557,90 +1562,34 @@ document.addEventListener(
 
     updateDashboard();
 
+    setupSearch();
 
-    const search =
+    setupModalClosing();
+
+
+    /* Keep update history hidden
+       when the page first loads */
+
+    const updateHistory =
       document.getElementById(
-        "productSearch"
+        "updateHistory"
+      );
+
+    const updateButton =
+      document.getElementById(
+        "updatesToggle"
       );
 
 
-    if (search) {
-
-      search.addEventListener(
-        "input",
-        event => {
-
-          renderProducts(
-            event.target.value
-          );
-
-        }
-      );
-
+    if (updateHistory) {
+      updateHistory.style.display =
+        "none";
     }
 
 
-    const publishButton =
-      document.getElementById(
-        "publishProduct"
-      );
-
-
-    if (publishButton) {
-
-      publishButton.addEventListener(
-        "click",
-        publishProduct
-      );
-
-    }
-
-
-    const imageInput =
-      document.getElementById(
-        "productImage"
-      );
-
-
-    if (imageInput) {
-
-      imageInput.addEventListener(
-        "change",
-        handleProductImage
-      );
-
-    }
-
-
-    const checkoutButton =
-      document.getElementById(
-        "checkoutButton"
-      );
-
-
-    if (checkoutButton) {
-
-      checkoutButton.addEventListener(
-        "click",
-        checkout
-      );
-
-    }
-
-
-    const resetButton =
-      document.getElementById(
-        "resetAnalytics"
-      );
-
-
-    if (resetButton) {
-
-      resetButton.addEventListener(
-        "click",
-        resetAnalytics
-      );
-
+    if (updateButton) {
+      updateButton.textContent =
+        "View Updates";
     }
 
   }
