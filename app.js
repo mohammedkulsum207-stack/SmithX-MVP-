@@ -1,51 +1,75 @@
 /* =========================================================
    SMITHX MVP — APP.JS
+   Version 1.6
    ========================================================= */
+
+
+/* =========================================================
+   DEFAULT PRODUCTS
+========================================================= */
 
 const DEFAULT_PRODUCTS = [
   {
     id: "s26-ultra",
     name: "Samsung Galaxy S26 Ultra",
     price: 169999,
-    description: "Premium Samsung smartphone with advanced performance, camera technology and a large high-resolution display.",
-    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=85"
+    description:
+      "Premium Samsung smartphone with advanced performance, camera technology and a large high-resolution display.",
+    image:
+      "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=85"
   },
+
   {
     id: "wireless-headphones",
     name: "Smart Wireless Headphones",
     price: 4500,
-    description: "Comfortable wireless headphones with immersive sound and a modern everyday design.",
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85"
+    description:
+      "Comfortable wireless headphones with immersive sound and a modern everyday design.",
+    image:
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85"
   },
+
   {
     id: "desk-lamp",
     name: "Minimal Desk Lamp",
     price: 2800,
-    description: "Modern minimalist desk lamp designed for workspaces, study areas and home offices.",
-    image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=85"
+    description:
+      "Modern minimalist desk lamp designed for workspaces, study areas and home offices.",
+    image:
+      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=85"
   },
+
   {
     id: "travel-backpack",
     name: "Everyday Travel Backpack",
     price: 3500,
-    description: "Practical everyday backpack with a clean design for travel, school and work.",
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85"
+    description:
+      "Practical everyday backpack with a clean design for travel, school and work.",
+    image:
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85"
   },
+
   {
     id: "smart-watch",
     name: "Smart Watch",
     price: 6500,
-    description: "Modern smartwatch designed for everyday activity tracking, notifications and convenience.",
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85"
+    description:
+      "Modern smartwatch designed for everyday activity tracking, notifications and convenience.",
+    image:
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85"
   },
+
   {
     id: "premium-sneakers",
     name: "Premium Sneakers",
     price: 7200,
-    description: "Modern everyday sneakers combining comfort, style and a clean premium look.",
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85"
+    description:
+      "Modern everyday sneakers combining comfort, style and a clean premium look.",
+    image:
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85"
   }
 ];
+
 
 const STORAGE = {
   products: "smithx_custom_products_v2",
@@ -57,11 +81,15 @@ const STORAGE = {
 
 /* =========================================================
    HELPERS
-   ========================================================= */
+========================================================= */
 
 function formatKES(amount) {
-  return "KES " + Number(amount || 0).toLocaleString("en-KE");
+  return (
+    "KES " +
+    Number(amount || 0).toLocaleString("en-KE")
+  );
 }
+
 
 function escapeHTML(value) {
   return String(value ?? "")
@@ -75,7 +103,7 @@ function escapeHTML(value) {
 
 /* =========================================================
    PRODUCTS
-   ========================================================= */
+========================================================= */
 
 function getCustomProducts() {
   try {
@@ -87,12 +115,14 @@ function getCustomProducts() {
   }
 }
 
+
 function saveCustomProducts(products) {
   localStorage.setItem(
     STORAGE.products,
     JSON.stringify(products)
   );
 }
+
 
 function getAllProducts() {
   return [
@@ -104,7 +134,7 @@ function getAllProducts() {
 
 /* =========================================================
    ANALYTICS
-   ========================================================= */
+========================================================= */
 
 function getAnalytics() {
   try {
@@ -120,6 +150,7 @@ function getAnalytics() {
   }
 }
 
+
 function saveAnalytics(data) {
   localStorage.setItem(
     STORAGE.analytics,
@@ -129,13 +160,20 @@ function saveAnalytics(data) {
 
 
 /* =========================================================
-   DAILY VISITOR
-   ========================================================= */
+   DAILY VISITORS
+========================================================= */
+
+function getTodayKey() {
+  return new Date()
+    .toISOString()
+    .slice(0, 10);
+}
+
 
 function registerDailyVisitor() {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = getTodayKey();
 
-  let visitorData;
+  let visitorData = null;
 
   try {
     visitorData = JSON.parse(
@@ -155,10 +193,13 @@ function registerDailyVisitor() {
       STORAGE.visitor,
       JSON.stringify(visitorData)
     );
+
+    return 1;
   }
 
-  return visitorData.count;
+  return Number(visitorData.count || 0);
 }
+
 
 function getDailyVisitors() {
   try {
@@ -166,13 +207,12 @@ function getDailyVisitors() {
       localStorage.getItem(STORAGE.visitor) || "null"
     );
 
-    const today = new Date().toISOString().slice(0, 10);
-
-    if (!data || data.date !== today) {
+    if (!data || data.date !== getTodayKey()) {
       return 0;
     }
 
     return Number(data.count || 0);
+
   } catch {
     return 0;
   }
@@ -181,124 +221,164 @@ function getDailyVisitors() {
 
 /* =========================================================
    MARKETPLACE
-   ========================================================= */
+========================================================= */
 
 function renderProducts(searchTerm = "") {
-  const grid = document.getElementById("productsGrid");
 
-  if (!grid) {
-    console.error("SMITHX ERROR: productsGrid not found.");
-    return;
-  }
+  const grid =
+    document.getElementById("productsGrid");
 
-  const products = getAllProducts();
+  if (!grid) return;
 
-  const term = searchTerm
-    .trim()
-    .toLowerCase();
+  const products =
+    getAllProducts();
 
-  const filteredProducts = products.filter(product => {
-    if (!term) return true;
+  const term =
+    String(searchTerm)
+      .trim()
+      .toLowerCase();
 
-    return (
-      product.name.toLowerCase().includes(term) ||
-      product.description.toLowerCase().includes(term)
-    );
-  });
+  const filteredProducts =
+    products.filter(product => {
+
+      if (!term) {
+        return true;
+      }
+
+      return (
+        String(product.name)
+          .toLowerCase()
+          .includes(term) ||
+
+        String(product.description)
+          .toLowerCase()
+          .includes(term)
+      );
+    });
+
 
   if (filteredProducts.length === 0) {
+
     grid.innerHTML = `
       <div style="
-        grid-column: 1 / -1;
-        text-align: center;
-        padding: 50px 20px;
-        color: #667085;
+        grid-column:1/-1;
+        text-align:center;
+        padding:50px 20px;
+        color:#667085;
       ">
+
         <h3>No products found</h3>
-        <p>Try another search.</p>
+
+        <p>
+          Try another search.
+        </p>
+
       </div>
     `;
 
     return;
   }
 
-  grid.innerHTML = filteredProducts.map(product => `
-    <article class="product-card">
 
-      <div class="product-image">
-        <img
-          src="${escapeHTML(product.image)}"
-          alt="${escapeHTML(product.name)}"
-          loading="lazy"
-          onerror="this.style.display='none'"
-        >
-      </div>
+  grid.innerHTML =
+    filteredProducts
+      .map(product => `
 
-      <div class="product-content">
+        <article class="product-card">
 
-        <h3>
-          ${escapeHTML(product.name)}
-        </h3>
+          <div class="product-image">
 
-        <p class="product-description">
-          ${escapeHTML(product.description)}
-        </p>
+            <img
+              src="${escapeHTML(product.image)}"
+              alt="${escapeHTML(product.name)}"
+              loading="lazy"
+              onerror="this.style.display='none'"
+            >
 
-        <div class="product-price">
-          ${formatKES(product.price)}
-        </div>
+          </div>
 
-        <div class="product-actions">
 
-          <button
-            type="button"
-            onclick="viewProduct('${product.id}')"
-          >
-            View
-          </button>
+          <div class="product-content">
 
-          <button
-            type="button"
-            onclick="addToCart('${product.id}')"
-          >
-            Add to Cart
-          </button>
+            <h3>
+              ${escapeHTML(product.name)}
+            </h3>
 
-        </div>
+            <p class="product-description">
+              ${escapeHTML(product.description)}
+            </p>
 
-      </div>
+            <div class="product-price">
+              ${formatKES(product.price)}
+            </div>
 
-    </article>
-  `).join("");
+
+            <div class="product-actions">
+
+              <button
+                type="button"
+                onclick="viewProduct('${escapeHTML(product.id)}')"
+              >
+                View
+              </button>
+
+
+              <button
+                type="button"
+                onclick="addToCart('${escapeHTML(product.id)}')"
+              >
+                Add to Cart
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      `)
+      .join("");
 
   updateProductStats();
 }
 
 
 /* =========================================================
-   PRODUCT VIEW
-   ========================================================= */
+   PRODUCT MODAL
+========================================================= */
 
 function viewProduct(productId) {
-  const product = getAllProducts()
-    .find(item => item.id === productId);
+
+  const product =
+    getAllProducts()
+      .find(item => item.id === productId);
 
   if (!product) return;
 
-  const modal = document.getElementById("productModal");
-  const content = document.getElementById("productModalContent");
+  const modal =
+    document.getElementById("productModal");
+
+  const content =
+    document.getElementById(
+      "productModalContent"
+    );
 
   if (!modal || !content) return;
 
+
   content.innerHTML = `
+
     <div class="product-modal-grid">
 
       <div class="product-modal-image">
+
         <img
           src="${escapeHTML(product.image)}"
           alt="${escapeHTML(product.name)}"
         >
+
       </div>
+
 
       <div>
 
@@ -306,13 +386,19 @@ function viewProduct(productId) {
           SMITHX MARKETPLACE
         </p>
 
-        <h2 style="font-size:32px;margin-bottom:12px;">
+
+        <h2 style="
+          font-size:32px;
+          margin-bottom:12px;
+        ">
           ${escapeHTML(product.name)}
         </h2>
+
 
         <div class="product-price">
           ${formatKES(product.price)}
         </div>
+
 
         <p style="
           color:#667085;
@@ -321,10 +407,14 @@ function viewProduct(productId) {
           ${escapeHTML(product.description)}
         </p>
 
+
         <button
           class="primary-button"
           type="button"
-          onclick="addToCart('${product.id}'); closeProductModal();"
+          onclick="
+            addToCart('${escapeHTML(product.id)}');
+            closeProductModal();
+          "
         >
           Add to Cart
         </button>
@@ -334,11 +424,17 @@ function viewProduct(productId) {
     </div>
   `;
 
+
   modal.classList.add("active");
 }
 
+
 function closeProductModal() {
-  const modal = document.getElementById("productModal");
+
+  const modal =
+    document.getElementById(
+      "productModal"
+    );
 
   if (modal) {
     modal.classList.remove("active");
@@ -348,9 +444,10 @@ function closeProductModal() {
 
 /* =========================================================
    CART
-   ========================================================= */
+========================================================= */
 
 function getCart() {
+
   try {
     return JSON.parse(
       localStorage.getItem(STORAGE.cart) || "[]"
@@ -360,37 +457,49 @@ function getCart() {
   }
 }
 
+
 function saveCart(cart) {
+
   localStorage.setItem(
     STORAGE.cart,
     JSON.stringify(cart)
   );
 }
 
+
 function addToCart(productId) {
-  const product = getAllProducts()
-    .find(item => item.id === productId);
+
+  const product =
+    getAllProducts()
+      .find(item => item.id === productId);
 
   if (!product) return;
 
-  const cart = getCart();
 
-  const existing = cart.find(
-    item => item.id === productId
-  );
+  const cart =
+    getCart();
+
+
+  const existing =
+    cart.find(item => item.id === productId);
+
 
   if (existing) {
     existing.quantity += 1;
   } else {
+
     cart.push({
       id: product.id,
       quantity: 1
     });
+
   }
+
 
   saveCart(cart);
 
   renderCart();
+
   updateCartCount();
 
   showToast(
@@ -398,168 +507,256 @@ function addToCart(productId) {
   );
 }
 
+
 function removeFromCart(productId) {
-  const cart = getCart()
-    .filter(item => item.id !== productId);
+
+  const cart =
+    getCart()
+      .filter(item => item.id !== productId);
 
   saveCart(cart);
 
   renderCart();
+
   updateCartCount();
 }
 
-function changeQuantity(productId, amount) {
-  const cart = getCart();
 
-  const item = cart.find(
-    cartItem => cartItem.id === productId
-  );
+function changeQuantity(
+  productId,
+  amount
+) {
+
+  const cart =
+    getCart();
+
+  const item =
+    cart.find(
+      cartItem =>
+        cartItem.id === productId
+    );
 
   if (!item) return;
 
+
   item.quantity += amount;
 
+
   if (item.quantity <= 0) {
-    const updatedCart = cart.filter(
-      cartItem => cartItem.id !== productId
+
+    saveCart(
+      cart.filter(
+        cartItem =>
+          cartItem.id !== productId
+      )
     );
 
-    saveCart(updatedCart);
   } else {
+
     saveCart(cart);
+
   }
 
+
   renderCart();
+
   updateCartCount();
 }
 
+
 function renderCart() {
-  const container = document.getElementById("cartItems");
-  const subtotalElement = document.getElementById("cartSubtotal");
-  const totalElement = document.getElementById("cartTotal");
+
+  const container =
+    document.getElementById(
+      "cartItems"
+    );
+
+  const subtotalElement =
+    document.getElementById(
+      "cartSubtotal"
+    );
+
+  const totalElement =
+    document.getElementById(
+      "cartTotal"
+    );
 
   if (!container) return;
 
-  const cart = getCart();
-  const products = getAllProducts();
+
+  const cart =
+    getCart();
+
+  const products =
+    getAllProducts();
+
 
   if (cart.length === 0) {
+
     container.innerHTML = `
       <div style="
         padding:35px 10px;
         text-align:center;
         color:#667085;
       ">
-        <h3>Your cart is empty</h3>
-        <p>Add products from the marketplace.</p>
+
+        <h3>
+          Your cart is empty
+        </h3>
+
+        <p>
+          Add products from the marketplace.
+        </p>
+
       </div>
     `;
 
     if (subtotalElement) {
-      subtotalElement.textContent = formatKES(0);
+      subtotalElement.textContent =
+        formatKES(0);
     }
 
     if (totalElement) {
-      totalElement.textContent = formatKES(0);
+      totalElement.textContent =
+        formatKES(0);
     }
 
     return;
   }
 
+
   let total = 0;
 
-  container.innerHTML = cart.map(item => {
-    const product = products.find(
-      p => p.id === item.id
-    );
 
-    if (!product) return "";
+  container.innerHTML =
+    cart.map(item => {
 
-    const itemTotal =
-      Number(product.price) * item.quantity;
+      const product =
+        products.find(
+          p => p.id === item.id
+        );
 
-    total += itemTotal;
+      if (!product) return "";
 
-    return `
-      <div class="cart-item">
 
-        <img
-          src="${escapeHTML(product.image)}"
-          alt="${escapeHTML(product.name)}"
-        >
+      const quantity =
+        Number(item.quantity || 0);
 
-        <div>
-          <h4>
-            ${escapeHTML(product.name)}
-          </h4>
 
-          <p>
-            ${formatKES(product.price)}
-          </p>
+      const itemTotal =
+        Number(product.price) *
+        quantity;
 
-          <div style="
-            display:flex;
-            align-items:center;
-            gap:8px;
-            margin-top:7px;
-          ">
+
+      total += itemTotal;
+
+
+      return `
+
+        <div class="cart-item">
+
+          <img
+            src="${escapeHTML(product.image)}"
+            alt="${escapeHTML(product.name)}"
+          >
+
+
+          <div>
+
+            <h4>
+              ${escapeHTML(product.name)}
+            </h4>
+
+            <p>
+              ${formatKES(product.price)}
+            </p>
+
+
+            <div style="
+              display:flex;
+              align-items:center;
+              gap:8px;
+              margin-top:7px;
+            ">
+
+              <button
+                type="button"
+                onclick="
+                  changeQuantity(
+                    '${escapeHTML(product.id)}',
+                    -1
+                  )
+                "
+                style="
+                  width:27px;
+                  height:27px;
+                  border:1px solid #d0d5dd;
+                  background:white;
+                  border-radius:6px;
+                "
+              >
+                −
+              </button>
+
+
+              <strong>
+                ${quantity}
+              </strong>
+
+
+              <button
+                type="button"
+                onclick="
+                  changeQuantity(
+                    '${escapeHTML(product.id)}',
+                    1
+                  )
+                "
+                style="
+                  width:27px;
+                  height:27px;
+                  border:1px solid #d0d5dd;
+                  background:white;
+                  border-radius:6px;
+                "
+              >
+                +
+              </button>
+
+            </div>
+
 
             <button
               type="button"
-              onclick="changeQuantity('${product.id}', -1)"
-              style="
-                width:27px;
-                height:27px;
-                border:1px solid #d0d5dd;
-                background:white;
-                border-radius:6px;
+              class="cart-remove"
+              onclick="
+                removeFromCart(
+                  '${escapeHTML(product.id)}'
+                )
               "
             >
-              −
-            </button>
-
-            <strong>
-              ${item.quantity}
-            </strong>
-
-            <button
-              type="button"
-              onclick="changeQuantity('${product.id}', 1)"
-              style="
-                width:27px;
-                height:27px;
-                border:1px solid #d0d5dd;
-                background:white;
-                border-radius:6px;
-              "
-            >
-              +
+              Remove
             </button>
 
           </div>
 
-          <button
-            type="button"
-            class="cart-remove"
-            onclick="removeFromCart('${product.id}')"
-          >
-            Remove
-          </button>
+
+          <strong>
+            ${formatKES(itemTotal)}
+          </strong>
 
         </div>
 
-        <strong>
-          ${formatKES(itemTotal)}
-        </strong>
+      `;
 
-      </div>
-    `;
-  }).join("");
+    }).join("");
+
 
   if (subtotalElement) {
     subtotalElement.textContent =
       formatKES(total);
   }
+
 
   if (totalElement) {
     totalElement.textContent =
@@ -567,25 +764,40 @@ function renderCart() {
   }
 }
 
+
 function updateCartCount() {
-  const cart = getCart();
 
-  const count = cart.reduce(
-    (sum, item) => sum + Number(item.quantity || 0),
-    0
-  );
+  const cart =
+    getCart();
 
-  const elements = document.querySelectorAll(
-    "#cartCount, .cart-count"
-  );
+
+  const count =
+    cart.reduce(
+      (sum, item) =>
+        sum +
+        Number(item.quantity || 0),
+      0
+    );
+
+
+  const elements =
+    document.querySelectorAll(
+      "#cartCount, .cart-count"
+    );
+
 
   elements.forEach(element => {
     element.textContent = count;
   });
 }
 
+
 function openCart() {
-  const panel = document.getElementById("cartPanel");
+
+  const panel =
+    document.getElementById(
+      "cartPanel"
+    );
 
   if (panel) {
     panel.classList.add("active");
@@ -594,8 +806,13 @@ function openCart() {
   renderCart();
 }
 
+
 function closeCart() {
-  const panel = document.getElementById("cartPanel");
+
+  const panel =
+    document.getElementById(
+      "cartPanel"
+    );
 
   if (panel) {
     panel.classList.remove("active");
@@ -605,44 +822,77 @@ function closeCart() {
 
 /* =========================================================
    CHECKOUT
-   ========================================================= */
+========================================================= */
 
 function checkout() {
-  const cart = getCart();
+
+  const cart =
+    getCart();
+
 
   if (cart.length === 0) {
-    showToast("Your cart is empty.");
+
+    showToast(
+      "Your cart is empty."
+    );
+
     return;
   }
 
-  const products = getAllProducts();
+
+  const products =
+    getAllProducts();
+
 
   let total = 0;
 
+
   cart.forEach(item => {
-    const product = products.find(
-      p => p.id === item.id
-    );
+
+    const product =
+      products.find(
+        p => p.id === item.id
+      );
 
     if (product) {
+
       total +=
         Number(product.price) *
         Number(item.quantity);
+
     }
+
   });
 
-  const analytics = getAnalytics();
 
-  analytics.sales += total;
-  analytics.orders += 1;
+  const analytics =
+    getAnalytics();
+
+
+  analytics.sales =
+    Number(analytics.sales || 0) +
+    total;
+
+
+  analytics.orders =
+    Number(analytics.orders || 0) +
+    1;
+
 
   saveAnalytics(analytics);
 
-  localStorage.removeItem(STORAGE.cart);
+
+  localStorage.removeItem(
+    STORAGE.cart
+  );
+
 
   renderCart();
+
   updateCartCount();
+
   updateDashboard();
+
 
   showToast(
     "Demo checkout completed successfully."
@@ -652,89 +902,163 @@ function checkout() {
 
 /* =========================================================
    IMAGE UPLOAD
-   ========================================================= */
+========================================================= */
 
-function compressImage(file, maxWidth = 900, quality = 0.78) {
-  return new Promise((resolve, reject) => {
+function compressImage(
+  file,
+  maxWidth = 900,
+  quality = 0.78
+) {
 
-    const reader = new FileReader();
+  return new Promise(
+    (resolve, reject) => {
 
-    reader.onload = event => {
+      const reader =
+        new FileReader();
 
-      const image = new Image();
 
-      image.onload = () => {
+      reader.onload =
+        event => {
 
-        const scale = Math.min(
-          1,
-          maxWidth / image.width
-        );
+          const image =
+            new Image();
 
-        const canvas = document.createElement("canvas");
 
-        canvas.width =
-          Math.round(image.width * scale);
+          image.onload =
+            () => {
 
-        canvas.height =
-          Math.round(image.height * scale);
+              const scale =
+                Math.min(
+                  1,
+                  maxWidth /
+                    image.width
+                );
 
-        const ctx = canvas.getContext("2d");
 
-        ctx.drawImage(
-          image,
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
+              const canvas =
+                document.createElement(
+                  "canvas"
+                );
 
-        resolve(
-          canvas.toDataURL(
-            "image/jpeg",
-            quality
-          )
-        );
-      };
 
-      image.onerror = reject;
-      image.src = event.target.result;
-    };
+              canvas.width =
+                Math.round(
+                  image.width *
+                  scale
+                );
 
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+
+              canvas.height =
+                Math.round(
+                  image.height *
+                  scale
+                );
+
+
+              const ctx =
+                canvas.getContext(
+                  "2d"
+                );
+
+
+              ctx.drawImage(
+                image,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+              );
+
+
+              resolve(
+                canvas.toDataURL(
+                  "image/jpeg",
+                  quality
+                )
+              );
+
+            };
+
+
+          image.onerror =
+            reject;
+
+
+          image.src =
+            event.target.result;
+
+        };
+
+
+      reader.onerror =
+        reject;
+
+
+      reader.readAsDataURL(file);
+
+    }
+  );
 }
 
-async function handleProductImage(event) {
+
+async function handleProductImage(
+  event
+) {
+
   const file =
     event.target.files &&
     event.target.files[0];
 
+
   if (!file) return;
+
+
+  if (!file.type.startsWith("image/")) {
+
+    showToast(
+      "Please choose an image file."
+    );
+
+    return;
+  }
+
 
   try {
 
     const compressed =
       await compressImage(file);
 
+
     const preview =
-      document.getElementById("previewImage");
+      document.getElementById(
+        "previewImage"
+      );
+
 
     const previewBox =
-      document.getElementById("imagePreview");
+      document.getElementById(
+        "imagePreview"
+      );
+
 
     if (preview) {
       preview.src = compressed;
     }
 
+
     if (previewBox) {
-      previewBox.classList.remove("hidden");
+      previewBox.classList.remove(
+        "hidden"
+      );
     }
+
 
     event.target.dataset.image =
       compressed;
 
+
   } catch (error) {
+
     console.error(error);
 
     showToast(
@@ -746,21 +1070,33 @@ async function handleProductImage(event) {
 
 /* =========================================================
    SELLER STUDIO
-   ========================================================= */
+========================================================= */
 
 function publishProduct() {
 
   const nameInput =
-    document.getElementById("productName");
+    document.getElementById(
+      "productName"
+    );
+
 
   const priceInput =
-    document.getElementById("productPrice");
+    document.getElementById(
+      "productPrice"
+    );
+
 
   const descriptionInput =
-    document.getElementById("productDescription");
+    document.getElementById(
+      "productDescription"
+    );
+
 
   const imageInput =
-    document.getElementById("productImage");
+    document.getElementById(
+      "productImage"
+    );
+
 
   if (
     !nameInput ||
@@ -771,93 +1107,152 @@ function publishProduct() {
     return;
   }
 
+
   const name =
     nameInput.value.trim();
+
 
   const price =
     Number(priceInput.value);
 
+
   const description =
     descriptionInput.value.trim();
+
 
   const image =
     imageInput.dataset.image || "";
 
+
   if (!name) {
-    showToast("Enter a product name.");
+
+    showToast(
+      "Enter a product name."
+    );
+
     return;
   }
+
 
   if (!price || price <= 0) {
-    showToast("Enter a valid price.");
+
+    showToast(
+      "Enter a valid price."
+    );
+
     return;
   }
+
 
   if (!description) {
-    showToast("Enter a product description.");
+
+    showToast(
+      "Enter a product description."
+    );
+
     return;
   }
 
+
   if (!image) {
-    showToast("Choose a product image.");
+
+    showToast(
+      "Choose a product image."
+    );
+
     return;
   }
+
 
   const customProducts =
     getCustomProducts();
 
+
   if (customProducts.length >= 3) {
+
     showToast(
       "Seller Studio limit reached: 3 additional products."
     );
+
     return;
   }
 
+
   const product = {
+
     id:
       "custom-" +
       Date.now() +
       "-" +
       Math.random()
         .toString(36)
-        .slice(2, 8),
+        .slice(2,8),
 
     name,
+
     price,
+
     description,
+
     image
+
   };
 
-  customProducts.push(product);
 
-  saveCustomProducts(customProducts);
+  customProducts.push(
+    product
+  );
+
+
+  saveCustomProducts(
+    customProducts
+  );
+
 
   nameInput.value = "";
+
   priceInput.value = "";
+
   descriptionInput.value = "";
+
   imageInput.value = "";
+
   delete imageInput.dataset.image;
 
+
   const preview =
-    document.getElementById("previewImage");
+    document.getElementById(
+      "previewImage"
+    );
+
 
   const previewBox =
-    document.getElementById("imagePreview");
+    document.getElementById(
+      "imagePreview"
+    );
+
 
   if (preview) {
     preview.src = "";
   }
 
+
   if (previewBox) {
-    previewBox.classList.add("hidden");
+    previewBox.classList.add(
+      "hidden"
+    );
   }
 
+
   renderProducts();
+
   updateDashboard();
+
 
   showToast(
     "Product published to the marketplace."
   );
+
 
   document
     .getElementById("market")
@@ -869,186 +1264,163 @@ function publishProduct() {
 
 /* =========================================================
    DASHBOARD
-   ========================================================= */
+========================================================= */
 
 function updateProductStats() {
+
   const count =
     getAllProducts().length;
 
+
   const heroProducts =
-    document.getElementById("heroProductCount");
+    document.getElementById(
+      "heroProductCount"
+    );
+
 
   const dashboardProducts =
-    document.getElementById("dashboardProducts");
+    document.getElementById(
+      "dashboardProducts"
+    );
+
 
   const activityProducts =
-    document.getElementById("activityProducts");
+    document.getElementById(
+      "activityProducts"
+    );
+
 
   if (heroProducts) {
-    heroProducts.textContent = count;
+    heroProducts.textContent =
+      count;
   }
+
 
   if (dashboardProducts) {
-    dashboardProducts.textContent = count;
+    dashboardProducts.textContent =
+      count;
   }
 
+
   if (activityProducts) {
-    activityProducts.textContent = count;
+    activityProducts.textContent =
+      count;
   }
 }
+
 
 function updateDashboard() {
 
   const analytics =
     getAnalytics();
 
+
   const visitors =
     getDailyVisitors();
+
 
   const products =
     getAllProducts().length;
 
+
   const sales =
     Number(analytics.sales || 0);
+
 
   const orders =
     Number(analytics.orders || 0);
 
-  const heroProducts =
-    document.getElementById("heroProductCount");
 
-  const heroVisitors =
-    document.getElementById("heroVisitorCount");
+  const values = {
 
-  const heroSales =
-    document.getElementById("heroSales");
+    heroProductCount: products,
 
-  const heroOrders =
-    document.getElementById("heroOrders");
+    heroVisitorCount: visitors,
 
-  const dashboardProducts =
-    document.getElementById("dashboardProducts");
+    heroSales: formatKES(sales),
 
-  const dashboardVisitors =
-    document.getElementById("dashboardVisitors");
+    heroOrders: orders,
 
-  const dashboardSales =
-    document.getElementById("dashboardSales");
+    dashboardProducts: products,
 
-  const dashboardOrders =
-    document.getElementById("dashboardOrders");
+    dashboardVisitors: visitors,
 
-  const activityProducts =
-    document.getElementById("activityProducts");
+    dashboardSales: formatKES(sales),
 
-  const activityVisitors =
-    document.getElementById("activityVisitors");
+    dashboardOrders: orders,
 
-  const activitySales =
-    document.getElementById("activitySales");
+    activityProducts: products,
 
-  const activityOrders =
-    document.getElementById("activityOrders");
+    activityVisitors: visitors,
 
-  if (heroProducts)
-    heroProducts.textContent = products;
+    activitySales: formatKES(sales),
 
-  if (heroVisitors)
-    heroVisitors.textContent = visitors;
+    activityOrders: orders
 
-  if (heroSales)
-    heroSales.textContent = formatKES(sales);
+  };
 
-  if (heroOrders)
-    heroOrders.textContent = orders;
 
-  if (dashboardProducts)
-    dashboardProducts.textContent = products;
+  Object.entries(values)
+    .forEach(([id, value]) => {
 
-  if (dashboardVisitors)
-    dashboardVisitors.textContent = visitors;
+      const element =
+        document.getElementById(id);
 
-  if (dashboardSales)
-    dashboardSales.textContent = formatKES(sales);
+      if (element) {
+        element.textContent =
+          value;
+      }
 
-  if (dashboardOrders)
-    dashboardOrders.textContent = orders;
-
-  if (activityProducts)
-    activityProducts.textContent = products;
-
-  if (activityVisitors)
-    activityVisitors.textContent = visitors;
-
-  if (activitySales)
-    activitySales.textContent = formatKES(sales);
-
-  if (activityOrders)
-    activityOrders.textContent = orders;
-}
-
-function resetAnalytics() {
-
-  const confirmed =
-    confirm(
-      "Reset demo sales, orders and today's visitor count?"
-    );
-
-  if (!confirmed) return;
-
-  localStorage.setItem(
-    STORAGE.analytics,
-    JSON.stringify({
-      sales: 0,
-      orders: 0
-    })
-  );
-
-  const today =
-    new Date().toISOString().slice(0, 10);
-
-  localStorage.setItem(
-    STORAGE.visitor,
-    JSON.stringify({
-      date: today,
-      count: 1
-    })
-  );
-
-  updateDashboard();
-
-  showToast(
-    "Demo analytics reset."
-  );
+    });
 }
 
 
 /* =========================================================
-   SEARCH
-   ========================================================= */
+   RESET ANALYTICS
+========================================================= */
 
-function searchProducts() {
-  const input =
-    document.getElementById("productSearch");
+function resetAnalytics() {
 
-  if (!input) return;
+  const confirmed =
+    window.confirm(
+      "Reset all demo sales and order analytics?"
+    );
 
-  renderProducts(input.value);
+
+  if (!confirmed) return;
+
+
+  saveAnalytics({
+    sales: 0,
+    orders: 0
+  });
+
+
+  updateDashboard();
+
+
+  showToast(
+    "Demo analytics have been reset."
+  );
 }
 
 
 /* =========================================================
    NAVIGATION
-   ========================================================= */
+========================================================= */
 
-function scrollToSection(id) {
+function scrollToSection(sectionId) {
 
-  const element =
-    document.getElementById(id);
+  const section =
+    document.getElementById(
+      sectionId
+    );
 
-  if (!element) return;
 
-  element.scrollIntoView({
+  if (!section) return;
+
+
+  section.scrollIntoView({
     behavior: "smooth",
     block: "start"
   });
@@ -1057,179 +1429,219 @@ function scrollToSection(id) {
 
 /* =========================================================
    UPDATE HISTORY
-   ========================================================= */
+========================================================= */
 
 function toggleUpdateHistory() {
 
-  const extra =
+  const history =
     document.getElementById(
       "updateHistoryExtra"
     );
 
-  if (!extra) return;
 
-  extra.classList.toggle("hidden");
+  if (!history) return;
+
+
+  history.classList.toggle(
+    "hidden"
+  );
 }
 
 
 /* =========================================================
    TOAST
-   ========================================================= */
+========================================================= */
 
-let toastTimer;
+let toastTimer = null;
+
 
 function showToast(message) {
 
   const toast =
-    document.getElementById("toast");
+    document.getElementById(
+      "toast"
+    );
+
 
   if (!toast) return;
 
-  toast.textContent = message;
-  toast.classList.add("show");
 
-  clearTimeout(toastTimer);
+  toast.textContent =
+    message;
 
-  toastTimer = setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2600);
+
+  toast.classList.add(
+    "show"
+  );
+
+
+  clearTimeout(
+    toastTimer
+  );
+
+
+  toastTimer =
+    setTimeout(() => {
+
+      toast.classList.remove(
+        "show"
+      );
+
+    }, 2800);
 }
 
 
 /* =========================================================
-   INITIALIZE SMITHX
-   ========================================================= */
+   CLOSE MODALS WITH ESC
+========================================================= */
 
 document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+  "keydown",
+  event => {
 
-    console.log(
-      "SMITHX MVP loading..."
-    );
-
-    /*
-      IMPORTANT:
-      Register this browser as today's visitor.
-    */
-    registerDailyVisitor();
-
-    /*
-      Render the six default products
-      immediately when the marketplace opens.
-    */
-    renderProducts();
-
-    /*
-      Load saved cart.
-    */
-    renderCart();
-    updateCartCount();
-
-    /*
-      Load dashboard analytics.
-    */
-    updateDashboard();
-
-    /*
-      Product image upload.
-    */
-    const imageInput =
-      document.getElementById(
-        "productImage"
-      );
-
-    if (imageInput) {
-      imageInput.addEventListener(
-        "change",
-        handleProductImage
-      );
+    if (event.key !== "Escape") {
+      return;
     }
 
-    /*
-      Publish product.
-    */
-    const publishButton =
-      document.getElementById(
-        "publishProduct"
-      );
 
-    if (publishButton) {
-      publishButton.addEventListener(
-        "click",
-        publishProduct
-      );
-    }
+    closeProductModal();
 
-    /*
-      Search.
-    */
-    const searchInput =
-      document.getElementById(
-        "productSearch"
-      );
+    closeCart();
 
-    if (searchInput) {
-      searchInput.addEventListener(
-        "input",
-        searchProducts
-      );
-    }
+  }
+);
 
-    /*
-      Checkout.
-    */
-    const checkoutButton =
-      document.getElementById(
-        "checkoutButton"
-      );
 
-    if (checkoutButton) {
-      checkoutButton.addEventListener(
-        "click",
-        checkout
-      );
-    }
+/* =========================================================
+   CLICK OUTSIDE PRODUCT MODAL
+========================================================= */
 
-    /*
-      Reset analytics.
-    */
-    const resetButton =
-      document.getElementById(
-        "resetAnalytics"
-      );
+document.addEventListener(
+  "click",
+  event => {
 
-    if (resetButton) {
-      resetButton.addEventListener(
-        "click",
-        resetAnalytics
-      );
-    }
-
-    /*
-      Close product modal when
-      clicking outside the content.
-    */
     const modal =
       document.getElementById(
         "productModal"
       );
 
-    if (modal) {
-      modal.addEventListener(
-        "click",
-        event => {
-          if (event.target === modal) {
-            closeProductModal();
-          }
-        }
-      );
+
+    if (
+      modal &&
+      event.target === modal
+    ) {
+
+      closeProductModal();
+
     }
 
-    console.log(
-      "SMITHX MVP ready.",
-      getAllProducts().length,
-      "products loaded."
-    );
+  }
+);
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    registerDailyVisitor();
+
+    renderProducts();
+
+    renderCart();
+
+    updateCartCount();
+
+    updateDashboard();
+
+
+    const search =
+      document.getElementById(
+        "productSearch"
+      );
+
+
+    if (search) {
+
+      search.addEventListener(
+        "input",
+        event => {
+
+          renderProducts(
+            event.target.value
+          );
+
+        }
+      );
+
+    }
+
+
+    const publishButton =
+      document.getElementById(
+        "publishProduct"
+      );
+
+
+    if (publishButton) {
+
+      publishButton.addEventListener(
+        "click",
+        publishProduct
+      );
+
+    }
+
+
+    const imageInput =
+      document.getElementById(
+        "productImage"
+      );
+
+
+    if (imageInput) {
+
+      imageInput.addEventListener(
+        "change",
+        handleProductImage
+      );
+
+    }
+
+
+    const checkoutButton =
+      document.getElementById(
+        "checkoutButton"
+      );
+
+
+    if (checkoutButton) {
+
+      checkoutButton.addEventListener(
+        "click",
+        checkout
+      );
+
+    }
+
+
+    const resetButton =
+      document.getElementById(
+        "resetAnalytics"
+      );
+
+
+    if (resetButton) {
+
+      resetButton.addEventListener(
+        "click",
+        resetAnalytics
+      );
+
+    }
+
   }
 );
