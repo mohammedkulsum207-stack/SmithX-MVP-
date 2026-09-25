@@ -47,19 +47,14 @@ a {
   position: sticky;
   top: 0;
   z-index: 5000;
-
   background: rgba(255, 255, 255, 0.96);
-
   border-bottom: 1px solid #eaecf0;
-
   backdrop-filter: blur(12px);
 }
 
 .topbar-inner {
   width: min(1180px, calc(100% - 32px));
-
   min-height: 82px;
-
   margin: auto;
 
   display: flex;
@@ -73,20 +68,15 @@ a {
   display: flex;
   align-items: center;
   gap: 12px;
-
   flex-shrink: 0;
 }
 
 .smithx-logo-image {
   width: 76px;
   height: 76px;
-
   flex: 0 0 76px;
-
   object-fit: contain;
-
   display: block;
-
   border-radius: 12px;
 }
 
@@ -130,19 +120,15 @@ a {
 
 .nav-login-btn {
   min-height: 40px;
-
   padding: 0 16px;
 
   border: 1px solid #1769ff;
-
   border-radius: 9px;
 
   background: #ffffff;
-
   color: #1769ff;
 
   font-weight: 800;
-
   transition: 0.2s ease;
 }
 
@@ -153,27 +139,20 @@ a {
 
 .cart-button {
   position: relative;
-
   border: 0;
-
   background: transparent;
-
   font-size: 25px;
-
   padding: 8px;
-
   color: #101828;
 }
 
 .cart-count {
   position: absolute;
-
   top: 0;
   right: 0;
 
   min-width: 20px;
   height: 20px;
-
   padding: 0 5px;
 
   display: flex;
@@ -181,9 +160,7 @@ a {
   justify-content: center;
 
   border-radius: 50%;
-
   background: #1769ff;
-
   color: #ffffff;
 
   font-size: 11px;
@@ -212,26 +189,20 @@ a {
 .section-eyebrow,
 .hero-eyebrow {
   margin: 0 0 10px;
-
   color: #1769ff;
-
   font-size: 12px;
   font-weight: 800;
-
   letter-spacing: 1.5px;
 }
 
 .section-heading h2 {
   margin: 0 0 12px;
-
   font-size: clamp(32px, 5vw, 48px);
-
   line-height: 1.1;
 }
 
 .section-heading p {
   margin: 0;
-
   color: #667085;
 }
 
@@ -254,15 +225,12 @@ a {
 
 .hero-inner {
   width: min(1180px, calc(100% - 32px));
-
   margin: auto;
 
   display: grid;
-
   grid-template-columns: 1.15fr 0.85fr;
 
   align-items: center;
-
   gap: 60px;
 }
 
@@ -270,9 +238,7 @@ a {
   margin: 0 0 22px;
 
   font-size: clamp(54px, 8vw, 92px);
-
   line-height: 0.95;
-
   letter-spacing: -4px;
 }
 
@@ -282,11 +248,9 @@ a {
 
 .hero-description {
   max-width: 650px;
-
   margin: 0 0 30px;
 
   color: #667085;
-
   font-size: 18px;
 }
 
@@ -306,43 +270,33 @@ a {
 
 .hero-panel-card {
   width: min(380px, 100%);
-
   padding: 42px;
 
   border: 1px solid #dbe6ff;
-
   border-radius: 28px;
 
   background: #ffffff;
 
   box-shadow: 0 25px 70px rgba(16, 24, 40, 0.10);
-
   text-align: center;
 }
 
 .hero-panel-card span {
   display: block;
-
   color: #1769ff;
-
   font-weight: 800;
-
   letter-spacing: 2px;
 }
 
 .hero-panel-card strong {
   display: block;
-
   margin: 18px 0;
-
   font-size: 34px;
-
   line-height: 1.1;
 }
 
 .hero-panel-card p {
   margin: 0;
-
   color: #667085;
 }
 
@@ -355,21 +309,16 @@ a {
 .secondary-button,
 .btn {
   min-height: 46px;
-
   padding: 11px 18px;
 
   border-radius: 10px;
-
   font-weight: 800;
-
   transition: 0.2s ease;
 }
 
 .primary-button {
   border: 1px solid #1769ff;
-
   background: #1769ff;
-
   color: #ffffff;
 }
 
@@ -382,9 +331,7 @@ a {
 .secondary-button,
 .btn-secondary {
   border: 1px solid #d0d5dd;
-
   background: #ffffff;
-
   color: #101828;
 }
 
@@ -408,9 +355,7 @@ a {
 
 .marketplace-tools {
   display: flex;
-
   gap: 12px;
-
   margin-bottom: 30px;
 }
 
@@ -420,21 +365,16 @@ a {
 
 .search-box input {
   width: 100%;
-
   min-height: 48px;
-
   padding: 0 16px;
 
   border: 1px solid #d0d5dd;
-
   border-radius: 10px;
-
   outline: none;
 }
 
 .search-box input:focus {
   border-color: #1769ff;
-
   box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
 }
 
@@ -445,71 +385,52 @@ a {
 
 .category-filter-wrapper {
   display: flex;
-
   flex-direction: column;
-
   justify-content: center;
-
   gap: 5px;
-
   min-width: 180px;
 }
 
 .category-filter-label {
   color: #667085;
-
   font-size: 11px;
-
   font-weight: 800;
-
   letter-spacing: 0.5px;
 }
 
 .category-filter,
 .seller-category-select {
   width: 100%;
-
   min-height: 48px;
-
   padding: 0 14px;
 
   border: 1px solid #d0d5dd;
-
   border-radius: 10px;
 
   background: #ffffff;
-
   color: #101828;
 
   outline: none;
-
   font-weight: 600;
 }
 
 .category-filter:focus,
 .seller-category-select:focus {
   border-color: #1769ff;
-
   box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
 }
 
 .product-category {
   display: inline-block;
-
   margin-bottom: 9px;
-
   padding: 4px 9px;
 
   border-radius: 999px;
-
   background: #eaf2ff;
-
   color: #1769ff;
 
   font-size: 11px;
-
   font-weight: 800;
-
   letter-spacing: 0.3px;
 }
 
@@ -520,9 +441,7 @@ a {
 
 .products-grid {
   display: grid;
-
   grid-template-columns: repeat(3, 1fr);
-
   gap: 22px;
 }
 
@@ -530,7 +449,6 @@ a {
   overflow: hidden;
 
   border: 1px solid #eaecf0;
-
   border-radius: 18px;
 
   background: #ffffff;
@@ -542,24 +460,19 @@ a {
 
 .product-card:hover {
   transform: translateY(-4px);
-
   box-shadow: 0 15px 40px rgba(16, 24, 40, 0.10);
 }
 
 .product-image {
   height: 245px;
-
   background: #f2f4f7;
-
   overflow: hidden;
 }
 
 .product-image img {
   width: 100%;
   height: 100%;
-
   object-fit: cover;
-
   display: block;
 }
 
@@ -569,59 +482,44 @@ a {
 
 .product-content h3 {
   margin: 0 0 8px;
-
   font-size: 19px;
 }
 
 .product-description {
   min-height: 48px;
-
   margin: 0 0 14px;
 
   color: #667085;
-
   font-size: 14px;
 }
 
 .product-price {
   margin-bottom: 14px;
-
   color: #1769ff;
-
   font-size: 20px;
-
   font-weight: 900;
 }
 
 .product-actions {
   display: flex;
-
   gap: 10px;
-
   margin-top: 18px;
 }
 
 .product-actions button {
   flex: 1;
-
   min-height: 44px;
-
   padding: 10px 14px;
 
   border-radius: 10px;
-
   font-weight: 800;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 
 .product-actions button:first-child {
   background: #ffffff;
-
   color: #101828;
-
   border: 1px solid #d0d5dd;
 }
 
@@ -631,15 +529,12 @@ a {
 
 .product-actions button:last-child {
   background: #1769ff;
-
   color: #ffffff;
-
   border: 1px solid #1769ff;
 }
 
 .product-actions button:last-child:hover {
   background: #0f55d8;
-
   border-color: #0f55d8;
 }
 
@@ -654,9 +549,7 @@ a {
 
 .seller-layout {
   display: grid;
-
   grid-template-columns: 1fr 1fr;
-
   gap: 25px;
 }
 
@@ -665,20 +558,15 @@ a {
 .card,
 .about-card {
   border: 1px solid #eaecf0;
-
   border-radius: 20px;
-
   background: #ffffff;
-
   padding: 28px;
-
   box-shadow: 0 8px 30px rgba(16, 24, 40, 0.05);
 }
 
 .seller-card h3,
 .seller-info-card h3 {
   margin-top: 0;
-
   font-size: 26px;
 }
 
@@ -692,11 +580,8 @@ a {
 
 .form-group label {
   display: block;
-
   margin-bottom: 7px;
-
   font-size: 14px;
-
   font-weight: 800;
 }
 
@@ -704,15 +589,12 @@ a {
 .form-group textarea,
 .form-group select {
   width: 100%;
-
   padding: 13px;
 
   border: 1px solid #d0d5dd;
-
   border-radius: 10px;
 
   outline: none;
-
   resize: vertical;
 }
 
@@ -720,7 +602,6 @@ a {
 .form-group textarea:focus,
 .form-group select:focus {
   border-color: #1769ff;
-
   box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
 }
 
@@ -735,9 +616,7 @@ a {
 .image-preview img {
   width: 160px;
   height: 120px;
-
   object-fit: cover;
-
   border-radius: 12px;
 }
 
@@ -747,17 +626,13 @@ a {
 
 .feature-list {
   display: grid;
-
   gap: 14px;
-
   margin-top: 25px;
 }
 
 .feature-item {
   padding: 16px;
-
   border-radius: 12px;
-
   background: #f8fafc;
 }
 
@@ -768,9 +643,7 @@ a {
 
 .feature-item span {
   margin-top: 4px;
-
   color: #667085;
-
   font-size: 14px;
 }
 
@@ -781,9 +654,7 @@ a {
 
 .dashboard-grid {
   display: grid;
-
   grid-template-columns: repeat(4, 1fr);
-
   gap: 18px;
 }
 
@@ -791,7 +662,6 @@ a {
   padding: 24px;
 
   border: 1px solid #eaecf0;
-
   border-radius: 16px;
 
   background: #ffffff;
@@ -801,11 +671,8 @@ a {
 
 .dashboard-card span {
   display: block;
-
   margin-bottom: 8px;
-
   color: #667085;
-
   font-size: 14px;
 }
 
@@ -824,9 +691,7 @@ a {
 
 .feature-grid {
   display: grid;
-
   grid-template-columns: repeat(4, 1fr);
-
   gap: 18px;
 }
 
@@ -834,7 +699,6 @@ a {
   padding: 25px;
 
   border: 1px solid #eaecf0;
-
   border-radius: 18px;
 
   background: #ffffff;
@@ -845,7 +709,6 @@ a {
   height: 48px;
 
   display: flex;
-
   align-items: center;
   justify-content: center;
 
@@ -854,7 +717,6 @@ a {
   border-radius: 12px;
 
   background: #eaf2ff;
-
   color: #1769ff;
 
   font-weight: 900;
@@ -866,9 +728,7 @@ a {
 
 .feature-card p {
   margin: 0;
-
   color: #667085;
-
   font-size: 14px;
 }
 
@@ -883,17 +743,13 @@ a {
 
 .about-card {
   display: grid;
-
   grid-template-columns: 1fr 1fr;
-
   gap: 50px;
 }
 
 .about-card h2 {
   margin: 0;
-
   font-size: clamp(32px, 5vw, 50px);
-
   line-height: 1.05;
 }
 
@@ -912,7 +768,6 @@ a {
 
 .update-item {
   padding: 20px 0;
-
   border-bottom: 1px solid #eaecf0;
 }
 
@@ -922,13 +777,11 @@ a {
 
 .update-item strong {
   display: block;
-
   margin-bottom: 6px;
 }
 
 .update-item p {
   margin: 0;
-
   color: #667085;
 }
 
@@ -939,13 +792,10 @@ a {
 
 .modal {
   position: fixed;
-
   inset: 0;
-
   z-index: 9000;
 
   display: none;
-
   align-items: center;
   justify-content: center;
 
@@ -962,13 +812,11 @@ a {
   position: relative;
 
   width: min(850px, 100%);
-
   max-height: 90vh;
 
   overflow-y: auto;
 
   padding: 30px;
-
   border-radius: 20px;
 
   background: #ffffff;
@@ -976,40 +824,29 @@ a {
 
 .modal-close {
   border: 0;
-
   background: transparent;
-
   color: #344054;
-
   font-size: 30px;
-
   cursor: pointer;
 }
 
 .modal-content > .modal-close {
   position: absolute;
-
   top: 15px;
   right: 18px;
 }
 
 .product-modal-grid {
   display: grid;
-
   grid-template-columns: 1fr 1fr;
-
   gap: 30px;
-
   align-items: center;
 }
 
 .product-modal-image img {
   width: 100%;
-
   max-height: 450px;
-
   object-fit: cover;
-
   border-radius: 15px;
 }
 
@@ -1025,19 +862,16 @@ a {
   right: 0;
 
   width: min(430px, 100%);
-
   height: 100vh;
 
   z-index: 99999;
 
   display: flex;
-
   flex-direction: column;
 
   background: #ffffff;
 
   transform: translateX(110%);
-
   transition: transform 0.3s ease;
 
   box-shadow: -10px 0 35px rgba(0, 0, 0, 0.15);
@@ -1053,13 +887,10 @@ a {
   flex: 0 0 auto;
 
   display: flex;
-
   justify-content: space-between;
-
   align-items: center;
 
   padding: 22px;
-
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -1069,34 +900,25 @@ a {
 
 .cart-items {
   flex: 1;
-
   overflow-y: auto;
-
   padding: 20px;
 }
 
 .cart-item {
   display: grid;
-
   grid-template-columns: 70px 1fr auto;
-
   gap: 12px;
-
   align-items: start;
 
   padding: 15px 0;
-
   border-bottom: 1px solid #e5e7eb;
 }
 
 .cart-item img {
   width: 70px;
   height: 70px;
-
   object-fit: cover;
-
   border-radius: 10px;
-
   background: #f3f4f6;
 }
 
@@ -1106,7 +928,6 @@ a {
 
 .cart-item p {
   margin: 0;
-
   color: #667085;
 }
 
@@ -1116,13 +937,10 @@ a {
 
 .cart-remove {
   margin-top: 8px;
-
   padding: 0;
 
   border: 0;
-
   background: transparent;
-
   color: #d92d20;
 
   font-weight: 700;
@@ -1134,15 +952,12 @@ a {
   padding: 20px;
 
   border-top: 1px solid #e5e7eb;
-
   background: #ffffff;
 }
 
 .cart-summary-row {
   display: flex;
-
   justify-content: space-between;
-
   align-items: center;
 
   margin-bottom: 12px;
@@ -1150,21 +965,17 @@ a {
 
 .total-row {
   margin-bottom: 18px;
-
   font-size: 20px;
 }
 
 .cart-summary .primary-button {
   width: 100%;
-
   min-height: 48px;
 
   background: #1769ff;
-
   color: #ffffff;
 
   border: 0;
-
   border-radius: 10px;
 
   font-weight: 800;
@@ -1177,15 +988,12 @@ a {
 
 .login-overlay {
   position: fixed;
-
   inset: 0;
 
   z-index: 12000;
 
   display: none;
-
   align-items: center;
-
   justify-content: center;
 
   padding: 20px;
@@ -1203,7 +1011,6 @@ a {
   position: relative;
 
   width: min(100%, 430px);
-
   max-height: 92vh;
 
   overflow-y: auto;
@@ -1220,19 +1027,15 @@ a {
 }
 
 @keyframes smithxLoginIn {
-
   from {
     opacity: 0;
-
     transform: translateY(18px) scale(0.98);
   }
 
   to {
     opacity: 1;
-
     transform: translateY(0) scale(1);
   }
-
 }
 
 .login-close {
@@ -1245,15 +1048,12 @@ a {
   height: 36px;
 
   border: 0;
-
   border-radius: 50%;
 
   background: #f2f4f7;
-
   color: #101828;
 
   font-size: 24px;
-
   cursor: pointer;
 
   transition: 0.2s ease;
@@ -1265,13 +1065,10 @@ a {
 
 .login-brand {
   display: flex;
-
   align-items: center;
-
   gap: 12px;
 
   margin-bottom: 28px;
-
   padding-right: 35px;
 }
 
@@ -1280,17 +1077,13 @@ a {
   height: 58px;
 
   object-fit: contain;
-
   border-radius: 10px;
 }
 
 .login-brand strong {
   display: block;
-
   color: #101828;
-
   font-size: 22px;
-
   letter-spacing: 1px;
 }
 
@@ -1306,23 +1099,18 @@ a {
   color: #667085;
 
   font-size: 9px;
-
   font-weight: 800;
-
   letter-spacing: 1px;
 }
 
 .login-card h2 {
   margin: 0 0 7px;
-
   color: #101828;
-
   font-size: 28px;
 }
 
 .login-subtitle {
   margin: 0 0 24px;
-
   color: #667085;
 }
 
@@ -1338,14 +1126,12 @@ a {
   color: #344054;
 
   font-size: 13px;
-
   font-weight: 700;
 }
 
 .login-form-group input,
 .login-form-group select {
   width: 100%;
-
   min-height: 48px;
 
   box-sizing: border-box;
@@ -1353,11 +1139,9 @@ a {
   padding: 0 14px;
 
   border: 1px solid #d0d5dd;
-
   border-radius: 10px;
 
   background: #ffffff;
-
   color: #101828;
 
   outline: none;
@@ -1366,7 +1150,6 @@ a {
 .login-form-group input:focus,
 .login-form-group select:focus {
   border-color: #1769ff;
-
   box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
 }
 
@@ -1387,13 +1170,10 @@ a {
   transform: translateY(-50%);
 
   border: 0;
-
   background: transparent;
-
   color: #1769ff;
 
   font-size: 12px;
-
   font-weight: 800;
 
   cursor: pointer;
@@ -1401,29 +1181,23 @@ a {
 
 .remember-row {
   display: flex;
-
   align-items: center;
-
   gap: 8px;
 
   margin: 5px 0 18px;
 
   color: #475467;
-
   font-size: 13px;
 }
 
 .remember-row input {
   width: auto;
-
   min-height: auto;
-
   accent-color: #1769ff;
 }
 
 .login-main-btn {
   width: 100%;
-
   min-height: 50px;
 }
 
@@ -1431,17 +1205,13 @@ a {
   display: block;
 
   width: 100%;
-
   margin-top: 15px;
 
   border: 0;
-
   background: transparent;
-
   color: #1769ff;
 
   font-weight: 700;
-
   cursor: pointer;
 }
 
@@ -1455,7 +1225,6 @@ a {
   color: #98a2b3;
 
   font-size: 11px;
-
   line-height: 1.5;
 
   text-align: center;
@@ -1470,7 +1239,6 @@ a {
   position: fixed;
 
   left: 50%;
-
   bottom: 25px;
 
   z-index: 13000;
@@ -1482,13 +1250,11 @@ a {
   border-radius: 10px;
 
   background: #101828;
-
   color: #ffffff;
 
   font-size: 14px;
 
   opacity: 0;
-
   pointer-events: none;
 
   transition: 0.3s ease;
@@ -1496,7 +1262,6 @@ a {
 
 .toast.show {
   transform: translate(-50%, 0);
-
   opacity: 1;
 }
 
@@ -1507,30 +1272,24 @@ a {
 
 .footer {
   padding: 45px 0;
-
   background: #101828;
-
   color: #ffffff;
 }
 
 .footer-inner {
   width: min(1180px, calc(100% - 32px));
-
   margin: auto;
 }
 
 .footer-brand {
   display: flex;
-
   align-items: center;
-
   gap: 12px;
 }
 
 .footer-brand .smithx-logo-image {
   width: 55px;
   height: 55px;
-
   flex-basis: 55px;
 }
 
@@ -1540,29 +1299,22 @@ a {
 
 .footer-brand p {
   margin: 0;
-
   color: #98a2b3;
 
   font-size: 9px;
-
   font-weight: 800;
-
   letter-spacing: 1px;
 }
 
 .footer-links {
   display: flex;
-
   flex-wrap: wrap;
-
   gap: 20px;
-
   margin: 25px 0;
 }
 
 .footer-links a {
   color: #d0d5dd;
-
   font-size: 14px;
 }
 
@@ -1572,9 +1324,7 @@ a {
 
 .footer-copy {
   margin: 0;
-
   color: #98a2b3;
-
   font-size: 13px;
 }
 
@@ -1585,8 +1335,33 @@ a {
 
 @media (max-width: 950px) {
 
+  /*
+     Keep the Login button visible on phones.
+     Hide only the normal navigation links.
+  */
+
   .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-links a {
     display: none;
+  }
+
+  .nav-login-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 38px;
+    padding: 0 13px;
+
+    white-space: nowrap;
+
+    font-size: 13px;
   }
 
   .hero-inner {
@@ -1622,22 +1397,43 @@ a {
 @media (max-width: 620px) {
 
   .topbar-inner {
-    min-height: 90px;
+    min-height: 82px;
 
-    width: min(100% - 20px, 1180px);
+    width: min(100% - 16px, 1180px);
+
+    gap: 8px;
   }
 
   .smithx-logo-image {
-    width: 64px;
-    height: 64px;
+    width: 58px;
+    height: 58px;
 
-    flex-basis: 64px;
+    flex-basis: 58px;
 
     border-radius: 10px;
   }
 
+  .smithx-brand {
+    gap: 7px;
+  }
+
   .smithx-brand-text strong {
-    font-size: 19px;
+    font-size: 17px;
+  }
+
+  .smithx-brand-text small {
+    font-size: 7px;
+  }
+
+  .nav-login-btn {
+    min-height: 36px;
+    padding: 0 11px;
+    font-size: 12px;
+  }
+
+  .cart-button {
+    font-size: 22px;
+    padding: 6px;
   }
 
   .hero {
@@ -1700,7 +1496,6 @@ a {
 
   .login-card {
     padding: 25px 20px;
-
     border-radius: 17px;
   }
 
@@ -1718,15 +1513,29 @@ a {
 
 @media (max-width: 400px) {
 
-  .smithx-logo-image {
-    width: 58px;
-    height: 58px;
+  .topbar-inner {
+    gap: 5px;
+  }
 
-    flex-basis: 58px;
+  .smithx-logo-image {
+    width: 52px;
+    height: 52px;
+
+    flex-basis: 52px;
+  }
+
+  .smithx-brand-text strong {
+    font-size: 15px;
   }
 
   .smithx-brand-text small {
     display: none;
+  }
+
+  .nav-login-btn {
+    min-height: 34px;
+    padding: 0 9px;
+    font-size: 11px;
   }
 
   .dashboard-grid {
