@@ -1,6 +1,7 @@
 /* =========================================================
    SMITHX MVP — APP.JS
-   Version 1.8
+   Version 1.9
+   Safe marketplace category update
    ========================================================= */
 
 
@@ -10,6 +11,7 @@ const DEFAULT_PRODUCTS = [
     id: "s26-ultra",
     name: "Samsung Galaxy S26 Ultra",
     price: 169999,
+    category: "Electronics",
     description:
       "Premium Samsung smartphone with advanced performance, camera technology and a large high-resolution display.",
     image:
@@ -20,6 +22,7 @@ const DEFAULT_PRODUCTS = [
     id: "wireless-headphones",
     name: "Smart Wireless Headphones",
     price: 4500,
+    category: "Electronics",
     description:
       "Comfortable wireless headphones with immersive sound and a modern everyday design.",
     image:
@@ -30,6 +33,7 @@ const DEFAULT_PRODUCTS = [
     id: "desk-lamp",
     name: "Minimal Desk Lamp",
     price: 2800,
+    category: "Home",
     description:
       "Modern minimalist desk lamp designed for workspaces, study areas and home offices.",
     image:
@@ -40,6 +44,7 @@ const DEFAULT_PRODUCTS = [
     id: "travel-backpack",
     name: "Everyday Travel Backpack",
     price: 3500,
+    category: "Accessories",
     description:
       "Practical everyday backpack with a clean design for travel, school and work.",
     image:
@@ -50,6 +55,7 @@ const DEFAULT_PRODUCTS = [
     id: "smart-watch",
     name: "Smart Watch",
     price: 6500,
+    category: "Electronics",
     description:
       "Modern smartwatch designed for everyday activity tracking, notifications and convenience.",
     image:
@@ -60,12 +66,23 @@ const DEFAULT_PRODUCTS = [
     id: "premium-sneakers",
     name: "Premium Sneakers",
     price: 7200,
+    category: "Fashion",
     description:
       "Modern everyday sneakers combining comfort, style and a clean premium look.",
     image:
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85"
   }
 
+];
+
+
+const CATEGORIES = [
+  "All",
+  "Electronics",
+  "Fashion",
+  "Home",
+  "Beauty",
+  "Accessories"
 ];
 
 
@@ -121,9 +138,11 @@ function getCustomProducts() {
 
   try {
 
-    return JSON.parse(
+    const products = JSON.parse(
       localStorage.getItem(STORAGE.products) || "[]"
     );
+
+    return Array.isArray(products) ? products : [];
 
   } catch {
 
@@ -281,6 +300,140 @@ function getDailyVisitors() {
 
 
 /* =========================================================
+   CATEGORY CONTROLS
+========================================================= */
+
+let activeCategory = "All";
+
+
+function setupCategoryFilter() {
+
+  const marketplaceTools =
+    document.querySelector(".marketplace-tools");
+
+  if (!marketplaceTools) return;
+
+  if (document.getElementById("categoryFilter")) {
+    return;
+  }
+
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.className =
+    "category-filter-wrapper";
+
+  wrapper.innerHTML = `
+
+    <label
+      for="categoryFilter"
+      class="category-filter-label"
+    >
+      Category
+    </label>
+
+    <select
+      id="categoryFilter"
+      class="category-filter"
+      aria-label="Filter products by category"
+    >
+
+      ${CATEGORIES.map(category => `
+
+        <option value="${escapeHTML(category)}">
+          ${escapeHTML(category)}
+        </option>
+
+      `).join("")}
+
+    </select>
+
+  `;
+
+  marketplaceTools.appendChild(wrapper);
+
+  const select =
+    document.getElementById("categoryFilter");
+
+  if (select) {
+
+    select.addEventListener(
+      "change",
+      event => {
+
+        activeCategory =
+          event.target.value || "All";
+
+        const searchInput =
+          document.getElementById("productSearch");
+
+        renderProducts(
+          searchInput
+            ? searchInput.value
+            : ""
+        );
+
+      }
+    );
+
+  }
+
+}
+
+
+function setupSellerCategory() {
+
+  const descriptionInput =
+    document.getElementById("productDescription");
+
+  if (!descriptionInput) return;
+
+  if (document.getElementById("productCategory")) {
+    return;
+  }
+
+  const formGroup =
+    document.createElement("div");
+
+  formGroup.className =
+    "form-group";
+
+  formGroup.innerHTML = `
+
+    <label
+      for="productCategory"
+    >
+      Category
+    </label>
+
+    <select
+      id="productCategory"
+      class="seller-category-select"
+    >
+
+      ${CATEGORIES
+        .filter(category => category !== "All")
+        .map(category => `
+
+          <option value="${escapeHTML(category)}">
+            ${escapeHTML(category)}
+          </option>
+
+        `)
+        .join("")}
+
+    </select>
+
+  `;
+
+  descriptionInput
+    .closest(".form-group")
+    ?.after(formGroup);
+
+}
+
+
+/* =========================================================
    RENDER PRODUCTS
 ========================================================= */
 
@@ -305,7 +458,24 @@ function renderProducts(searchTerm = "") {
   const filteredProducts =
     products.filter(product => {
 
-      if (!term) return true;
+      const productCategory =
+        product.category || "Accessories";
+
+
+      const categoryMatches =
+        activeCategory === "All" ||
+        productCategory === activeCategory;
+
+
+      if (!categoryMatches) {
+        return false;
+      }
+
+
+      if (!term) {
+        return true;
+      }
+
 
       return (
 
@@ -316,6 +486,12 @@ function renderProducts(searchTerm = "") {
         ||
 
         String(product.description)
+          .toLowerCase()
+          .includes(term)
+
+        ||
+
+        String(productCategory)
           .toLowerCase()
           .includes(term)
 
@@ -342,12 +518,14 @@ function renderProducts(searchTerm = "") {
         </h3>
 
         <p>
-          Try another search.
+          Try another search or category.
         </p>
 
       </div>
 
     `;
+
+    updateProductStats();
 
     return;
 
@@ -358,7 +536,12 @@ function renderProducts(searchTerm = "") {
 
     filteredProducts
 
-      .map(product => `
+      .map(product => {
+
+        const category =
+          product.category || "Accessories";
+
+        return `
 
         <article class="product-card">
 
@@ -375,6 +558,11 @@ function renderProducts(searchTerm = "") {
 
 
           <div class="product-content">
+
+            <span class="product-category">
+              ${escapeHTML(category)}
+            </span>
+
 
             <h3>
               ${escapeHTML(product.name)}
@@ -414,7 +602,9 @@ function renderProducts(searchTerm = "") {
 
         </article>
 
-      `)
+      `;
+
+      })
 
       .join("");
 
@@ -487,6 +677,10 @@ function viewProduct(productId) {
   if (!modal || !content) return;
 
 
+  const category =
+    product.category || "Accessories";
+
+
   content.innerHTML = `
 
     <div class="product-modal-grid">
@@ -506,6 +700,11 @@ function viewProduct(productId) {
         <p class="hero-eyebrow">
           SMITHX MARKETPLACE
         </p>
+
+
+        <span class="product-category">
+          ${escapeHTML(category)}
+        </span>
 
 
         <h2>
@@ -1361,6 +1560,12 @@ function publishProduct() {
     );
 
 
+  const categoryInput =
+    document.getElementById(
+      "productCategory"
+    );
+
+
   if (
     !nameInput ||
     !priceInput ||
@@ -1387,6 +1592,12 @@ function publishProduct() {
 
   const image =
     imageInput.dataset.image || "";
+
+
+  const category =
+    categoryInput
+      ? categoryInput.value
+      : "Accessories";
 
 
   if (!name) {
@@ -1462,6 +1673,8 @@ function publishProduct() {
 
     price,
 
+    category,
+
     description,
 
     image
@@ -1486,6 +1699,14 @@ function publishProduct() {
   descriptionInput.value = "";
 
   imageInput.value = "";
+
+
+  if (categoryInput) {
+
+    categoryInput.value =
+      "Electronics";
+
+  }
 
 
   delete imageInput.dataset.image;
@@ -1881,6 +2102,10 @@ document.addEventListener(
   () => {
 
     registerDailyVisitor();
+
+    setupCategoryFilter();
+
+    setupSellerCategory();
 
     renderProducts();
 
