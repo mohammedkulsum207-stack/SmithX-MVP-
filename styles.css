@@ -34,7 +34,10 @@ img {
   display: none !important;
 }
 
-/* TOPBAR */
+
+/* =========================
+   TOPBAR
+========================= */
 
 .topbar {
   position: sticky;
@@ -47,7 +50,7 @@ img {
 
 .topbar-inner {
   width: min(1180px,92%);
-  min-height: 70px;
+  min-height: 78px;
   margin: auto;
   display: flex;
   align-items: center;
@@ -55,15 +58,66 @@ img {
   gap: 15px;
 }
 
-.logo {
-  font-size: 23px;
-  font-weight: 900;
+
+/* =========================
+   SMITHX BRAND
+========================= */
+
+.smithx-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   color: #07101f;
+  text-decoration: none;
+  min-width: 0;
 }
 
-.logo span {
+.smithx-logo-mark {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  background: #07101f;
+  color: white;
+  overflow: hidden;
+}
+
+.smithx-logo-mark svg {
+  width: 38px;
+  height: 38px;
+}
+
+.smithx-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.smithx-brand-text strong {
+  font-size: 20px;
+  font-weight: 950;
+  letter-spacing: 1.5px;
+}
+
+.smithx-brand-text strong span {
   color: #1463ff;
 }
+
+.smithx-brand-text small {
+  margin-top: 5px;
+  color: #667085;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 1.1px;
+}
+
+
+/* =========================
+   NAV
+========================= */
 
 .nav {
   display: flex;
@@ -89,13 +143,24 @@ img {
   color: white !important;
 }
 
-/* HERO */
+
+/* =========================
+   HERO
+========================= */
 
 .hero {
   padding: 80px 0 70px;
   background:
-    radial-gradient(circle at 85% 20%,rgba(20,99,255,.14),transparent 32%),
-    linear-gradient(135deg,#fff,#f1f6ff);
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(20,99,255,.14),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      #fff,
+      #f1f6ff
+    );
 }
 
 .hero-grid {
@@ -163,7 +228,10 @@ img {
   color: #101828;
 }
 
-/* HERO CARD */
+
+/* =========================
+   HERO CARD
+========================= */
 
 .hero-card {
   background: #07101f;
@@ -204,7 +272,10 @@ img {
   font-size: 12px;
 }
 
-/* SEARCH */
+
+/* =========================
+   SEARCH
+========================= */
 
 .search-box {
   width: min(700px,92%);
@@ -227,7 +298,10 @@ img {
   border-color: #1463ff;
 }
 
-/* SECTIONS */
+
+/* =========================
+   SECTIONS
+========================= */
 
 .section {
   padding: 70px 0;
@@ -249,7 +323,10 @@ img {
   margin-bottom: 30px;
 }
 
-/* MARKETPLACE */
+
+/* =========================
+   MARKETPLACE
+========================= */
 
 .marketplace {
   background: white;
@@ -333,7 +410,10 @@ img {
   color: white;
 }
 
-/* SELLER */
+
+/* =========================
+   SELLER
+========================= */
 
 .seller-section {
   background: #f5f8fc;
@@ -464,7 +544,10 @@ img {
   background: #1463ff;
 }
 
-/* DASHBOARD */
+
+/* =========================
+   DASHBOARD
+========================= */
 
 .dashboard-section {
   background: white;
@@ -522,7 +605,61 @@ img {
   font-weight: 700;
 }
 
-/* MODAL */
+
+/* =========================
+   UPDATE HISTORY
+========================= */
+
+.update-history {
+  padding: 55px 0;
+  background: #f5f8fc;
+}
+
+.update-history-card {
+  width: min(900px,92%);
+  margin: auto;
+  padding: 25px;
+  border: 1px solid #e4e7ec;
+  border-radius: 18px;
+  background: white;
+}
+
+.update-version {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid #eaecf0;
+}
+
+.update-version:last-of-type {
+  border-bottom: 0;
+}
+
+.update-version strong,
+.update-version span {
+  display: block;
+}
+
+.update-version span {
+  color: #667085;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.update-history-button {
+  margin-top: 18px;
+  padding: 11px 16px;
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  background: white;
+  font-weight: 800;
+}
+
+
+/* =========================
+   MODAL
+========================= */
 
 .modal {
   position: fixed;
@@ -549,6 +686,19 @@ img {
   background: white;
 }
 
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: #f2f4f7;
+  font-size: 25px;
+}
+
 .product-modal-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -570,7 +720,10 @@ img {
   object-fit: contain;
 }
 
-/* CART */
+
+/* =========================
+   CART
+========================= */
 
 .cart-panel {
   position: fixed;
@@ -596,6 +749,15 @@ img {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 25px;
+}
+
+.cart-header button {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: #f2f4f7;
+  font-size: 22px;
 }
 
 .cart-item {
@@ -654,41 +816,17 @@ img {
   font-weight: 900;
 }
 
-/* UPDATE HISTORY */
 
-.update-history {
-  padding: 55px 0;
-  background: #f5f8fc;
-}
-
-.update-history-card {
-  width: min(900px,92%);
-  margin: auto;
-  padding: 25px;
-  border: 1px solid #e4e7ec;
-  border-radius: 18px;
-  background: white;
-}
-
-.update-version {
-  display: flex;
-  justify-content: space-between;
-  gap: 15px;
-  padding: 15px 0;
-  border-bottom: 1px solid #eaecf0;
-}
-
-.update-version:last-of-type {
-  border-bottom: 0;
-}
-
-/* TOAST */
+/* =========================
+   TOAST
+========================= */
 
 .toast {
   position: fixed;
   left: 50%;
   bottom: 25px;
   z-index: 5000;
+  max-width: 90%;
   padding: 12px 18px;
   border-radius: 10px;
   background: #07101f;
@@ -696,6 +834,7 @@ img {
   opacity: 0;
   transform: translate(-50%,120px);
   transition: .3s ease;
+  text-align: center;
 }
 
 .toast.show {
@@ -703,7 +842,10 @@ img {
   transform: translate(-50%,0);
 }
 
-/* MOBILE */
+
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 900px) {
 
@@ -721,19 +863,41 @@ img {
   }
 }
 
+
 @media (max-width: 620px) {
 
   .topbar-inner {
-    min-height: 62px;
+    min-height: 66px;
   }
 
-  .logo {
-    font-size: 19px;
+  .smithx-logo-mark {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    border-radius: 11px;
+  }
+
+  .smithx-logo-mark svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .smithx-brand-text strong {
+    font-size: 16px;
+  }
+
+  .smithx-brand-text small {
+    font-size: 6px;
+    letter-spacing: .8px;
+  }
+
+  .nav {
+    gap: 2px;
   }
 
   .nav button {
-    padding: 7px 8px;
-    font-size: 12px;
+    padding: 7px 7px;
+    font-size: 11px;
   }
 
   .hero {
@@ -778,7 +942,16 @@ img {
   }
 }
 
+
 @media (max-width: 400px) {
+
+  .smithx-brand-text small {
+    display: none;
+  }
+
+  .nav button:not(.cart-button) {
+    display: none;
+  }
 
   .dashboard-grid {
     grid-template-columns: 1fr;
