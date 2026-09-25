@@ -1,7 +1,7 @@
 /* =========================================================
    SMITHX MVP — APP.JS
-   Version 1.9
-   Safe marketplace category update
+   Version 2.0
+   Safe marketplace category + demo login update
    ========================================================= */
 
 
@@ -100,6 +100,14 @@ const STORAGE = {
 
 
 /* =========================================================
+   DEMO LOGIN STORAGE
+========================================================= */
+
+const DEMO_USER_KEY =
+  "smithx_demo_user_v1";
+
+
+/* =========================================================
    UTILITIES
 ========================================================= */
 
@@ -185,7 +193,9 @@ function getAnalytics() {
   try {
 
     return JSON.parse(
-      localStorage.getItem(STORAGE.analytics) ||
+      localStorage.getItem(
+        STORAGE.analytics
+      ) ||
       '{"sales":0,"orders":0}'
     );
 
@@ -229,7 +239,9 @@ function registerDailyVisitor() {
   try {
 
     visitorData = JSON.parse(
-      localStorage.getItem(STORAGE.visitor) || "null"
+      localStorage.getItem(
+        STORAGE.visitor
+      ) || "null"
     );
 
   } catch {
@@ -274,7 +286,9 @@ function getDailyVisitors() {
   try {
 
     const data = JSON.parse(
-      localStorage.getItem(STORAGE.visitor) || "null"
+      localStorage.getItem(
+        STORAGE.visitor
+      ) || "null"
     );
 
     if (
@@ -309,12 +323,20 @@ let activeCategory = "All";
 function setupCategoryFilter() {
 
   const marketplaceTools =
-    document.querySelector(".marketplace-tools");
+    document.querySelector(
+      ".marketplace-tools"
+    );
 
   if (!marketplaceTools) return;
 
-  if (document.getElementById("categoryFilter")) {
+  if (
+    document.getElementById(
+      "categoryFilter"
+    )
+  ) {
+
     return;
+
   }
 
   const wrapper =
@@ -338,22 +360,30 @@ function setupCategoryFilter() {
       aria-label="Filter products by category"
     >
 
-      ${CATEGORIES.map(category => `
+      ${CATEGORIES.map(
+        category => `
 
         <option value="${escapeHTML(category)}">
           ${escapeHTML(category)}
         </option>
 
-      `).join("")}
+      `
+      ).join("")}
 
     </select>
 
   `;
 
-  marketplaceTools.appendChild(wrapper);
+  marketplaceTools.appendChild(
+    wrapper
+  );
+
 
   const select =
-    document.getElementById("categoryFilter");
+    document.getElementById(
+      "categoryFilter"
+    );
+
 
   if (select) {
 
@@ -365,7 +395,9 @@ function setupCategoryFilter() {
           event.target.value || "All";
 
         const searchInput =
-          document.getElementById("productSearch");
+          document.getElementById(
+            "productSearch"
+          );
 
         renderProducts(
           searchInput
@@ -384,19 +416,29 @@ function setupCategoryFilter() {
 function setupSellerCategory() {
 
   const descriptionInput =
-    document.getElementById("productDescription");
+    document.getElementById(
+      "productDescription"
+    );
 
   if (!descriptionInput) return;
 
-  if (document.getElementById("productCategory")) {
+  if (
+    document.getElementById(
+      "productCategory"
+    )
+  ) {
+
     return;
+
   }
+
 
   const formGroup =
     document.createElement("div");
 
   formGroup.className =
     "form-group";
+
 
   formGroup.innerHTML = `
 
@@ -412,19 +454,25 @@ function setupSellerCategory() {
     >
 
       ${CATEGORIES
-        .filter(category => category !== "All")
-        .map(category => `
+        .filter(
+          category =>
+            category !== "All"
+        )
+        .map(
+          category => `
 
           <option value="${escapeHTML(category)}">
             ${escapeHTML(category)}
           </option>
 
-        `)
+        `
+        )
         .join("")}
 
     </select>
 
   `;
+
 
   descriptionInput
     .closest(".form-group")
@@ -437,10 +485,14 @@ function setupSellerCategory() {
    RENDER PRODUCTS
 ========================================================= */
 
-function renderProducts(searchTerm = "") {
+function renderProducts(
+  searchTerm = ""
+) {
 
   const grid =
-    document.getElementById("productsGrid");
+    document.getElementById(
+      "productsGrid"
+    );
 
   if (!grid) return;
 
@@ -459,21 +511,27 @@ function renderProducts(searchTerm = "") {
     products.filter(product => {
 
       const productCategory =
-        product.category || "Accessories";
+        product.category ||
+        "Accessories";
 
 
       const categoryMatches =
         activeCategory === "All" ||
-        productCategory === activeCategory;
+        productCategory ===
+          activeCategory;
 
 
       if (!categoryMatches) {
+
         return false;
+
       }
 
 
       if (!term) {
+
         return true;
+
       }
 
 
@@ -525,6 +583,7 @@ function renderProducts(searchTerm = "") {
 
     `;
 
+
     updateProductStats();
 
     return;
@@ -539,7 +598,9 @@ function renderProducts(searchTerm = "") {
       .map(product => {
 
         const category =
-          product.category || "Accessories";
+          product.category ||
+          "Accessories";
+
 
         return `
 
@@ -548,8 +609,12 @@ function renderProducts(searchTerm = "") {
           <div class="product-image">
 
             <img
-              src="${escapeHTML(product.image)}"
-              alt="${escapeHTML(product.name)}"
+              src="${escapeHTML(
+                product.image
+              )}"
+              alt="${escapeHTML(
+                product.name
+              )}"
               loading="lazy"
               onerror="this.style.display='none'"
             >
@@ -560,22 +625,30 @@ function renderProducts(searchTerm = "") {
           <div class="product-content">
 
             <span class="product-category">
-              ${escapeHTML(category)}
+              ${escapeHTML(
+                category
+              )}
             </span>
 
 
             <h3>
-              ${escapeHTML(product.name)}
+              ${escapeHTML(
+                product.name
+              )}
             </h3>
 
 
             <p class="product-description">
-              ${escapeHTML(product.description)}
+              ${escapeHTML(
+                product.description
+              )}
             </p>
 
 
             <div class="product-price">
-              ${formatKES(product.price)}
+              ${formatKES(
+                product.price
+              )}
             </div>
 
 
@@ -583,7 +656,9 @@ function renderProducts(searchTerm = "") {
 
               <button
                 type="button"
-                onclick="viewProduct('${escapeHTML(product.id)}')"
+                onclick="viewProduct('${escapeHTML(
+                  product.id
+                )}')"
               >
                 View
               </button>
@@ -591,7 +666,9 @@ function renderProducts(searchTerm = "") {
 
               <button
                 type="button"
-                onclick="addToCart('${escapeHTML(product.id)}')"
+                onclick="addToCart('${escapeHTML(
+                  product.id
+                )}')"
               >
                 Add to Cart
               </button>
@@ -625,11 +702,15 @@ function updateProductStats() {
 
 
   const productCount =
-    document.getElementById("productCount");
+    document.getElementById(
+      "productCount"
+    );
 
 
   const totalProducts =
-    document.getElementById("totalProducts");
+    document.getElementById(
+      "totalProducts"
+    );
 
 
   if (productCount) {
@@ -658,14 +739,19 @@ function viewProduct(productId) {
 
   const product =
     getAllProducts()
-      .find(item => item.id === productId);
+      .find(
+        item =>
+          item.id === productId
+      );
 
 
   if (!product) return;
 
 
   const modal =
-    document.getElementById("productModal");
+    document.getElementById(
+      "productModal"
+    );
 
 
   const content =
@@ -678,7 +764,8 @@ function viewProduct(productId) {
 
 
   const category =
-    product.category || "Accessories";
+    product.category ||
+    "Accessories";
 
 
   content.innerHTML = `
@@ -688,8 +775,12 @@ function viewProduct(productId) {
       <div class="product-modal-image">
 
         <img
-          src="${escapeHTML(product.image)}"
-          alt="${escapeHTML(product.name)}"
+          src="${escapeHTML(
+            product.image
+          )}"
+          alt="${escapeHTML(
+            product.name
+          )}"
         >
 
       </div>
@@ -703,17 +794,23 @@ function viewProduct(productId) {
 
 
         <span class="product-category">
-          ${escapeHTML(category)}
+          ${escapeHTML(
+            category
+          )}
         </span>
 
 
         <h2>
-          ${escapeHTML(product.name)}
+          ${escapeHTML(
+            product.name
+          )}
         </h2>
 
 
         <div class="product-price">
-          ${formatKES(product.price)}
+          ${formatKES(
+            product.price
+          )}
         </div>
 
 
@@ -721,7 +818,9 @@ function viewProduct(productId) {
           color:#667085;
           margin:20px 0;
         ">
-          ${escapeHTML(product.description)}
+          ${escapeHTML(
+            product.description
+          )}
         </p>
 
 
@@ -729,7 +828,9 @@ function viewProduct(productId) {
           class="primary-button"
           type="button"
           onclick="
-            addToCart('${escapeHTML(product.id)}');
+            addToCart('${escapeHTML(
+              product.id
+            )}');
             closeProductModal();
           "
         >
@@ -745,6 +846,7 @@ function viewProduct(productId) {
 
   modal.classList.add("active");
 
+
   modal.setAttribute(
     "aria-hidden",
     "false"
@@ -756,13 +858,18 @@ function viewProduct(productId) {
 function closeProductModal() {
 
   const modal =
-    document.getElementById("productModal");
+    document.getElementById(
+      "productModal"
+    );
 
 
   if (!modal) return;
 
 
-  modal.classList.remove("active");
+  modal.classList.remove(
+    "active"
+  );
+
 
   modal.setAttribute(
     "aria-hidden",
@@ -781,7 +888,9 @@ function getCart() {
   try {
 
     return JSON.parse(
-      localStorage.getItem(STORAGE.cart) || "[]"
+      localStorage.getItem(
+        STORAGE.cart
+      ) || "[]"
     );
 
   } catch {
@@ -811,7 +920,10 @@ function addToCart(productId) {
 
   const product =
     getAllProducts()
-      .find(item => item.id === productId);
+      .find(
+        item =>
+          item.id === productId
+      );
 
 
   if (!product) {
@@ -831,14 +943,17 @@ function addToCart(productId) {
 
   const existing =
     cart.find(
-      item => item.id === productId
+      item =>
+        item.id === productId
     );
 
 
   if (existing) {
 
     existing.quantity =
-      Number(existing.quantity || 0) + 1;
+      Number(
+        existing.quantity || 0
+      ) + 1;
 
   } else {
 
@@ -872,12 +987,15 @@ function addToCart(productId) {
    REMOVE
 ========================================================= */
 
-function removeFromCart(productId) {
+function removeFromCart(
+  productId
+) {
 
   const cart =
     getCart()
       .filter(
-        item => item.id !== productId
+        item =>
+          item.id !== productId
       );
 
 
@@ -920,8 +1038,12 @@ function changeQuantity(
 
 
   item.quantity =
-    Number(item.quantity || 0) +
-    Number(amount || 0);
+    Number(
+      item.quantity || 0
+    ) +
+    Number(
+      amount || 0
+    );
 
 
   if (item.quantity <= 0) {
@@ -932,7 +1054,10 @@ function changeQuantity(
           cartItem.id !== productId
       );
 
-    saveCart(updatedCart);
+
+    saveCart(
+      updatedCart
+    );
 
   } else {
 
@@ -1038,7 +1163,8 @@ function renderCart() {
 
         const product =
           products.find(
-            p => p.id === item.id
+            p =>
+              p.id === item.id
           );
 
 
@@ -1046,11 +1172,15 @@ function renderCart() {
 
 
         const quantity =
-          Number(item.quantity || 0);
+          Number(
+            item.quantity || 0
+          );
 
 
         const itemTotal =
-          Number(product.price) *
+          Number(
+            product.price
+          ) *
           quantity;
 
 
@@ -1062,20 +1192,28 @@ function renderCart() {
           <div class="cart-item">
 
             <img
-              src="${escapeHTML(product.image)}"
-              alt="${escapeHTML(product.name)}"
+              src="${escapeHTML(
+                product.image
+              )}"
+              alt="${escapeHTML(
+                product.name
+              )}"
             >
 
 
             <div>
 
               <h4>
-                ${escapeHTML(product.name)}
+                ${escapeHTML(
+                  product.name
+                )}
               </h4>
 
 
               <p>
-                ${formatKES(product.price)}
+                ${formatKES(
+                  product.price
+                )}
               </p>
 
 
@@ -1090,7 +1228,9 @@ function renderCart() {
                   type="button"
                   onclick="
                     changeQuantity(
-                      '${escapeHTML(product.id)}',
+                      '${escapeHTML(
+                        product.id
+                      )}',
                       -1
                     )
                   "
@@ -1108,7 +1248,9 @@ function renderCart() {
                   type="button"
                   onclick="
                     changeQuantity(
-                      '${escapeHTML(product.id)}',
+                      '${escapeHTML(
+                        product.id
+                      )}',
                       1
                     )
                   "
@@ -1124,7 +1266,9 @@ function renderCart() {
                 class="cart-remove"
                 onclick="
                   removeFromCart(
-                    '${escapeHTML(product.id)}'
+                    '${escapeHTML(
+                      product.id
+                    )}'
                   )
                 "
               >
@@ -1135,7 +1279,9 @@ function renderCart() {
 
 
             <strong>
-              ${formatKES(itemTotal)}
+              ${formatKES(
+                itemTotal
+              )}
             </strong>
 
           </div>
@@ -1177,9 +1323,14 @@ function updateCartCount() {
 
   const count =
     cart.reduce(
-      (sum, item) =>
+      (
+        sum,
+        item
+      ) =>
         sum +
-        Number(item.quantity || 0),
+        Number(
+          item.quantity || 0
+        ),
       0
     );
 
@@ -1190,12 +1341,14 @@ function updateCartCount() {
     );
 
 
-  elements.forEach(element => {
+  elements.forEach(
+    element => {
 
-    element.textContent =
-      count;
+      element.textContent =
+        count;
 
-  });
+    }
+  );
 
 }
 
@@ -1228,7 +1381,9 @@ function openCart() {
   updateCartCount();
 
 
-  panel.classList.add("active");
+  panel.classList.add(
+    "active"
+  );
 
 }
 
@@ -1248,7 +1403,9 @@ function closeCart() {
   if (!panel) return;
 
 
-  panel.classList.remove("active");
+  panel.classList.remove(
+    "active"
+  );
 
 }
 
@@ -1281,23 +1438,30 @@ function checkout() {
   let total = 0;
 
 
-  cart.forEach(item => {
+  cart.forEach(
+    item => {
 
-    const product =
-      products.find(
-        p => p.id === item.id
-      );
+      const product =
+        products.find(
+          p =>
+            p.id === item.id
+        );
 
 
-    if (product) {
+      if (product) {
 
-      total +=
-        Number(product.price) *
-        Number(item.quantity || 0);
+        total +=
+          Number(
+            product.price
+          ) *
+          Number(
+            item.quantity || 0
+          );
+
+      }
 
     }
-
-  });
+  );
 
 
   if (total <= 0) {
@@ -1316,16 +1480,22 @@ function checkout() {
 
 
   analytics.sales =
-    Number(analytics.sales || 0) +
+    Number(
+      analytics.sales || 0
+    ) +
     total;
 
 
   analytics.orders =
-    Number(analytics.orders || 0) +
+    Number(
+      analytics.orders || 0
+    ) +
     1;
 
 
-  saveAnalytics(analytics);
+  saveAnalytics(
+    analytics
+  );
 
 
   localStorage.removeItem(
@@ -1345,11 +1515,14 @@ function checkout() {
   );
 
 
-  setTimeout(() => {
+  setTimeout(
+    () => {
 
-    closeCart();
+      closeCart();
 
-  }, 1200);
+    },
+    1200
+  );
 
 }
 
@@ -1365,7 +1538,10 @@ function compressImage(
 ) {
 
   return new Promise(
-    (resolve, reject) => {
+    (
+      resolve,
+      reject
+    ) => {
 
       const reader =
         new FileReader();
@@ -1448,7 +1624,9 @@ function compressImage(
         reject;
 
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(
+        file
+      );
 
     }
   );
@@ -1456,7 +1634,9 @@ function compressImage(
 }
 
 
-async function handleProductImage(event) {
+async function handleProductImage(
+  event
+) {
 
   const file =
     event.target.files &&
@@ -1466,7 +1646,11 @@ async function handleProductImage(event) {
   if (!file) return;
 
 
-  if (!file.type.startsWith("image/")) {
+  if (
+    !file.type.startsWith(
+      "image/"
+    )
+  ) {
 
     showToast(
       "Please choose an image file."
@@ -1480,7 +1664,9 @@ async function handleProductImage(event) {
   try {
 
     const compressed =
-      await compressImage(file);
+      await compressImage(
+        file
+      );
 
 
     const preview =
@@ -1583,7 +1769,9 @@ function publishProduct() {
 
 
   const price =
-    Number(priceInput.value);
+    Number(
+      priceInput.value
+    );
 
 
   const description =
@@ -1591,7 +1779,8 @@ function publishProduct() {
 
 
   const image =
-    imageInput.dataset.image || "";
+    imageInput.dataset.image ||
+    "";
 
 
   const category =
@@ -1648,7 +1837,9 @@ function publishProduct() {
     getCustomProducts();
 
 
-  if (customProducts.length >= 3) {
+  if (
+    customProducts.length >= 3
+  ) {
 
     showToast(
       "Seller Studio limit reached: 3 additional products."
@@ -1902,8 +2093,10 @@ function toggleUpdateHistory() {
 
 
   const isHidden =
-    history.style.display === "none" ||
-    history.style.display === "";
+    history.style.display ===
+      "none" ||
+    history.style.display ===
+      "";
 
 
   if (isHidden) {
@@ -1990,13 +2183,16 @@ function showToast(message) {
 
 
   toastTimer =
-    setTimeout(() => {
+    setTimeout(
+      () => {
 
-      toast.classList.remove(
-        "show"
-      );
+        toast.classList.remove(
+          "show"
+        );
 
-    }, 3000);
+      },
+      3000
+    );
 
 }
 
@@ -2078,12 +2274,548 @@ function setupKeyboardControls() {
     event => {
 
       if (
-        event.key === "Escape"
+        event.key ===
+        "Escape"
       ) {
 
         closeProductModal();
 
         closeCart();
+
+        closeLogin();
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   DEMO LOGIN SYSTEM
+========================================================= */
+
+function getDemoUser() {
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem(
+        DEMO_USER_KEY
+      ) || "null"
+    );
+
+  } catch {
+
+    return null;
+
+  }
+
+}
+
+
+function saveDemoUser(user) {
+
+  localStorage.setItem(
+    DEMO_USER_KEY,
+    JSON.stringify(user)
+  );
+
+}
+
+
+function openLogin() {
+
+  const overlay =
+    document.getElementById(
+      "loginOverlay"
+    );
+
+
+  if (!overlay) return;
+
+
+  showLoginForm();
+
+  overlay.classList.add(
+    "active"
+  );
+
+
+  const email =
+    document.getElementById(
+      "loginEmail"
+    );
+
+
+  if (email) {
+
+    setTimeout(
+      () => email.focus(),
+      100
+    );
+
+  }
+
+}
+
+
+function closeLogin() {
+
+  const overlay =
+    document.getElementById(
+      "loginOverlay"
+    );
+
+
+  if (!overlay) return;
+
+
+  overlay.classList.remove(
+    "active"
+  );
+
+}
+
+
+function showLoginForm() {
+
+  const login =
+    document.getElementById(
+      "loginFormSection"
+    );
+
+
+  const register =
+    document.getElementById(
+      "registerFormSection"
+    );
+
+
+  if (login) {
+
+    login.style.display =
+      "block";
+
+  }
+
+
+  if (register) {
+
+    register.style.display =
+      "none";
+
+  }
+
+}
+
+
+function showRegisterForm() {
+
+  const login =
+    document.getElementById(
+      "loginFormSection"
+    );
+
+
+  const register =
+    document.getElementById(
+      "registerFormSection"
+    );
+
+
+  if (login) {
+
+    login.style.display =
+      "none";
+
+  }
+
+
+  if (register) {
+
+    register.style.display =
+      "block";
+
+  }
+
+}
+
+
+function togglePassword(
+  inputId,
+  button
+) {
+
+  const input =
+    document.getElementById(
+      inputId
+    );
+
+
+  if (!input || !button) return;
+
+
+  if (
+    input.type ===
+    "password"
+  ) {
+
+    input.type =
+      "text";
+
+    button.textContent =
+      "Hide";
+
+  } else {
+
+    input.type =
+      "password";
+
+    button.textContent =
+      "Show";
+
+  }
+
+}
+
+
+function demoRegister() {
+
+  const name =
+    document.getElementById(
+      "registerName"
+    )?.value.trim();
+
+
+  const email =
+    document.getElementById(
+      "registerEmail"
+    )?.value.trim();
+
+
+  const password =
+    document.getElementById(
+      "registerPassword"
+    )?.value;
+
+
+  const accountType =
+    document.getElementById(
+      "accountType"
+    )?.value;
+
+
+  if (
+    !name ||
+    !email ||
+    !password
+  ) {
+
+    showToast(
+      "Please complete all required fields."
+    );
+
+    return;
+
+  }
+
+
+  if (
+    password.length < 4
+  ) {
+
+    showToast(
+      "Demo password must contain at least 4 characters."
+    );
+
+    return;
+
+  }
+
+
+  const user = {
+
+    name,
+
+    email,
+
+    accountType:
+      accountType ||
+      "buyer",
+
+    loggedIn: true
+
+  };
+
+
+  saveDemoUser(user);
+
+
+  closeLogin();
+
+  updateLoginButton();
+
+
+  showToast(
+    `Welcome to SMITHX, ${name}!`
+  );
+
+
+  const nameInput =
+    document.getElementById(
+      "registerName"
+    );
+
+
+  const emailInput =
+    document.getElementById(
+      "registerEmail"
+    );
+
+
+  const passwordInput =
+    document.getElementById(
+      "registerPassword"
+    );
+
+
+  if (nameInput) {
+
+    nameInput.value = "";
+
+  }
+
+
+  if (emailInput) {
+
+    emailInput.value = "";
+
+  }
+
+
+  if (passwordInput) {
+
+    passwordInput.value = "";
+
+  }
+
+
+  showLoginForm();
+
+}
+
+
+function demoLogin() {
+
+  const email =
+    document.getElementById(
+      "loginEmail"
+    )?.value.trim();
+
+
+  if (!email) {
+
+    showToast(
+      "Please enter your email."
+    );
+
+    return;
+
+  }
+
+
+  const existingUser =
+    getDemoUser();
+
+
+  if (!existingUser) {
+
+    showToast(
+      "Create a demo account first."
+    );
+
+    showRegisterForm();
+
+    return;
+
+  }
+
+
+  if (
+    email.toLowerCase() !==
+    String(
+      existingUser.email
+    ).toLowerCase()
+  ) {
+
+    showToast(
+      "Email does not match the demo account."
+    );
+
+    return;
+
+  }
+
+
+  existingUser.loggedIn =
+    true;
+
+
+  saveDemoUser(
+    existingUser
+  );
+
+
+  closeLogin();
+
+  updateLoginButton();
+
+
+  showToast(
+    `Welcome back, ${existingUser.name}!`
+  );
+
+}
+
+
+function logoutDemoUser() {
+
+  const existingUser =
+    getDemoUser();
+
+
+  if (existingUser) {
+
+    existingUser.loggedIn =
+      false;
+
+
+    saveDemoUser(
+      existingUser
+    );
+
+  }
+
+
+  updateLoginButton();
+
+
+  showToast(
+    "You have been logged out."
+  );
+
+}
+
+
+function updateLoginButton() {
+
+  const existingUser =
+    getDemoUser();
+
+
+  let loginButton =
+    document.getElementById(
+      "smithxLoginButton"
+    );
+
+
+  if (!loginButton) {
+
+    const nav =
+      document.querySelector(
+        ".nav-links"
+      );
+
+
+    if (!nav) return;
+
+
+    loginButton =
+      document.createElement(
+        "button"
+      );
+
+
+    loginButton.id =
+      "smithxLoginButton";
+
+
+    loginButton.type =
+      "button";
+
+
+    loginButton.className =
+      "nav-login-btn";
+
+
+    nav.appendChild(
+      loginButton
+    );
+
+  }
+
+
+  if (
+    existingUser &&
+    existingUser.loggedIn
+  ) {
+
+    loginButton.textContent =
+      `👤 ${existingUser.name}`;
+
+
+    loginButton.onclick =
+      logoutDemoUser;
+
+
+    loginButton.title =
+      "Click to logout";
+
+  } else {
+
+    loginButton.textContent =
+      "Login";
+
+
+    loginButton.onclick =
+      openLogin;
+
+
+    loginButton.title =
+      "Login to SmithX";
+
+  }
+
+}
+
+
+/* =========================================================
+   LOGIN OVERLAY CONTROLS
+========================================================= */
+
+function setupLoginControls() {
+
+  const overlay =
+    document.getElementById(
+      "loginOverlay"
+    );
+
+
+  if (!overlay) return;
+
+
+  overlay.addEventListener(
+    "click",
+    event => {
+
+      if (
+        event.target ===
+        overlay
+      ) {
+
+        closeLogin();
 
       }
 
@@ -2103,23 +2835,38 @@ document.addEventListener(
 
     registerDailyVisitor();
 
+
     setupCategoryFilter();
+
 
     setupSellerCategory();
 
+
     renderProducts();
+
 
     renderCart();
 
+
     updateCartCount();
+
 
     updateDashboard();
 
+
     setupSearch();
+
 
     setupModalClosing();
 
+
     setupKeyboardControls();
+
+
+    setupLoginControls();
+
+
+    updateLoginButton();
 
 
     /* Updates hidden initially */
