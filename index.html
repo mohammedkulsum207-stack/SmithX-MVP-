@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#07101f">
   <meta
     name="description"
-    content="SMITHX — Future Commerce. Build. Sell. Grow."
+    content="SMITHX — Future Commerce. Shop. Buy. Grow."
   >
 
   <title>SMITHX — Future Commerce</title>
@@ -24,11 +24,70 @@
   <header class="topbar">
     <div class="topbar-inner">
 
-      <div class="logo">
-        SMITH<span>X</span>
-      </div>
+      <a
+        href="#"
+        class="smithx-brand"
+        aria-label="SMITHX Home"
+      >
+
+        <span class="smithx-logo-mark" aria-hidden="true">
+          <svg
+            viewBox="0 0 100 100"
+            role="img"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 22h9l8 40h40l9-30H34"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <circle
+              cx="44"
+              cy="78"
+              r="6"
+              fill="currentColor"
+            />
+
+            <circle
+              cx="75"
+              cy="78"
+              r="6"
+              fill="currentColor"
+            />
+
+            <path
+              d="M51 18c7-8 18-8 25 0"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="6"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M57 12l-4 7 8 1"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+        <span class="smithx-brand-text">
+          <strong>SMITH<span>X</span></strong>
+          <small>SHOP • BUY • GROW</small>
+        </span>
+
+      </a>
+
 
       <nav class="nav">
+
         <button onclick="scrollToSection('market')">
           Market
         </button>
@@ -41,10 +100,14 @@
           Dashboard
         </button>
 
-        <button class="cart-button" onclick="openCart()">
+        <button
+          class="cart-button"
+          onclick="openCart()"
+        >
           Cart
           <span id="cartCount">0</span>
         </button>
+
       </nav>
 
     </div>
@@ -204,8 +267,6 @@
         <div class="seller-grid">
 
 
-          <!-- PRODUCT FORM -->
-
           <div class="form-card">
 
             <h3>
@@ -280,10 +341,12 @@
                   id="imagePreview"
                   class="image-preview hidden"
                 >
+
                   <img
                     id="previewImage"
                     alt="Product preview"
                   >
+
                 </div>
 
               </div>
@@ -300,8 +363,6 @@
 
           </div>
 
-
-          <!-- SELLER INFO -->
 
           <div class="ai-card">
 
@@ -385,54 +446,23 @@
         <div class="dashboard-grid">
 
           <div class="dashboard-stat">
-
-            <span>
-              Marketplace Products
-            </span>
-
-            <strong id="dashboardProducts">
-              6
-            </strong>
-
+            <span>Marketplace Products</span>
+            <strong id="dashboardProducts">6</strong>
           </div>
 
-
           <div class="dashboard-stat">
-
-            <span>
-              Today's Users
-            </span>
-
-            <strong id="dashboardVisitors">
-              0
-            </strong>
-
+            <span>Today's Users</span>
+            <strong id="dashboardVisitors">0</strong>
           </div>
 
-
           <div class="dashboard-stat">
-
-            <span>
-              Demo Sales
-            </span>
-
-            <strong id="dashboardSales">
-              KES 0
-            </strong>
-
+            <span>Demo Sales</span>
+            <strong id="dashboardSales">KES 0</strong>
           </div>
 
-
           <div class="dashboard-stat">
-
-            <span>
-              Orders
-            </span>
-
-            <strong id="dashboardOrders">
-              0
-            </strong>
-
+            <span>Orders</span>
+            <strong id="dashboardOrders">0</strong>
           </div>
 
         </div>
@@ -450,54 +480,23 @@
           <div class="activity-list">
 
             <div class="activity-item">
-
-              <span>
-                Marketplace products
-              </span>
-
-              <strong id="activityProducts">
-                6
-              </strong>
-
+              <span>Marketplace products</span>
+              <strong id="activityProducts">6</strong>
             </div>
 
-
             <div class="activity-item">
-
-              <span>
-                People who visited today
-              </span>
-
-              <strong id="activityVisitors">
-                0
-              </strong>
-
+              <span>People who visited today</span>
+              <strong id="activityVisitors">0</strong>
             </div>
 
-
             <div class="activity-item">
-
-              <span>
-                Total amount used
-              </span>
-
-              <strong id="activitySales">
-                KES 0
-              </strong>
-
+              <span>Total amount used</span>
+              <strong id="activitySales">KES 0</strong>
             </div>
 
-
             <div class="activity-item">
-
-              <span>
-                Completed purchases
-              </span>
-
-              <strong id="activityOrders">
-                0
-              </strong>
-
+              <span>Completed purchases</span>
+              <strong id="activityOrders">0</strong>
             </div>
 
           </div>
@@ -530,14 +529,25 @@
         </div>
 
         <p class="section-subtitle">
-          Version 1.5
+          Version 1.6
         </p>
 
 
         <div class="update-version">
-
           <div>
+            <strong>
+              v1.6 — SmithX Brand Update
+            </strong>
 
+            <span>
+              25 September 2026
+            </span>
+          </div>
+        </div>
+
+
+        <div class="update-version">
+          <div>
             <strong>
               v1.5 — Marketplace MVP
             </strong>
@@ -545,16 +555,12 @@
             <span>
               24 September 2026
             </span>
-
           </div>
-
         </div>
 
 
         <div class="update-version">
-
           <div>
-
             <strong>
               v1.4 — Seller Studio Improvements
             </strong>
@@ -562,16 +568,12 @@
             <span>
               23 September 2026
             </span>
-
           </div>
-
         </div>
 
 
         <div class="update-version">
-
           <div>
-
             <strong>
               v1.3 — Marketplace & Cart Improvements
             </strong>
@@ -579,10 +581,9 @@
             <span>
               22 September 2026
             </span>
-
           </div>
-
         </div>
+
 
         <button
           class="update-history-button"
@@ -671,28 +672,14 @@
     <div class="cart-total">
 
       <div class="cart-total-row">
-
-        <span>
-          Subtotal
-        </span>
-
-        <strong id="cartSubtotal">
-          KES 0
-        </strong>
-
+        <span>Subtotal</span>
+        <strong id="cartSubtotal">KES 0</strong>
       </div>
 
 
       <div class="cart-total-row">
-
-        <strong>
-          Total
-        </strong>
-
-        <strong id="cartTotal">
-          KES 0
-        </strong>
-
+        <strong>Total</strong>
+        <strong id="cartTotal">KES 0</strong>
       </div>
 
 
@@ -717,8 +704,6 @@
     class="toast"
   ></div>
 
-
-  <!-- JAVASCRIPT -->
 
   <script src="app.js"></script>
 
