@@ -13,7 +13,7 @@
 <header class="topbar">
   <div class="topbar-inner">
 
-    <a href="#home" class="smithx-brand">
+    <a href="#home" class="smithx-brand" aria-label="SM1THX 🛒 Home">
       <img
         src="assets/smithx-logo.jpg"
         class="smithx-logo-image"
@@ -78,9 +78,9 @@
       </h1>
 
       <p class="hero-description">
-        SM1THX 🛒 gives sellers the tools to launch, manage
-        and grow online businesses while giving buyers a
-        smarter way to discover products.
+        SM1THX 🛒 gives sellers the tools to launch,
+        manage and grow online businesses while giving
+        buyers a smarter way to discover products.
       </p>
 
       <div class="hero-actions">
@@ -104,7 +104,6 @@
       </div>
 
     </div>
-
 
     <div class="hero-panel">
 
@@ -180,16 +179,12 @@
     </div>
 
 
-    <!-- =================================================
-         PRODUCTS
-         These are intentionally placed directly in HTML.
-         They will appear even if JavaScript has a problem.
-    ================================================== -->
+    <div id="categoryFilters" class="category-filters"></div>
+
 
     <div id="productsGrid" class="products-grid">
 
-
-      <!-- PRODUCT 1 -->
+      <!-- Samsung Galaxy -->
 
       <article class="product-card">
 
@@ -202,6 +197,7 @@
           <img
             src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80"
             alt="Samsung Galaxy S26 Ultra"
+            loading="lazy"
           >
 
         </button>
@@ -242,7 +238,7 @@
       </article>
 
 
-      <!-- PRODUCT 2 -->
+      <!-- Headphones -->
 
       <article class="product-card">
 
@@ -255,6 +251,7 @@
           <img
             src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
             alt="Smart Wireless Headphones"
+            loading="lazy"
           >
 
         </button>
@@ -295,7 +292,7 @@
       </article>
 
 
-      <!-- PRODUCT 3 -->
+      <!-- Desk Lamp -->
 
       <article class="product-card">
 
@@ -308,6 +305,7 @@
           <img
             src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80"
             alt="Minimal Desk Lamp"
+            loading="lazy"
           >
 
         </button>
@@ -348,7 +346,7 @@
       </article>
 
 
-      <!-- PRODUCT 4 -->
+      <!-- Backpack -->
 
       <article class="product-card">
 
@@ -361,6 +359,7 @@
           <img
             src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80"
             alt="Everyday Travel Backpack"
+            loading="lazy"
           >
 
         </button>
@@ -401,7 +400,7 @@
       </article>
 
 
-      <!-- PRODUCT 5 -->
+      <!-- Smart Watch -->
 
       <article class="product-card">
 
@@ -414,6 +413,7 @@
           <img
             src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
             alt="Smart Watch"
+            loading="lazy"
           >
 
         </button>
@@ -454,7 +454,7 @@
       </article>
 
 
-      <!-- PRODUCT 6 -->
+      <!-- Sneakers -->
 
       <article class="product-card">
 
@@ -467,6 +467,7 @@
           <img
             src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
             alt="Premium Sneakers"
+            loading="lazy"
           >
 
         </button>
@@ -514,7 +515,7 @@
 
 
 <!-- =====================================================
-     SELLER
+     SELLER STUDIO
 ===================================================== -->
 
 <section id="seller" class="section seller-section">
@@ -579,6 +580,17 @@
             min="1"
             placeholder="169999"
           >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="productCategory">
+            Category
+          </label>
+
+          <select id="productCategory"></select>
 
         </div>
 
@@ -784,39 +796,74 @@
     <div class="feature-grid">
 
       <div class="feature-card">
-        <div class="feature-icon">AI</div>
-        <h3>AI Seller Assistant</h3>
+
+        <div class="feature-icon">
+          AI
+        </div>
+
+        <h3>
+          AI Seller Assistant
+        </h3>
+
         <p>
           Intelligent tools designed to help sellers
           make better business decisions.
         </p>
+
       </div>
 
+
       <div class="feature-card">
-        <div class="feature-icon">↗</div>
-        <h3>Growth Tools</h3>
+
+        <div class="feature-icon">
+          ↗
+        </div>
+
+        <h3>
+          Growth Tools
+        </h3>
+
         <p>
           Marketing, pricing, SEO and analytics
           designed around seller growth.
         </p>
+
       </div>
 
+
       <div class="feature-card">
-        <div class="feature-icon">₿</div>
-        <h3>Modern Payments</h3>
+
+        <div class="feature-icon">
+          ₿
+        </div>
+
+        <h3>
+          Modern Payments
+        </h3>
+
         <p>
           Future plans include flexible fiat
           and digital payment options.
         </p>
+
       </div>
 
+
       <div class="feature-card">
-        <div class="feature-icon">🌍</div>
-        <h3>Global Commerce</h3>
+
+        <div class="feature-icon">
+          🌍
+        </div>
+
+        <h3>
+          Global Commerce
+        </h3>
+
         <p>
           Starting locally and designed with
           global expansion in mind.
         </p>
+
       </div>
 
     </div>
@@ -916,43 +963,72 @@
       <div class="card">
 
         <div class="update-item">
-          <strong>SM1THX 🛒 MVP launched</strong>
+
+          <strong>
+            SM1THX 🛒 MVP launched
+          </strong>
+
           <p>
             Initial marketplace experience with products,
             search, product details, cart and demo checkout.
           </p>
+
         </div>
 
+
         <div class="update-item">
-          <strong>Seller Studio added</strong>
+
+          <strong>
+            Seller Studio added
+          </strong>
+
           <p>
             Sellers can create products and publish
             them directly to the marketplace.
           </p>
+
         </div>
 
+
         <div class="update-item">
-          <strong>Product image uploads added</strong>
+
+          <strong>
+            Product image uploads added
+          </strong>
+
           <p>
             Sellers can upload product images when
             creating products.
           </p>
+
         </div>
 
+
         <div class="update-item">
-          <strong>Dashboard improvements</strong>
+
+          <strong>
+            Dashboard improvements
+          </strong>
+
           <p>
             Added seller statistics for products,
             orders, revenue and visitors.
           </p>
+
         </div>
 
+
         <div class="update-item">
-          <strong>SM1THX 🛒 branding updated</strong>
+
+          <strong>
+            SM1THX 🛒 branding updated
+          </strong>
+
           <p>
-            Updated the platform with the new SM1THX 🛒
-            logo and SHOP • BUY • GROW branding.
+            Updated the platform with the new
+            SM1THX 🛒 logo and SHOP • BUY • GROW branding.
           </p>
+
         </div>
 
       </div>
@@ -1030,23 +1106,36 @@
   </div>
 
 
-  <div
-    id="cartItems"
-    class="cart-items"
-  ></div>
+  <div id="cartItems" class="cart-items"></div>
 
 
   <div class="cart-summary">
 
     <div class="cart-summary-row">
-      <span>Subtotal</span>
-      <strong id="cartSubtotal">KES 0</strong>
+
+      <span>
+        Subtotal
+      </span>
+
+      <strong id="cartSubtotal">
+        KES 0
+      </strong>
+
     </div>
 
+
     <div class="cart-summary-row total-row">
-      <span>Total</span>
-      <strong id="cartTotal">KES 0</strong>
+
+      <span>
+        Total
+      </span>
+
+      <strong id="cartTotal">
+        KES 0
+      </strong>
+
     </div>
+
 
     <button
       type="button"
@@ -1059,6 +1148,275 @@
   </div>
 
 </aside>
+
+
+<!-- =====================================================
+     LOGIN / REGISTER
+===================================================== -->
+
+<div
+  id="loginOverlay"
+  class="login-overlay"
+  aria-hidden="true"
+>
+
+  <div class="login-card">
+
+    <button
+      type="button"
+      class="modal-close"
+      onclick="closeLogin()"
+      aria-label="Close login"
+    >
+      ×
+    </button>
+
+
+    <div id="loginFormSection">
+
+      <div class="login-header">
+
+        <p class="section-eyebrow">
+          WELCOME BACK
+        </p>
+
+        <h2>
+          Login to SM1THX 🛒
+        </h2>
+
+        <p>
+          Access your seller dashboard and account.
+        </p>
+
+      </div>
+
+
+      <form id="loginForm">
+
+        <div class="form-group">
+
+          <label for="loginEmail">
+            Email
+          </label>
+
+          <input
+            id="loginEmail"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="loginPassword">
+            Password
+          </label>
+
+          <div class="password-field">
+
+            <input
+              id="loginPassword"
+              type="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            >
+
+            <button
+              type="button"
+              class="password-toggle"
+              onclick="togglePassword('loginPassword', this)"
+              aria-label="Show password"
+            >
+              👁
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <label class="checkbox-row">
+
+          <input
+            id="rememberUser"
+            type="checkbox"
+          >
+
+          <span>
+            Remember me
+          </span>
+
+        </label>
+
+
+        <button
+          type="submit"
+          class="primary-button full-width"
+        >
+          Login
+        </button>
+
+      </form>
+
+
+      <p class="login-switch">
+
+        Don't have an account?
+
+        <button
+          type="button"
+          onclick="showRegisterForm()"
+        >
+          Create account
+        </button>
+
+      </p>
+
+    </div>
+
+
+    <div
+      id="registerFormSection"
+      style="display:none;"
+    >
+
+      <div class="login-header">
+
+        <p class="section-eyebrow">
+          JOIN SM1THX 🛒
+        </p>
+
+        <h2>
+          Create your account
+        </h2>
+
+        <p>
+          Start exploring or selling on SM1THX 🛒.
+        </p>
+
+      </div>
+
+
+      <form id="registerForm">
+
+        <div class="form-group">
+
+          <label for="registerName">
+            Full Name
+          </label>
+
+          <input
+            id="registerName"
+            type="text"
+            placeholder="Your name"
+            autocomplete="name"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="registerEmail">
+            Email
+          </label>
+
+          <input
+            id="registerEmail"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="registerPassword">
+            Password
+          </label>
+
+          <div class="password-field">
+
+            <input
+              id="registerPassword"
+              type="password"
+              placeholder="Create a password"
+              autocomplete="new-password"
+              required
+            >
+
+            <button
+              type="button"
+              class="password-toggle"
+              onclick="togglePassword('registerPassword', this)"
+              aria-label="Show password"
+            >
+              👁
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="accountType">
+            Account Type
+          </label>
+
+          <select id="accountType">
+
+            <option value="buyer">
+              Buyer
+            </option>
+
+            <option value="seller">
+              Seller
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="primary-button full-width"
+        >
+          Create Account
+        </button>
+
+      </form>
+
+
+      <p class="login-switch">
+
+        Already have an account?
+
+        <button
+          type="button"
+          onclick="showLoginForm()"
+        >
+          Login
+        </button>
+
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
 
 
 <!-- =====================================================
