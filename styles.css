@@ -1332,4 +1332,117 @@ a {
   .product-actions {
     flex-direction: column;
   }
+}/* =========================================================
+   MARKETPLACE CATEGORIES — SAFE ADDITION
+========================================================= */
+
+.category-filter-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  min-width: 180px;
+}
+
+.category-filter-label {
+  color: #667085;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.category-filter,
+.seller-category-select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #101828;
+  outline: none;
+  font-weight: 600;
+}
+
+.category-filter:focus,
+.seller-category-select:focus {
+  border-color: #1769ff;
+  box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
+}
+
+.product-category {
+  display: inline-block;
+  margin-bottom: 9px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #eaf2ff;
+  color: #1769ff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+@media (max-width: 620px) {
+
+  .category-filter-wrapper {
+    width: 100%;
+  }
+
+}
+/* =========================================================
+   MARKETPLACE CATEGORIES — SAFE ADDITION
+========================================================= */
+
+.category-filter-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  min-width: 180px;
+}
+
+.category-filter-label {
+  color: #667085;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.category-filter,
+.seller-category-select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #101828;
+  outline: none;
+  font-weight: 600;
+}
+
+.category-filter:focus,
+.seller-category-select:focus {
+  border-color: #1769ff;
+  box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
+}
+
+.product-category {
+  display: inline-block;
+  margin-bottom: 9px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #eaf2ff;
+  color: #1769ff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+@media (max-width: 620px) {
+
+  .category-filter-wrapper {
+    width: 100%;
+  }
+
 }
