@@ -1,1488 +1,404 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SM1THX 🛒 — AI-powered commerce for sellers and buyers.">
-  <title>SM1THX 🛒 — Shop • Buy • Grow</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-
-<body>
-
-<header class="topbar">
-  <div class="topbar-inner">
-
-    <a href="#home" class="smithx-brand" aria-label="SM1THX 🛒 Home">
-      <img
-        src="assets/smithx-logo.jpg"
-        class="smithx-logo-image"
-        alt="SM1THX 🛒 logo"
-      >
-
-      <span class="smithx-brand-text">
-        <strong>SM1THX 🛒</strong>
-        <small>SHOP • BUY • GROW</small>
-      </span>
-    </a>
-
-    <nav class="nav-links">
-      <a href="#home">Home</a>
-      <a href="#market">Marketplace</a>
-      <a href="#seller">Sell</a>
-      <a href="#dashboard">Dashboard</a>
-      <a href="#updates">Updates</a>
-    </nav>
-
-    <button
-      type="button"
-      class="nav-login-btn"
-      id="loginNavButton"
-      onclick="openLogin()"
-    >
-      Login
-    </button>
-
-    <button
-      type="button"
-      class="cart-button"
-      onclick="openCart()"
-      aria-label="Open shopping cart"
-    >
-      🛒
-      <span id="cartCount" class="cart-count">0</span>
-    </button>
-
-  </div>
-</header>
-
-
-<main>
-
-<!-- =====================================================
-     HERO
-===================================================== -->
-
-<section id="home" class="hero">
-
-  <div class="hero-inner">
-
-    <div class="hero-copy">
-
-      <p class="hero-eyebrow">
-        THE FUTURE OF COMMERCE
-      </p>
-
-      <h1>
-        Build. <span>Sell.</span> Grow.
-      </h1>
-
-      <p class="hero-description">
-        SM1THX 🛒 gives sellers the tools to launch,
-        manage and grow online businesses while giving
-        buyers a smarter way to discover products.
-      </p>
-
-      <div class="hero-actions">
-
-        <button
-          type="button"
-          class="primary-button"
-          onclick="scrollToSection('market')"
-        >
-          Explore Marketplace
-        </button>
-
-        <button
-          type="button"
-          class="secondary-button"
-          onclick="scrollToSection('seller')"
-        >
-          Start Selling
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="hero-panel">
-
-      <div class="hero-panel-card">
-
-        <span>SM1THX 🛒</span>
-
-        <strong>
-          AI-POWERED COMMERCE
-        </strong>
-
-        <p>
-          One platform for discovering,
-          selling and growing.
-        </p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-     MARKETPLACE
-===================================================== -->
-
-<section id="market" class="section marketplace-section">
-
-  <div class="section-inner">
-
-    <div class="section-heading">
-
-      <p class="section-eyebrow">
-        DISCOVER
-      </p>
-
-      <h2>
-        SM1THX 🛒 Marketplace
-      </h2>
-
-      <p>
-        Discover products from the growing
-        SM1THX 🛒 marketplace.
-      </p>
-
-    </div>
-
-
-    <div class="marketplace-tools">
-
-      <div class="search-box">
-
-        <input
-          id="productSearch"
-          type="search"
-          placeholder="Search products..."
-          aria-label="Search products"
-        >
-
-      </div>
-
-      <button
-        type="button"
-        class="secondary-button"
-        onclick="openCart()"
-      >
-        View Cart
-      </button>
-
-    </div>
-
-
-    <div id="categoryFilters" class="category-filters"></div>
-
-
-    <div id="productsGrid" class="products-grid">
-
-      <!-- Samsung Galaxy -->
-
-      <article class="product-card">
-
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('default-1')"
-        >
-
-          <img
-            src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80"
-            alt="Samsung Galaxy S26 Ultra"
-            loading="lazy"
-          >
-
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            Electronics
-          </span>
-
-          <h3>
-            Samsung Galaxy S26 Ultra
-          </h3>
-
-          <p>
-            Premium flagship smartphone with advanced
-            performance, camera technology and a modern design.
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              KES 169,999
-            </strong>
-
-            <button
-              type="button"
-              class="primary-button small-button"
-              onclick="addToCart('default-1')"
-            >
-              Add to cart
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- Headphones -->
-
-      <article class="product-card">
-
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('default-2')"
-        >
-
-          <img
-            src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
-            alt="Smart Wireless Headphones"
-            loading="lazy"
-          >
-
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            Electronics
-          </span>
-
-          <h3>
-            Smart Wireless Headphones
-          </h3>
-
-          <p>
-            Wireless headphones with a comfortable design
-            and immersive sound.
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              KES 4,500
-            </strong>
-
-            <button
-              type="button"
-              class="primary-button small-button"
-              onclick="addToCart('default-2')"
-            >
-              Add to cart
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- Desk Lamp -->
-
-      <article class="product-card">
-
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('default-3')"
-        >
-
-          <img
-            src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80"
-            alt="Minimal Desk Lamp"
-            loading="lazy"
-          >
-
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            Home
-          </span>
-
-          <h3>
-            Minimal Desk Lamp
-          </h3>
-
-          <p>
-            Clean modern desk lamp designed for workspaces,
-            bedrooms and study areas.
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              KES 2,800
-            </strong>
-
-            <button
-              type="button"
-              class="primary-button small-button"
-              onclick="addToCart('default-3')"
-            >
-              Add to cart
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- Backpack -->
-
-      <article class="product-card">
-
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('default-4')"
-        >
-
-          <img
-            src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80"
-            alt="Everyday Travel Backpack"
-            loading="lazy"
-          >
-
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            Accessories
-          </span>
-
-          <h3>
-            Everyday Travel Backpack
-          </h3>
-
-          <p>
-            Lightweight everyday backpack for school,
-            work, travel and daily use.
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              KES 3,500
-            </strong>
-
-            <button
-              type="button"
-              class="primary-button small-button"
-              onclick="addToCart('default-4')"
-            >
-              Add to cart
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- Smart Watch -->
-
-      <article class="product-card">
-
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('default-5')"
-        >
-
-          <img
-            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
-            alt="Smart Watch"
-            loading="lazy"
-          >
-
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            Electronics
-          </span>
-
-          <h3>
-            Smart Watch
-          </h3>
-
-          <p>
-            Modern smartwatch for everyday activity tracking,
-            notifications and convenience.
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              KES 6,500
-            </strong>
-
-            <button
-              type="button"
-              class="primary-button small-button"
-              onclick="addToCart('default-5')"
-            >
-              Add to cart
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- Sneakers -->
-
-      <article class="product-card">
-
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('default-6')"
-        >
-
-          <img
-            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
-            alt="Premium Sneakers"
-            loading="lazy"
-          >
-
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            Fashion
-          </span>
-
-          <h3>
-            Premium Sneakers
-          </h3>
-
-          <p>
-            Modern everyday sneakers combining comfort,
-            style and versatility.
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              KES 7,200
-            </strong>
-
-            <button
-              type="button"
-              class="primary-button small-button"
-              onclick="addToCart('default-6')"
-            >
-              Add to cart
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-     SELLER STUDIO
-===================================================== -->
-
-<section id="seller" class="section seller-section">
-
-  <div class="section-inner">
-
-    <div class="section-heading">
-
-      <p class="section-eyebrow">
-        SELLER STUDIO
-      </p>
-
-      <h2>
-        Build Your Store
-      </h2>
-
-      <p>
-        Create a product and publish it directly
-        to the SM1THX 🛒 marketplace.
-      </p>
-
-    </div>
-
-
-    <div class="seller-layout">
-
-      <div class="seller-card">
-
-        <h3>
-          Create Product
-        </h3>
-
-        <p class="muted">
-          Add your product details below.
-        </p>
-
-
-        <div class="form-group">
-
-          <label for="productName">
-            Product Name
-          </label>
-
-          <input
-            id="productName"
-            type="text"
-            placeholder="e.g. Samsung Galaxy S26 Ultra"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="productPrice">
-            Price
-          </label>
-
-          <input
-            id="productPrice"
-            type="number"
-            min="1"
-            placeholder="169999"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="productCategory">
-            Category
-          </label>
-
-          <select id="productCategory"></select>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="productDescription">
-            Description
-          </label>
-
-          <textarea
-            id="productDescription"
-            rows="5"
-            placeholder="Describe your product..."
-          ></textarea>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="productImage">
-            Product Image
-          </label>
-
-          <input
-            id="productImage"
-            type="file"
-            accept="image/*"
-          >
-
-        </div>
-
-
-        <div
-          id="imagePreview"
-          class="image-preview hidden"
-        >
-
-          <img
-            id="previewImage"
-            src=""
-            alt="Product preview"
-          >
-
-        </div>
-
-
-        <button
-          type="button"
-          class="primary-button full-width"
-          onclick="publishProduct()"
-        >
-          Publish Product
-        </button>
-
-      </div>
-
-
-      <div class="seller-info-card">
-
-        <p class="hero-eyebrow">
-          AI-POWERED SELLING
-        </p>
-
-        <h3>
-          Your business, powered by SM1THX 🛒.
-        </h3>
-
-        <p>
-          SM1THX 🛒 is being built to help sellers
-          launch faster, understand their customers
-          and grow their businesses using intelligent technology.
-        </p>
-
-        <div class="feature-list">
-
-          <div class="feature-item">
-            <strong>Easy product creation</strong>
-            <span>Create and publish products quickly.</span>
-          </div>
-
-          <div class="feature-item">
-            <strong>Marketplace visibility</strong>
-            <span>Put your products in front of buyers.</span>
-          </div>
-
-          <div class="feature-item">
-            <strong>Seller analytics</strong>
-            <span>Track products, orders and revenue.</span>
-          </div>
-
-          <div class="feature-item">
-            <strong>AI-powered future</strong>
-            <span>More intelligent seller tools are coming.</span>
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-     DASHBOARD
-===================================================== -->
-
-<section id="dashboard" class="section dashboard-section">
-
-  <div class="section-inner">
-
-    <div class="section-heading">
-
-      <p class="section-eyebrow">
-        SELLER DASHBOARD
-      </p>
-
-      <h2>
-        Your Business Overview
-      </h2>
-
-      <p>
-        Demo analytics showing how the
-        SM1THX 🛒 seller dashboard can work.
-      </p>
-
-    </div>
-
-
-    <div class="dashboard-grid">
-
-      <div class="dashboard-card">
-        <span>Products</span>
-        <strong id="dashboardProducts">6</strong>
-      </div>
-
-      <div class="dashboard-card">
-        <span>Orders</span>
-        <strong id="dashboardOrders">0</strong>
-      </div>
-
-      <div class="dashboard-card">
-        <span>Revenue</span>
-        <strong id="dashboardRevenue">KES 0</strong>
-      </div>
-
-      <div class="dashboard-card">
-        <span>Today's Visitors</span>
-        <strong id="dashboardVisitors">0</strong>
-      </div>
-
-    </div>
-
-
-    <div class="dashboard-actions">
-
-      <button
-        type="button"
-        class="secondary-button"
-        onclick="resetAnalytics()"
-      >
-        Reset Demo Analytics
-      </button>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-     FEATURES
-===================================================== -->
-
-<section id="features" class="section">
-
-  <div class="section-inner">
-
-    <div class="section-heading">
-
-      <p class="section-eyebrow">
-        THE SM1THX 🛒 VISION
-      </p>
-
-      <h2>
-        More Than An Online Store
-      </h2>
-
-      <p>
-        SM1THX 🛒 is being built as an intelligent
-        commerce ecosystem.
-      </p>
-
-    </div>
-
-
-    <div class="feature-grid">
-
-      <div class="feature-card">
-
-        <div class="feature-icon">
-          AI
-        </div>
-
-        <h3>
-          AI Seller Assistant
-        </h3>
-
-        <p>
-          Intelligent tools designed to help sellers
-          make better business decisions.
-        </p>
-
-      </div>
-
-
-      <div class="feature-card">
-
-        <div class="feature-icon">
-          ↗
-        </div>
-
-        <h3>
-          Growth Tools
-        </h3>
-
-        <p>
-          Marketing, pricing, SEO and analytics
-          designed around seller growth.
-        </p>
-
-      </div>
-
-
-      <div class="feature-card">
-
-        <div class="feature-icon">
-          ₿
-        </div>
-
-        <h3>
-          Modern Payments
-        </h3>
-
-        <p>
-          Future plans include flexible fiat
-          and digital payment options.
-        </p>
-
-      </div>
-
-
-      <div class="feature-card">
-
-        <div class="feature-icon">
-          🌍
-        </div>
-
-        <h3>
-          Global Commerce
-        </h3>
-
-        <p>
-          Starting locally and designed with
-          global expansion in mind.
-        </p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-     ABOUT
-===================================================== -->
-
-<section id="about" class="section about-section">
-
-  <div class="section-inner">
-
-    <div class="about-card">
-
-      <div>
-
-        <p class="section-eyebrow">
-          ABOUT SM1THX 🛒
-        </p>
-
-        <h2>
-          Building The Future Of Commerce
-        </h2>
-
-      </div>
-
-      <div>
-
-        <p>
-          SM1THX 🛒 started with a simple idea:
-          make it easier for people to build,
-          sell and grow online.
-        </p>
-
-        <p>
-          This MVP is an early demonstration of
-          that vision — combining marketplace
-          technology, seller tools and the foundation
-          for future AI-powered commerce.
-        </p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-     UPDATES
-===================================================== -->
-
-<section id="updates" class="section">
-
-  <div class="section-inner">
-
-    <div class="section-heading">
-
-      <p class="section-eyebrow">
-        BUILDING IN PUBLIC
-      </p>
-
-      <h2>
-        SM1THX 🛒 Updates
-      </h2>
-
-      <p>
-        See what has been improved and added to SM1THX 🛒.
-      </p>
-
-    </div>
-
-
-    <button
-      type="button"
-      class="secondary-button"
-      id="updatesToggle"
-      onclick="toggleUpdateHistory()"
-    >
-      View Updates
-    </button>
-
-
-    <div
-      id="updateHistory"
-      class="update-history"
-      style="display:none;"
-    >
-
-      <div class="card">
-
-        <div class="update-item">
-
-          <strong>
-            SM1THX 🛒 MVP launched
-          </strong>
-
-          <p>
-            Initial marketplace experience with products,
-            search, product details, cart and demo checkout.
-          </p>
-
-        </div>
-
-
-        <div class="update-item">
-
-          <strong>
-            Seller Studio added
-          </strong>
-
-          <p>
-            Sellers can create products and publish
-            them directly to the marketplace.
-          </p>
-
-        </div>
-
-
-        <div class="update-item">
-
-          <strong>
-            Product image uploads added
-          </strong>
-
-          <p>
-            Sellers can upload product images when
-            creating products.
-          </p>
-
-        </div>
-
-
-        <div class="update-item">
-
-          <strong>
-            Dashboard improvements
-          </strong>
-
-          <p>
-            Added seller statistics for products,
-            orders, revenue and visitors.
-          </p>
-
-        </div>
-
-
-        <div class="update-item">
-
-          <strong>
-            SM1THX 🛒 branding updated
-          </strong>
-
-          <p>
-            Updated the platform with the new
-            SM1THX 🛒 logo and SHOP • BUY • GROW branding.
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-</main>
-
-
-<!-- =====================================================
-     PRODUCT MODAL
-===================================================== -->
-
-<div
-  id="productModal"
-  class="modal"
-  aria-hidden="true"
->
-
-  <div class="modal-content">
-
-    <button
-      type="button"
-      class="modal-close"
-      onclick="closeProductModal()"
-      aria-label="Close product"
-    >
-      ×
-    </button>
-
-    <div id="productModalContent"></div>
-
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     CART
-===================================================== -->
-
-<aside
-  id="cartPanel"
-  class="cart-panel"
-  aria-label="Shopping cart"
->
-
-  <div class="cart-panel-header">
-
-    <div>
-
-      <p class="section-eyebrow">
-        SM1THX 🛒
-      </p>
-
-      <h2>
-        Your Cart
-      </h2>
-
-    </div>
-
-    <button
-      type="button"
-      class="modal-close"
-      onclick="closeCart()"
-      aria-label="Close cart"
-    >
-      ×
-    </button>
-
-  </div>
-
-
-  <div id="cartItems" class="cart-items"></div>
-
-
-  <div class="cart-summary">
-
-    <div class="cart-summary-row">
-
-      <span>
-        Subtotal
-      </span>
-
-      <strong id="cartSubtotal">
-        KES 0
-      </strong>
-
-    </div>
-
-
-    <div class="cart-summary-row total-row">
-
-      <span>
-        Total
-      </span>
-
-      <strong id="cartTotal">
-        KES 0
-      </strong>
-
-    </div>
-
-
-    <button
-      type="button"
-      class="primary-button full-width"
-      onclick="demoCheckout()"
-    >
-      Demo Checkout
-    </button>
-
-  </div>
-
-</aside>
-
-
-<!-- =====================================================
-     LOGIN / REGISTER
-===================================================== -->
-
-<div
-  id="loginOverlay"
-  class="login-overlay"
-  aria-hidden="true"
->
-
-  <div class="login-card">
-
-    <button
-      type="button"
-      class="modal-close"
-      onclick="closeLogin()"
-      aria-label="Close login"
-    >
-      ×
-    </button>
-
-
-    <div id="loginFormSection">
-
-      <div class="login-header">
-
-        <p class="section-eyebrow">
-          WELCOME BACK
-        </p>
-
-        <h2>
-          Login to SM1THX 🛒
-        </h2>
-
-        <p>
-          Access your seller dashboard and account.
-        </p>
-
-      </div>
-
-
-      <form id="loginForm">
-
-        <div class="form-group">
-
-          <label for="loginEmail">
-            Email
-          </label>
-
-          <input
-            id="loginEmail"
-            type="email"
-            placeholder="you@example.com"
-            autocomplete="email"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="loginPassword">
-            Password
-          </label>
-
-          <div class="password-field">
-
-            <input
-              id="loginPassword"
-              type="password"
-              placeholder="Enter your password"
-              autocomplete="current-password"
-              required
-            >
-
-            <button
-              type="button"
-              class="password-toggle"
-              onclick="togglePassword('loginPassword', this)"
-              aria-label="Show password"
-            >
-              👁
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <label class="checkbox-row">
-
-          <input
-            id="rememberUser"
-            type="checkbox"
-          >
-
-          <span>
-            Remember me
-          </span>
-
-        </label>
-
-
-        <button
-          type="submit"
-          class="primary-button full-width"
-        >
-          Login
-        </button>
-
-      </form>
-
-
-      <p class="login-switch">
-
-        Don't have an account?
-
-        <button
-          type="button"
-          onclick="showRegisterForm()"
-        >
-          Create account
-        </button>
-
-      </p>
-
-    </div>
-
-
-    <div
-      id="registerFormSection"
-      style="display:none;"
-    >
-
-      <div class="login-header">
-
-        <p class="section-eyebrow">
-          JOIN SM1THX 🛒
-        </p>
-
-        <h2>
-          Create your account
-        </h2>
-
-        <p>
-          Start exploring or selling on SM1THX 🛒.
-        </p>
-
-      </div>
-
-
-      <form id="registerForm">
-
-        <div class="form-group">
-
-          <label for="registerName">
-            Full Name
-          </label>
-
-          <input
-            id="registerName"
-            type="text"
-            placeholder="Your name"
-            autocomplete="name"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="registerEmail">
-            Email
-          </label>
-
-          <input
-            id="registerEmail"
-            type="email"
-            placeholder="you@example.com"
-            autocomplete="email"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="registerPassword">
-            Password
-          </label>
-
-          <div class="password-field">
-
-            <input
-              id="registerPassword"
-              type="password"
-              placeholder="Create a password"
-              autocomplete="new-password"
-              required
-            >
-
-            <button
-              type="button"
-              class="password-toggle"
-              onclick="togglePassword('registerPassword', this)"
-              aria-label="Show password"
-            >
-              👁
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="accountType">
-            Account Type
-          </label>
-
-          <select id="accountType">
-
-            <option value="buyer">
-              Buyer
-            </option>
-
-            <option value="seller">
-              Seller
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <button
-          type="submit"
-          class="primary-button full-width"
-        >
-          Create Account
-        </button>
-
-      </form>
-
-
-      <p class="login-switch">
-
-        Already have an account?
-
-        <button
-          type="button"
-          onclick="showLoginForm()"
-        >
-          Login
-        </button>
-
-      </p>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     TOAST
-===================================================== -->
-
-<div
-  id="toast"
-  class="toast"
-  role="status"
-  aria-live="polite"
-></div>
-
-
-<!-- =====================================================
-     FOOTER
-===================================================== -->
-
-<footer class="footer">
-
-  <div class="footer-inner">
-
-    <div class="footer-brand">
-
-      <img
-        src="assets/smithx-logo.jpg"
-        class="smithx-logo-image"
-        alt="SM1THX 🛒 logo"
-      >
-
-      <div>
-
-        <strong>
-          SM1THX 🛒
-        </strong>
-
-        <p>
-          SHOP • BUY • GROW
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <div class="footer-links">
-
-      <a href="#home">Home</a>
-      <a href="#market">Marketplace</a>
-      <a href="#seller">Sell</a>
-      <a href="#dashboard">Dashboard</a>
-      <a href="#updates">Updates</a>
-
-    </div>
-
-
-    <p class="footer-copy">
-      © 2026 SM1THX 🛒. Built for the future of commerce.
-    </p>
-
-  </div>
-
-</footer>
-
-
-<script src="app.js"></script>
-
-</body>
-</html>
+/* =========================================================
+   SM1THX 🛒 — MAIN STYLES
+   White / Blue / Modern Commerce UI
+========================================================= */
+
+:root {
+  --blue: #1463ff;
+  --blue-dark: #0b3ea8;
+  --blue-light: #eaf2ff;
+  --blue-soft: #f5f8ff;
+
+  --text: #101828;
+  --muted: #667085;
+  --border: #e4e7ec;
+  --white: #ffffff;
+  --background: #f7f9fc;
+
+  --success: #12b76a;
+  --danger: #e5484d;
+
+  --shadow-sm: 0 4px 14px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 12px 32px rgba(16, 24, 40, 0.10);
+  --shadow-lg: 0 24px 60px rgba(16, 24, 40, 0.16);
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  --container: 1180px;
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =========================================================
+   CONTAINERS
+========================================================= */
+
+.section-inner,
+.topbar-inner,
+.footer-inner,
+.hero-inner {
+  width: min(var(--container), calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-inner {
+  min-height: 76px;
+
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.smithx-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  min-width: max-content;
+}
+
+.smithx-logo-image {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.smithx-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.smithx-brand-text strong {
+  font-size: 17px;
+  letter-spacing: -0.4px;
+}
+
+.smithx-brand-text small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 1.3px;
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+
+  margin-left: auto;
+}
+
+.nav-links a {
+  color: #344054;
+  font-size: 14px;
+  font-weight: 600;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: var(--blue);
+  transform: translateY(-1px);
+}
+
+.nav-login-btn,
+.cart-button {
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.nav-login-btn {
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+.nav-login-btn:hover {
+  background: var(--blue-light);
+  color: var(--blue);
+}
+
+.cart-button {
+  position: relative;
+
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--white);
+
+  font-size: 18px;
+
+  box-shadow: var(--shadow-sm);
+}
+
+.cart-button:hover {
+  border-color: var(--blue);
+  transform: translateY(-1px);
+}
+
+.cart-count {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+
+  min-width: 21px;
+  height: 21px;
+
+  padding: 0 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: var(--blue);
+  color: white;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(20, 99, 255, 0.13),
+      transparent 34%
+    ),
+    linear-gradient(180deg, #ffffff 0%, #f5f8ff 100%);
+
+  padding: 90px 0 100px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-inner {
+  min-height: 470px;
+
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 60px;
+}
+
+.hero-eyebrow,
+.section-eyebrow {
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+}
+
+.hero h1 {
+  margin-top: 12px;
+
+  font-size: clamp(48px, 7vw, 82px);
+  line-height: 0.98;
+  letter-spacing: -4px;
+}
+
+.hero h1 span {
+  color: var(--blue);
+}
+
+.hero-description {
+  max-width: 650px;
+
+  margin-top: 25px;
+
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+  margin-top: 32px;
+}
+
+.hero-panel {
+  display: flex;
+  justify-content: center;
+}
+
+.hero-panel-card {
+  position: relative;
+
+  width: min(100%, 430px);
+  min-height: 330px;
+
+  padding: 42px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  border-radius: 32px;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(20, 99, 255, 0.98),
+      rgba(8, 48, 132, 0.98)
+    );
+
+  box-shadow:
+    0 30px 70px rgba(20, 99, 255, 0.28);
+
+  overflow: hidden;
+}
+
+.hero-panel-card::before,
+.hero-panel-card::after {
+  content: "";
+  position: absolute;
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+}
+
+.hero-panel-card::before {
+  width: 280px;
+  height: 280px;
+  top: -120px;
+  right: -80px;
+}
+
+.hero-panel-card::after {
+  width: 180px;
+  height: 180px;
+  bottom: -90px;
+  left: -60px;
+}
+
+.hero-panel-card span,
+.hero-panel-card strong,
+.hero-panel-card p {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-panel-card span {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.hero-panel-card strong {
+  margin-top: 12px;
+  font-size: 30px;
+  line-height: 1.15;
+}
+
+.hero-panel-card p {
+  margin-top: 14px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.primary-button,
+.secondary-button {
+  min-height: 46px;
+
+  border-radius: 11px;
+
+  padding: 11px 18px;
+
+  font-weight: 750;
+  font-size: 14px;
+
+  transition:
+    transform 0.2s ease,
