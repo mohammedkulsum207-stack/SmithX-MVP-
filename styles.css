@@ -20,7 +20,8 @@ body {
 
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
 }
 
@@ -125,6 +126,29 @@ a {
 
 .nav-links a:hover {
   color: #1769ff;
+}
+
+.nav-login-btn {
+  min-height: 40px;
+
+  padding: 0 16px;
+
+  border: 1px solid #1769ff;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #1769ff;
+
+  font-weight: 800;
+
+  transition: 0.2s ease;
+}
+
+.nav-login-btn:hover {
+  background: #1769ff;
+  color: #ffffff;
 }
 
 .cart-button {
@@ -414,6 +438,86 @@ a {
   box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
 }
 
+
+/* =========================================================
+   MARKETPLACE CATEGORIES
+========================================================= */
+
+.category-filter-wrapper {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  min-width: 180px;
+}
+
+.category-filter-label {
+  color: #667085;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.5px;
+}
+
+.category-filter,
+.seller-category-select {
+  width: 100%;
+
+  min-height: 48px;
+
+  padding: 0 14px;
+
+  border: 1px solid #d0d5dd;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #101828;
+
+  outline: none;
+
+  font-weight: 600;
+}
+
+.category-filter:focus,
+.seller-category-select:focus {
+  border-color: #1769ff;
+
+  box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
+}
+
+.product-category {
+  display: inline-block;
+
+  margin-bottom: 9px;
+
+  padding: 4px 9px;
+
+  border-radius: 999px;
+
+  background: #eaf2ff;
+
+  color: #1769ff;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.3px;
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
 .products-grid {
   display: grid;
 
@@ -513,9 +617,6 @@ a {
   transition: 0.2s ease;
 }
 
-
-/* VIEW = WHITE */
-
 .product-actions button:first-child {
   background: #ffffff;
 
@@ -527,9 +628,6 @@ a {
 .product-actions button:first-child:hover {
   background: #f5f7fa;
 }
-
-
-/* ADD TO CART = BLUE */
 
 .product-actions button:last-child {
   background: #1769ff;
@@ -603,7 +701,8 @@ a {
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
   width: 100%;
 
   padding: 13px;
@@ -618,7 +717,8 @@ a {
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group select:focus {
   border-color: #1769ff;
 
   box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
@@ -1072,6 +1172,297 @@ a {
 
 
 /* =========================================================
+   SMITHX DEMO LOGIN
+========================================================= */
+
+.login-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 12000;
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(8, 20, 40, 0.72);
+
+  backdrop-filter: blur(8px);
+}
+
+.login-overlay.active {
+  display: flex;
+}
+
+.login-card {
+  position: relative;
+
+  width: min(100%, 430px);
+
+  max-height: 92vh;
+
+  overflow-y: auto;
+
+  padding: 32px;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+
+  animation: smithxLoginIn 0.25s ease;
+}
+
+@keyframes smithxLoginIn {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(18px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
+  }
+
+}
+
+.login-close {
+  position: absolute;
+
+  top: 14px;
+  right: 16px;
+
+  width: 36px;
+  height: 36px;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background: #f2f4f7;
+
+  color: #101828;
+
+  font-size: 24px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.login-close:hover {
+  background: #e4e7ec;
+}
+
+.login-brand {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 28px;
+
+  padding-right: 35px;
+}
+
+.login-brand img {
+  width: 58px;
+  height: 58px;
+
+  object-fit: contain;
+
+  border-radius: 10px;
+}
+
+.login-brand strong {
+  display: block;
+
+  color: #101828;
+
+  font-size: 22px;
+
+  letter-spacing: 1px;
+}
+
+.login-brand strong span {
+  color: #1769ff;
+}
+
+.login-brand small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #667085;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+.login-card h2 {
+  margin: 0 0 7px;
+
+  color: #101828;
+
+  font-size: 28px;
+}
+
+.login-subtitle {
+  margin: 0 0 24px;
+
+  color: #667085;
+}
+
+.login-form-group {
+  margin-bottom: 17px;
+}
+
+.login-form-group label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #344054;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+.login-form-group input,
+.login-form-group select {
+  width: 100%;
+
+  min-height: 48px;
+
+  box-sizing: border-box;
+
+  padding: 0 14px;
+
+  border: 1px solid #d0d5dd;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #101828;
+
+  outline: none;
+}
+
+.login-form-group input:focus,
+.login-form-group select:focus {
+  border-color: #1769ff;
+
+  box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 70px;
+}
+
+.password-toggle {
+  position: absolute;
+
+  top: 50%;
+  right: 10px;
+
+  transform: translateY(-50%);
+
+  border: 0;
+
+  background: transparent;
+
+  color: #1769ff;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.remember-row {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin: 5px 0 18px;
+
+  color: #475467;
+
+  font-size: 13px;
+}
+
+.remember-row input {
+  width: auto;
+
+  min-height: auto;
+
+  accent-color: #1769ff;
+}
+
+.login-main-btn {
+  width: 100%;
+
+  min-height: 50px;
+}
+
+.login-link-btn {
+  display: block;
+
+  width: 100%;
+
+  margin-top: 15px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #1769ff;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.login-link-btn:hover {
+  text-decoration: underline;
+}
+
+.demo-login-note {
+  margin: 18px 0 0;
+
+  color: #98a2b3;
+
+  font-size: 11px;
+
+  line-height: 1.5;
+
+  text-align: center;
+}
+
+
+/* =========================================================
    TOAST
 ========================================================= */
 
@@ -1082,7 +1473,7 @@ a {
 
   bottom: 25px;
 
-  z-index: 11000;
+  z-index: 13000;
 
   transform: translate(-50%, 120px);
 
@@ -1269,6 +1660,11 @@ a {
     flex-direction: column;
   }
 
+  .category-filter-wrapper {
+    width: 100%;
+    min-width: 0;
+  }
+
   .dashboard-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -1301,6 +1697,22 @@ a {
     width: 60px;
     height: 60px;
   }
+
+  .login-card {
+    padding: 25px 20px;
+
+    border-radius: 17px;
+  }
+
+  .login-card h2 {
+    font-size: 24px;
+  }
+
+  .login-brand img {
+    width: 52px;
+    height: 52px;
+  }
+
 }
 
 
@@ -1332,117 +1744,9 @@ a {
   .product-actions {
     flex-direction: column;
   }
-}/* =========================================================
-   MARKETPLACE CATEGORIES — SAFE ADDITION
-========================================================= */
 
-.category-filter-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  min-width: 180px;
-}
-
-.category-filter-label {
-  color: #667085;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
-
-.category-filter,
-.seller-category-select {
-  width: 100%;
-  min-height: 48px;
-  padding: 0 14px;
-  border: 1px solid #d0d5dd;
-  border-radius: 10px;
-  background: #ffffff;
-  color: #101828;
-  outline: none;
-  font-weight: 600;
-}
-
-.category-filter:focus,
-.seller-category-select:focus {
-  border-color: #1769ff;
-  box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
-}
-
-.product-category {
-  display: inline-block;
-  margin-bottom: 9px;
-  padding: 4px 9px;
-  border-radius: 999px;
-  background: #eaf2ff;
-  color: #1769ff;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-}
-
-@media (max-width: 620px) {
-
-  .category-filter-wrapper {
-    width: 100%;
-  }
-
-}
-/* =========================================================
-   MARKETPLACE CATEGORIES — SAFE ADDITION
-========================================================= */
-
-.category-filter-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  min-width: 180px;
-}
-
-.category-filter-label {
-  color: #667085;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
-
-.category-filter,
-.seller-category-select {
-  width: 100%;
-  min-height: 48px;
-  padding: 0 14px;
-  border: 1px solid #d0d5dd;
-  border-radius: 10px;
-  background: #ffffff;
-  color: #101828;
-  outline: none;
-  font-weight: 600;
-}
-
-.category-filter:focus,
-.seller-category-select:focus {
-  border-color: #1769ff;
-  box-shadow: 0 0 0 3px rgba(23, 105, 255, 0.10);
-}
-
-.product-category {
-  display: inline-block;
-  margin-bottom: 9px;
-  padding: 4px 9px;
-  border-radius: 999px;
-  background: #eaf2ff;
-  color: #1769ff;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-}
-
-@media (max-width: 620px) {
-
-  .category-filter-wrapper {
-    width: 100%;
+  .login-card {
+    padding: 22px 16px;
   }
 
 }
