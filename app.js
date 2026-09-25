@@ -1683,3 +1683,121 @@ window.publishProduct =
 
 window.resetAnalytics =
   resetAnalytics;
+/* =========================================================
+   SMITHX — FORCE MARKETPLACE PRODUCTS
+   Ensures default products always appear
+   ========================================================= */
+
+(function forceSmithXProducts() {
+  function showProducts() {
+    const grid = document.getElementById("productsGrid");
+
+    if (!grid) {
+      console.error("SmithX: productsGrid not found.");
+      return;
+    }
+
+    const products = [
+      {
+        id: "force-1",
+        name: "Samsung Galaxy S26 Ultra",
+        price: 169999,
+        category: "Electronics",
+        description: "Premium flagship smartphone."
+      },
+      {
+        id: "force-2",
+        name: "Smart Wireless Headphones",
+        price: 4500,
+        category: "Electronics",
+        description: "Wireless headphones with premium sound."
+      },
+      {
+        id: "force-3",
+        name: "Minimal Desk Lamp",
+        price: 2800,
+        category: "Home",
+        description: "Modern lighting for your workspace."
+      },
+      {
+        id: "force-4",
+        name: "Everyday Travel Backpack",
+        price: 3500,
+        category: "Accessories",
+        description: "A practical backpack for everyday travel."
+      },
+      {
+        id: "force-5",
+        name: "Smart Watch",
+        price: 6500,
+        category: "Electronics",
+        description: "Smart wearable for everyday life."
+      },
+      {
+        id: "force-6",
+        name: "Premium Sneakers",
+        price: 7200,
+        category: "Fashion",
+        description: "Comfortable modern sneakers."
+      }
+    ];
+
+    grid.innerHTML = products.map(product => `
+      <article class="product-card">
+
+        <div class="product-image-button">
+          <div style="
+            width:100%;
+            height:100%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:linear-gradient(135deg,#eff6ff,#dbeafe);
+            color:#2563eb;
+            font-size:48px;
+            font-weight:800;
+          ">
+            🛒
+          </div>
+        </div>
+
+        <div class="product-card-body">
+
+          <span class="product-category">
+            ${product.category}
+          </span>
+
+          <h3>${product.name}</h3>
+
+          <p>${product.description}</p>
+
+          <div class="product-card-bottom">
+
+            <strong>
+              KES ${Number(product.price).toLocaleString()}
+            </strong>
+
+            <button
+              type="button"
+              class="small-button"
+              onclick="addToCart('${product.id}')"
+            >
+              Add to Cart
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+    `).join("");
+
+    console.log("SmithX: 6 products forced into marketplace.");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", showProducts);
+  } else {
+    showProducts();
+  }
+})();
