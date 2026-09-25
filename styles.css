@@ -50,7 +50,7 @@ img {
 
 .topbar-inner {
   width: min(1180px,92%);
-  min-height: 78px;
+  min-height: 82px;
   margin: auto;
   display: flex;
   align-items: center;
@@ -66,29 +66,30 @@ img {
 .smithx-brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   color: #07101f;
   text-decoration: none;
   min-width: 0;
 }
 
 .smithx-logo-image {
-  width: 48px;
-  height: 48px;
-  flex: 0 0 48px;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
   object-fit: contain;
   display: block;
-  border-radius: 10px
+  border-radius: 10px;
 }
 
 .smithx-brand-text {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   line-height: 1;
 }
 
 .smithx-brand-text strong {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 950;
   letter-spacing: 1.5px;
 }
@@ -858,18 +859,22 @@ img {
 @media (max-width: 620px) {
 
   .topbar-inner {
-    min-height: 66px;
+    min-height: 72px;
+  }
+
+  .smithx-brand {
+    gap: 9px;
   }
 
   .smithx-logo-image {
-    width: 40px;
-    height: 40px;
-    flex-basis: 40px;
-    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+    flex-basis: 50px;
+    border-radius: 9px;
   }
 
   .smithx-brand-text strong {
-    font-size: 16px;
+    font-size: 17px;
   }
 
   .smithx-brand-text small {
@@ -949,5 +954,15 @@ img {
 
   .product-actions {
     flex-direction: column;
+  }
+
+  .smithx-logo-image {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+  }
+
+  .smithx-brand-text strong {
+    font-size: 16px;
   }
 }
