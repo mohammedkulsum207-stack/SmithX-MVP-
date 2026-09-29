@@ -3,7 +3,7 @@
 /* =====================================================
    SM1THX 🛒
    APP.JS — STABLE MVP
-   CART + MARKETPLACE + SELLER STUDIO + AI ASSISTANT
+   CART + MARKETPLACE + SELLER STUDIO + DEMO AI
 ===================================================== */
 
 /* =====================================================
@@ -107,12 +107,6 @@ let latestAIProduct = null;
 let toastTimer = null;
 
 /* =====================================================
-   AI BACKEND
-===================================================== */
-
-const AI_API_URL =
-  "https://smithx-ai-backend.onrender.com/api/generate-product";
-/* =====================================================
    HELPERS
 ===================================================== */
 
@@ -152,9 +146,7 @@ function getCustomProducts() {
     []
   );
 
-  return Array.isArray(products)
-    ? products
-    : [];
+  return Array.isArray(products) ? products : [];
 }
 
 function saveCustomProducts(products) {
@@ -184,7 +176,6 @@ function findProduct(productId) {
 ===================================================== */
 
 function normalizeCart() {
-
   const stored = safeJSONParse(
     localStorage.getItem(STORAGE.cart),
     []
@@ -199,7 +190,6 @@ function normalizeCart() {
   const seen = new Set();
 
   stored.forEach(item => {
-
     if (
       !item ||
       typeof item !== "object"
@@ -231,20 +221,16 @@ function normalizeCart() {
         10
       );
 
-    if (
-      !Number.isFinite(quantity)
-    ) {
+    if (!Number.isFinite(quantity)) {
       quantity = 1;
     }
 
-    quantity =
-      Math.max(
-        1,
-        quantity
-      );
+    quantity = Math.max(
+      1,
+      quantity
+    );
 
     if (seen.has(id)) {
-
       const existing =
         normalized.find(
           cartItem =>
@@ -252,8 +238,7 @@ function normalizeCart() {
         );
 
       if (existing) {
-        existing.quantity +=
-          quantity;
+        existing.quantity += quantity;
       }
 
       return;
@@ -277,7 +262,6 @@ function getCart() {
 }
 
 function saveCart(cart) {
-
   if (!Array.isArray(cart)) {
     cart = [];
   }
@@ -297,7 +281,6 @@ function clearCart() {
 ===================================================== */
 
 function getCartCount() {
-
   return getCart().reduce(
     (total, item) =>
       total +
@@ -310,7 +293,6 @@ function getCartCount() {
 }
 
 function updateCartCount() {
-
   const element =
     getElement("cartCount");
 
@@ -325,14 +307,11 @@ function updateCartCount() {
 ===================================================== */
 
 function calculateCartTotals() {
-
-  const cart =
-    getCart();
+  const cart = getCart();
 
   let subtotal = 0;
 
   cart.forEach(item => {
-
     const product =
       findProduct(
         item.productId
@@ -364,12 +343,10 @@ function calculateCartTotals() {
 ===================================================== */
 
 function addToCart(productId) {
-
   const product =
     findProduct(productId);
 
   if (!product) {
-
     showToast(
       "Product could not be added."
     );
@@ -388,15 +365,12 @@ function addToCart(productId) {
     );
 
   if (existing) {
-
     existing.quantity =
       Math.max(
         1,
         Number(existing.quantity) || 1
       ) + 1;
-
   } else {
-
     cart.push({
       productId:
         String(product.id),
@@ -428,7 +402,6 @@ function addToCart(productId) {
 ===================================================== */
 
 function removeFromCart(productId) {
-
   const cart =
     getCart().filter(
       item =>
@@ -453,7 +426,6 @@ function changeCartQuantity(
   productId,
   change
 ) {
-
   const cart =
     getCart();
 
@@ -479,10 +451,7 @@ function changeCartQuantity(
       Number(item.quantity) || 0
     ) + amount;
 
-  if (
-    item.quantity <= 0
-  ) {
-
+  if (item.quantity <= 0) {
     saveCart(
       cart.filter(
         cartItem =>
@@ -492,9 +461,7 @@ function changeCartQuantity(
           String(productId)
       )
     );
-
   } else {
-
     saveCart(cart);
   }
 
@@ -509,7 +476,6 @@ function setCartQuantity(
   productId,
   quantity
 ) {
-
   const cart =
     getCart();
 
@@ -532,10 +498,7 @@ function setCartQuantity(
       Number(quantity) || 0
     );
 
-  if (
-    newQuantity === 0
-  ) {
-
+  if (newQuantity === 0) {
     saveCart(
       cart.filter(
         cartItem =>
@@ -545,9 +508,7 @@ function setCartQuantity(
           String(productId)
       )
     );
-
   } else {
-
     item.quantity =
       newQuantity;
 
@@ -562,7 +523,6 @@ function setCartQuantity(
 ===================================================== */
 
 function clearShoppingCart() {
-
   clearCart();
 
   updateCartUI();
@@ -577,7 +537,6 @@ function clearShoppingCart() {
 ===================================================== */
 
 function renderCart() {
-
   const container =
     getElement("cartItems");
 
@@ -589,7 +548,6 @@ function renderCart() {
     getCart();
 
   if (!cart.length) {
-
     container.innerHTML = `
       <div class="empty-state">
         <strong>Your cart is empty.</strong>
@@ -601,14 +559,10 @@ function renderCart() {
     `;
 
     const subtotal =
-      getElement(
-        "cartSubtotal"
-      );
+      getElement("cartSubtotal");
 
     const total =
-      getElement(
-        "cartTotal"
-      );
+      getElement("cartTotal");
 
     if (subtotal) {
       subtotal.textContent =
@@ -626,7 +580,6 @@ function renderCart() {
   container.innerHTML = "";
 
   cart.forEach(item => {
-
     const product =
       findProduct(
         item.productId
@@ -751,9 +704,7 @@ function renderCart() {
 ===================================================== */
 
 function updateCartUI() {
-
   updateCartCount();
-
   renderCart();
 }
 
@@ -762,7 +713,6 @@ function updateCartUI() {
 ===================================================== */
 
 function openCart() {
-
   const panel =
     getElement("cartPanel");
 
@@ -783,7 +733,6 @@ function openCart() {
 }
 
 function closeCart() {
-
   const panel =
     getElement("cartPanel");
 
@@ -806,7 +755,6 @@ function closeCart() {
 ===================================================== */
 
 function getAnalytics() {
-
   const analytics =
     safeJSONParse(
       localStorage.getItem(
@@ -817,10 +765,8 @@ function getAnalytics() {
 
   if (
     !analytics ||
-    typeof analytics !==
-      "object"
+    typeof analytics !== "object"
   ) {
-
     return {
       orders: 0,
       revenue: 0,
@@ -851,7 +797,6 @@ function getAnalytics() {
 function saveAnalytics(
   analytics
 ) {
-
   localStorage.setItem(
     STORAGE.analytics,
     JSON.stringify(
@@ -864,7 +809,6 @@ function trackEvent(
   eventName,
   data = {}
 ) {
-
   const analytics =
     getAnalytics();
 
@@ -879,7 +823,6 @@ function trackEvent(
     analytics.events.length >
     500
   ) {
-
     analytics.events =
       analytics.events.slice(
         -500
@@ -898,7 +841,6 @@ function trackEvent(
 ===================================================== */
 
 function trackDailyVisitor() {
-
   const today =
     new Date()
       .toISOString()
@@ -916,7 +858,6 @@ function trackDailyVisitor() {
     !saved ||
     saved.date !== today
   ) {
-
     localStorage.setItem(
       STORAGE.visitor,
       JSON.stringify({
@@ -924,13 +865,11 @@ function trackDailyVisitor() {
         count: 1
       })
     );
-
   } else if (
     !sessionStorage.getItem(
       "smithx_visitor_counted"
     )
   ) {
-
     saved.count =
       Number(
         saved.count || 0
@@ -957,7 +896,6 @@ function trackDailyVisitor() {
 ===================================================== */
 
 function setupCategories() {
-
   const container =
     getElement(
       "categoryFilters"
@@ -967,12 +905,10 @@ function setupCategories() {
     return;
   }
 
-  container.innerHTML =
-    "";
+  container.innerHTML = "";
 
   CATEGORIES.forEach(
     category => {
-
       const button =
         document.createElement(
           "button"
@@ -981,8 +917,6 @@ function setupCategories() {
       button.type =
         "button";
 
-      /* FIXED:
-         CSS uses .category-filter */
       button.className =
         "category-filter";
 
@@ -990,7 +924,6 @@ function setupCategories() {
         category ===
         currentCategory
       ) {
-
         button.classList.add(
           "active"
         );
@@ -1002,7 +935,6 @@ function setupCategories() {
       button.addEventListener(
         "click",
         () => {
-
           currentCategory =
             category;
 
@@ -1024,7 +956,6 @@ function setupCategories() {
 ===================================================== */
 
 function setupSellerCategory() {
-
   const select =
     getElement(
       "productCategory"
@@ -1034,18 +965,15 @@ function setupSellerCategory() {
     return;
   }
 
-  select.innerHTML =
-    "";
+  select.innerHTML = "";
 
   CATEGORIES
     .filter(
       category =>
-        category !==
-        "All"
+        category !== "All"
     )
     .forEach(
       category => {
-
         const option =
           document.createElement(
             "option"
@@ -1069,7 +997,6 @@ function setupSellerCategory() {
 ===================================================== */
 
 function renderProducts() {
-
   const grid =
     getElement(
       "productsGrid"
@@ -1091,7 +1018,6 @@ function renderProducts() {
     currentCategory !==
     "All"
   ) {
-
     products =
       products.filter(
         product =>
@@ -1101,11 +1027,9 @@ function renderProducts() {
   }
 
   if (search) {
-
     products =
       products.filter(
         product => {
-
           const text = [
             product.name,
             product.description,
@@ -1122,7 +1046,6 @@ function renderProducts() {
   }
 
   if (!products.length) {
-
     grid.innerHTML = `
       <div class="empty-state">
         <strong>No products found.</strong>
@@ -1139,7 +1062,6 @@ function renderProducts() {
     products
       .map(
         product => {
-
           const safeId =
             escapeHTML(
               product.id
@@ -1150,1765 +1072,4 @@ function renderProducts() {
 
               <button
                 type="button"
-                class="product-image-button"
-                onclick="openProductModal('${safeId}')"
-              >
-                <img
-                  src="${escapeHTML(
-                    product.image || ""
-                  )}"
-                  alt="${escapeHTML(
-                    product.name
-                  )}"
-                  loading="lazy"
-                >
-              </button>
-
-              <div class="product-card-body">
-
-                <span class="product-category">
-                  ${escapeHTML(
-                    product.category
-                  )}
-                </span>
-
-                <h3>
-                  ${escapeHTML(
-                    product.name
-                  )}
-                </h3>
-
-                <p>
-                  ${escapeHTML(
-                    product.description
-                  )}
-                </p>
-
-                <div class="product-card-bottom">
-
-                  <strong>
-                    ${formatKES(
-                      product.price
-                    )}
-                  </strong>
-
-                  <button
-                    type="button"
-                    class="primary-button small-button"
-                    onclick="addToCart('${safeId}')"
-                  >
-                    Add to cart
-                  </button>
-
-                </div>
-
-              </div>
-
-            </article>
-          `;
-        }
-      )
-      .join("");
-}
-
-/* =====================================================
-   PRODUCT MODAL
-===================================================== */
-
-function openProductModal(
-  productId
-) {
-
-  const product =
-    findProduct(productId);
-
-  const modal =
-    getElement(
-      "productModal"
-    );
-
-  const content =
-    getElement(
-      "productModalContent"
-    );
-
-  if (
-    !product ||
-    !modal ||
-    !content
-  ) {
-    return;
-  }
-
-  const safeId =
-    escapeHTML(
-      product.id
-    );
-
-  content.innerHTML = `
-    <div class="product-modal-layout">
-
-      <div>
-        <img
-          src="${escapeHTML(
-            product.image || ""
-          )}"
-          alt="${escapeHTML(
-            product.name
-          )}"
-        >
-      </div>
-
-      <div>
-
-        <span class="product-category">
-          ${escapeHTML(
-            product.category
-          )}
-        </span>
-
-        <h2>
-          ${escapeHTML(
-            product.name
-          )}
-        </h2>
-
-        <strong class="product-modal-price">
-          ${formatKES(
-            product.price
-          )}
-        </strong>
-
-        <p>
-          ${escapeHTML(
-            product.description
-          )}
-        </p>
-
-        <button
-          type="button"
-          class="primary-button"
-          onclick="addToCart('${safeId}'); closeProductModal();"
-        >
-          Add to cart
-        </button>
-
-      </div>
-
-    </div>
-  `;
-
-  modal.classList.add(
-    "open"
-  );
-
-  modal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-}
-
-function closeProductModal() {
-
-  const modal =
-    getElement(
-      "productModal"
-    );
-
-  if (!modal) {
-    return;
-  }
-
-  modal.classList.remove(
-    "open"
-  );
-
-  modal.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-}
-
-/* =====================================================
-   DEMO CHECKOUT
-===================================================== */
-
-function demoCheckout() {
-
-  const cart =
-    getCart();
-
-  if (!cart.length) {
-
-    showToast(
-      "Your cart is empty."
-    );
-
-    return;
-  }
-
-  const totals =
-    calculateCartTotals();
-
-  const analytics =
-    getAnalytics();
-
-  analytics.orders += 1;
-
-  analytics.revenue +=
-    Number(
-      totals.total
-    ) || 0;
-
-  saveAnalytics(
-    analytics
-  );
-
-  const orderId =
-    `SMX-DEMO-${Date.now()}`;
-
-  localStorage.setItem(
-    "smithx_last_demo_order",
-    JSON.stringify({
-      orderId,
-      total:
-        totals.total,
-      createdAt:
-        new Date().toISOString()
-    })
-  );
-
-  trackEvent(
-    "demo_order",
-    {
-      orderId,
-      total:
-        totals.total
-    }
-  );
-
-  clearCart();
-
-  updateCartUI();
-
-  closeCart();
-
-  updateDashboard();
-
-  showToast(
-    `Demo order ${orderId} created!`
-  );
-}
-
-/* =====================================================
-   IMAGE PREVIEW
-===================================================== */
-
-function setupImagePreview() {
-
-  const input =
-    getElement(
-      "productImage"
-    );
-
-  const preview =
-    getElement(
-      "imagePreview"
-    );
-
-  const image =
-    getElement(
-      "previewImage"
-    );
-
-  if (
-    !input ||
-    !preview ||
-    !image
-  ) {
-    return;
-  }
-
-  input.addEventListener(
-    "change",
-    () => {
-
-      const file =
-        input.files &&
-        input.files[0];
-
-      if (!file) {
-
-        preview.classList.add(
-          "hidden"
-        );
-
-        image.src = "";
-
-        return;
-      }
-
-      if (
-        !file.type.startsWith(
-          "image/"
-        )
-      ) {
-
-        showToast(
-          "Please choose an image file."
-        );
-
-        input.value =
-          "";
-
-        return;
-      }
-
-      const reader =
-        new FileReader();
-
-      reader.onload =
-        event => {
-
-          image.src =
-            event.target.result;
-
-          preview.classList.remove(
-            "hidden"
-          );
-        };
-
-      reader.readAsDataURL(
-        file
-      );
-    }
-  );
-}
-
-/* =====================================================
-   COMPRESS IMAGE
-===================================================== */
-
-function compressImage(
-  file,
-  maxWidth = 1200,
-  quality = 0.82
-) {
-
-  return new Promise(
-    (
-      resolve,
-      reject
-    ) => {
-
-      const reader =
-        new FileReader();
-
-      reader.onerror =
-        reject;
-
-      reader.onload =
-        event => {
-
-          const img =
-            new Image();
-
-          img.onload =
-            () => {
-
-              let width =
-                img.width;
-
-              let height =
-                img.height;
-
-              if (
-                width >
-                maxWidth
-              ) {
-
-                height =
-                  Math.round(
-                    height *
-                    (
-                      maxWidth /
-                      width
-                    )
-                  );
-
-                width =
-                  maxWidth;
-              }
-
-              const canvas =
-                document.createElement(
-                  "canvas"
-                );
-
-              canvas.width =
-                width;
-
-              canvas.height =
-                height;
-
-              const context =
-                canvas.getContext(
-                  "2d"
-                );
-
-              if (!context) {
-
-                reject(
-                  new Error(
-                    "Canvas unavailable."
-                  )
-                );
-
-                return;
-              }
-
-              context.drawImage(
-                img,
-                0,
-                0,
-                width,
-                height
-              );
-
-              resolve(
-                canvas.toDataURL(
-                  "image/jpeg",
-                  quality
-                )
-              );
-            };
-
-          img.onerror =
-            reject;
-
-          img.src =
-            event.target.result;
-        };
-
-      reader.readAsDataURL(
-        file
-      );
-    }
-  );
-}
-
-/* =====================================================
-   PUBLISH PRODUCT
-===================================================== */
-
-async function publishProduct() {
-
-  const nameInput =
-    getElement(
-      "productName"
-    );
-
-  const priceInput =
-    getElement(
-      "productPrice"
-    );
-
-  const categoryInput =
-    getElement(
-      "productCategory"
-    );
-
-  const descriptionInput =
-    getElement(
-      "productDescription"
-    );
-
-  const imageInput =
-    getElement(
-      "productImage"
-    );
-
-  const name =
-    nameInput?.value.trim();
-
-  const price =
-    Number(
-      priceInput?.value
-    );
-
-  const category =
-    categoryInput?.value;
-
-  const description =
-    descriptionInput?.value.trim();
-
-  if (!name) {
-
-    showToast(
-      "Please enter a product name."
-    );
-
-    nameInput?.focus();
-
-    return;
-  }
-
-  if (
-    !price ||
-    price <= 0
-  ) {
-
-    showToast(
-      "Please enter a valid price."
-    );
-
-    priceInput?.focus();
-
-    return;
-  }
-
-  if (!category) {
-
-    showToast(
-      "Please select a category."
-    );
-
-    categoryInput?.focus();
-
-    return;
-  }
-
-  if (!description) {
-
-    showToast(
-      "Please add a product description."
-    );
-
-    descriptionInput?.focus();
-
-    return;
-  }
-
-  let image = "";
-
-  try {
-
-    const file =
-      imageInput?.files?.[0];
-
-    if (file) {
-
-      image =
-        await compressImage(
-          file
-        );
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Image processing error:",
-      error
-    );
-
-    showToast(
-      "Could not process the image."
-    );
-
-    return;
-  }
-
-  if (!image) {
-
-    image =
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80";
-  }
-
-  const product = {
-
-    id:
-      `custom-${Date.now()}-${Math.random()
-        .toString(36)
-        .slice(2, 8)}`,
-
-    name,
-    price,
-    category,
-    description,
-    image
-  };
-
-  const products =
-    getCustomProducts();
-
-  products.push(
-    product
-  );
-
-  saveCustomProducts(
-    products
-  );
-
-  trackEvent(
-    "product_published",
-    {
-      productId:
-        product.id,
-      name:
-        product.name,
-      price:
-        product.price,
-      category:
-        product.category
-    }
-  );
-
-  if (nameInput) {
-    nameInput.value =
-      "";
-  }
-
-  if (priceInput) {
-    priceInput.value =
-      "";
-  }
-
-  if (descriptionInput) {
-    descriptionInput.value =
-      "";
-  }
-
-  if (imageInput) {
-    imageInput.value =
-      "";
-  }
-
-  const preview =
-    getElement(
-      "imagePreview"
-    );
-
-  const previewImage =
-    getElement(
-      "previewImage"
-    );
-
-  if (preview) {
-    preview.classList.add(
-      "hidden"
-    );
-  }
-
-  if (previewImage) {
-    previewImage.src =
-      "";
-  }
-
-  latestAIProduct =
-    null;
-
-  const aiResult =
-    getElement(
-      "aiProductResult"
-    );
-
-  if (aiResult) {
-    aiResult.style.display =
-      "none";
-  }
-
-  renderProducts();
-
-  updateDashboard();
-
-  showToast(
-    "✓ Product published successfully!"
-  );
-
-  scrollToSection(
-    "market"
-  );
-}
-
-/* =====================================================
-   AI PRODUCT ASSISTANT
-===================================================== */
-
-async function generateProductListing() {
-
-  const productNameInput =
-    getElement(
-      "productName"
-    );
-
-  const generateButton =
-    getElement(
-      "generateProductButton"
-    );
-
-  const resultBox =
-    getElement(
-      "aiProductResult"
-    );
-
-  if (!productNameInput) {
-
-    showToast(
-      "Product name field not found."
-    );
-
-    return;
-  }
-
-  const productName =
-    productNameInput.value.trim();
-
-  if (!productName) {
-
-    showToast(
-      "Enter a product name first."
-    );
-
-    productNameInput.focus();
-
-    return;
-  }
-
-  const currentPrice =
-    getElement(
-      "productPrice"
-    )?.value || "";
-
-  const currentCategory =
-    getElement(
-      "productCategory"
-    )?.value || "";
-
-  const currentDescription =
-    getElement(
-      "productDescription"
-    )?.value.trim() || "";
-
-  if (
-    !AI_API_URL ||
-    AI_API_URL.includes(
-      "YOUR_PYTHON_BACKEND_URL"
-    )
-  ) {
-
-    showToast(
-      "AI backend is not connected yet."
-    );
-
-    if (resultBox) {
-
-      resultBox.style.display =
-        "block";
-
-      resultBox.innerHTML = `
-        <div class="ai-result-item">
-
-          <span>SM1THX AI</span>
-
-          <strong>
-            AI assistant is ready.
-          </strong>
-
-          <p>
-            The Python AI backend still
-            needs to be connected.
-          </p>
-
-        </div>
-      `;
-    }
-
-    return;
-  }
-
-  if (generateButton) {
-
-    generateButton.disabled =
-      true;
-
-    generateButton.innerHTML =
-      "✨ Generating Listing...";
-  }
-
-  if (resultBox) {
-
-    resultBox.style.display =
-      "block";
-
-    resultBox.innerHTML = `
-      <div class="ai-result-item">
-
-        <span>SM1THX AI</span>
-
-        <strong>
-          Creating your product listing...
-        </strong>
-
-        <p>
-          SM1THX is analyzing your product.
-        </p>
-
-      </div>
-    `;
-  }
-
-  try {
-
-    const response =
-      await fetch(
-        AI_API_URL,
-        {
-          method:
-            "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
-
-          body:
-            JSON.stringify({
-              product_name:
-                productName,
-
-              price:
-                currentPrice,
-
-              category:
-                currentCategory,
-
-              description:
-                currentDescription
-            })
-        }
-      );
-
-    if (!response.ok) {
-
-      throw new Error(
-        `AI server returned ${response.status}`
-      );
-    }
-
-    const data =
-      await response.json();
-
-    if (data.error) {
-
-      throw new Error(
-        data.error
-      );
-    }
-
-    latestAIProduct =
-      data;
-
-    const titleElement =
-      getElement(
-        "aiGeneratedTitle"
-      );
-
-    if (titleElement) {
-
-      titleElement.textContent =
-        data.title ||
-        productName;
-    }
-
-    const descriptionElement =
-      getElement(
-        "aiGeneratedDescription"
-      );
-
-    if (descriptionElement) {
-
-      descriptionElement.textContent =
-        data.description ||
-        "";
-    }
-
-    const categoryElement =
-      getElement(
-        "aiGeneratedCategory"
-      );
-
-    if (categoryElement) {
-
-      categoryElement.textContent =
-        data.category ||
-        "";
-    }
-
-    const priceElement =
-      getElement(
-        "aiGeneratedPrice"
-      );
-
-    if (priceElement) {
-
-      const price =
-        Number(
-          data.price || 0
-        );
-
-      priceElement.textContent =
-        price > 0
-          ? formatKES(price)
-          : "Not available";
-    }
-
-    const featuresElement =
-      getElement(
-        "aiGeneratedFeatures"
-      );
-
-    if (featuresElement) {
-
-      featuresElement.innerHTML =
-        "";
-
-      const features =
-        Array.isArray(
-          data.features
-        )
-          ? data.features
-          : [];
-
-      features.forEach(
-        feature => {
-
-          const li =
-            document.createElement(
-              "li"
-            );
-
-          li.textContent =
-            feature;
-
-          featuresElement.appendChild(
-            li
-          );
-        }
-      );
-    }
-
-    const seoElement =
-      getElement(
-        "aiGeneratedSEO"
-      );
-
-    if (seoElement) {
-
-      seoElement.textContent =
-        Array.isArray(
-          data.seo_keywords
-        )
-          ? data.seo_keywords.join(
-              ", "
-            )
-          : data.seo_keywords ||
-            "";
-    }
-
-    const adElement =
-      getElement(
-        "aiGeneratedAd"
-      );
-
-    if (adElement) {
-
-      adElement.textContent =
-        data.ad_caption ||
-        "";
-    }
-
-    if (resultBox) {
-
-      resultBox.style.display =
-        "block";
-    }
-
-    showToast(
-      "✨ AI listing generated!"
-    );
-
-  } catch (error) {
-
-    console.error(
-      "SM1THX AI error:",
-      error
-    );
-
-    if (resultBox) {
-
-      resultBox.style.display =
-        "block";
-
-      resultBox.innerHTML = `
-        <div class="ai-result-item">
-
-          <span>SM1THX AI</span>
-
-          <strong>
-            AI connection error
-          </strong>
-
-          <p>
-            ${escapeHTML(
-              error.message ||
-              "The AI service is unavailable."
-            )}
-          </p>
-
-        </div>
-      `;
-    }
-
-    showToast(
-      "AI could not generate the listing."
-    );
-
-  } finally {
-
-    if (generateButton) {
-
-      generateButton.disabled =
-        false;
-
-      generateButton.innerHTML =
-        "✨ Generate Listing";
-    }
-  }
-}
-
-/* =====================================================
-   APPLY AI LISTING
-===================================================== */
-
-function applyAIProductListing() {
-
-  if (!latestAIProduct) {
-
-    showToast(
-      "Generate an AI listing first."
-    );
-
-    return;
-  }
-
-  const productName =
-    getElement(
-      "productName"
-    );
-
-  const productPrice =
-    getElement(
-      "productPrice"
-    );
-
-  const productCategory =
-    getElement(
-      "productCategory"
-    );
-
-  const productDescription =
-    getElement(
-      "productDescription"
-    );
-
-  if (
-    productName &&
-    latestAIProduct.title
-  ) {
-
-    productName.value =
-      latestAIProduct.title;
-  }
-
-  if (
-    productPrice &&
-    latestAIProduct.price
-  ) {
-
-    productPrice.value =
-      Number(
-        latestAIProduct.price
-      );
-  }
-
-  if (
-    productCategory &&
-    latestAIProduct.category
-  ) {
-
-    const matchingOption =
-      Array.from(
-        productCategory.options
-      ).find(
-        option =>
-          option.value.toLowerCase() ===
-          String(
-            latestAIProduct.category
-          ).toLowerCase()
-      );
-
-    if (matchingOption) {
-
-      productCategory.value =
-        matchingOption.value;
-    }
-  }
-
-  if (productDescription) {
-
-    let description =
-      latestAIProduct.description ||
-      "";
-
-    const features =
-      Array.isArray(
-        latestAIProduct.features
-      )
-        ? latestAIProduct.features
-        : [];
-
-    if (features.length) {
-
-      description +=
-        "\n\nKey Features:\n" +
-        features
-          .map(
-            feature =>
-              `• ${feature}`
-          )
-          .join("\n");
-    }
-
-    productDescription.value =
-      description;
-  }
-
-  if (productName) {
-
-    productName.scrollIntoView({
-      behavior:
-        "smooth",
-      block:
-        "center"
-    });
-  }
-
-  showToast(
-    "✓ AI listing applied to your product form!"
-  );
-}
-
-/* =====================================================
-   DASHBOARD
-===================================================== */
-
-function updateDashboard() {
-
-  const products =
-    getAllProducts();
-
-  const analytics =
-    getAnalytics();
-
-  const visitorData =
-    safeJSONParse(
-      localStorage.getItem(
-        STORAGE.visitor
-      ),
-      { count: 0 }
-    );
-
-  const productsElement =
-    getElement(
-      "dashboardProducts"
-    );
-
-  const ordersElement =
-    getElement(
-      "dashboardOrders"
-    );
-
-  const revenueElement =
-    getElement(
-      "dashboardRevenue"
-    );
-
-  const visitorsElement =
-    getElement(
-      "dashboardVisitors"
-    );
-
-  if (productsElement) {
-
-    productsElement.textContent =
-      products.length;
-  }
-
-  if (ordersElement) {
-
-    ordersElement.textContent =
-      analytics.orders;
-  }
-
-  if (revenueElement) {
-
-    revenueElement.textContent =
-      formatKES(
-        analytics.revenue
-      );
-  }
-
-  if (visitorsElement) {
-
-    visitorsElement.textContent =
-      Number(
-        visitorData.count || 0
-      );
-  }
-}
-
-/* =====================================================
-   RESET ANALYTICS
-===================================================== */
-
-function resetAnalytics() {
-
-  saveAnalytics({
-    orders: 0,
-    revenue: 0,
-    events: []
-  });
-
-  updateDashboard();
-
-  showToast(
-    "Demo analytics reset."
-  );
-}
-
-/* =====================================================
-   UPDATES
-===================================================== */
-
-function toggleUpdateHistory() {
-
-  const history =
-    getElement(
-      "updateHistory"
-    );
-
-  const button =
-    getElement(
-      "updatesToggle"
-    );
-
-  if (!history) {
-    return;
-  }
-
-  const hidden =
-    history.style.display ===
-      "none" ||
-    !history.style.display;
-
-  history.style.display =
-    hidden
-      ? "block"
-      : "none";
-
-  if (button) {
-
-    button.textContent =
-      hidden
-        ? "Hide Updates"
-        : "View Updates";
-  }
-}
-
-function setupUpdatesToggle() {
-
-  const history =
-    getElement(
-      "updateHistory"
-    );
-
-  if (history) {
-
-    history.style.display =
-      "none";
-  }
-}
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-function setupSearch() {
-
-  const input =
-    getElement(
-      "productSearch"
-    );
-
-  if (!input) {
-    return;
-  }
-
-  input.addEventListener(
-    "input",
-    event => {
-
-      currentSearch =
-        event.target.value;
-
-      renderProducts();
-    }
-  );
-}
-
-/* =====================================================
-   NAVIGATION
-===================================================== */
-
-function scrollToSection(
-  sectionId
-) {
-
-  const section =
-    getElement(
-      sectionId
-    );
-
-  if (!section) {
-    return;
-  }
-
-  section.scrollIntoView({
-    behavior:
-      "smooth",
-    block:
-      "start"
-  });
-}
-
-function setupNavigation() {
-
-  document
-    .querySelectorAll(
-      'a[href^="#"]'
-    )
-    .forEach(
-      link => {
-
-        link.addEventListener(
-          "click",
-          event => {
-
-            const href =
-              link.getAttribute(
-                "href"
-              );
-
-            if (!href) {
-              return;
-            }
-
-            const targetId =
-              href.slice(1);
-
-            const target =
-              getElement(
-                targetId
-              );
-
-            if (!target) {
-              return;
-            }
-
-            event.preventDefault();
-
-            scrollToSection(
-              targetId
-            );
-          }
-        );
-      }
-    );
-}
-
-/* =====================================================
-   TOAST
-===================================================== */
-
-function showToast(
-  message
-) {
-
-  const toast =
-    getElement(
-      "toast"
-    );
-
-  if (!toast) {
-
-    console.log(message);
-
-    return;
-  }
-
-  toast.textContent =
-    message;
-
-  toast.classList.add(
-    "show"
-  );
-
-  clearTimeout(
-    toastTimer
-  );
-
-  toastTimer =
-    setTimeout(
-      () => {
-
-        toast.classList.remove(
-          "show"
-        );
-
-      },
-      3000
-    );
-}
-
-/* =====================================================
-   LOGIN COMPATIBILITY
-===================================================== */
-
-function removeLoginUI() {
-
-  const overlay =
-    getElement(
-      "loginOverlay"
-    );
-
-  const loginButton =
-    getElement(
-      "loginNavButton"
-    );
-
-  if (overlay) {
-    overlay.remove();
-  }
-
-  if (loginButton) {
-    loginButton.remove();
-  }
-}
-
-function disableOldLoginHandlers() {
-
-  window.openLogin =
-    function () {
-
-      removeLoginUI();
-    };
-
-  window.closeLogin =
-    function () {
-
-      removeLoginUI();
-    };
-}
-
-/* =====================================================
-   OLD LOGIN COMPATIBILITY
-===================================================== */
-
-function showRegisterForm() {
-
-  const login =
-    getElement(
-      "loginFormSection"
-    );
-
-  const register =
-    getElement(
-      "registerFormSection"
-    );
-
-  if (login) {
-    login.style.display =
-      "none";
-  }
-
-  if (register) {
-    register.style.display =
-      "block";
-  }
-}
-
-function showLoginForm() {
-
-  const login =
-    getElement(
-      "loginFormSection"
-    );
-
-  const register =
-    getElement(
-      "registerFormSection"
-    );
-
-  if (login) {
-    login.style.display =
-      "block";
-  }
-
-  if (register) {
-    register.style.display =
-      "none";
-  }
-}
-
-function togglePassword(
-  inputId,
-  button
-) {
-
-  const input =
-    getElement(
-      inputId
-    );
-
-  if (!input) {
-    return;
-  }
-
-  if (
-    input.type ===
-    "password"
-  ) {
-
-    input.type =
-      "text";
-
-    if (button) {
-      button.textContent =
-        "🙈";
-    }
-
-  } else {
-
-    input.type =
-      "password";
-
-    if (button) {
-      button.textContent =
-        "👁";
-    }
-  }
-}
-
-/* =====================================================
-   CONTROLS
-===================================================== */
-
-function setupCartControls() {
-  // Cart buttons use global functions.
-}
-
-function setupKeyboardControls() {
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key ===
-        "Escape"
-      ) {
-
-        closeProductModal();
-
-        closeCart();
-      }
-    }
-  );
-}
-
-function setupProductBackdrop() {
-
-  const modal =
-    getElement(
-      "productModal"
-    );
-
-  if (!modal) {
-    return;
-  }
-
-  modal.addEventListener(
-    "click",
-    event => {
-
-      if (
-        event.target ===
-        modal
-      ) {
-
-        closeProductModal();
-      }
-    }
-  );
-}
-
-/* =====================================================
-   INITIALIZE
-===================================================== */
-
-function initializeSmithX() {
-
-  try {
-
-    removeLoginUI();
-
-    disableOldLoginHandlers();
-
-    setupCategories();
-
-    setupSellerCategory();
-
-    renderProducts();
-
-    updateCartUI();
-
-    setupCartControls();
-
-    setupImagePreview();
-
-    setupSearch();
-
-    setupNavigation();
-
-    setupUpdatesToggle();
-
-    setupProductBackdrop();
-
-    setupKeyboardControls();
-
-    trackDailyVisitor();
-
-    updateDashboard();
-
-    console.log(
-      "SM1THX initialized successfully."
-    );
-
-  } catch (error) {
-
-    console.error(
-      "SM1THX initialization error:",
-      error
-    );
-
-    showToast(
-      "SM1THX encountered an error. Please refresh."
-    );
-  }
-}
-
-/* =====================================================
-   GLOBAL FUNCTIONS
-===================================================== */
-
-window.addToCart =
-  addToCart;
-
-window.removeFromCart =
-  removeFromCart;
-
-window.changeCartQuantity =
-  changeCartQuantity;
-
-window.setCartQuantity =
-  setCartQuantity;
-
-window.clearShoppingCart =
-  clearShoppingCart;
-
-window.openCart =
-  openCart;
-
-window.closeCart =
-  closeCart;
-
-window.renderCart =
-  renderCart;
-
-window.updateCartCount =
-  updateCartCount;
-
-window.updateCartUI =
-  updateCartUI;
-
-window.demoCheckout =
-  demoCheckout;
-
-window.openProductModal =
-  openProductModal;
-
-window.closeProductModal =
-  closeProductModal;
-
-window.publishProduct =
-  publishProduct;
-
-window.resetAnalytics =
-  resetAnalytics;
-
-window.toggleUpdateHistory =
-  toggleUpdateHistory;
-
-window.scrollToSection =
-  scrollToSection;
-
-window.renderProducts =
-  renderProducts;
-
-window.showToast =
-  showToast;
-
-window.generateProductListing =
-  generateProductListing;
-
-window.applyAIProductListing =
-  applyAIProductListing;
-
-/* =====================================================
-   DOM READY
-===================================================== */
-
-if (
-  document.readyState ===
-  "loading"
-) {
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    initializeSmithX
-  );
-
-} else {
-
-  initializeSmithX();
-}
+                class="product
