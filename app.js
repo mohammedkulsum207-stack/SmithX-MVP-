@@ -111,8 +111,7 @@ let toastTimer = null;
 ===================================================== */
 
 const AI_API_URL =
-  "YOUR_PYTHON_BACKEND_URL/api/generate-product";
-
+  "https://smithx-ai-backend.onrender.com/api/generate-product";
 /* =====================================================
    HELPERS
 ===================================================== */
