@@ -2,9 +2,9 @@
 
 /* =====================================================
    SM1THX 🛒
-   APP.JS — CART + MARKETPLACE + AI ASSISTANT
+   APP.JS — STABLE MVP VERSION
+   CART + MARKETPLACE + SELLER STUDIO + AI ASSISTANT
 ===================================================== */
-
 
 /* =====================================================
    DEFAULT PRODUCTS
@@ -21,7 +21,6 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: "default-2",
     name: "Smart Wireless Headphones",
@@ -32,7 +31,6 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: "default-3",
     name: "Minimal Desk Lamp",
@@ -43,7 +41,6 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: "default-4",
     name: "Everyday Travel Backpack",
@@ -54,7 +51,6 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: "default-5",
     name: "Smart Watch",
@@ -65,7 +61,6 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: "default-6",
     name: "Premium Sneakers",
@@ -77,7 +72,6 @@ const DEFAULT_PRODUCTS = [
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
   }
 ];
-
 
 /* =====================================================
    CATEGORIES
@@ -92,7 +86,6 @@ const CATEGORIES = [
   "Accessories"
 ];
 
-
 /* =====================================================
    STORAGE
 ===================================================== */
@@ -104,7 +97,6 @@ const STORAGE = {
   visitor: "smithx_daily_visitor_v2"
 };
 
-
 /* =====================================================
    STATE
 ===================================================== */
@@ -112,20 +104,14 @@ const STORAGE = {
 let currentCategory = "All";
 let currentSearch = "";
 let latestAIProduct = null;
-
+let toastTimer = null;
 
 /* =====================================================
    AI BACKEND
 ===================================================== */
 
-/*
-  Leave this unchanged until the Python backend
-  is actually deployed.
-*/
-
 const AI_API_URL =
   "YOUR_PYTHON_BACKEND_URL/api/generate-product";
-
 
 /* =====================================================
    HELPERS
@@ -135,13 +121,10 @@ function getElement(id) {
   return document.getElementById(id);
 }
 
-
 function formatKES(value) {
   const number = Number(value) || 0;
-
   return "KES " + number.toLocaleString("en-KE");
 }
-
 
 function escapeHTML(value) {
   return String(value ?? "")
@@ -152,7 +135,6 @@ function escapeHTML(value) {
     .replace(/'/g, "&#039;");
 }
 
-
 function safeJSONParse(value, fallback) {
   try {
     return JSON.parse(value);
@@ -161,18 +143,18 @@ function safeJSONParse(value, fallback) {
   }
 }
 
-
 /* =====================================================
    PRODUCTS
 ===================================================== */
 
 function getCustomProducts() {
-  return safeJSONParse(
+  const products = safeJSONParse(
     localStorage.getItem(STORAGE.products),
     []
   );
-}
 
+  return Array.isArray(products) ? products : [];
+}
 
 function saveCustomProducts(products) {
   localStorage.setItem(
@@ -181,7 +163,6 @@ function saveCustomProducts(products) {
   );
 }
 
-
 function getAllProducts() {
   return [
     ...DEFAULT_PRODUCTS,
@@ -189,40 +170,105 @@ function getAllProducts() {
   ];
 }
 
-
 function findProduct(productId) {
   return getAllProducts().find(
-    product => String(product.id) === String(productId)
+    product =>
+      String(product.id) === String(productId)
   );
 }
 
-
 /* =====================================================
-   CART STORAGE
+   CART
 ===================================================== */
 
-function getCart() {
-  const cart = safeJSONParse(
+function normalizeCart() {
+  const stored = safeJSONParse(
     localStorage.getItem(STORAGE.cart),
     []
   );
 
-  return Array.isArray(cart) ? cart : [];
+  if (!Array.isArray(stored)) {
+    localStorage.setItem(
+      STORAGE.cart,
+      JSON.stringify([])
+    );
+    return [];
+  }
+
+  const normalized = [];
+  const seen = new Set();
+
+  stored.forEach(item => {
+    if (!item || typeof item !== "object") {
+      return;
+    }
+
+    /*
+      Support BOTH cart formats:
+
+      New:
+      { productId: "default-1", quantity: 1 }
+
+      Old:
+      { id: "default-1", quantity: 1 }
+    */
+
+    const productId =
+      item.productId ?? item.id;
+
+    if (!productId) return;
+
+    const product = findProduct(productId);
+
+    if (!product) return;
+
+    const id = String(product.id);
+
+    if (seen.has(id)) return;
+
+    let quantity =
+      Number.parseInt(item.quantity, 10);
+
+    if (!Number.isFinite(quantity)) {
+      quantity = 1;
+    }
+
+    quantity = Math.max(1, quantity);
+
+    normalized.push({
+      productId: id,
+      quantity
+    });
+
+    seen.add(id);
+  });
+
+  localStorage.setItem(
+    STORAGE.cart,
+    JSON.stringify(normalized)
+  );
+
+  return normalized;
 }
 
+function getCart() {
+  return normalizeCart();
+}
 
 function saveCart(cart) {
+  if (!Array.isArray(cart)) {
+    cart = [];
+  }
+
   localStorage.setItem(
     STORAGE.cart,
     JSON.stringify(cart)
   );
 }
 
-
 function clearCart() {
   saveCart([]);
 }
-
 
 /* =====================================================
    CART COUNT
@@ -230,21 +276,28 @@ function clearCart() {
 
 function getCartCount() {
   return getCart().reduce(
-    (total, item) =>
-      total + Math.max(0, Number(item.quantity) || 0),
+    (total, item) => {
+      return (
+        total +
+        Math.max(
+          0,
+          Number(item.quantity) || 0
+        )
+      );
+    },
     0
   );
 }
 
-
 function updateCartCount() {
-  const element = getElement("cartCount");
+  const element =
+    getElement("cartCount");
 
   if (element) {
-    element.textContent = getCartCount();
+    element.textContent =
+      String(getCartCount());
   }
 }
-
 
 /* =====================================================
    CART TOTALS
@@ -256,15 +309,20 @@ function calculateCartTotals() {
   let subtotal = 0;
 
   cart.forEach(item => {
-    const product = findProduct(item.productId);
+    const product =
+      findProduct(item.productId);
 
     if (!product) return;
 
     const quantity =
-      Math.max(0, Number(item.quantity) || 0);
+      Math.max(
+        1,
+        Number(item.quantity) || 1
+      );
 
     subtotal +=
-      Number(product.price) * quantity;
+      Number(product.price || 0) *
+      quantity;
   });
 
   return {
@@ -273,32 +331,39 @@ function calculateCartTotals() {
   };
 }
 
-
 /* =====================================================
    ADD TO CART
 ===================================================== */
 
 function addToCart(productId) {
-  const product = findProduct(productId);
+  const product =
+    findProduct(productId);
 
   if (!product) {
-    showToast("Product not found.");
+    showToast(
+      "Product could not be added."
+    );
     return;
   }
 
   const cart = getCart();
 
-  const existing = cart.find(
-    item =>
-      String(item.productId) === String(productId)
-  );
+  const existing =
+    cart.find(
+      item =>
+        String(item.productId) ===
+        String(product.id)
+    );
 
   if (existing) {
     existing.quantity =
-      Math.max(0, Number(existing.quantity) || 0) + 1;
+      Math.max(
+        1,
+        Number(existing.quantity) || 1
+      ) + 1;
   } else {
     cart.push({
-      productId: product.id,
+      productId: String(product.id),
       quantity: 1
     });
   }
@@ -317,48 +382,58 @@ function addToCart(productId) {
   );
 }
 
-
 /* =====================================================
    REMOVE FROM CART
 ===================================================== */
 
 function removeFromCart(productId) {
-  const cart = getCart().filter(
-    item =>
-      String(item.productId) !== String(productId)
-  );
+  const cart =
+    getCart().filter(
+      item =>
+        String(item.productId) !==
+        String(productId)
+    );
 
   saveCart(cart);
-
   updateCartUI();
 
   showToast("Item removed from cart.");
 }
 
-
 /* =====================================================
    CHANGE CART QUANTITY
 ===================================================== */
 
-function changeCartQuantity(productId, change) {
+function changeCartQuantity(
+  productId,
+  change
+) {
   const cart = getCart();
 
-  const item = cart.find(
-    cartItem =>
-      String(cartItem.productId) === String(productId)
-  );
+  const item =
+    cart.find(
+      cartItem =>
+        String(cartItem.productId) ===
+        String(productId)
+    );
 
   if (!item) return;
 
+  const amount =
+    Number(change) || 0;
+
   item.quantity =
-    (Number(item.quantity) || 0) +
-    Number(change || 0);
+    Math.max(
+      0,
+      Number(item.quantity) || 0
+    ) + amount;
 
   if (item.quantity <= 0) {
     saveCart(
       cart.filter(
         cartItem =>
-          String(cartItem.productId) !== String(productId)
+          String(cartItem.productId) !==
+          String(productId)
       )
     );
   } else {
@@ -368,29 +443,37 @@ function changeCartQuantity(productId, change) {
   updateCartUI();
 }
 
-
 /* =====================================================
    SET CART QUANTITY
 ===================================================== */
 
-function setCartQuantity(productId, quantity) {
+function setCartQuantity(
+  productId,
+  quantity
+) {
   const cart = getCart();
 
-  const item = cart.find(
-    cartItem =>
-      String(cartItem.productId) === String(productId)
-  );
+  const item =
+    cart.find(
+      cartItem =>
+        String(cartItem.productId) ===
+        String(productId)
+    );
 
   if (!item) return;
 
   const newQuantity =
-    Math.max(0, Number(quantity) || 0);
+    Math.max(
+      0,
+      Number(quantity) || 0
+    );
 
   if (newQuantity === 0) {
     saveCart(
       cart.filter(
         cartItem =>
-          String(cartItem.productId) !== String(productId)
+          String(cartItem.productId) !==
+          String(productId)
       )
     );
   } else {
@@ -401,26 +484,23 @@ function setCartQuantity(productId, quantity) {
   updateCartUI();
 }
 
-
 /* =====================================================
-   CLEAR SHOPPING CART
+   CLEAR CART
 ===================================================== */
 
 function clearShoppingCart() {
   clearCart();
-
   updateCartUI();
-
   showToast("Cart cleared.");
 }
-
 
 /* =====================================================
    RENDER CART
 ===================================================== */
 
 function renderCart() {
-  const container = getElement("cartItems");
+  const container =
+    getElement("cartItems");
 
   if (!container) return;
 
@@ -437,15 +517,20 @@ function renderCart() {
       </div>
     `;
 
-    const subtotal = getElement("cartSubtotal");
-    const total = getElement("cartTotal");
+    const subtotal =
+      getElement("cartSubtotal");
+
+    const total =
+      getElement("cartTotal");
 
     if (subtotal) {
-      subtotal.textContent = formatKES(0);
+      subtotal.textContent =
+        formatKES(0);
     }
 
     if (total) {
-      total.textContent = formatKES(0);
+      total.textContent =
+        formatKES(0);
     }
 
     return;
@@ -454,17 +539,25 @@ function renderCart() {
   container.innerHTML = "";
 
   cart.forEach(item => {
-    const product = findProduct(item.productId);
+    const product =
+      findProduct(item.productId);
 
     if (!product) return;
 
     const quantity =
-      Math.max(1, Number(item.quantity) || 1);
+      Math.max(
+        1,
+        Number(item.quantity) || 1
+      );
 
     const itemElement =
       document.createElement("div");
 
-    itemElement.className = "cart-item";
+    itemElement.className =
+      "cart-item";
+
+    const safeId =
+      escapeHTML(product.id);
 
     itemElement.innerHTML = `
       <div class="cart-item-image">
@@ -488,23 +581,25 @@ function renderCart() {
 
           <button
             type="button"
-            onclick="changeCartQuantity('${escapeHTML(product.id)}', -1)"
+            onclick="changeCartQuantity('${safeId}', -1)"
           >
             −
           </button>
 
-          <span>${quantity}</span>
+          <span>
+            ${quantity}
+          </span>
 
           <button
             type="button"
-            onclick="changeCartQuantity('${escapeHTML(product.id)}', 1)"
+            onclick="changeCartQuantity('${safeId}', 1)"
           >
             +
           </button>
 
           <button
             type="button"
-            onclick="removeFromCart('${escapeHTML(product.id)}')"
+            onclick="removeFromCart('${safeId}')"
           >
             Remove
           </button>
@@ -514,13 +609,19 @@ function renderCart() {
       </div>
     `;
 
-    container.appendChild(itemElement);
+    container.appendChild(
+      itemElement
+    );
   });
 
-  const totals = calculateCartTotals();
+  const totals =
+    calculateCartTotals();
 
-  const subtotal = getElement("cartSubtotal");
-  const total = getElement("cartTotal");
+  const subtotal =
+    getElement("cartSubtotal");
+
+  const total =
+    getElement("cartTotal");
 
   if (subtotal) {
     subtotal.textContent =
@@ -533,7 +634,6 @@ function renderCart() {
   }
 }
 
-
 /* =====================================================
    UPDATE CART UI
 ===================================================== */
@@ -543,46 +643,77 @@ function updateCartUI() {
   renderCart();
 }
 
-
 /* =====================================================
    OPEN / CLOSE CART
 ===================================================== */
 
 function openCart() {
-  const panel = getElement("cartPanel");
+  const panel =
+    getElement("cartPanel");
 
   if (!panel) return;
 
   panel.classList.add("open");
 
+  panel.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
   renderCart();
 }
 
-
 function closeCart() {
-  const panel = getElement("cartPanel");
+  const panel =
+    getElement("cartPanel");
 
   if (!panel) return;
 
   panel.classList.remove("open");
-}
 
+  panel.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+}
 
 /* =====================================================
    ANALYTICS
 ===================================================== */
 
 function getAnalytics() {
-  return safeJSONParse(
-    localStorage.getItem(STORAGE.analytics),
-    {
+  const analytics =
+    safeJSONParse(
+      localStorage.getItem(
+        STORAGE.analytics
+      ),
+      null
+    );
+
+  if (
+    !analytics ||
+    typeof analytics !== "object"
+  ) {
+    return {
       orders: 0,
       revenue: 0,
       events: []
-    }
-  );
-}
+    };
+  }
 
+  return {
+    orders:
+      Number(analytics.orders) || 0,
+
+    revenue:
+      Number(analytics.revenue) || 0,
+
+    events:
+      Array.isArray(analytics.events)
+        ? analytics.events
+        : []
+  };
+}
 
 function saveAnalytics(analytics) {
   localStorage.setItem(
@@ -591,22 +722,23 @@ function saveAnalytics(analytics) {
   );
 }
 
-
-function trackEvent(eventName, data = {}) {
-  const analytics = getAnalytics();
-
-  analytics.events =
-    Array.isArray(analytics.events)
-      ? analytics.events
-      : [];
+function trackEvent(
+  eventName,
+  data = {}
+) {
+  const analytics =
+    getAnalytics();
 
   analytics.events.push({
     event: eventName,
     data,
-    timestamp: new Date().toISOString()
+    timestamp:
+      new Date().toISOString()
   });
 
-  if (analytics.events.length > 500) {
+  if (
+    analytics.events.length > 500
+  ) {
     analytics.events =
       analytics.events.slice(-500);
   }
@@ -616,22 +748,28 @@ function trackEvent(eventName, data = {}) {
   updateDashboard();
 }
 
-
 /* =====================================================
    DAILY VISITOR
 ===================================================== */
 
 function trackDailyVisitor() {
   const today =
-    new Date().toISOString().slice(0, 10);
+    new Date()
+      .toISOString()
+      .slice(0, 10);
 
   const saved =
     safeJSONParse(
-      localStorage.getItem(STORAGE.visitor),
+      localStorage.getItem(
+        STORAGE.visitor
+      ),
       null
     );
 
-  if (!saved || saved.date !== today) {
+  if (
+    !saved ||
+    saved.date !== today
+  ) {
     localStorage.setItem(
       STORAGE.visitor,
       JSON.stringify({
@@ -661,7 +799,6 @@ function trackDailyVisitor() {
   updateDashboard();
 }
 
-
 /* =====================================================
    CATEGORIES
 ===================================================== */
@@ -679,25 +816,35 @@ function setupCategories() {
       document.createElement("button");
 
     button.type = "button";
-    button.className = "category-button";
 
-    if (category === currentCategory) {
+    button.className =
+      "category-button";
+
+    if (
+      category === currentCategory
+    ) {
       button.classList.add("active");
     }
 
-    button.textContent = category;
+    button.textContent =
+      category;
 
-    button.addEventListener("click", () => {
-      currentCategory = category;
+    button.addEventListener(
+      "click",
+      () => {
+        currentCategory =
+          category;
 
-      setupCategories();
-      renderProducts();
-    });
+        setupCategories();
+        renderProducts();
+      }
+    );
 
-    container.appendChild(button);
+    container.appendChild(
+      button
+    );
   });
 }
-
 
 /* =====================================================
    SELLER CATEGORY
@@ -712,18 +859,27 @@ function setupSellerCategory() {
   select.innerHTML = "";
 
   CATEGORIES
-    .filter(category => category !== "All")
+    .filter(
+      category =>
+        category !== "All"
+    )
     .forEach(category => {
       const option =
-        document.createElement("option");
+        document.createElement(
+          "option"
+        );
 
-      option.value = category;
-      option.textContent = category;
+      option.value =
+        category;
 
-      select.appendChild(option);
+      option.textContent =
+        category;
+
+      select.appendChild(
+        option
+      );
     });
 }
-
 
 /* =====================================================
    RENDER PRODUCTS
@@ -736,31 +892,41 @@ function renderProducts() {
   if (!grid) return;
 
   const search =
-    currentSearch.trim().toLowerCase();
+    currentSearch
+      .trim()
+      .toLowerCase();
 
-  let products = getAllProducts();
+  let products =
+    getAllProducts();
 
-  if (currentCategory !== "All") {
+  if (
+    currentCategory !== "All"
+  ) {
     products =
       products.filter(
         product =>
-          product.category === currentCategory
+          product.category ===
+          currentCategory
       );
   }
 
   if (search) {
     products =
-      products.filter(product => {
-        const text = [
-          product.name,
-          product.description,
-          product.category
-        ]
-          .join(" ")
-          .toLowerCase();
+      products.filter(
+        product => {
+          const text = [
+            product.name,
+            product.description,
+            product.category
+          ]
+            .join(" ")
+            .toLowerCase();
 
-        return text.includes(search);
-      });
+          return text.includes(
+            search
+          );
+        }
+      );
   }
 
   if (!products.length) {
@@ -777,72 +943,90 @@ function renderProducts() {
   }
 
   grid.innerHTML =
-    products.map(product => `
-      <article class="product-card">
+    products
+      .map(product => {
+        const safeId =
+          escapeHTML(product.id);
 
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('${escapeHTML(product.id)}')"
-        >
-          <img
-            src="${escapeHTML(product.image || "")}"
-            alt="${escapeHTML(product.name)}"
-            loading="lazy"
-          >
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            ${escapeHTML(product.category)}
-          </span>
-
-          <h3>
-            ${escapeHTML(product.name)}
-          </h3>
-
-          <p>
-            ${escapeHTML(product.description)}
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              ${formatKES(product.price)}
-            </strong>
+        return `
+          <article class="product-card">
 
             <button
               type="button"
-              class="primary-button small-button"
-              onclick="addToCart('${escapeHTML(product.id)}')"
+              class="product-image-button"
+              onclick="openProductModal('${safeId}')"
             >
-              Add to cart
+              <img
+                src="${escapeHTML(product.image || "")}"
+                alt="${escapeHTML(product.name)}"
+                loading="lazy"
+              >
             </button>
 
-          </div>
+            <div class="product-card-body">
 
-        </div>
+              <span class="product-category">
+                ${escapeHTML(product.category)}
+              </span>
 
-      </article>
-    `).join("");
+              <h3>
+                ${escapeHTML(product.name)}
+              </h3>
+
+              <p>
+                ${escapeHTML(product.description)}
+              </p>
+
+              <div class="product-card-bottom">
+
+                <strong>
+                  ${formatKES(product.price)}
+                </strong>
+
+                <button
+                  type="button"
+                  class="primary-button small-button"
+                  onclick="addToCart('${safeId}')"
+                >
+                  Add to cart
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+        `;
+      })
+      .join("");
 }
-
 
 /* =====================================================
    PRODUCT MODAL
 ===================================================== */
 
 function openProductModal(productId) {
-  const product = findProduct(productId);
+  const product =
+    findProduct(productId);
 
   const modal =
     getElement("productModal");
 
   const content =
-    getElement("productModalContent");
+    getElement(
+      "productModalContent"
+    );
 
-  if (!product || !modal || !content) return;
+  if (
+    !product ||
+    !modal ||
+    !content
+  ) {
+    return;
+  }
+
+  const safeId =
+    escapeHTML(product.id);
 
   content.innerHTML = `
     <div class="product-modal-layout">
@@ -875,7 +1059,7 @@ function openProductModal(productId) {
         <button
           type="button"
           class="primary-button"
-          onclick="addToCart('${escapeHTML(product.id)}'); closeProductModal();"
+          onclick="addToCart('${safeId}'); closeProductModal();"
         >
           Add to cart
         </button>
@@ -886,9 +1070,12 @@ function openProductModal(productId) {
   `;
 
   modal.classList.add("open");
-  modal.setAttribute("aria-hidden", "false");
-}
 
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+}
 
 function closeProductModal() {
   const modal =
@@ -897,19 +1084,25 @@ function closeProductModal() {
   if (!modal) return;
 
   modal.classList.remove("open");
-  modal.setAttribute("aria-hidden", "true");
-}
 
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+}
 
 /* =====================================================
    DEMO CHECKOUT
 ===================================================== */
 
 function demoCheckout() {
-  const cart = getCart();
+  const cart =
+    getCart();
 
   if (!cart.length) {
-    showToast("Your cart is empty.");
+    showToast(
+      "Your cart is empty."
+    );
     return;
   }
 
@@ -919,14 +1112,14 @@ function demoCheckout() {
   const analytics =
     getAnalytics();
 
-  analytics.orders =
-    Number(analytics.orders || 0) + 1;
+  analytics.orders += 1;
 
-  analytics.revenue =
-    Number(analytics.revenue || 0) +
-    Number(totals.total || 0);
+  analytics.revenue +=
+    Number(totals.total) || 0;
 
-  saveAnalytics(analytics);
+  saveAnalytics(
+    analytics
+  );
 
   const orderId =
     `SMX-DEMO-${Date.now()}`;
@@ -936,25 +1129,31 @@ function demoCheckout() {
     JSON.stringify({
       orderId,
       total: totals.total,
-      createdAt: new Date().toISOString()
+      createdAt:
+        new Date().toISOString()
     })
   );
 
-  trackEvent("demo_order", {
-    orderId,
-    total: totals.total
-  });
+  trackEvent(
+    "demo_order",
+    {
+      orderId,
+      total: totals.total
+    }
+  );
 
   clearCart();
+
   updateCartUI();
+
   closeCart();
+
   updateDashboard();
 
   showToast(
     `Demo order ${orderId} created!`
   );
 }
-
 
 /* =====================================================
    IMAGE PREVIEW
@@ -970,41 +1169,62 @@ function setupImagePreview() {
   const image =
     getElement("previewImage");
 
-  if (!input || !preview || !image) return;
+  if (
+    !input ||
+    !preview ||
+    !image
+  ) {
+    return;
+  }
 
-  input.addEventListener("change", () => {
-    const file =
-      input.files && input.files[0];
+  input.addEventListener(
+    "change",
+    () => {
+      const file =
+        input.files &&
+        input.files[0];
 
-    if (!file) {
-      preview.classList.add("hidden");
-      image.src = "";
-      return;
+      if (!file) {
+        preview.classList.add(
+          "hidden"
+        );
+
+        image.src = "";
+
+        return;
+      }
+
+      if (
+        !file.type.startsWith(
+          "image/"
+        )
+      ) {
+        showToast(
+          "Please choose an image file."
+        );
+
+        input.value = "";
+
+        return;
+      }
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        event => {
+          image.src =
+            event.target.result;
+
+          preview.classList.remove(
+            "hidden"
+          );
+        };
+
+      reader.readAsDataURL(file);
     }
-
-    if (!file.type.startsWith("image/")) {
-      showToast(
-        "Please choose an image file."
-      );
-
-      input.value = "";
-      return;
-    }
-
-    const reader =
-      new FileReader();
-
-    reader.onload = event => {
-      image.src =
-        event.target.result;
-
-      preview.classList.remove("hidden");
-    };
-
-    reader.readAsDataURL(file);
-  });
+  );
 }
-
 
 /* =====================================================
    COMPRESS IMAGE
@@ -1015,62 +1235,96 @@ function compressImage(
   maxWidth = 1200,
   quality = 0.82
 ) {
-  return new Promise((resolve, reject) => {
-    const reader =
-      new FileReader();
+  return new Promise(
+    (resolve, reject) => {
+      const reader =
+        new FileReader();
 
-    reader.onerror = reject;
+      reader.onerror =
+        reject;
 
-    reader.onload = event => {
-      const img = new Image();
+      reader.onload =
+        event => {
+          const img =
+            new Image();
 
-      img.onload = () => {
-        let width = img.width;
-        let height = img.height;
+          img.onload =
+            () => {
+              let width =
+                img.width;
 
-        if (width > maxWidth) {
-          height =
-            Math.round(
-              height *
-              (maxWidth / width)
-            );
+              let height =
+                img.height;
 
-          width = maxWidth;
-        }
+              if (
+                width > maxWidth
+              ) {
+                height =
+                  Math.round(
+                    height *
+                    (maxWidth /
+                      width)
+                  );
 
-        const canvas =
-          document.createElement("canvas");
+                width =
+                  maxWidth;
+              }
 
-        canvas.width = width;
-        canvas.height = height;
+              const canvas =
+                document.createElement(
+                  "canvas"
+                );
 
-        const context =
-          canvas.getContext("2d");
+              canvas.width =
+                width;
 
-        context.drawImage(
-          img,
-          0,
-          0,
-          width,
-          height
-        );
+              canvas.height =
+                height;
 
-        resolve(
-          canvas.toDataURL(
-            "image/jpeg",
-            quality
-          )
-        );
-      };
+              const context =
+                canvas.getContext(
+                  "2d"
+                );
 
-      img.onerror = reject;
-      img.src = event.target.result;
-    };
+              if (!context) {
+                reject(
+                  new Error(
+                    "Canvas unavailable."
+                  )
+                );
 
-    reader.readAsDataURL(file);
-  });
+                return;
+              }
+
+              context.drawImage(
+                img,
+                0,
+                0,
+                width,
+                height
+              );
+
+              resolve(
+                canvas.toDataURL(
+                  "image/jpeg",
+                  quality
+                )
+              );
+            };
+
+          img.onerror =
+            reject;
+
+          img.src =
+            event.target.result;
+        };
+
+      reader.readAsDataURL(
+        file
+      );
+    }
+  );
 }
-
 
 /* =====================================================
    PUBLISH PRODUCT
@@ -1087,7 +1341,9 @@ async function publishProduct() {
     getElement("productCategory");
 
   const descriptionInput =
-    getElement("productDescription");
+    getElement(
+      "productDescription"
+    );
 
   const imageInput =
     getElement("productImage");
@@ -1110,15 +1366,20 @@ async function publishProduct() {
     );
 
     nameInput?.focus();
+
     return;
   }
 
-  if (!price || price <= 0) {
+  if (
+    !price ||
+    price <= 0
+  ) {
     showToast(
       "Please enter a valid price."
     );
 
     priceInput?.focus();
+
     return;
   }
 
@@ -1128,6 +1389,7 @@ async function publishProduct() {
     );
 
     categoryInput?.focus();
+
     return;
   }
 
@@ -1137,6 +1399,7 @@ async function publishProduct() {
     );
 
     descriptionInput?.focus();
+
     return;
   }
 
@@ -1148,7 +1411,9 @@ async function publishProduct() {
 
     if (file) {
       image =
-        await compressImage(file);
+        await compressImage(
+          file
+        );
     }
   } catch (error) {
     console.error(
@@ -1186,19 +1451,35 @@ async function publishProduct() {
 
   products.push(product);
 
-  saveCustomProducts(products);
+  saveCustomProducts(
+    products
+  );
 
-  trackEvent("product_published", {
-    productId: product.id,
-    name: product.name,
-    price: product.price,
-    category: product.category
-  });
+  trackEvent(
+    "product_published",
+    {
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      category: product.category
+    }
+  );
 
-  if (nameInput) nameInput.value = "";
-  if (priceInput) priceInput.value = "";
-  if (descriptionInput) descriptionInput.value = "";
-  if (imageInput) imageInput.value = "";
+  if (nameInput) {
+    nameInput.value = "";
+  }
+
+  if (priceInput) {
+    priceInput.value = "";
+  }
+
+  if (descriptionInput) {
+    descriptionInput.value = "";
+  }
+
+  if (imageInput) {
+    imageInput.value = "";
+  }
 
   if (categoryInput) {
     categoryInput.selectedIndex = 0;
@@ -1211,7 +1492,9 @@ async function publishProduct() {
     getElement("previewImage");
 
   if (preview) {
-    preview.classList.add("hidden");
+    preview.classList.add(
+      "hidden"
+    );
   }
 
   if (previewImage) {
@@ -1221,22 +1504,27 @@ async function publishProduct() {
   latestAIProduct = null;
 
   const aiResult =
-    getElement("aiProductResult");
+    getElement(
+      "aiProductResult"
+    );
 
   if (aiResult) {
-    aiResult.style.display = "none";
+    aiResult.style.display =
+      "none";
   }
 
   renderProducts();
+
   updateDashboard();
 
   showToast(
     "✓ Product published successfully!"
   );
 
-  scrollToSection("market");
+  scrollToSection(
+    "market"
+  );
 }
-
 
 /* =====================================================
    AI PRODUCT ASSISTANT
@@ -1247,10 +1535,14 @@ async function generateProductListing() {
     getElement("productName");
 
   const generateButton =
-    getElement("generateProductButton");
+    getElement(
+      "generateProductButton"
+    );
 
   const resultBox =
-    getElement("aiProductResult");
+    getElement(
+      "aiProductResult"
+    );
 
   if (!productNameInput) {
     showToast(
@@ -1269,18 +1561,24 @@ async function generateProductListing() {
     );
 
     productNameInput.focus();
+
     return;
   }
 
   const currentPrice =
-    getElement("productPrice")?.value || "";
+    getElement(
+      "productPrice"
+    )?.value || "";
 
   const currentCategory =
-    getElement("productCategory")?.value || "";
+    getElement(
+      "productCategory"
+    )?.value || "";
 
   const currentDescription =
-    getElement("productDescription")
-      ?.value.trim() || "";
+    getElement(
+      "productDescription"
+    )?.value.trim() || "";
 
   if (
     !AI_API_URL ||
@@ -1293,10 +1591,12 @@ async function generateProductListing() {
     );
 
     if (resultBox) {
-      resultBox.style.display = "block";
+      resultBox.style.display =
+        "block";
 
       resultBox.innerHTML = `
         <div class="ai-result-item">
+
           <span>SM1THX AI</span>
 
           <strong>
@@ -1304,9 +1604,10 @@ async function generateProductListing() {
           </strong>
 
           <p>
-            The Python AI backend still needs
-            to be connected.
+            The Python AI backend still
+            needs to be connected.
           </p>
+
         </div>
       `;
     }
@@ -1315,16 +1616,20 @@ async function generateProductListing() {
   }
 
   if (generateButton) {
-    generateButton.disabled = true;
+    generateButton.disabled =
+      true;
+
     generateButton.innerHTML =
       "✨ Generating Listing...";
   }
 
   if (resultBox) {
-    resultBox.style.display = "block";
+    resultBox.style.display =
+      "block";
 
     resultBox.innerHTML = `
       <div class="ai-result-item">
+
         <span>SM1THX AI</span>
 
         <strong>
@@ -1334,6 +1639,7 @@ async function generateProductListing() {
         <p>
           SM1THX is analyzing your product.
         </p>
+
       </div>
     `;
   }
@@ -1350,12 +1656,20 @@ async function generateProductListing() {
               "application/json"
           },
 
-          body: JSON.stringify({
-            product_name: productName,
-            price: currentPrice,
-            category: currentCategory,
-            description: currentDescription
-          })
+          body:
+            JSON.stringify({
+              product_name:
+                productName,
+
+              price:
+                currentPrice,
+
+              category:
+                currentCategory,
+
+              description:
+                currentDescription
+            })
         }
       );
 
@@ -1369,17 +1683,23 @@ async function generateProductListing() {
       await response.json();
 
     if (data.error) {
-      throw new Error(data.error);
+      throw new Error(
+        data.error
+      );
     }
 
-    latestAIProduct = data;
+    latestAIProduct =
+      data;
 
     const titleElement =
-      getElement("aiGeneratedTitle");
+      getElement(
+        "aiGeneratedTitle"
+      );
 
     if (titleElement) {
       titleElement.textContent =
-        data.title || productName;
+        data.title ||
+        productName;
     }
 
     const descriptionElement =
@@ -1389,7 +1709,8 @@ async function generateProductListing() {
 
     if (descriptionElement) {
       descriptionElement.textContent =
-        data.description || "";
+        data.description ||
+        "";
     }
 
     const categoryElement =
@@ -1399,7 +1720,8 @@ async function generateProductListing() {
 
     if (categoryElement) {
       categoryElement.textContent =
-        data.category || "";
+        data.category ||
+        "";
     }
 
     const priceElement =
@@ -1409,7 +1731,9 @@ async function generateProductListing() {
 
     if (priceElement) {
       const price =
-        Number(data.price || 0);
+        Number(
+          data.price || 0
+        );
 
       priceElement.textContent =
         price > 0
@@ -1423,43 +1747,64 @@ async function generateProductListing() {
       );
 
     if (featuresElement) {
-      featuresElement.innerHTML = "";
+      featuresElement.innerHTML =
+        "";
 
       const features =
-        Array.isArray(data.features)
+        Array.isArray(
+          data.features
+        )
           ? data.features
           : [];
 
-      features.forEach(feature => {
-        const li =
-          document.createElement("li");
+      features.forEach(
+        feature => {
+          const li =
+            document.createElement(
+              "li"
+            );
 
-        li.textContent = feature;
+          li.textContent =
+            feature;
 
-        featuresElement.appendChild(li);
-      });
+          featuresElement.appendChild(
+            li
+          );
+        }
+      );
     }
 
     const seoElement =
-      getElement("aiGeneratedSEO");
+      getElement(
+        "aiGeneratedSEO"
+      );
 
     if (seoElement) {
       seoElement.textContent =
-        Array.isArray(data.seo_keywords)
-          ? data.seo_keywords.join(", ")
-          : data.seo_keywords || "";
+        Array.isArray(
+          data.seo_keywords
+        )
+          ? data.seo_keywords.join(
+              ", "
+            )
+          : data.seo_keywords ||
+            "";
     }
 
     const adElement =
-      getElement("aiGeneratedAd");
+      getElement(
+        "aiGeneratedAd"
+      );
 
     if (adElement) {
       adElement.textContent =
-        data.ad_caption || "";
+        data.ad_caption ||
+        "";
     }
 
     if (resultBox) {
-      resultBox.style.display = "block";
+      resultBox.style.display =
+        "block";
     }
 
     showToast(
@@ -1473,8 +1818,12 @@ async function generateProductListing() {
     );
 
     if (resultBox) {
+      resultBox.style.display =
+        "block";
+
       resultBox.innerHTML = `
         <div class="ai-result-item">
+
           <span>SM1THX AI</span>
 
           <strong>
@@ -1487,6 +1836,7 @@ async function generateProductListing() {
               "The AI service is unavailable."
             )}
           </p>
+
         </div>
       `;
     }
@@ -1497,14 +1847,14 @@ async function generateProductListing() {
 
   } finally {
     if (generateButton) {
-      generateButton.disabled = false;
+      generateButton.disabled =
+        false;
 
       generateButton.innerHTML =
         "✨ Generate Listing";
     }
   }
 }
-
 
 /* =====================================================
    APPLY AI LISTING
@@ -1526,10 +1876,14 @@ function applyAIProductListing() {
     getElement("productPrice");
 
   const productCategory =
-    getElement("productCategory");
+    getElement(
+      "productCategory"
+    );
 
   const productDescription =
-    getElement("productDescription");
+    getElement(
+      "productDescription"
+    );
 
   if (
     productName &&
@@ -1544,7 +1898,9 @@ function applyAIProductListing() {
     latestAIProduct.price
   ) {
     productPrice.value =
-      Number(latestAIProduct.price);
+      Number(
+        latestAIProduct.price
+      );
   }
 
   if (
@@ -1570,7 +1926,8 @@ function applyAIProductListing() {
 
   if (productDescription) {
     let description =
-      latestAIProduct.description || "";
+      latestAIProduct.description ||
+      "";
 
     const features =
       Array.isArray(
@@ -1606,7 +1963,6 @@ function applyAIProductListing() {
   );
 }
 
-
 /* =====================================================
    DASHBOARD
 ===================================================== */
@@ -1627,16 +1983,24 @@ function updateDashboard() {
     );
 
   const productsElement =
-    getElement("dashboardProducts");
+    getElement(
+      "dashboardProducts"
+    );
 
   const ordersElement =
-    getElement("dashboardOrders");
+    getElement(
+      "dashboardOrders"
+    );
 
   const revenueElement =
-    getElement("dashboardRevenue");
+    getElement(
+      "dashboardRevenue"
+    );
 
   const visitorsElement =
-    getElement("dashboardVisitors");
+    getElement(
+      "dashboardVisitors"
+    );
 
   if (productsElement) {
     productsElement.textContent =
@@ -1645,22 +2009,23 @@ function updateDashboard() {
 
   if (ordersElement) {
     ordersElement.textContent =
-      Number(analytics.orders || 0);
+      analytics.orders;
   }
 
   if (revenueElement) {
     revenueElement.textContent =
       formatKES(
-        analytics.revenue || 0
+        analytics.revenue
       );
   }
 
   if (visitorsElement) {
     visitorsElement.textContent =
-      Number(visitorData.count || 0);
+      Number(
+        visitorData.count || 0
+      );
   }
 }
-
 
 /* =====================================================
    RESET ANALYTICS
@@ -1680,45 +2045,52 @@ function resetAnalytics() {
   );
 }
 
-
 /* =====================================================
    UPDATES
 ===================================================== */
 
 function toggleUpdateHistory() {
   const history =
-    getElement("updateHistory");
+    getElement(
+      "updateHistory"
+    );
 
   const button =
-    getElement("updatesToggle");
+    getElement(
+      "updatesToggle"
+    );
 
   if (!history) return;
 
-  const isHidden =
-    history.style.display === "none" ||
+  const hidden =
+    history.style.display ===
+      "none" ||
     !history.style.display;
 
   history.style.display =
-    isHidden ? "block" : "none";
+    hidden
+      ? "block"
+      : "none";
 
   if (button) {
     button.textContent =
-      isHidden
+      hidden
         ? "Hide Updates"
         : "View Updates";
   }
 }
 
-
 function setupUpdatesToggle() {
   const history =
-    getElement("updateHistory");
+    getElement(
+      "updateHistory"
+    );
 
   if (history) {
-    history.style.display = "none";
+    history.style.display =
+      "none";
   }
 }
-
 
 /* =====================================================
    SEARCH
@@ -1726,7 +2098,9 @@ function setupUpdatesToggle() {
 
 function setupSearch() {
   const input =
-    getElement("productSearch");
+    getElement(
+      "productSearch"
+    );
 
   if (!input) return;
 
@@ -1741,12 +2115,13 @@ function setupSearch() {
   );
 }
 
-
 /* =====================================================
    NAVIGATION
 ===================================================== */
 
-function scrollToSection(sectionId) {
+function scrollToSection(
+  sectionId
+) {
   const section =
     getElement(sectionId);
 
@@ -1758,7 +2133,6 @@ function scrollToSection(sectionId) {
   });
 }
 
-
 function setupNavigation() {
   document
     .querySelectorAll(
@@ -1768,13 +2142,20 @@ function setupNavigation() {
       link.addEventListener(
         "click",
         event => {
+          const href =
+            link.getAttribute(
+              "href"
+            );
+
+          if (!href) return;
+
           const targetId =
-            link
-              .getAttribute("href")
-              .slice(1);
+            href.slice(1);
 
           const target =
-            getElement(targetId);
+            getElement(
+              targetId
+            );
 
           if (!target) return;
 
@@ -1788,13 +2169,9 @@ function setupNavigation() {
     });
 }
 
-
 /* =====================================================
    TOAST
 ===================================================== */
-
-let toastTimer = null;
-
 
 function showToast(message) {
   const toast =
@@ -1805,18 +2182,27 @@ function showToast(message) {
     return;
   }
 
-  toast.textContent = message;
+  toast.textContent =
+    message;
 
-  toast.classList.add("show");
+  toast.classList.add(
+    "show"
+  );
 
-  clearTimeout(toastTimer);
+  clearTimeout(
+    toastTimer
+  );
 
   toastTimer =
-    setTimeout(() => {
-      toast.classList.remove("show");
-    }, 3000);
+    setTimeout(
+      () => {
+        toast.classList.remove(
+          "show"
+        );
+      },
+      3000
+    );
 }
-
 
 /* =====================================================
    LOGIN COMPATIBILITY
@@ -1824,10 +2210,14 @@ function showToast(message) {
 
 function removeLoginUI() {
   const overlay =
-    getElement("loginOverlay");
+    getElement(
+      "loginOverlay"
+    );
 
   const loginButton =
-    getElement("loginNavButton");
+    getElement(
+      "loginNavButton"
+    );
 
   if (overlay) {
     overlay.remove();
@@ -1837,7 +2227,6 @@ function removeLoginUI() {
     loginButton.remove();
   }
 }
-
 
 function disableOldLoginHandlers() {
   window.openLogin =
@@ -1851,40 +2240,49 @@ function disableOldLoginHandlers() {
     };
 }
 
-
 function showRegisterForm() {
   const login =
-    getElement("loginFormSection");
+    getElement(
+      "loginFormSection"
+    );
 
   const register =
-    getElement("registerFormSection");
+    getElement(
+      "registerFormSection"
+    );
 
   if (login) {
-    login.style.display = "none";
+    login.style.display =
+      "none";
   }
 
   if (register) {
-    register.style.display = "block";
+    register.style.display =
+      "block";
   }
 }
-
 
 function showLoginForm() {
   const login =
-    getElement("loginFormSection");
+    getElement(
+      "loginFormSection"
+    );
 
   const register =
-    getElement("registerFormSection");
+    getElement(
+      "registerFormSection"
+    );
 
   if (login) {
-    login.style.display = "block";
+    login.style.display =
+      "block";
   }
 
   if (register) {
-    register.style.display = "none";
+    register.style.display =
+      "none";
   }
 }
-
 
 function togglePassword(
   inputId,
@@ -1895,39 +2293,43 @@ function togglePassword(
 
   if (!input) return;
 
-  if (input.type === "password") {
+  if (
+    input.type ===
+    "password"
+  ) {
     input.type = "text";
 
     if (button) {
-      button.textContent = "🙈";
+      button.textContent =
+        "🙈";
     }
   } else {
-    input.type = "password";
+    input.type =
+      "password";
 
     if (button) {
-      button.textContent = "👁";
+      button.textContent =
+        "👁";
     }
   }
 }
 
-
 /* =====================================================
-   CART / KEYBOARD CONTROLS
+   CONTROLS
 ===================================================== */
 
 function setupCartControls() {
-  /*
-    Cart buttons use inline onclick handlers,
-    so they remain available globally.
-  */
+  // Cart buttons use global functions.
 }
-
 
 function setupKeyboardControls() {
   document.addEventListener(
     "keydown",
     event => {
-      if (event.key === "Escape") {
+      if (
+        event.key ===
+        "Escape"
+      ) {
         closeProductModal();
         closeCart();
       }
@@ -1935,76 +2337,107 @@ function setupKeyboardControls() {
   );
 }
 
-
-/* =====================================================
-   PRODUCT BACKDROP
-===================================================== */
-
 function setupProductBackdrop() {
   const modal =
-    getElement("productModal");
+    getElement(
+      "productModal"
+    );
 
   if (!modal) return;
 
   modal.addEventListener(
     "click",
     event => {
-      if (event.target === modal) {
+      if (
+        event.target ===
+        modal
+      ) {
         closeProductModal();
       }
     }
   );
 }
 
-
 /* =====================================================
    INITIALIZE
 ===================================================== */
 
 function initializeSmithX() {
-  removeLoginUI();
-  disableOldLoginHandlers();
+  try {
+    removeLoginUI();
 
-  setupCategories();
-  setupSellerCategory();
+    disableOldLoginHandlers();
 
-  renderProducts();
+    setupCategories();
 
-  updateCartUI();
-  setupCartControls();
+    setupSellerCategory();
 
-  setupImagePreview();
+    renderProducts();
 
-  setupSearch();
-  setupNavigation();
+    updateCartUI();
 
-  setupUpdatesToggle();
+    setupCartControls();
 
-  setupProductBackdrop();
-  setupKeyboardControls();
+    setupImagePreview();
 
-  trackDailyVisitor();
+    setupSearch();
 
-  updateDashboard();
+    setupNavigation();
+
+    setupUpdatesToggle();
+
+    setupProductBackdrop();
+
+    setupKeyboardControls();
+
+    trackDailyVisitor();
+
+    updateDashboard();
+
+    console.log(
+      "SM1THX initialized successfully."
+    );
+
+  } catch (error) {
+    console.error(
+      "SM1THX initialization error:",
+      error
+    );
+
+    showToast(
+      "SM1THX encountered an error. Please refresh."
+    );
+  }
 }
-
 
 /* =====================================================
    GLOBAL FUNCTIONS
 ===================================================== */
 
-window.addToCart = addToCart;
-window.removeFromCart = removeFromCart;
-window.changeCartQuantity = changeCartQuantity;
-window.setCartQuantity = setCartQuantity;
+window.addToCart =
+  addToCart;
+
+window.removeFromCart =
+  removeFromCart;
+
+window.changeCartQuantity =
+  changeCartQuantity;
+
+window.setCartQuantity =
+  setCartQuantity;
 
 window.clearShoppingCart =
   clearShoppingCart;
 
-window.openCart = openCart;
-window.closeCart = closeCart;
+window.openCart =
+  openCart;
 
-window.renderCart = renderCart;
+window.closeCart =
+  closeCart;
+
+window.renderCart =
+  renderCart;
+
 window.updateCartCount =
   updateCartCount;
 
@@ -2044,13 +2477,13 @@ window.generateProductListing =
 window.applyAIProductListing =
   applyAIProductListing;
 
-
 /* =====================================================
    DOM READY
 ===================================================== */
 
 if (
-  document.readyState === "loading"
+  document.readyState ===
+  "loading"
 ) {
   document.addEventListener(
     "DOMContentLoaded",
