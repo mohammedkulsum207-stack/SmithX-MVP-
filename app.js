@@ -3,7 +3,7 @@
 /* =====================================================
    SM1THX 🛒
    APP.JS — STABLE MVP
-   CART + MARKETPLACE + SELLER STUDIO + DEMO AI
+   CART + MARKETPLACE + SELLER STUDIO + AI ASSISTANT
 ===================================================== */
 
 /* =====================================================
@@ -107,6 +107,12 @@ let latestAIProduct = null;
 let toastTimer = null;
 
 /* =====================================================
+   AI BACKEND
+===================================================== */
+
+const AI_API_URL =
+  "https://smithx-ai-backend.onrender.com/api/generate-product";
+/* =====================================================
    HELPERS
 ===================================================== */
 
@@ -136,18 +142,6 @@ function safeJSONParse(value, fallback) {
   }
 }
 
-function createId(prefix = "smithx") {
-  return (
-    prefix +
-    "-" +
-    Date.now() +
-    "-" +
-    Math.random()
-      .toString(36)
-      .slice(2, 8)
-  );
-}
-
 /* =====================================================
    PRODUCTS
 ===================================================== */
@@ -158,7 +152,9 @@ function getCustomProducts() {
     []
   );
 
-  return Array.isArray(products) ? products : [];
+  return Array.isArray(products)
+    ? products
+    : [];
 }
 
 function saveCustomProducts(products) {
@@ -188,6 +184,7 @@ function findProduct(productId) {
 ===================================================== */
 
 function normalizeCart() {
+
   const stored = safeJSONParse(
     localStorage.getItem(STORAGE.cart),
     []
@@ -202,6 +199,7 @@ function normalizeCart() {
   const seen = new Set();
 
   stored.forEach(item => {
+
     if (
       !item ||
       typeof item !== "object"
@@ -233,16 +231,20 @@ function normalizeCart() {
         10
       );
 
-    if (!Number.isFinite(quantity)) {
+    if (
+      !Number.isFinite(quantity)
+    ) {
       quantity = 1;
     }
 
-    quantity = Math.max(
-      1,
-      quantity
-    );
+    quantity =
+      Math.max(
+        1,
+        quantity
+      );
 
     if (seen.has(id)) {
+
       const existing =
         normalized.find(
           cartItem =>
@@ -250,7 +252,8 @@ function normalizeCart() {
         );
 
       if (existing) {
-        existing.quantity += quantity;
+        existing.quantity +=
+          quantity;
       }
 
       return;
@@ -274,6 +277,7 @@ function getCart() {
 }
 
 function saveCart(cart) {
+
   if (!Array.isArray(cart)) {
     cart = [];
   }
@@ -293,6 +297,7 @@ function clearCart() {
 ===================================================== */
 
 function getCartCount() {
+
   return getCart().reduce(
     (total, item) =>
       total +
@@ -305,6 +310,7 @@ function getCartCount() {
 }
 
 function updateCartCount() {
+
   const element =
     getElement("cartCount");
 
@@ -319,11 +325,14 @@ function updateCartCount() {
 ===================================================== */
 
 function calculateCartTotals() {
-  const cart = getCart();
+
+  const cart =
+    getCart();
 
   let subtotal = 0;
 
   cart.forEach(item => {
+
     const product =
       findProduct(
         item.productId
@@ -355,10 +364,12 @@ function calculateCartTotals() {
 ===================================================== */
 
 function addToCart(productId) {
+
   const product =
     findProduct(productId);
 
   if (!product) {
+
     showToast(
       "Product could not be added."
     );
@@ -377,12 +388,15 @@ function addToCart(productId) {
     );
 
   if (existing) {
+
     existing.quantity =
       Math.max(
         1,
         Number(existing.quantity) || 1
       ) + 1;
+
   } else {
+
     cart.push({
       productId:
         String(product.id),
@@ -414,6 +428,7 @@ function addToCart(productId) {
 ===================================================== */
 
 function removeFromCart(productId) {
+
   const cart =
     getCart().filter(
       item =>
@@ -438,6 +453,7 @@ function changeCartQuantity(
   productId,
   change
 ) {
+
   const cart =
     getCart();
 
@@ -463,7 +479,10 @@ function changeCartQuantity(
       Number(item.quantity) || 0
     ) + amount;
 
-  if (item.quantity <= 0) {
+  if (
+    item.quantity <= 0
+  ) {
+
     saveCart(
       cart.filter(
         cartItem =>
@@ -473,7 +492,9 @@ function changeCartQuantity(
           String(productId)
       )
     );
+
   } else {
+
     saveCart(cart);
   }
 
@@ -488,6 +509,7 @@ function setCartQuantity(
   productId,
   quantity
 ) {
+
   const cart =
     getCart();
 
@@ -510,7 +532,10 @@ function setCartQuantity(
       Number(quantity) || 0
     );
 
-  if (newQuantity === 0) {
+  if (
+    newQuantity === 0
+  ) {
+
     saveCart(
       cart.filter(
         cartItem =>
@@ -520,7 +545,9 @@ function setCartQuantity(
           String(productId)
       )
     );
+
   } else {
+
     item.quantity =
       newQuantity;
 
@@ -535,6 +562,7 @@ function setCartQuantity(
 ===================================================== */
 
 function clearShoppingCart() {
+
   clearCart();
 
   updateCartUI();
@@ -549,6 +577,7 @@ function clearShoppingCart() {
 ===================================================== */
 
 function renderCart() {
+
   const container =
     getElement("cartItems");
 
@@ -560,6 +589,7 @@ function renderCart() {
     getCart();
 
   if (!cart.length) {
+
     container.innerHTML = `
       <div class="empty-state">
         <strong>Your cart is empty.</strong>
@@ -571,10 +601,14 @@ function renderCart() {
     `;
 
     const subtotal =
-      getElement("cartSubtotal");
+      getElement(
+        "cartSubtotal"
+      );
 
     const total =
-      getElement("cartTotal");
+      getElement(
+        "cartTotal"
+      );
 
     if (subtotal) {
       subtotal.textContent =
@@ -592,6 +626,7 @@ function renderCart() {
   container.innerHTML = "";
 
   cart.forEach(item => {
+
     const product =
       findProduct(
         item.productId
@@ -716,7 +751,9 @@ function renderCart() {
 ===================================================== */
 
 function updateCartUI() {
+
   updateCartCount();
+
   renderCart();
 }
 
@@ -725,6 +762,7 @@ function updateCartUI() {
 ===================================================== */
 
 function openCart() {
+
   const panel =
     getElement("cartPanel");
 
@@ -745,6 +783,7 @@ function openCart() {
 }
 
 function closeCart() {
+
   const panel =
     getElement("cartPanel");
 
@@ -767,6 +806,7 @@ function closeCart() {
 ===================================================== */
 
 function getAnalytics() {
+
   const analytics =
     safeJSONParse(
       localStorage.getItem(
@@ -777,8 +817,10 @@ function getAnalytics() {
 
   if (
     !analytics ||
-    typeof analytics !== "object"
+    typeof analytics !==
+      "object"
   ) {
+
     return {
       orders: 0,
       revenue: 0,
@@ -809,6 +851,7 @@ function getAnalytics() {
 function saveAnalytics(
   analytics
 ) {
+
   localStorage.setItem(
     STORAGE.analytics,
     JSON.stringify(
@@ -821,6 +864,7 @@ function trackEvent(
   eventName,
   data = {}
 ) {
+
   const analytics =
     getAnalytics();
 
@@ -835,6 +879,7 @@ function trackEvent(
     analytics.events.length >
     500
   ) {
+
     analytics.events =
       analytics.events.slice(
         -500
@@ -853,6 +898,7 @@ function trackEvent(
 ===================================================== */
 
 function trackDailyVisitor() {
+
   const today =
     new Date()
       .toISOString()
@@ -870,6 +916,7 @@ function trackDailyVisitor() {
     !saved ||
     saved.date !== today
   ) {
+
     localStorage.setItem(
       STORAGE.visitor,
       JSON.stringify({
@@ -877,11 +924,13 @@ function trackDailyVisitor() {
         count: 1
       })
     );
+
   } else if (
     !sessionStorage.getItem(
       "smithx_visitor_counted"
     )
   ) {
+
     saved.count =
       Number(
         saved.count || 0
@@ -908,6 +957,7 @@ function trackDailyVisitor() {
 ===================================================== */
 
 function setupCategories() {
+
   const container =
     getElement(
       "categoryFilters"
@@ -917,10 +967,12 @@ function setupCategories() {
     return;
   }
 
-  container.innerHTML = "";
+  container.innerHTML =
+    "";
 
   CATEGORIES.forEach(
     category => {
+
       const button =
         document.createElement(
           "button"
@@ -929,6 +981,8 @@ function setupCategories() {
       button.type =
         "button";
 
+      /* FIXED:
+         CSS uses .category-filter */
       button.className =
         "category-filter";
 
@@ -936,6 +990,7 @@ function setupCategories() {
         category ===
         currentCategory
       ) {
+
         button.classList.add(
           "active"
         );
@@ -947,6 +1002,7 @@ function setupCategories() {
       button.addEventListener(
         "click",
         () => {
+
           currentCategory =
             category;
 
@@ -968,6 +1024,7 @@ function setupCategories() {
 ===================================================== */
 
 function setupSellerCategory() {
+
   const select =
     getElement(
       "productCategory"
@@ -977,15 +1034,18 @@ function setupSellerCategory() {
     return;
   }
 
-  select.innerHTML = "";
+  select.innerHTML =
+    "";
 
   CATEGORIES
     .filter(
       category =>
-        category !== "All"
+        category !==
+        "All"
     )
     .forEach(
       category => {
+
         const option =
           document.createElement(
             "option"
@@ -1009,6 +1069,7 @@ function setupSellerCategory() {
 ===================================================== */
 
 function renderProducts() {
+
   const grid =
     getElement(
       "productsGrid"
@@ -1030,6 +1091,7 @@ function renderProducts() {
     currentCategory !==
     "All"
   ) {
+
     products =
       products.filter(
         product =>
@@ -1039,9 +1101,11 @@ function renderProducts() {
   }
 
   if (search) {
+
     products =
       products.filter(
         product => {
+
           const text = [
             product.name,
             product.description,
@@ -1058,6 +1122,7 @@ function renderProducts() {
   }
 
   if (!products.length) {
+
     grid.innerHTML = `
       <div class="empty-state">
         <strong>No products found.</strong>
@@ -1074,6 +1139,7 @@ function renderProducts() {
     products
       .map(
         product => {
+
           const safeId =
             escapeHTML(
               product.id
@@ -1086,12 +1152,8 @@ function renderProducts() {
                 type="button"
                 class="product-image-button"
                 onclick="openProductModal('${safeId}')"
-                aria-label="View ${escapeHTML(
-                  product.name
-                )}"
               >
                 <img
-                  class="product-image"
                   src="${escapeHTML(
                     product.image || ""
                   )}"
@@ -1099,11 +1161,10 @@ function renderProducts() {
                     product.name
                   )}"
                   loading="lazy"
-                  onerror="this.style.display='none'"
                 >
               </button>
 
-              <div class="product-card-content">
+              <div class="product-card-body">
 
                 <span class="product-category">
                   ${escapeHTML(
@@ -1125,7 +1186,7 @@ function renderProducts() {
 
                 <div class="product-card-bottom">
 
-                  <strong class="product-price">
+                  <strong>
                     ${formatKES(
                       product.price
                     )}
@@ -1133,10 +1194,10 @@ function renderProducts() {
 
                   <button
                     type="button"
-                    class="primary-button"
+                    class="primary-button small-button"
                     onclick="addToCart('${safeId}')"
                   >
-                    Add to Cart
+                    Add to cart
                   </button>
 
                 </div>
@@ -1151,35 +1212,13 @@ function renderProducts() {
 }
 
 /* =====================================================
-   MARKETPLACE SEARCH
-===================================================== */
-
-function setupSearch() {
-  const input =
-    getElement(
-      "productSearch"
-    );
-
-  if (!input) {
-    return;
-  }
-
-  input.addEventListener(
-    "input",
-    event => {
-      currentSearch =
-        event.target.value || "";
-
-      renderProducts();
-    }
-  );
-}
-
-/* =====================================================
    PRODUCT MODAL
 ===================================================== */
 
-function openProductModal(productId) {
+function openProductModal(
+  productId
+) {
+
   const product =
     findProduct(productId);
 
@@ -1188,70 +1227,76 @@ function openProductModal(productId) {
       "productModal"
     );
 
+  const content =
+    getElement(
+      "productModalContent"
+    );
+
   if (
     !product ||
-    !modal
+    !modal ||
+    !content
   ) {
     return;
   }
 
-  const image =
-    getElement(
-      "modalProductImage"
+  const safeId =
+    escapeHTML(
+      product.id
     );
 
-  const title =
-    getElement(
-      "modalProductTitle"
-    );
+  content.innerHTML = `
+    <div class="product-modal-layout">
 
-  const description =
-    getElement(
-      "modalProductDescription"
-    );
+      <div>
+        <img
+          src="${escapeHTML(
+            product.image || ""
+          )}"
+          alt="${escapeHTML(
+            product.name
+          )}"
+        >
+      </div>
 
-  const price =
-    getElement(
-      "modalProductPrice"
-    );
+      <div>
 
-  const category =
-    getElement(
-      "modalProductCategory"
-    );
+        <span class="product-category">
+          ${escapeHTML(
+            product.category
+          )}
+        </span>
 
-  if (image) {
-    image.src =
-      product.image || "";
+        <h2>
+          ${escapeHTML(
+            product.name
+          )}
+        </h2>
 
-    image.alt =
-      product.name || "";
-  }
+        <strong class="product-modal-price">
+          ${formatKES(
+            product.price
+          )}
+        </strong>
 
-  if (title) {
-    title.textContent =
-      product.name || "";
-  }
+        <p>
+          ${escapeHTML(
+            product.description
+          )}
+        </p>
 
-  if (description) {
-    description.textContent =
-      product.description || "";
-  }
+        <button
+          type="button"
+          class="primary-button"
+          onclick="addToCart('${safeId}'); closeProductModal();"
+        >
+          Add to cart
+        </button>
 
-  if (price) {
-    price.textContent =
-      formatKES(
-        product.price
-      );
-  }
+      </div>
 
-  if (category) {
-    category.textContent =
-      product.category || "";
-  }
-
-  modal.dataset.productId =
-    String(product.id);
+    </div>
+  `;
 
   modal.classList.add(
     "open"
@@ -1261,19 +1306,10 @@ function openProductModal(productId) {
     "aria-hidden",
     "false"
   );
-
-  trackEvent(
-    "product_view",
-    {
-      productId:
-        product.id,
-      productName:
-        product.name
-    }
-  );
 }
 
 function closeProductModal() {
+
   const modal =
     getElement(
       "productModal"
@@ -1293,64 +1329,122 @@ function closeProductModal() {
   );
 }
 
-function addModalProductToCart() {
-  const modal =
-    getElement(
-      "productModal"
+/* =====================================================
+   DEMO CHECKOUT
+===================================================== */
+
+function demoCheckout() {
+
+  const cart =
+    getCart();
+
+  if (!cart.length) {
+
+    showToast(
+      "Your cart is empty."
     );
 
-  if (!modal) {
     return;
   }
 
-  const productId =
-    modal.dataset.productId;
+  const totals =
+    calculateCartTotals();
 
-  if (!productId) {
-    return;
-  }
+  const analytics =
+    getAnalytics();
 
-  addToCart(productId);
+  analytics.orders += 1;
 
-  closeProductModal();
+  analytics.revenue +=
+    Number(
+      totals.total
+    ) || 0;
+
+  saveAnalytics(
+    analytics
+  );
+
+  const orderId =
+    `SMX-DEMO-${Date.now()}`;
+
+  localStorage.setItem(
+    "smithx_last_demo_order",
+    JSON.stringify({
+      orderId,
+      total:
+        totals.total,
+      createdAt:
+        new Date().toISOString()
+    })
+  );
+
+  trackEvent(
+    "demo_order",
+    {
+      orderId,
+      total:
+        totals.total
+    }
+  );
+
+  clearCart();
+
+  updateCartUI();
+
+  closeCart();
+
+  updateDashboard();
+
+  showToast(
+    `Demo order ${orderId} created!`
+  );
 }
 
 /* =====================================================
-   SELLER IMAGE PREVIEW
+   IMAGE PREVIEW
 ===================================================== */
 
 function setupImagePreview() {
+
   const input =
     getElement(
       "productImage"
     );
 
-  if (!input) {
+  const preview =
+    getElement(
+      "imagePreview"
+    );
+
+  const image =
+    getElement(
+      "previewImage"
+    );
+
+  if (
+    !input ||
+    !preview ||
+    !image
+  ) {
     return;
   }
 
   input.addEventListener(
     "change",
     () => {
+
       const file =
         input.files &&
         input.files[0];
 
-      const preview =
-        getElement(
-          "imagePreview"
+      if (!file) {
+
+        preview.classList.add(
+          "hidden"
         );
 
-      const previewImage =
-        getElement(
-          "previewImage"
-        );
+        image.src = "";
 
-      if (
-        !file ||
-        !preview ||
-        !previewImage
-      ) {
         return;
       }
 
@@ -1359,11 +1453,13 @@ function setupImagePreview() {
           "image/"
         )
       ) {
+
         showToast(
-          "Please select an image file."
+          "Please choose an image file."
         );
 
-        input.value = "";
+        input.value =
+          "";
 
         return;
       }
@@ -1373,11 +1469,13 @@ function setupImagePreview() {
 
       reader.onload =
         event => {
-          previewImage.src =
+
+          image.src =
             event.target.result;
 
-          preview.style.display =
-            "block";
+          preview.classList.remove(
+            "hidden"
+          );
         };
 
       reader.readAsDataURL(
@@ -1396,28 +1494,28 @@ function compressImage(
   maxWidth = 1200,
   quality = 0.82
 ) {
+
   return new Promise(
-    resolve => {
-      if (
-        !file ||
-        !file.type.startsWith(
-          "image/"
-        )
-      ) {
-        resolve("");
-        return;
-      }
+    (
+      resolve,
+      reject
+    ) => {
 
       const reader =
         new FileReader();
 
+      reader.onerror =
+        reject;
+
       reader.onload =
         event => {
+
           const img =
             new Image();
 
           img.onload =
             () => {
+
               let width =
                 img.width;
 
@@ -1428,18 +1526,18 @@ function compressImage(
                 width >
                 maxWidth
               ) {
-                const ratio =
-                  maxWidth /
-                  width;
-
-                width =
-                  maxWidth;
 
                 height =
                   Math.round(
                     height *
-                    ratio
+                    (
+                      maxWidth /
+                      width
+                    )
                   );
+
+                width =
+                  maxWidth;
               }
 
               const canvas =
@@ -1453,12 +1551,23 @@ function compressImage(
               canvas.height =
                 height;
 
-              const ctx =
+              const context =
                 canvas.getContext(
                   "2d"
                 );
 
-              ctx.drawImage(
+              if (!context) {
+
+                reject(
+                  new Error(
+                    "Canvas unavailable."
+                  )
+                );
+
+                return;
+              }
+
+              context.drawImage(
                 img,
                 0,
                 0,
@@ -1475,14 +1584,11 @@ function compressImage(
             };
 
           img.onerror =
-            () => resolve("");
+            reject;
 
           img.src =
             event.target.result;
         };
-
-      reader.onerror =
-        () => resolve("");
 
       reader.readAsDataURL(
         file
@@ -1492,59 +1598,10 @@ function compressImage(
 }
 
 /* =====================================================
-   SELLER FORM
+   PUBLISH PRODUCT
 ===================================================== */
 
-function resetSellerForm() {
-  const form =
-    getElement(
-      "sellerProductForm"
-    );
-
-  if (form) {
-    form.reset();
-  }
-
-  const preview =
-    getElement(
-      "imagePreview"
-    );
-
-  if (preview) {
-    preview.style.display =
-      "none";
-  }
-
-  const previewImage =
-    getElement(
-      "previewImage"
-    );
-
-  if (previewImage) {
-    previewImage.removeAttribute(
-      "src"
-    );
-  }
-
-  const aiResult =
-    getElement(
-      "aiProductResult"
-    );
-
-  if (aiResult) {
-    aiResult.style.display =
-      "none";
-  }
-
-  latestAIProduct = null;
-}
-
-async function createSellerProduct(
-  event
-) {
-  if (event) {
-    event.preventDefault();
-  }
+async function publishProduct() {
 
   const nameInput =
     getElement(
@@ -1572,417 +1629,216 @@ async function createSellerProduct(
     );
 
   const name =
-    nameInput
-      ? nameInput.value.trim()
-      : "";
+    nameInput?.value.trim();
 
   const price =
-    priceInput
-      ? Number(priceInput.value)
-      : 0;
+    Number(
+      priceInput?.value
+    );
 
   const category =
-    categoryInput
-      ? categoryInput.value
-      : "Electronics";
+    categoryInput?.value;
 
   const description =
-    descriptionInput
-      ? descriptionInput.value.trim()
-      : "";
+    descriptionInput?.value.trim();
 
   if (!name) {
+
     showToast(
-      "Enter a product name."
+      "Please enter a product name."
     );
+
+    nameInput?.focus();
 
     return;
   }
 
   if (
-    !Number.isFinite(price) ||
+    !price ||
     price <= 0
   ) {
+
     showToast(
-      "Enter a valid price."
+      "Please enter a valid price."
     );
+
+    priceInput?.focus();
+
+    return;
+  }
+
+  if (!category) {
+
+    showToast(
+      "Please select a category."
+    );
+
+    categoryInput?.focus();
+
+    return;
+  }
+
+  if (!description) {
+
+    showToast(
+      "Please add a product description."
+    );
+
+    descriptionInput?.focus();
 
     return;
   }
 
   let image = "";
 
-  if (
-    imageInput &&
-    imageInput.files &&
-    imageInput.files[0]
-  ) {
-    showToast(
-      "Preparing product image..."
+  try {
+
+    const file =
+      imageInput?.files?.[0];
+
+    if (file) {
+
+      image =
+        await compressImage(
+          file
+        );
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Image processing error:",
+      error
     );
 
+    showToast(
+      "Could not process the image."
+    );
+
+    return;
+  }
+
+  if (!image) {
+
     image =
-      await compressImage(
-        imageInput.files[0]
-      );
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80";
   }
 
   const product = {
-    id: createId("product"),
+
+    id:
+      `custom-${Date.now()}-${Math.random()
+        .toString(36)
+        .slice(2, 8)}`,
+
     name,
     price,
-    category:
-      CATEGORIES.includes(
-        category
-      ) &&
-      category !== "All"
-        ? category
-        : "Electronics",
-    description:
-      description ||
-      "A new product available on SM1THX.",
-    image,
-    createdAt:
-      new Date().toISOString()
+    category,
+    description,
+    image
   };
 
   const products =
     getCustomProducts();
 
-  products.push(product);
+  products.push(
+    product
+  );
 
   saveCustomProducts(
     products
   );
 
-  renderProducts();
-  updateDashboard();
-
   trackEvent(
-    "product_created",
+    "product_published",
     {
       productId:
         product.id,
-      productName:
+      name:
         product.name,
       price:
-        product.price
+        product.price,
+      category:
+        product.category
     }
   );
 
-  showToast(
-    `${product.name} published successfully.`
-  );
-
-  resetSellerForm();
-}
-
-/* =====================================================
-   LOCAL DEMO AI
-   NO API
-   NO OPENAI
-   NO RENDER
-===================================================== */
-
-function detectDemoCategory(
-  productName,
-  selectedCategory
-) {
-  if (
-    CATEGORIES.includes(
-      selectedCategory
-    ) &&
-    selectedCategory !== "All"
-  ) {
-    return selectedCategory;
+  if (nameInput) {
+    nameInput.value =
+      "";
   }
 
-  const name =
-    productName.toLowerCase();
-
-  const electronicsWords = [
-    "phone",
-    "iphone",
-    "samsung",
-    "galaxy",
-    "laptop",
-    "computer",
-    "tablet",
-    "ipad",
-    "headphone",
-    "earbud",
-    "speaker",
-    "camera",
-    "television",
-    "tv",
-    "console",
-    "gaming",
-    "watch",
-    "smart"
-  ];
-
-  const fashionWords = [
-    "shoe",
-    "sneaker",
-    "shirt",
-    "dress",
-    "jacket",
-    "jeans",
-    "trouser",
-    "hoodie",
-    "fashion",
-    "clothing"
-  ];
-
-  const homeWords = [
-    "lamp",
-    "chair",
-    "table",
-    "desk",
-    "sofa",
-    "bed",
-    "kitchen",
-    "home",
-    "furniture",
-    "decor"
-  ];
-
-  const beautyWords = [
-    "beauty",
-    "perfume",
-    "makeup",
-    "cosmetic",
-    "lotion",
-    "cream",
-    "skin",
-    "hair",
-    "shampoo"
-  ];
-
-  const accessoryWords = [
-    "bag",
-    "backpack",
-    "wallet",
-    "belt",
-    "case",
-    "accessory",
-    "sunglasses"
-  ];
-
-  if (
-    electronicsWords.some(
-      word =>
-        name.includes(word)
-    )
-  ) {
-    return "Electronics";
+  if (priceInput) {
+    priceInput.value =
+      "";
   }
 
-  if (
-    fashionWords.some(
-      word =>
-        name.includes(word)
-    )
-  ) {
-    return "Fashion";
+  if (descriptionInput) {
+    descriptionInput.value =
+      "";
   }
 
-  if (
-    homeWords.some(
-      word =>
-        name.includes(word)
-    )
-  ) {
-    return "Home";
+  if (imageInput) {
+    imageInput.value =
+      "";
   }
 
-  if (
-    beautyWords.some(
-      word =>
-        name.includes(word)
-    )
-  ) {
-    return "Beauty";
-  }
+  const preview =
+    getElement(
+      "imagePreview"
+    );
 
-  if (
-    accessoryWords.some(
-      word =>
-        name.includes(word)
-    )
-  ) {
-    return "Accessories";
-  }
+  const previewImage =
+    getElement(
+      "previewImage"
+    );
 
-  return "Accessories";
-}
-
-function getDemoFeatures(
-  category
-) {
-  const features = {
-    Electronics: [
-      "Modern everyday design",
-      "Designed for convenient daily use",
-      "Practical choice for technology shoppers",
-      "Clean and versatile style",
-      "Suitable for everyday customers"
-    ],
-
-    Fashion: [
-      "Modern everyday style",
-      "Comfort-focused design",
-      "Easy to pair with different looks",
-      "Versatile for daily use",
-      "Suitable for everyday wear"
-    ],
-
-    Home: [
-      "Clean modern design",
-      "Practical for everyday spaces",
-      "Easy to style with your setup",
-      "Versatile home use",
-      "Suitable for modern interiors"
-    ],
-
-    Beauty: [
-      "Simple everyday beauty option",
-      "Easy to include in a routine",
-      "Modern presentation",
-      "Versatile everyday use",
-      "Suitable for personal care shoppers"
-    ],
-
-    Accessories: [
-      "Modern everyday style",
-      "Practical design",
-      "Easy to pair with different products",
-      "Versatile daily use",
-      "Suitable for everyday customers"
-    ]
-  };
-
-  return (
-    features[category] ||
-    features.Accessories
-  );
-}
-
-function buildDemoDescription(
-  productName,
-  category,
-  originalDescription
-) {
-  const cleanOriginal =
-    String(
-      originalDescription || ""
-    ).trim();
-
-  if (cleanOriginal) {
-    return (
-      cleanOriginal +
-      " " +
-      `Discover ${productName} on SM1THX, a ${category.toLowerCase()} option designed for everyday shoppers.`
+  if (preview) {
+    preview.classList.add(
+      "hidden"
     );
   }
 
-  return (
-    `Discover ${productName} on SM1THX. ` +
-    `This ${category.toLowerCase()} product is presented with a clean, practical listing designed to help customers understand what they are shopping for. ` +
-    `A versatile choice for everyday use and online shopping.`
-  );
-}
-
-function buildDemoSEO(
-  productName,
-  category
-) {
-  const cleanName =
-    productName.trim();
-
-  return [
-    cleanName,
-    `buy ${cleanName}`,
-    `shop ${cleanName}`,
-    `${category} Kenya`,
-    `SM1THX ${cleanName}`
-  ];
-}
-
-function buildDemoAdCaption(
-  productName
-) {
-  return (
-    `Discover ${productName} on SM1THX. ` +
-    `Shop now and find your next everyday favorite.`
-  );
-}
-
-function cleanProductTitle(
-  productName
-) {
-  const clean =
-    productName
-      .replace(/\s+/g, " ")
-      .trim();
-
-  if (!clean) {
-    return "New SM1THX Product";
+  if (previewImage) {
+    previewImage.src =
+      "";
   }
 
-  return clean
-    .split(" ")
-    .map(
-      word => {
-        if (!word) {
-          return word;
-        }
+  latestAIProduct =
+    null;
 
-        if (
-          word.length <= 3 ||
-          word ===
-            word.toUpperCase()
-        ) {
-          return word;
-        }
+  const aiResult =
+    getElement(
+      "aiProductResult"
+    );
 
-        return (
-          word.charAt(0).toUpperCase() +
-          word.slice(1)
-        );
-      }
-    )
-    .join(" ");
+  if (aiResult) {
+    aiResult.style.display =
+      "none";
+  }
+
+  renderProducts();
+
+  updateDashboard();
+
+  showToast(
+    "✓ Product published successfully!"
+  );
+
+  scrollToSection(
+    "market"
+  );
 }
 
 /* =====================================================
-   GENERATE DEMO AI LISTING
+   AI PRODUCT ASSISTANT
 ===================================================== */
 
 async function generateProductListing() {
-  const nameInput =
+
+  const productNameInput =
     getElement(
       "productName"
-    );
-
-  const priceInput =
-    getElement(
-      "productPrice"
-    );
-
-  const categoryInput =
-    getElement(
-      "productCategory"
-    );
-
-  const descriptionInput =
-    getElement(
-      "productDescription"
-    );
-
-  const resultBox =
-    getElement(
-      "aiProductResult"
     );
 
   const generateButton =
@@ -1990,331 +1846,465 @@ async function generateProductListing() {
       "generateProductButton"
     );
 
+  const resultBox =
+    getElement(
+      "aiProductResult"
+    );
+
+  if (!productNameInput) {
+
+    showToast(
+      "Product name field not found."
+    );
+
+    return;
+  }
+
   const productName =
-    nameInput
-      ? nameInput.value.trim()
-      : "";
-
-  const currentPrice =
-    priceInput
-      ? Number(priceInput.value) || 0
-      : 0;
-
-  const selectedCategory =
-    categoryInput
-      ? categoryInput.value
-      : "";
-
-  const currentDescription =
-    descriptionInput
-      ? descriptionInput.value.trim()
-      : "";
+    productNameInput.value.trim();
 
   if (!productName) {
+
     showToast(
       "Enter a product name first."
     );
 
-    if (nameInput) {
-      nameInput.focus();
+    productNameInput.focus();
+
+    return;
+  }
+
+  const currentPrice =
+    getElement(
+      "productPrice"
+    )?.value || "";
+
+  const currentCategory =
+    getElement(
+      "productCategory"
+    )?.value || "";
+
+  const currentDescription =
+    getElement(
+      "productDescription"
+    )?.value.trim() || "";
+
+  if (
+    !AI_API_URL ||
+    AI_API_URL.includes(
+      "YOUR_PYTHON_BACKEND_URL"
+    )
+  ) {
+
+    showToast(
+      "AI backend is not connected yet."
+    );
+
+    if (resultBox) {
+
+      resultBox.style.display =
+        "block";
+
+      resultBox.innerHTML = `
+        <div class="ai-result-item">
+
+          <span>SM1THX AI</span>
+
+          <strong>
+            AI assistant is ready.
+          </strong>
+
+          <p>
+            The Python AI backend still
+            needs to be connected.
+          </p>
+
+        </div>
+      `;
     }
 
     return;
   }
 
   if (generateButton) {
+
     generateButton.disabled =
       true;
 
-    generateButton.dataset.originalText =
-      generateButton.textContent;
-
-    generateButton.textContent =
-      "Creating listing...";
+    generateButton.innerHTML =
+      "✨ Generating Listing...";
   }
 
   if (resultBox) {
+
     resultBox.style.display =
       "block";
 
     resultBox.innerHTML = `
-      <div class="ai-product-result">
-        <div class="ai-result-item">
-          <strong>SM1THX Demo AI</strong>
-          <p>
-            Creating your product listing...
-          </p>
-        </div>
+      <div class="ai-result-item">
+
+        <span>SM1THX AI</span>
+
+        <strong>
+          Creating your product listing...
+        </strong>
+
+        <p>
+          SM1THX is analyzing your product.
+        </p>
+
       </div>
     `;
   }
 
-  /*
-    Small delay makes the demo feel like
-    an AI assistant while everything is
-    still generated locally in the browser.
-  */
-
-  await new Promise(
-    resolve =>
-      setTimeout(
-        resolve,
-        500
-      )
-  );
-
   try {
-    const category =
-      detectDemoCategory(
-        productName,
-        selectedCategory
+
+    const response =
+      await fetch(
+        AI_API_URL,
+        {
+          method:
+            "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+              product_name:
+                productName,
+
+              price:
+                currentPrice,
+
+              category:
+                currentCategory,
+
+              description:
+                currentDescription
+            })
+        }
       );
 
-    const title =
-      cleanProductTitle(
-        productName
+    if (!response.ok) {
+
+      throw new Error(
+        `AI server returned ${response.status}`
       );
+    }
 
-    const description =
-      buildDemoDescription(
-        productName,
-        category,
-        currentDescription
+    const data =
+      await response.json();
+
+    if (data.error) {
+
+      throw new Error(
+        data.error
       );
+    }
 
-    const features =
-      getDemoFeatures(
-        category
-      );
+    latestAIProduct =
+      data;
 
-    const seoKeywords =
-      buildDemoSEO(
-        productName,
-        category
-      );
-
-    const adCaption =
-      buildDemoAdCaption(
-        productName
-      );
-
-    latestAIProduct = {
-      title,
-      description,
-      category,
-      price: currentPrice,
-      features,
-      seo_keywords:
-        seoKeywords,
-      ad_caption:
-        adCaption
-    };
-
-    const titleOutput =
+    const titleElement =
       getElement(
         "aiGeneratedTitle"
       );
 
-    const descriptionOutput =
+    if (titleElement) {
+
+      titleElement.textContent =
+        data.title ||
+        productName;
+    }
+
+    const descriptionElement =
       getElement(
         "aiGeneratedDescription"
       );
 
-    const categoryOutput =
+    if (descriptionElement) {
+
+      descriptionElement.textContent =
+        data.description ||
+        "";
+    }
+
+    const categoryElement =
       getElement(
         "aiGeneratedCategory"
       );
 
-    const priceOutput =
+    if (categoryElement) {
+
+      categoryElement.textContent =
+        data.category ||
+        "";
+    }
+
+    const priceElement =
       getElement(
         "aiGeneratedPrice"
       );
 
-    const featuresOutput =
+    if (priceElement) {
+
+      const price =
+        Number(
+          data.price || 0
+        );
+
+      priceElement.textContent =
+        price > 0
+          ? formatKES(price)
+          : "Not available";
+    }
+
+    const featuresElement =
       getElement(
         "aiGeneratedFeatures"
       );
 
-    const seoOutput =
+    if (featuresElement) {
+
+      featuresElement.innerHTML =
+        "";
+
+      const features =
+        Array.isArray(
+          data.features
+        )
+          ? data.features
+          : [];
+
+      features.forEach(
+        feature => {
+
+          const li =
+            document.createElement(
+              "li"
+            );
+
+          li.textContent =
+            feature;
+
+          featuresElement.appendChild(
+            li
+          );
+        }
+      );
+    }
+
+    const seoElement =
       getElement(
         "aiGeneratedSEO"
       );
 
-    const adOutput =
+    if (seoElement) {
+
+      seoElement.textContent =
+        Array.isArray(
+          data.seo_keywords
+        )
+          ? data.seo_keywords.join(
+              ", "
+            )
+          : data.seo_keywords ||
+            "";
+    }
+
+    const adElement =
       getElement(
         "aiGeneratedAd"
       );
 
-    if (titleOutput) {
-      titleOutput.textContent =
-        title;
-    }
+    if (adElement) {
 
-    if (descriptionOutput) {
-      descriptionOutput.textContent =
-        description;
-    }
-
-    if (categoryOutput) {
-      categoryOutput.textContent =
-        category;
-    }
-
-    if (priceOutput) {
-      priceOutput.textContent =
-        currentPrice > 0
-          ? formatKES(
-              currentPrice
-            )
-          : "Add a price";
-    }
-
-    if (featuresOutput) {
-      featuresOutput.innerHTML =
-        features
-          .map(
-            feature =>
-              `<li>${escapeHTML(
-                feature
-              )}</li>`
-          )
-          .join("");
-    }
-
-    if (seoOutput) {
-      seoOutput.textContent =
-        seoKeywords.join(
-          ", "
-        );
-    }
-
-    if (adOutput) {
-      adOutput.textContent =
-        adCaption;
+      adElement.textContent =
+        data.ad_caption ||
+        "";
     }
 
     if (resultBox) {
+
       resultBox.style.display =
         "block";
     }
 
-    trackEvent(
-      "demo_ai_generation",
-      {
-        productName,
-        category
-      }
+    showToast(
+      "✨ AI listing generated!"
     );
 
-    showToast(
-      "SM1THX Demo AI created your listing."
-    );
   } catch (error) {
+
     console.error(
-      "Demo AI error:",
+      "SM1THX AI error:",
       error
     );
 
+    if (resultBox) {
+
+      resultBox.style.display =
+        "block";
+
+      resultBox.innerHTML = `
+        <div class="ai-result-item">
+
+          <span>SM1THX AI</span>
+
+          <strong>
+            AI connection error
+          </strong>
+
+          <p>
+            ${escapeHTML(
+              error.message ||
+              "The AI service is unavailable."
+            )}
+          </p>
+
+        </div>
+      `;
+    }
+
     showToast(
-      "Could not create the listing."
+      "AI could not generate the listing."
     );
+
   } finally {
+
     if (generateButton) {
+
       generateButton.disabled =
         false;
 
-      generateButton.textContent =
-        generateButton.dataset.originalText ||
-        "Generate with AI";
+      generateButton.innerHTML =
+        "✨ Generate Listing";
     }
   }
 }
 
 /* =====================================================
-   APPLY DEMO AI LISTING
+   APPLY AI LISTING
 ===================================================== */
 
 function applyAIProductListing() {
+
   if (!latestAIProduct) {
+
     showToast(
-      "Generate a listing first."
+      "Generate an AI listing first."
     );
 
     return;
   }
 
-  const nameInput =
+  const productName =
     getElement(
       "productName"
     );
 
-  const priceInput =
+  const productPrice =
     getElement(
       "productPrice"
     );
 
-  const categoryInput =
+  const productCategory =
     getElement(
       "productCategory"
     );
 
-  const descriptionInput =
+  const productDescription =
     getElement(
       "productDescription"
     );
 
-  if (nameInput) {
-    nameInput.value =
+  if (
+    productName &&
+    latestAIProduct.title
+  ) {
+
+    productName.value =
       latestAIProduct.title;
   }
 
   if (
-    categoryInput &&
-    CATEGORIES.includes(
-      latestAIProduct.category
-    )
+    productPrice &&
+    latestAIProduct.price
   ) {
-    categoryInput.value =
-      latestAIProduct.category;
+
+    productPrice.value =
+      Number(
+        latestAIProduct.price
+      );
   }
 
   if (
-    priceInput &&
-    Number(
-      latestAIProduct.price
-    ) > 0
+    productCategory &&
+    latestAIProduct.category
   ) {
-    priceInput.value =
-      latestAIProduct.price;
+
+    const matchingOption =
+      Array.from(
+        productCategory.options
+      ).find(
+        option =>
+          option.value.toLowerCase() ===
+          String(
+            latestAIProduct.category
+          ).toLowerCase()
+      );
+
+    if (matchingOption) {
+
+      productCategory.value =
+        matchingOption.value;
+    }
   }
 
-  if (descriptionInput) {
-    let finalDescription =
-      latestAIProduct.description;
+  if (productDescription) {
 
-    if (
+    let description =
+      latestAIProduct.description ||
+      "";
+
+    const features =
       Array.isArray(
         latestAIProduct.features
-      ) &&
-      latestAIProduct.features
-        .length
-    ) {
-      finalDescription +=
-        "\n\nKey features:\n" +
-        latestAIProduct.features
+      )
+        ? latestAIProduct.features
+        : [];
+
+    if (features.length) {
+
+      description +=
+        "\n\nKey Features:\n" +
+        features
           .map(
             feature =>
-              "• " + feature
+              `• ${feature}`
           )
           .join("\n");
     }
 
-    descriptionInput.value =
-      finalDescription;
+    productDescription.value =
+      description;
+  }
+
+  if (productName) {
+
+    productName.scrollIntoView({
+      behavior:
+        "smooth",
+      block:
+        "center"
+    });
   }
 
   showToast(
-    "AI listing applied to your product."
+    "✓ AI listing applied to your product form!"
   );
 }
 
@@ -2322,45 +2312,26 @@ function applyAIProductListing() {
    DASHBOARD
 ===================================================== */
 
-function getDailyVisitorCount() {
-  const today =
-    new Date()
-      .toISOString()
-      .slice(0, 10);
+function updateDashboard() {
 
-  const saved =
+  const products =
+    getAllProducts();
+
+  const analytics =
+    getAnalytics();
+
+  const visitorData =
     safeJSONParse(
       localStorage.getItem(
         STORAGE.visitor
       ),
-      null
+      { count: 0 }
     );
 
-  if (
-    saved &&
-    saved.date === today
-  ) {
-    return Number(
-      saved.count || 0
+  const productsElement =
+    getElement(
+      "dashboardProducts"
     );
-  }
-
-  return 0;
-}
-
-function updateDashboard() {
-  const analytics =
-    getAnalytics();
-
-  const customProducts =
-    getCustomProducts();
-
-  const totalProducts =
-    DEFAULT_PRODUCTS.length +
-    customProducts.length;
-
-  const visitors =
-    getDailyVisitorCount();
 
   const ordersElement =
     getElement(
@@ -2372,245 +2343,137 @@ function updateDashboard() {
       "dashboardRevenue"
     );
 
-  const productsElement =
-    getElement(
-      "dashboardProducts"
-    );
-
   const visitorsElement =
     getElement(
       "dashboardVisitors"
     );
 
+  if (productsElement) {
+
+    productsElement.textContent =
+      products.length;
+  }
+
   if (ordersElement) {
+
     ordersElement.textContent =
-      String(
-        analytics.orders
-      );
+      analytics.orders;
   }
 
   if (revenueElement) {
+
     revenueElement.textContent =
       formatKES(
         analytics.revenue
       );
   }
 
-  if (productsElement) {
-    productsElement.textContent =
-      String(
-        totalProducts
-      );
-  }
-
   if (visitorsElement) {
+
     visitorsElement.textContent =
-      String(
-        visitors
-      );
-  }
-
-  /*
-    Compatibility with alternate
-    dashboard IDs used by earlier MVP
-    versions.
-  */
-
-  const ordersAlt =
-    getElement("ordersCount");
-
-  const revenueAlt =
-    getElement("revenueCount");
-
-  const productsAlt =
-    getElement("productsCount");
-
-  const visitorsAlt =
-    getElement("visitorsCount");
-
-  if (ordersAlt) {
-    ordersAlt.textContent =
-      String(
-        analytics.orders
-      );
-  }
-
-  if (revenueAlt) {
-    revenueAlt.textContent =
-      formatKES(
-        analytics.revenue
-      );
-  }
-
-  if (productsAlt) {
-    productsAlt.textContent =
-      String(
-        totalProducts
-      );
-  }
-
-  if (visitorsAlt) {
-    visitorsAlt.textContent =
-      String(
-        visitors
+      Number(
+        visitorData.count || 0
       );
   }
 }
 
 /* =====================================================
-   DEMO CHECKOUT
+   RESET ANALYTICS
 ===================================================== */
 
-function checkout() {
-  const cart =
-    getCart();
+function resetAnalytics() {
 
-  if (!cart.length) {
-    showToast(
-      "Your cart is empty."
-    );
+  saveAnalytics({
+    orders: 0,
+    revenue: 0,
+    events: []
+  });
 
-    return;
-  }
-
-  const totals =
-    calculateCartTotals();
-
-  const analytics =
-    getAnalytics();
-
-  analytics.orders += 1;
-
-  analytics.revenue +=
-    totals.total;
-
-  saveAnalytics(
-    analytics
-  );
-
-  trackEvent(
-    "checkout",
-    {
-      amount:
-        totals.total,
-      items:
-        getCartCount()
-    }
-  );
-
-  clearCart();
-
-  updateCartUI();
   updateDashboard();
 
-  closeCart();
-
   showToast(
-    "Demo checkout completed successfully."
+    "Demo analytics reset."
   );
 }
 
 /* =====================================================
-   CHECKOUT ALIASES
+   UPDATES
 ===================================================== */
 
-function demoCheckout() {
-  checkout();
-}
+function toggleUpdateHistory() {
 
-function handleCheckout() {
-  checkout();
-}
-
-/* =====================================================
-   UPDATES / UPDATE MANAGER
-===================================================== */
-
-function setupUpdateManager() {
-  const updateButton =
+  const history =
     getElement(
-      "checkUpdatesButton"
+      "updateHistory"
     );
 
-  if (!updateButton) {
+  const button =
+    getElement(
+      "updatesToggle"
+    );
+
+  if (!history) {
     return;
   }
 
-  updateButton.addEventListener(
-    "click",
-    () => {
-      showToast(
-        "SM1THX is up to date."
-      );
+  const hidden =
+    history.style.display ===
+      "none" ||
+    !history.style.display;
 
-      const status =
-        getElement(
-          "updateStatus"
-        );
+  history.style.display =
+    hidden
+      ? "block"
+      : "none";
 
-      if (status) {
-        status.textContent =
-          "System checked — no update required.";
-      }
-    }
-  );
+  if (button) {
+
+    button.textContent =
+      hidden
+        ? "Hide Updates"
+        : "View Updates";
+  }
 }
 
-function checkForUpdates() {
-  showToast(
-    "SM1THX is up to date."
-  );
+function setupUpdatesToggle() {
+
+  const history =
+    getElement(
+      "updateHistory"
+    );
+
+  if (history) {
+
+    history.style.display =
+      "none";
+  }
 }
 
 /* =====================================================
-   TOAST
+   SEARCH
 ===================================================== */
 
-function showToast(message) {
-  let toast =
+function setupSearch() {
+
+  const input =
     getElement(
-      "toast"
+      "productSearch"
     );
 
-  if (!toast) {
-    toast =
-      document.createElement(
-        "div"
-      );
-
-    toast.id =
-      "toast";
-
-    toast.className =
-      "toast";
-
-    document.body.appendChild(
-      toast
-    );
+  if (!input) {
+    return;
   }
 
-  toast.textContent =
-    String(message);
+  input.addEventListener(
+    "input",
+    event => {
 
-  toast.classList.add(
-    "show"
+      currentSearch =
+        event.target.value;
+
+      renderProducts();
+    }
   );
-
-  if (toastTimer) {
-    clearTimeout(
-      toastTimer
-    );
-  }
-
-  toastTimer =
-    setTimeout(
-      () => {
-        toast.classList.remove(
-          "show"
-        );
-      },
-      2800
-    );
 }
 
 /* =====================================================
@@ -2620,6 +2483,7 @@ function showToast(message) {
 function scrollToSection(
   sectionId
 ) {
+
   const section =
     getElement(
       sectionId
@@ -2630,32 +2494,52 @@ function scrollToSection(
   }
 
   section.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
+    behavior:
+      "smooth",
+    block:
+      "start"
   });
 }
 
 function setupNavigation() {
+
   document
     .querySelectorAll(
-      "[data-scroll]"
+      'a[href^="#"]'
     )
     .forEach(
-      element => {
-        element.addEventListener(
+      link => {
+
+        link.addEventListener(
           "click",
           event => {
-            event.preventDefault();
+
+            const href =
+              link.getAttribute(
+                "href"
+              );
+
+            if (!href) {
+              return;
+            }
+
+            const targetId =
+              href.slice(1);
 
             const target =
-              element.dataset
-                .scroll;
-
-            if (target) {
-              scrollToSection(
-                target
+              getElement(
+                targetId
               );
+
+            if (!target) {
+              return;
             }
+
+            event.preventDefault();
+
+            scrollToSection(
+              targetId
+            );
           }
         );
       }
@@ -2663,328 +2547,288 @@ function setupNavigation() {
 }
 
 /* =====================================================
-   LOGIN / DEMO ACCOUNT
+   TOAST
 ===================================================== */
 
-function openLogin() {
-  const modal =
-    getElement(
-      "loginModal"
-    );
-
-  if (!modal) {
-    return;
-  }
-
-  modal.classList.add(
-    "open"
-  );
-
-  modal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-}
-
-function closeLogin() {
-  const modal =
-    getElement(
-      "loginModal"
-    );
-
-  if (!modal) {
-    return;
-  }
-
-  modal.classList.remove(
-    "open"
-  );
-
-  modal.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-}
-
-function handleLogin(
-  event
+function showToast(
+  message
 ) {
-  if (event) {
-    event.preventDefault();
+
+  const toast =
+    getElement(
+      "toast"
+    );
+
+  if (!toast) {
+
+    console.log(message);
+
+    return;
   }
 
-  closeLogin();
+  toast.textContent =
+    message;
 
-  showToast(
-    "Demo login successful."
+  toast.classList.add(
+    "show"
   );
+
+  clearTimeout(
+    toastTimer
+  );
+
+  toastTimer =
+    setTimeout(
+      () => {
+
+        toast.classList.remove(
+          "show"
+        );
+
+      },
+      3000
+    );
 }
 
 /* =====================================================
-   KEYBOARD CONTROLS
+   LOGIN COMPATIBILITY
 ===================================================== */
 
+function removeLoginUI() {
+
+  const overlay =
+    getElement(
+      "loginOverlay"
+    );
+
+  const loginButton =
+    getElement(
+      "loginNavButton"
+    );
+
+  if (overlay) {
+    overlay.remove();
+  }
+
+  if (loginButton) {
+    loginButton.remove();
+  }
+}
+
+function disableOldLoginHandlers() {
+
+  window.openLogin =
+    function () {
+
+      removeLoginUI();
+    };
+
+  window.closeLogin =
+    function () {
+
+      removeLoginUI();
+    };
+}
+
+/* =====================================================
+   OLD LOGIN COMPATIBILITY
+===================================================== */
+
+function showRegisterForm() {
+
+  const login =
+    getElement(
+      "loginFormSection"
+    );
+
+  const register =
+    getElement(
+      "registerFormSection"
+    );
+
+  if (login) {
+    login.style.display =
+      "none";
+  }
+
+  if (register) {
+    register.style.display =
+      "block";
+  }
+}
+
+function showLoginForm() {
+
+  const login =
+    getElement(
+      "loginFormSection"
+    );
+
+  const register =
+    getElement(
+      "registerFormSection"
+    );
+
+  if (login) {
+    login.style.display =
+      "block";
+  }
+
+  if (register) {
+    register.style.display =
+      "none";
+  }
+}
+
+function togglePassword(
+  inputId,
+  button
+) {
+
+  const input =
+    getElement(
+      inputId
+    );
+
+  if (!input) {
+    return;
+  }
+
+  if (
+    input.type ===
+    "password"
+  ) {
+
+    input.type =
+      "text";
+
+    if (button) {
+      button.textContent =
+        "🙈";
+    }
+
+  } else {
+
+    input.type =
+      "password";
+
+    if (button) {
+      button.textContent =
+        "👁";
+    }
+  }
+}
+
+/* =====================================================
+   CONTROLS
+===================================================== */
+
+function setupCartControls() {
+  // Cart buttons use global functions.
+}
+
 function setupKeyboardControls() {
+
   document.addEventListener(
     "keydown",
     event => {
+
       if (
         event.key ===
         "Escape"
       ) {
-        closeCart();
+
         closeProductModal();
-        closeLogin();
+
+        closeCart();
+      }
+    }
+  );
+}
+
+function setupProductBackdrop() {
+
+  const modal =
+    getElement(
+      "productModal"
+    );
+
+  if (!modal) {
+    return;
+  }
+
+  modal.addEventListener(
+    "click",
+    event => {
+
+      if (
+        event.target ===
+        modal
+      ) {
+
+        closeProductModal();
       }
     }
   );
 }
 
 /* =====================================================
-   CLICK OUTSIDE MODALS
-===================================================== */
-
-function setupModalClosing() {
-  const productModal =
-    getElement(
-      "productModal"
-    );
-
-  if (productModal) {
-    productModal.addEventListener(
-      "click",
-      event => {
-        if (
-          event.target ===
-          productModal
-        ) {
-          closeProductModal();
-        }
-      }
-    );
-  }
-
-  const loginModal =
-    getElement(
-      "loginModal"
-    );
-
-  if (loginModal) {
-    loginModal.addEventListener(
-      "click",
-      event => {
-        if (
-          event.target ===
-          loginModal
-        ) {
-          closeLogin();
-        }
-      }
-    );
-  }
-}
-
-/* =====================================================
-   EVENT BINDINGS
-===================================================== */
-
-function setupEventBindings() {
-  const sellerForm =
-    getElement(
-      "sellerProductForm"
-    );
-
-  if (sellerForm) {
-    sellerForm.addEventListener(
-      "submit",
-      createSellerProduct
-    );
-  }
-
-  const cartButton =
-    getElement(
-      "cartButton"
-    );
-
-  if (cartButton) {
-    cartButton.addEventListener(
-      "click",
-      openCart
-    );
-  }
-
-  const closeCartButton =
-    getElement(
-      "closeCartButton"
-    );
-
-  if (closeCartButton) {
-    closeCartButton.addEventListener(
-      "click",
-      closeCart
-    );
-  }
-
-  const checkoutButton =
-    getElement(
-      "checkoutButton"
-    );
-
-  if (checkoutButton) {
-    checkoutButton.addEventListener(
-      "click",
-      checkout
-    );
-  }
-
-  const clearCartButton =
-    getElement(
-      "clearCartButton"
-    );
-
-  if (clearCartButton) {
-    clearCartButton.addEventListener(
-      "click",
-      clearShoppingCart
-    );
-  }
-
-  const closeProductButton =
-    getElement(
-      "closeProductModalButton"
-    );
-
-  if (closeProductButton) {
-    closeProductButton.addEventListener(
-      "click",
-      closeProductModal
-    );
-  }
-
-  const modalCartButton =
-    getElement(
-      "modalAddToCartButton"
-    );
-
-  if (modalCartButton) {
-    modalCartButton.addEventListener(
-      "click",
-      addModalProductToCart
-    );
-  }
-
-  const closeLoginButton =
-    getElement(
-      "closeLoginButton"
-    );
-
-  if (closeLoginButton) {
-    closeLoginButton.addEventListener(
-      "click",
-      closeLogin
-    );
-  }
-
-  const loginForm =
-    getElement(
-      "loginForm"
-    );
-
-  if (loginForm) {
-    loginForm.addEventListener(
-      "submit",
-      handleLogin
-    );
-  }
-
-  const generateButton =
-    getElement(
-      "generateProductButton"
-    );
-
-  if (generateButton) {
-    generateButton.addEventListener(
-      "click",
-      generateProductListing
-    );
-  }
-
-  const applyAIButton =
-    getElement(
-      "applyAIProductButton"
-    );
-
-  if (applyAIButton) {
-    applyAIButton.addEventListener(
-      "click",
-      applyAIProductListing
-    );
-  }
-
-  const closeCartOverlay =
-    getElement(
-      "cartOverlay"
-    );
-
-  if (closeCartOverlay) {
-    closeCartOverlay.addEventListener(
-      "click",
-      closeCart
-    );
-  }
-}
-
-/* =====================================================
    INITIALIZE
 ===================================================== */
 
-function initSmithX() {
-  setupCategories();
-  setupSellerCategory();
-  setupSearch();
-  setupImagePreview();
-  setupNavigation();
-  setupUpdateManager();
-  setupEventBindings();
-  setupKeyboardControls();
-  setupModalClosing();
+function initializeSmithX() {
 
-  normalizeCart();
-  updateCartUI();
+  try {
 
-  renderProducts();
+    removeLoginUI();
 
-  trackDailyVisitor();
-  updateDashboard();
+    disableOldLoginHandlers();
 
-  console.log(
-    "SM1THX MVP initialized successfully."
-  );
-  console.log(
-    "SM1THX Demo AI is running locally."
-  );
+    setupCategories();
+
+    setupSellerCategory();
+
+    renderProducts();
+
+    updateCartUI();
+
+    setupCartControls();
+
+    setupImagePreview();
+
+    setupSearch();
+
+    setupNavigation();
+
+    setupUpdatesToggle();
+
+    setupProductBackdrop();
+
+    setupKeyboardControls();
+
+    trackDailyVisitor();
+
+    updateDashboard();
+
+    console.log(
+      "SM1THX initialized successfully."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "SM1THX initialization error:",
+      error
+    );
+
+    showToast(
+      "SM1THX encountered an error. Please refresh."
+    );
+  }
 }
 
 /* =====================================================
-   START APP
-===================================================== */
-
-if (
-  document.readyState ===
-  "loading"
-) {
-  document.addEventListener(
-    "DOMContentLoaded",
-    initSmithX
-  );
-} else {
-  initSmithX();
-}
-
-/* =====================================================
-   GLOBAL COMPATIBILITY
-   Allows existing HTML onclick handlers
-   to continue working.
+   GLOBAL FUNCTIONS
 ===================================================== */
 
 window.addToCart =
@@ -3008,14 +2852,41 @@ window.openCart =
 window.closeCart =
   closeCart;
 
+window.renderCart =
+  renderCart;
+
+window.updateCartCount =
+  updateCartCount;
+
+window.updateCartUI =
+  updateCartUI;
+
+window.demoCheckout =
+  demoCheckout;
+
 window.openProductModal =
   openProductModal;
 
 window.closeProductModal =
   closeProductModal;
 
-window.addModalProductToCart =
-  addModalProductToCart;
+window.publishProduct =
+  publishProduct;
+
+window.resetAnalytics =
+  resetAnalytics;
+
+window.toggleUpdateHistory =
+  toggleUpdateHistory;
+
+window.scrollToSection =
+  scrollToSection;
+
+window.renderProducts =
+  renderProducts;
+
+window.showToast =
+  showToast;
 
 window.generateProductListing =
   generateProductListing;
@@ -3023,29 +2894,21 @@ window.generateProductListing =
 window.applyAIProductListing =
   applyAIProductListing;
 
-window.createSellerProduct =
-  createSellerProduct;
+/* =====================================================
+   DOM READY
+===================================================== */
 
-window.checkout =
-  checkout;
+if (
+  document.readyState ===
+  "loading"
+) {
 
-window.demoCheckout =
-  demoCheckout;
+  document.addEventListener(
+    "DOMContentLoaded",
+    initializeSmithX
+  );
 
-window.handleCheckout =
-  handleCheckout;
+} else {
 
-window.openLogin =
-  openLogin;
-
-window.closeLogin =
-  closeLogin;
-
-window.handleLogin =
-  handleLogin;
-
-window.checkForUpdates =
-  checkForUpdates;
-
-window.scrollToSection =
-  scrollToSection;
+  initializeSmithX();
+}
