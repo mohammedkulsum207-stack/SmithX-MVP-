@@ -3,8 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SM1THX 🛒 — AI-powered commerce for sellers and buyers.">
+
+  <meta
+    name="description"
+    content="SM1THX 🛒 — AI-powered commerce for sellers and buyers."
+  >
+
   <title>SM1THX 🛒 — Shop • Buy • Grow</title>
+
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -14,6 +20,7 @@
   <div class="topbar-inner">
 
     <a href="#home" class="smithx-brand" aria-label="SM1THX 🛒 Home">
+
       <img
         src="assets/smithx-logo.jpg"
         class="smithx-logo-image"
@@ -24,6 +31,7 @@
         <strong>SM1THX 🛒</strong>
         <small>SHOP • BUY • GROW</small>
       </span>
+
     </a>
 
     <nav class="nav-links">
@@ -179,10 +187,16 @@
     </div>
 
 
-    <div id="categoryFilters" class="category-filters"></div>
+    <div
+      id="categoryFilters"
+      class="category-filters"
+    ></div>
 
 
-    <div id="productsGrid" class="products-grid">
+    <div
+      id="productsGrid"
+      class="products-grid"
+    >
 
       <!-- Samsung Galaxy -->
 
@@ -542,6 +556,11 @@
 
     <div class="seller-layout">
 
+
+      <!-- =================================================
+           CREATE PRODUCT
+      ================================================= -->
+
       <div class="seller-card">
 
         <h3>
@@ -552,6 +571,8 @@
           Add your product details below.
         </p>
 
+
+        <!-- PRODUCT NAME -->
 
         <div class="form-group">
 
@@ -567,6 +588,168 @@
 
         </div>
 
+
+        <!-- =================================================
+             SM1THX AI PRODUCT ASSISTANT
+        ================================================= -->
+
+        <div class="ai-assistant-card">
+
+          <div class="ai-assistant-header">
+
+            <p class="section-eyebrow">
+              SM1THX AI
+            </p>
+
+            <h3>
+              ✨ AI Product Assistant
+            </h3>
+
+            <p class="muted">
+              Enter a product name and let SM1THX
+              help create a professional listing.
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="primary-button full-width"
+            id="generateProductButton"
+            onclick="generateProductListing()"
+          >
+            ✨ Generate Listing
+          </button>
+
+
+          <!-- AI RESULT -->
+
+          <div
+            id="aiProductResult"
+            class="ai-product-result"
+            style="display:none;"
+          >
+
+            <!-- TITLE -->
+
+            <div class="ai-result-item">
+
+              <span>
+                AI Title
+              </span>
+
+              <strong
+                id="aiGeneratedTitle"
+              ></strong>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="ai-result-item">
+
+              <span>
+                Description
+              </span>
+
+              <p
+                id="aiGeneratedDescription"
+              ></p>
+
+            </div>
+
+
+            <!-- CATEGORY -->
+
+            <div class="ai-result-item">
+
+              <span>
+                Category
+              </span>
+
+              <strong
+                id="aiGeneratedCategory"
+              ></strong>
+
+            </div>
+
+
+            <!-- PRICE -->
+
+            <div class="ai-result-item">
+
+              <span>
+                Suggested Price
+              </span>
+
+              <strong
+                id="aiGeneratedPrice"
+              ></strong>
+
+            </div>
+
+
+            <!-- FEATURES -->
+
+            <div class="ai-result-item">
+
+              <span>
+                Key Features
+              </span>
+
+              <ul
+                id="aiGeneratedFeatures"
+              ></ul>
+
+            </div>
+
+
+            <!-- SEO -->
+
+            <div class="ai-result-item">
+
+              <span>
+                SEO Keywords
+              </span>
+
+              <p
+                id="aiGeneratedSEO"
+              ></p>
+
+            </div>
+
+
+            <!-- AD -->
+
+            <div class="ai-result-item">
+
+              <span>
+                Ad Caption
+              </span>
+
+              <p
+                id="aiGeneratedAd"
+              ></p>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="secondary-button full-width"
+              onclick="applyAIProductListing()"
+            >
+              ✓ Apply to Product Form
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- PRICE -->
 
         <div class="form-group">
 
@@ -584,6 +767,8 @@
         </div>
 
 
+        <!-- CATEGORY -->
+
         <div class="form-group">
 
           <label for="productCategory">
@@ -594,6 +779,8 @@
 
         </div>
 
+
+        <!-- DESCRIPTION -->
 
         <div class="form-group">
 
@@ -610,6 +797,8 @@
         </div>
 
 
+        <!-- IMAGE -->
+
         <div class="form-group">
 
           <label for="productImage">
@@ -625,6 +814,8 @@
         </div>
 
 
+        <!-- IMAGE PREVIEW -->
+
         <div
           id="imagePreview"
           class="image-preview hidden"
@@ -639,6 +830,8 @@
         </div>
 
 
+        <!-- PUBLISH -->
+
         <button
           type="button"
           class="primary-button full-width"
@@ -649,6 +842,10 @@
 
       </div>
 
+
+      <!-- =================================================
+           SELLER INFO
+      ================================================= -->
 
       <div class="seller-info-card">
 
@@ -666,26 +863,71 @@
           and grow their businesses using intelligent technology.
         </p>
 
+
         <div class="feature-list">
 
           <div class="feature-item">
-            <strong>Easy product creation</strong>
-            <span>Create and publish products quickly.</span>
+
+            <strong>
+              AI Product Assistant
+            </strong>
+
+            <span>
+              Generate professional product listings faster.
+            </span>
+
           </div>
 
-          <div class="feature-item">
-            <strong>Marketplace visibility</strong>
-            <span>Put your products in front of buyers.</span>
-          </div>
 
           <div class="feature-item">
-            <strong>Seller analytics</strong>
-            <span>Track products, orders and revenue.</span>
+
+            <strong>
+              Easy product creation
+            </strong>
+
+            <span>
+              Create and publish products quickly.
+            </span>
+
           </div>
 
+
           <div class="feature-item">
-            <strong>AI-powered future</strong>
-            <span>More intelligent seller tools are coming.</span>
+
+            <strong>
+              Marketplace visibility
+            </strong>
+
+            <span>
+              Put your products in front of buyers.
+            </span>
+
+          </div>
+
+
+          <div class="feature-item">
+
+            <strong>
+              Seller analytics
+            </strong>
+
+            <span>
+              Track products, orders and revenue.
+            </span>
+
+          </div>
+
+
+          <div class="feature-item">
+
+            <strong>
+              AI-powered future
+            </strong>
+
+            <span>
+              More intelligent seller tools are coming.
+            </span>
+
           </div>
 
         </div>
@@ -728,23 +970,54 @@
     <div class="dashboard-grid">
 
       <div class="dashboard-card">
-        <span>Products</span>
-        <strong id="dashboardProducts">6</strong>
+
+        <span>
+          Products
+        </span>
+
+        <strong id="dashboardProducts">
+          6
+        </strong>
+
       </div>
 
-      <div class="dashboard-card">
-        <span>Orders</span>
-        <strong id="dashboardOrders">0</strong>
-      </div>
 
       <div class="dashboard-card">
-        <span>Revenue</span>
-        <strong id="dashboardRevenue">KES 0</strong>
+
+        <span>
+          Orders
+        </span>
+
+        <strong id="dashboardOrders">
+          0
+        </strong>
+
       </div>
 
+
       <div class="dashboard-card">
-        <span>Today's Visitors</span>
-        <strong id="dashboardVisitors">0</strong>
+
+        <span>
+          Revenue
+        </span>
+
+        <strong id="dashboardRevenue">
+          KES 0
+        </strong>
+
+      </div>
+
+
+      <div class="dashboard-card">
+
+        <span>
+          Today's Visitors
+        </span>
+
+        <strong id="dashboardVisitors">
+          0
+        </strong>
+
       </div>
 
     </div>
@@ -1021,6 +1294,20 @@
         <div class="update-item">
 
           <strong>
+            SM1THX 🛒 AI Product Assistant added
+          </strong>
+
+          <p>
+            Added the foundation for AI-assisted
+            product listing generation.
+          </p>
+
+        </div>
+
+
+        <div class="update-item">
+
+          <strong>
             SM1THX 🛒 branding updated
           </strong>
 
@@ -1106,7 +1393,10 @@
   </div>
 
 
-  <div id="cartItems" class="cart-items"></div>
+  <div
+    id="cartItems"
+    class="cart-items"
+  ></div>
 
 
   <div class="cart-summary">
