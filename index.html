@@ -19,22 +19,20 @@
 <header class="topbar">
   <div class="topbar-inner">
 
-    <a href="#home" class="smithx-brand" aria-label="SM1THX 🛒 Home">
-
+    <a href="#home" class="smithx-brand" aria-label="SM1THX Home">
       <img
         src="assets/smithx-logo.jpg"
         class="smithx-logo-image"
-        alt="SM1THX 🛒 logo"
+        alt="SM1THX logo"
       >
 
       <span class="smithx-brand-text">
         <strong>SM1THX 🛒</strong>
         <small>SHOP • BUY • GROW</small>
       </span>
-
     </a>
 
-    <nav class="nav-links">
+    <nav class="nav-links" aria-label="Main navigation">
       <a href="#home">Home</a>
       <a href="#market">Marketplace</a>
       <a href="#seller">Sell</a>
@@ -162,7 +160,6 @@
 
     </div>
 
-
     <div class="marketplace-tools">
 
       <div class="search-box">
@@ -186,342 +183,16 @@
 
     </div>
 
-
     <div
       id="categoryFilters"
       class="category-filters"
+      aria-label="Product categories"
     ></div>
-
 
     <div
       id="productsGrid"
       class="products-grid"
-    >
-
-      <!-- Samsung Galaxy -->
-
-      <article class="product-card">
-
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('default-1')"
-        >
-
-          <img
-            src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80"
-            alt="Samsung Galaxy S26 Ultra"
-            loading="lazy"
-          >
-
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            Electronics
-          </span>
-
-          <h3>
-            Samsung Galaxy S26 Ultra
-          </h3>
-
-          <p>
-            Premium flagship smartphone with advanced
-            performance, camera technology and a modern design.
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              KES 169,999
-            </strong>
-
-            <button
-              type="button"
-              class="primary-button small-button"
-              onclick="addToCart('default-1')"
-            >
-              Add to cart
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- Headphones -->
-
-      <article class="product-card">
-
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('default-2')"
-        >
-
-          <img
-            src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
-            alt="Smart Wireless Headphones"
-            loading="lazy"
-          >
-
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            Electronics
-          </span>
-
-          <h3>
-            Smart Wireless Headphones
-          </h3>
-
-          <p>
-            Wireless headphones with a comfortable design
-            and immersive sound.
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              KES 4,500
-            </strong>
-
-            <button
-              type="button"
-              class="primary-button small-button"
-              onclick="addToCart('default-2')"
-            >
-              Add to cart
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- Desk Lamp -->
-
-      <article class="product-card">
-
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('default-3')"
-        >
-
-          <img
-            src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80"
-            alt="Minimal Desk Lamp"
-            loading="lazy"
-          >
-
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            Home
-          </span>
-
-          <h3>
-            Minimal Desk Lamp
-          </h3>
-
-          <p>
-            Clean modern desk lamp designed for workspaces,
-            bedrooms and study areas.
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              KES 2,800
-            </strong>
-
-            <button
-              type="button"
-              class="primary-button small-button"
-              onclick="addToCart('default-3')"
-            >
-              Add to cart
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- Backpack -->
-
-      <article class="product-card">
-
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('default-4')"
-        >
-
-          <img
-            src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80"
-            alt="Everyday Travel Backpack"
-            loading="lazy"
-          >
-
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            Accessories
-          </span>
-
-          <h3>
-            Everyday Travel Backpack
-          </h3>
-
-          <p>
-            Lightweight everyday backpack for school,
-            work, travel and daily use.
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              KES 3,500
-            </strong>
-
-            <button
-              type="button"
-              class="primary-button small-button"
-              onclick="addToCart('default-4')"
-            >
-              Add to cart
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- Smart Watch -->
-
-      <article class="product-card">
-
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('default-5')"
-        >
-
-          <img
-            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
-            alt="Smart Watch"
-            loading="lazy"
-          >
-
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            Electronics
-          </span>
-
-          <h3>
-            Smart Watch
-          </h3>
-
-          <p>
-            Modern smartwatch for everyday activity tracking,
-            notifications and convenience.
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              KES 6,500
-            </strong>
-
-            <button
-              type="button"
-              class="primary-button small-button"
-              onclick="addToCart('default-5')"
-            >
-              Add to cart
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- Sneakers -->
-
-      <article class="product-card">
-
-        <button
-          type="button"
-          class="product-image-button"
-          onclick="openProductModal('default-6')"
-        >
-
-          <img
-            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
-            alt="Premium Sneakers"
-            loading="lazy"
-          >
-
-        </button>
-
-        <div class="product-card-body">
-
-          <span class="product-category">
-            Fashion
-          </span>
-
-          <h3>
-            Premium Sneakers
-          </h3>
-
-          <p>
-            Modern everyday sneakers combining comfort,
-            style and versatility.
-          </p>
-
-          <div class="product-card-bottom">
-
-            <strong>
-              KES 7,200
-            </strong>
-
-            <button
-              type="button"
-              class="primary-button small-button"
-              onclick="addToCart('default-6')"
-            >
-              Add to cart
-            </button>
-
-          </div>
-
-        </div>
-
-      </article>
-
-    </div>
+    ></div>
 
   </div>
 
@@ -553,13 +224,9 @@
 
     </div>
 
-
     <div class="seller-layout">
 
-
-      <!-- =================================================
-           CREATE PRODUCT
-      ================================================= -->
+      <!-- CREATE PRODUCT -->
 
       <div class="seller-card">
 
@@ -570,9 +237,6 @@
         <p class="muted">
           Add your product details below.
         </p>
-
-
-        <!-- PRODUCT NAME -->
 
         <div class="form-group">
 
@@ -589,9 +253,7 @@
         </div>
 
 
-        <!-- =================================================
-             SM1THX AI PRODUCT ASSISTANT
-        ================================================= -->
+        <!-- AI PRODUCT ASSISTANT -->
 
         <div class="ai-assistant-card">
 
@@ -612,7 +274,6 @@
 
           </div>
 
-
           <button
             type="button"
             class="primary-button full-width"
@@ -622,119 +283,67 @@
             ✨ Generate Listing
           </button>
 
-
-          <!-- AI RESULT -->
-
           <div
             id="aiProductResult"
             class="ai-product-result"
             style="display:none;"
           >
 
-            <!-- TITLE -->
-
             <div class="ai-result-item">
 
-              <span>
-                AI Title
-              </span>
+              <span>AI Title</span>
 
-              <strong
-                id="aiGeneratedTitle"
-              ></strong>
+              <strong id="aiGeneratedTitle"></strong>
 
             </div>
 
-
-            <!-- DESCRIPTION -->
-
             <div class="ai-result-item">
 
-              <span>
-                Description
-              </span>
+              <span>Description</span>
 
-              <p
-                id="aiGeneratedDescription"
-              ></p>
+              <p id="aiGeneratedDescription"></p>
 
             </div>
 
-
-            <!-- CATEGORY -->
-
             <div class="ai-result-item">
 
-              <span>
-                Category
-              </span>
+              <span>Category</span>
 
-              <strong
-                id="aiGeneratedCategory"
-              ></strong>
+              <strong id="aiGeneratedCategory"></strong>
 
             </div>
 
-
-            <!-- PRICE -->
-
             <div class="ai-result-item">
 
-              <span>
-                Suggested Price
-              </span>
+              <span>Suggested Price</span>
 
-              <strong
-                id="aiGeneratedPrice"
-              ></strong>
+              <strong id="aiGeneratedPrice"></strong>
 
             </div>
 
-
-            <!-- FEATURES -->
-
             <div class="ai-result-item">
 
-              <span>
-                Key Features
-              </span>
+              <span>Key Features</span>
 
-              <ul
-                id="aiGeneratedFeatures"
-              ></ul>
+              <ul id="aiGeneratedFeatures"></ul>
 
             </div>
 
-
-            <!-- SEO -->
-
             <div class="ai-result-item">
 
-              <span>
-                SEO Keywords
-              </span>
+              <span>SEO Keywords</span>
 
-              <p
-                id="aiGeneratedSEO"
-              ></p>
+              <p id="aiGeneratedSEO"></p>
 
             </div>
 
-
-            <!-- AD -->
-
             <div class="ai-result-item">
 
-              <span>
-                Ad Caption
-              </span>
+              <span>Ad Caption</span>
 
-              <p
-                id="aiGeneratedAd"
-              ></p>
+              <p id="aiGeneratedAd"></p>
 
             </div>
-
 
             <button
               type="button"
@@ -748,8 +357,6 @@
 
         </div>
 
-
-        <!-- PRICE -->
 
         <div class="form-group">
 
@@ -767,8 +374,6 @@
         </div>
 
 
-        <!-- CATEGORY -->
-
         <div class="form-group">
 
           <label for="productCategory">
@@ -779,8 +384,6 @@
 
         </div>
 
-
-        <!-- DESCRIPTION -->
 
         <div class="form-group">
 
@@ -797,8 +400,6 @@
         </div>
 
 
-        <!-- IMAGE -->
-
         <div class="form-group">
 
           <label for="productImage">
@@ -814,8 +415,6 @@
         </div>
 
 
-        <!-- IMAGE PREVIEW -->
-
         <div
           id="imagePreview"
           class="image-preview hidden"
@@ -830,8 +429,6 @@
         </div>
 
 
-        <!-- PUBLISH -->
-
         <button
           type="button"
           class="primary-button full-width"
@@ -843,9 +440,7 @@
       </div>
 
 
-      <!-- =================================================
-           SELLER INFO
-      ================================================= -->
+      <!-- SELLER INFO -->
 
       <div class="seller-info-card">
 
@@ -863,71 +458,41 @@
           and grow their businesses using intelligent technology.
         </p>
 
-
         <div class="feature-list">
 
           <div class="feature-item">
-
-            <strong>
-              AI Product Assistant
-            </strong>
-
+            <strong>AI Product Assistant</strong>
             <span>
               Generate professional product listings faster.
             </span>
-
           </div>
 
-
           <div class="feature-item">
-
-            <strong>
-              Easy product creation
-            </strong>
-
+            <strong>Easy product creation</strong>
             <span>
               Create and publish products quickly.
             </span>
-
           </div>
 
-
           <div class="feature-item">
-
-            <strong>
-              Marketplace visibility
-            </strong>
-
+            <strong>Marketplace visibility</strong>
             <span>
               Put your products in front of buyers.
             </span>
-
           </div>
 
-
           <div class="feature-item">
-
-            <strong>
-              Seller analytics
-            </strong>
-
+            <strong>Seller analytics</strong>
             <span>
               Track products, orders and revenue.
             </span>
-
           </div>
 
-
           <div class="feature-item">
-
-            <strong>
-              AI-powered future
-            </strong>
-
+            <strong>AI-powered future</strong>
             <span>
               More intelligent seller tools are coming.
             </span>
-
           </div>
 
         </div>
@@ -966,62 +531,29 @@
 
     </div>
 
-
     <div class="dashboard-grid">
 
       <div class="dashboard-card">
-
-        <span>
-          Products
-        </span>
-
-        <strong id="dashboardProducts">
-          6
-        </strong>
-
+        <span>Products</span>
+        <strong id="dashboardProducts">6</strong>
       </div>
 
-
       <div class="dashboard-card">
-
-        <span>
-          Orders
-        </span>
-
-        <strong id="dashboardOrders">
-          0
-        </strong>
-
+        <span>Orders</span>
+        <strong id="dashboardOrders">0</strong>
       </div>
 
-
       <div class="dashboard-card">
-
-        <span>
-          Revenue
-        </span>
-
-        <strong id="dashboardRevenue">
-          KES 0
-        </strong>
-
+        <span>Revenue</span>
+        <strong id="dashboardRevenue">KES 0</strong>
       </div>
 
-
       <div class="dashboard-card">
-
-        <span>
-          Today's Visitors
-        </span>
-
-        <strong id="dashboardVisitors">
-          0
-        </strong>
-
+        <span>Today's Visitors</span>
+        <strong id="dashboardVisitors">0</strong>
       </div>
 
     </div>
-
 
     <div class="dashboard-actions">
 
@@ -1065,7 +597,6 @@
 
     </div>
 
-
     <div class="feature-grid">
 
       <div class="feature-card">
@@ -1080,7 +611,7 @@
 
         <p>
           Intelligent tools designed to help sellers
-          make better business decisions.
+          create and manage products.
         </p>
 
       </div>
@@ -1089,16 +620,16 @@
       <div class="feature-card">
 
         <div class="feature-icon">
-          ↗
+          🛍
         </div>
 
         <h3>
-          Growth Tools
+          Smart Marketplace
         </h3>
 
         <p>
-          Marketing, pricing, SEO and analytics
-          designed around seller growth.
+          A marketplace designed around easier
+          product discovery.
         </p>
 
       </div>
@@ -1107,16 +638,16 @@
       <div class="feature-card">
 
         <div class="feature-icon">
-          ₿
+          📊
         </div>
 
         <h3>
-          Modern Payments
+          Seller Analytics
         </h3>
 
         <p>
-          Future plans include flexible fiat
-          and digital payment options.
+          Understand products, orders, visitors
+          and business activity.
         </p>
 
       </div>
@@ -1133,8 +664,8 @@
         </h3>
 
         <p>
-          Starting locally and designed with
-          global expansion in mind.
+          A foundation for expanding commerce
+          beyond local markets.
         </p>
 
       </div>
@@ -1159,11 +690,11 @@
       <div>
 
         <p class="section-eyebrow">
-          ABOUT SM1THX 🛒
+          ABOUT SM1THX
         </p>
 
         <h2>
-          Building The Future Of Commerce
+          Building the future of commerce.
         </h2>
 
       </div>
@@ -1171,16 +702,16 @@
       <div>
 
         <p>
-          SM1THX 🛒 started with a simple idea:
-          make it easier for people to build,
-          sell and grow online.
+          SM1THX 🛒 is an early-stage commerce platform
+          focused on helping people discover, sell and
+          grow online.
         </p>
 
         <p>
-          This MVP is an early demonstration of
-          that vision — combining marketplace
-          technology, seller tools and the foundation
-          for future AI-powered commerce.
+          This MVP demonstrates the foundation:
+          marketplace discovery, shopping cart,
+          seller product creation, image uploads,
+          analytics and an AI product assistant.
         </p>
 
       </div>
@@ -1203,19 +734,18 @@
     <div class="section-heading">
 
       <p class="section-eyebrow">
-        BUILDING IN PUBLIC
+        BUILD LOG
       </p>
 
       <h2>
-        SM1THX 🛒 Updates
+        SM1THX Updates
       </h2>
 
       <p>
-        See what has been improved and added to SM1THX 🛒.
+        Follow the evolution of the SM1THX MVP.
       </p>
 
     </div>
-
 
     <button
       type="button"
@@ -1226,98 +756,37 @@
       View Updates
     </button>
 
-
     <div
       id="updateHistory"
-      class="update-history"
-      style="display:none;"
+      class="update-history card"
     >
 
-      <div class="card">
+      <div class="update-item">
+        <strong>Marketplace foundation</strong>
+        <p>
+          Product discovery and marketplace browsing added.
+        </p>
+      </div>
 
-        <div class="update-item">
+      <div class="update-item">
+        <strong>Shopping cart</strong>
+        <p>
+          Cart management and demo checkout added.
+        </p>
+      </div>
 
-          <strong>
-            SM1THX 🛒 MVP launched
-          </strong>
+      <div class="update-item">
+        <strong>Seller Studio</strong>
+        <p>
+          Sellers can create and publish products.
+        </p>
+      </div>
 
-          <p>
-            Initial marketplace experience with products,
-            search, product details, cart and demo checkout.
-          </p>
-
-        </div>
-
-
-        <div class="update-item">
-
-          <strong>
-            Seller Studio added
-          </strong>
-
-          <p>
-            Sellers can create products and publish
-            them directly to the marketplace.
-          </p>
-
-        </div>
-
-
-        <div class="update-item">
-
-          <strong>
-            Product image uploads added
-          </strong>
-
-          <p>
-            Sellers can upload product images when
-            creating products.
-          </p>
-
-        </div>
-
-
-        <div class="update-item">
-
-          <strong>
-            Dashboard improvements
-          </strong>
-
-          <p>
-            Added seller statistics for products,
-            orders, revenue and visitors.
-          </p>
-
-        </div>
-
-
-        <div class="update-item">
-
-          <strong>
-            SM1THX 🛒 AI Product Assistant added
-          </strong>
-
-          <p>
-            Added the foundation for AI-assisted
-            product listing generation.
-          </p>
-
-        </div>
-
-
-        <div class="update-item">
-
-          <strong>
-            SM1THX 🛒 branding updated
-          </strong>
-
-          <p>
-            Updated the platform with the new
-            SM1THX 🛒 logo and SHOP • BUY • GROW branding.
-          </p>
-
-        </div>
-
+      <div class="update-item">
+        <strong>AI Product Assistant</strong>
+        <p>
+          AI listing generation interface added.
+        </p>
       </div>
 
     </div>
@@ -1364,13 +833,12 @@
 <aside
   id="cartPanel"
   class="cart-panel"
-  aria-label="Shopping cart"
+  aria-hidden="true"
 >
 
-  <div class="cart-panel-header">
+  <div class="cart-header">
 
     <div>
-
       <p class="section-eyebrow">
         SM1THX 🛒
       </p>
@@ -1378,12 +846,11 @@
       <h2>
         Your Cart
       </h2>
-
     </div>
 
     <button
       type="button"
-      class="modal-close"
+      class="cart-close"
       onclick="closeCart()"
       aria-label="Close cart"
     >
@@ -1392,40 +859,44 @@
 
   </div>
 
-
   <div
     id="cartItems"
     class="cart-items"
   ></div>
 
+  <div class="cart-total">
 
-  <div class="cart-summary">
+    <span>
+      Subtotal
+    </span>
 
-    <div class="cart-summary-row">
+    <strong id="cartSubtotal">
+      KES 0
+    </strong>
 
-      <span>
-        Subtotal
-      </span>
+  </div>
 
-      <strong id="cartSubtotal">
-        KES 0
-      </strong>
+  <div class="cart-total">
 
-    </div>
+    <span>
+      Total
+    </span>
 
+    <strong id="cartTotal">
+      KES 0
+    </strong>
 
-    <div class="cart-summary-row total-row">
+  </div>
 
-      <span>
-        Total
-      </span>
+  <div class="cart-actions">
 
-      <strong id="cartTotal">
-        KES 0
-      </strong>
-
-    </div>
-
+    <button
+      type="button"
+      class="secondary-button full-width"
+      onclick="clearShoppingCart()"
+    >
+      Clear Cart
+    </button>
 
     <button
       type="button"
@@ -1441,275 +912,6 @@
 
 
 <!-- =====================================================
-     LOGIN / REGISTER
-===================================================== -->
-
-<div
-  id="loginOverlay"
-  class="login-overlay"
-  aria-hidden="true"
->
-
-  <div class="login-card">
-
-    <button
-      type="button"
-      class="modal-close"
-      onclick="closeLogin()"
-      aria-label="Close login"
-    >
-      ×
-    </button>
-
-
-    <div id="loginFormSection">
-
-      <div class="login-header">
-
-        <p class="section-eyebrow">
-          WELCOME BACK
-        </p>
-
-        <h2>
-          Login to SM1THX 🛒
-        </h2>
-
-        <p>
-          Access your seller dashboard and account.
-        </p>
-
-      </div>
-
-
-      <form id="loginForm">
-
-        <div class="form-group">
-
-          <label for="loginEmail">
-            Email
-          </label>
-
-          <input
-            id="loginEmail"
-            type="email"
-            placeholder="you@example.com"
-            autocomplete="email"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="loginPassword">
-            Password
-          </label>
-
-          <div class="password-field">
-
-            <input
-              id="loginPassword"
-              type="password"
-              placeholder="Enter your password"
-              autocomplete="current-password"
-              required
-            >
-
-            <button
-              type="button"
-              class="password-toggle"
-              onclick="togglePassword('loginPassword', this)"
-              aria-label="Show password"
-            >
-              👁
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <label class="checkbox-row">
-
-          <input
-            id="rememberUser"
-            type="checkbox"
-          >
-
-          <span>
-            Remember me
-          </span>
-
-        </label>
-
-
-        <button
-          type="submit"
-          class="primary-button full-width"
-        >
-          Login
-        </button>
-
-      </form>
-
-
-      <p class="login-switch">
-
-        Don't have an account?
-
-        <button
-          type="button"
-          onclick="showRegisterForm()"
-        >
-          Create account
-        </button>
-
-      </p>
-
-    </div>
-
-
-    <div
-      id="registerFormSection"
-      style="display:none;"
-    >
-
-      <div class="login-header">
-
-        <p class="section-eyebrow">
-          JOIN SM1THX 🛒
-        </p>
-
-        <h2>
-          Create your account
-        </h2>
-
-        <p>
-          Start exploring or selling on SM1THX 🛒.
-        </p>
-
-      </div>
-
-
-      <form id="registerForm">
-
-        <div class="form-group">
-
-          <label for="registerName">
-            Full Name
-          </label>
-
-          <input
-            id="registerName"
-            type="text"
-            placeholder="Your name"
-            autocomplete="name"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="registerEmail">
-            Email
-          </label>
-
-          <input
-            id="registerEmail"
-            type="email"
-            placeholder="you@example.com"
-            autocomplete="email"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="registerPassword">
-            Password
-          </label>
-
-          <div class="password-field">
-
-            <input
-              id="registerPassword"
-              type="password"
-              placeholder="Create a password"
-              autocomplete="new-password"
-              required
-            >
-
-            <button
-              type="button"
-              class="password-toggle"
-              onclick="togglePassword('registerPassword', this)"
-              aria-label="Show password"
-            >
-              👁
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="accountType">
-            Account Type
-          </label>
-
-          <select id="accountType">
-
-            <option value="buyer">
-              Buyer
-            </option>
-
-            <option value="seller">
-              Seller
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <button
-          type="submit"
-          class="primary-button full-width"
-        >
-          Create Account
-        </button>
-
-      </form>
-
-
-      <p class="login-switch">
-
-        Already have an account?
-
-        <button
-          type="button"
-          onclick="showLoginForm()"
-        >
-          Login
-        </button>
-
-      </p>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =====================================================
      TOAST
 ===================================================== -->
 
@@ -1721,50 +923,19 @@
 ></div>
 
 
-<!-- =====================================================
-     FOOTER
-===================================================== -->
-
-<footer class="footer">
+<footer>
 
   <div class="footer-inner">
 
-    <div class="footer-brand">
-
-      <img
-        src="assets/smithx-logo.jpg"
-        class="smithx-logo-image"
-        alt="SM1THX 🛒 logo"
-      >
-
-      <div>
-
-        <strong>
-          SM1THX 🛒
-        </strong>
-
-        <p>
-          SHOP • BUY • GROW
-        </p>
-
-      </div>
-
+    <div>
+      <strong>SM1THX 🛒</strong>
+      <p>
+        Shop • Buy • Grow
+      </p>
     </div>
 
-
-    <div class="footer-links">
-
-      <a href="#home">Home</a>
-      <a href="#market">Marketplace</a>
-      <a href="#seller">Sell</a>
-      <a href="#dashboard">Dashboard</a>
-      <a href="#updates">Updates</a>
-
-    </div>
-
-
-    <p class="footer-copy">
-      © 2026 SM1THX 🛒. Built for the future of commerce.
+    <p>
+      © 2026 SM1THX. MVP demonstration.
     </p>
 
   </div>
