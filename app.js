@@ -1,18 +1,17 @@
-/* =========================================================
-   SM1THX 🛒 — APP.JS
-   MVP VERSION 6.0
-   RELIABLE CART + DEMO CHECKOUT
-   LOGIN REMOVED
-========================================================= */
-
 "use strict";
 
+/* =====================================================
+   SM1THX 🛒
+   APP.JS
+===================================================== */
 
-/* =========================================================
+
+/* =====================================================
    DEFAULT PRODUCTS
-========================================================= */
+===================================================== */
 
 const DEFAULT_PRODUCTS = [
+
   {
     id: "default-1",
     name: "Samsung Galaxy S26 Ultra",
@@ -78,12 +77,13 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
   }
+
 ];
 
 
-/* =========================================================
+/* =====================================================
    CATEGORIES
-========================================================= */
+===================================================== */
 
 const CATEGORIES = [
   "All",
@@ -95,517 +95,1057 @@ const CATEGORIES = [
 ];
 
 
-/* =========================================================
-   STORAGE
-========================================================= */
+/* =====================================================
+   LOCAL STORAGE
+===================================================== */
 
 const STORAGE = {
-  products: "smithx_custom_products_v2",
-  cart: "smithx_cart_v2",
-  analytics: "smithx_analytics_v2",
-  visitor: "smithx_daily_visitor_v2"
+
+  products:
+    "smithx_custom_products_v2",
+
+  cart:
+    "smithx_cart_v2",
+
+  analytics:
+    "smithx_analytics_v2",
+
+  visitor:
+    "smithx_daily_visitor_v2"
+
 };
 
 
-/* =========================================================
+/* =====================================================
    STATE
-========================================================= */
+===================================================== */
 
 let currentCategory = "All";
 let currentSearch = "";
 
+let latestAIProduct = null;
 
-/* =========================================================
+
+/* =====================================================
+   AI BACKEND
+===================================================== */
+
+/*
+   IMPORTANT
+
+   Do NOT put an AI API key in this file.
+
+   This URL will be replaced when we create
+   the Python backend.
+*/
+
+const AI_API_URL =
+  "YOUR_PYTHON_BACKEND_URL/api/generate-product";
+
+
+/* =====================================================
    HELPERS
-========================================================= */
+===================================================== */
 
 function formatKES(value) {
-  return new Intl.NumberFormat("en-KE", {
-    style: "currency",
-    currency: "KES",
-    maximumFractionDigits: 0
-  }).format(Number(value) || 0);
+
+  const number = Number(value) || 0;
+
+  return (
+    "KES " +
+    number.toLocaleString("en-KE")
+  );
+
 }
 
 
 function escapeHTML(value) {
+
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+
 }
 
 
 function safeJSONParse(value, fallback) {
-  try {
-    const parsed = JSON.parse(value);
 
-    return parsed ?? fallback;
+  try {
+
+    return JSON.parse(value);
+
   } catch {
+
     return fallback;
+
   }
+
 }
 
 
 function getElement(id) {
+
   return document.getElementById(id);
+
 }
 
 
-/* =========================================================
+/* =====================================================
    PRODUCTS
-========================================================= */
+===================================================== */
 
 function getCustomProducts() {
-  const products = safeJSONParse(
-    localStorage.getItem(STORAGE.products),
+
+  const saved =
+    localStorage.getItem(
+      STORAGE.products
+    );
+
+  return safeJSONParse(
+    saved,
     []
   );
 
-  return Array.isArray(products)
-    ? products
-    : [];
 }
 
 
 function saveCustomProducts(products) {
+
   localStorage.setItem(
     STORAGE.products,
-    JSON.stringify(
-      Array.isArray(products)
-        ? products
-        : []
-    )
+    JSON.stringify(products)
   );
+
 }
 
 
 function getAllProducts() {
+
   return [
     ...DEFAULT_PRODUCTS,
     ...getCustomProducts()
   ];
+
 }
 
 
 function findProduct(productId) {
+
   return getAllProducts().find(
-    product => product.id === productId
+    product =>
+      product.id === productId
   );
+
 }
 
 
-/* =========================================================
-   CART STORAGE
-========================================================= */
+/* =====================================================
+   CART
+===================================================== */
 
 function getCart() {
-  const stored = safeJSONParse(
-    localStorage.getItem(STORAGE.cart),
+
+  const saved =
+    localStorage.getItem(
+      STORAGE.cart
+    );
+
+  return safeJSONParse(
+    saved,
     []
   );
 
-  if (!Array.isArray(stored)) {
-    return [];
-  }
-
-  const cleaned = [];
-  const seen = new Set();
-
-  stored.forEach(item => {
-    if (!item || !item.id) {
-      return;
-    }
-
-    if (seen.has(item.id)) {
-      return;
-    }
-
-    const product = findProduct(item.id);
-
-    if (!product) {
-      return;
-    }
-
-    let quantity =
-      Number.parseInt(item.quantity, 10);
-
-    if (!Number.isFinite(quantity)) {
-      quantity = 1;
-    }
-
-    quantity = Math.max(1, quantity);
-
-    seen.add(item.id);
-
-    cleaned.push({
-      id: item.id,
-      quantity
-    });
-  });
-
-  return cleaned;
 }
 
 
 function saveCart(cart) {
-  const safeCart =
-    Array.isArray(cart)
-      ? cart
-      : [];
 
   localStorage.setItem(
     STORAGE.cart,
-    JSON.stringify(safeCart)
+    JSON.stringify(cart)
   );
+
 }
 
 
 function clearCart() {
-  localStorage.removeItem(
-    STORAGE.cart
-  );
+
+  saveCart([]);
+
 }
 
 
-/* =========================================================
-   CART CALCULATIONS
-========================================================= */
-
 function getCartCount() {
-  return getCart().reduce(
-    (total, item) => {
-      const quantity =
-        Number.parseInt(
-          item.quantity,
-          10
-        ) || 0;
 
-      return total + Math.max(
-        0,
-        quantity
-      );
-    },
+  return getCart().reduce(
+    (total, item) =>
+      total + Number(item.quantity || 0),
     0
   );
+
 }
 
 
 function calculateCartTotals() {
+
   const cart = getCart();
 
   let subtotal = 0;
-  let itemCount = 0;
-
-  const validItems = [];
 
   cart.forEach(item => {
+
     const product =
-      findProduct(item.id);
+      findProduct(item.productId);
 
-    if (!product) {
-      return;
-    }
-
-    const quantity =
-      Math.max(
-        1,
-        Number.parseInt(
-          item.quantity,
-          10
-        ) || 1
-      );
-
-    const price =
-      Math.max(
-        0,
-        Number(product.price) || 0
-      );
+    if (!product) return;
 
     subtotal +=
-      price * quantity;
+      Number(product.price) *
+      Number(item.quantity || 0);
 
-    itemCount += quantity;
-
-    validItems.push({
-      id: product.id,
-      quantity
-    });
   });
 
   return {
+
     subtotal,
-    total: subtotal,
-    itemCount,
-    validItems
+    total: subtotal
+
   };
+
 }
 
 
-/* =========================================================
+/* =====================================================
+   ADD TO CART
+===================================================== */
+
+function addToCart(productId) {
+
+  const product =
+    findProduct(productId);
+
+  if (!product) {
+
+    showToast(
+      "Product not found."
+    );
+
+    return;
+
+  }
+
+
+  const cart = getCart();
+
+  const existing =
+    cart.find(
+      item =>
+        item.productId === productId
+    );
+
+
+  if (existing) {
+
+    existing.quantity =
+      Number(existing.quantity || 0) + 1;
+
+  } else {
+
+    cart.push({
+
+      productId,
+      quantity: 1
+
+    });
+
+  }
+
+
+  saveCart(cart);
+
+  updateCartUI();
+
+  trackEvent("cart_add", {
+    productId
+  });
+
+  showToast(
+    `${product.name} added to cart.`
+  );
+
+}
+
+
+/* =====================================================
+   REMOVE FROM CART
+===================================================== */
+
+function removeFromCart(productId) {
+
+  const cart =
+    getCart().filter(
+      item =>
+        item.productId !== productId
+    );
+
+  saveCart(cart);
+
+  updateCartUI();
+
+}
+
+
+/* =====================================================
+   CHANGE CART QUANTITY
+===================================================== */
+
+function changeCartQuantity(
+  productId,
+  change
+) {
+
+  const cart = getCart();
+
+  const item =
+    cart.find(
+      cartItem =>
+        cartItem.productId === productId
+    );
+
+
+  if (!item) return;
+
+
+  item.quantity =
+    Number(item.quantity || 0) +
+    Number(change);
+
+
+  if (item.quantity <= 0) {
+
+    const newCart =
+      cart.filter(
+        cartItem =>
+          cartItem.productId !== productId
+      );
+
+    saveCart(newCart);
+
+  } else {
+
+    saveCart(cart);
+
+  }
+
+
+  updateCartUI();
+
+}
+
+
+/* =====================================================
+   SET CART QUANTITY
+===================================================== */
+
+function setCartQuantity(
+  productId,
+  quantity
+) {
+
+  const cart = getCart();
+
+  const item =
+    cart.find(
+      cartItem =>
+        cartItem.productId === productId
+    );
+
+
+  if (!item) return;
+
+
+  const newQuantity =
+    Math.max(
+      0,
+      Number(quantity) || 0
+    );
+
+
+  item.quantity =
+    newQuantity;
+
+
+  if (newQuantity === 0) {
+
+    saveCart(
+      cart.filter(
+        cartItem =>
+          cartItem.productId !== productId
+      )
+    );
+
+  } else {
+
+    saveCart(cart);
+
+  }
+
+
+  updateCartUI();
+
+}
+
+
+/* =====================================================
+   CLEAR SHOPPING CART
+===================================================== */
+
+function clearShoppingCart() {
+
+  clearCart();
+
+  updateCartUI();
+
+  showToast(
+    "Cart cleared."
+  );
+
+}
+
+
+/* =====================================================
+   RENDER CART
+===================================================== */
+
+function renderCart() {
+
+  const container =
+    getElement("cartItems");
+
+  if (!container) return;
+
+
+  const cart = getCart();
+
+
+  if (!cart.length) {
+
+    container.innerHTML = `
+
+      <div class="empty-state">
+
+        <strong>
+          Your cart is empty.
+        </strong>
+
+        <p>
+          Add products from the marketplace
+          to get started.
+        </p>
+
+      </div>
+
+    `;
+
+    const subtotal =
+      getElement("cartSubtotal");
+
+    const total =
+      getElement("cartTotal");
+
+
+    if (subtotal)
+      subtotal.textContent =
+        formatKES(0);
+
+    if (total)
+      total.textContent =
+        formatKES(0);
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+
+  cart.forEach(item => {
+
+    const product =
+      findProduct(item.productId);
+
+    if (!product) return;
+
+
+    const quantity =
+      Number(item.quantity || 1);
+
+
+    const itemElement =
+      document.createElement("div");
+
+
+    itemElement.className =
+      "cart-item";
+
+
+    itemElement.innerHTML = `
+
+      <div class="cart-item-image">
+
+        <img
+          src="${escapeHTML(product.image || "")}"
+          alt="${escapeHTML(product.name)}"
+        >
+
+      </div>
+
+      <div class="cart-item-info">
+
+        <strong>
+          ${escapeHTML(product.name)}
+        </strong>
+
+        <span>
+          ${formatKES(product.price)}
+        </span>
+
+        <div class="cart-item-controls">
+
+          <button
+            type="button"
+            onclick="changeCartQuantity('${product.id}', -1)"
+          >
+            −
+          </button>
+
+          <span>
+            ${quantity}
+          </span>
+
+          <button
+            type="button"
+            onclick="changeCartQuantity('${product.id}', 1)"
+          >
+            +
+          </button>
+
+          <button
+            type="button"
+            onclick="removeFromCart('${product.id}')"
+          >
+            Remove
+          </button>
+
+        </div>
+
+      </div>
+
+    `;
+
+
+    container.appendChild(
+      itemElement
+    );
+
+  });
+
+
+  const totals =
+    calculateCartTotals();
+
+
+  const subtotal =
+    getElement("cartSubtotal");
+
+  const total =
+    getElement("cartTotal");
+
+
+  if (subtotal)
+    subtotal.textContent =
+      formatKES(totals.subtotal);
+
+  if (total)
+    total.textContent =
+      formatKES(totals.total);
+
+}
+
+
+/* =====================================================
+   CART COUNT
+===================================================== */
+
+function updateCartCount() {
+
+  const element =
+    getElement("cartCount");
+
+  if (!element) return;
+
+  element.textContent =
+    getCartCount();
+
+}
+
+
+/* =====================================================
+   UPDATE CART UI
+===================================================== */
+
+function updateCartUI() {
+
+  updateCartCount();
+
+  renderCart();
+
+}
+
+
+/* =====================================================
+   OPEN CART
+===================================================== */
+
+function openCart() {
+
+  const panel =
+    getElement("cartPanel");
+
+  if (!panel) return;
+
+
+  panel.classList.add(
+    "open"
+  );
+
+
+  renderCart();
+
+}
+
+
+/* =====================================================
+   CLOSE CART
+===================================================== */
+
+function closeCart() {
+
+  const panel =
+    getElement("cartPanel");
+
+  if (!panel) return;
+
+
+  panel.classList.remove(
+    "open"
+  );
+
+}
+
+
+/* =====================================================
    ANALYTICS
-========================================================= */
+===================================================== */
 
 function getAnalytics() {
-  const data = safeJSONParse(
+
+  const saved =
     localStorage.getItem(
       STORAGE.analytics
-    ),
+    );
+
+
+  return safeJSONParse(
+    saved,
     {
-      visitors: 0,
       orders: 0,
       revenue: 0,
-      productViews: 0
+      events: []
     }
   );
 
-  return {
-    visitors:
-      Number(data.visitors) || 0,
-
-    orders:
-      Number(data.orders) || 0,
-
-    revenue:
-      Number(data.revenue) || 0,
-
-    productViews:
-      Number(data.productViews) || 0
-  };
 }
 
 
-function saveAnalytics(data) {
+function saveAnalytics(
+  analytics
+) {
+
   localStorage.setItem(
     STORAGE.analytics,
-    JSON.stringify(data)
+    JSON.stringify(analytics)
   );
+
 }
 
 
 function trackEvent(
-  type,
-  amount = 0
+  eventName,
+  data = {}
 ) {
+
   const analytics =
     getAnalytics();
 
-  if (type === "visitor") {
-    analytics.visitors += 1;
+
+  analytics.events =
+    analytics.events || [];
+
+
+  analytics.events.push({
+
+    event:
+      eventName,
+
+    data,
+
+    timestamp:
+      new Date().toISOString()
+
+  });
+
+
+  /*
+    Keep the demo analytics
+    lightweight.
+  */
+
+  if (
+    analytics.events.length >
+    500
+  ) {
+
+    analytics.events =
+      analytics.events.slice(-500);
+
   }
 
-  if (type === "order") {
-    analytics.orders += 1;
-
-    analytics.revenue +=
-      Number(amount) || 0;
-  }
-
-  if (type === "productView") {
-    analytics.productViews += 1;
-  }
 
   saveAnalytics(
     analytics
   );
 
+
   updateDashboard();
+
 }
 
 
+/* =====================================================
+   DAILY VISITOR
+===================================================== */
+
 function trackDailyVisitor() {
+
   const today =
     new Date()
       .toISOString()
-      .split("T")[0];
+      .slice(0, 10);
 
-  const previous =
-    localStorage.getItem(
-      STORAGE.visitor
+
+  const saved =
+    safeJSONParse(
+      localStorage.getItem(
+        STORAGE.visitor
+      ),
+      null
     );
 
-  if (previous !== today) {
+
+  if (
+    !saved ||
+    saved.date !== today
+  ) {
+
+    const data = {
+
+      date: today,
+
+      count: 1
+
+    };
+
+
     localStorage.setItem(
       STORAGE.visitor,
-      today
+      JSON.stringify(data)
     );
 
-    trackEvent(
-      "visitor"
-    );
+
+  } else {
+
+    /*
+      Only count once per page load.
+    */
+
+    if (
+      !sessionStorage.getItem(
+        "smithx_visitor_counted"
+      )
+    ) {
+
+      saved.count =
+        Number(saved.count || 0) + 1;
+
+
+      localStorage.setItem(
+        STORAGE.visitor,
+        JSON.stringify(saved)
+      );
+
+    }
+
   }
+
+
+  sessionStorage.setItem(
+    "smithx_visitor_counted",
+    "true"
+  );
+
+
+  updateDashboard();
+
 }
 
 
-/* =========================================================
+/* =====================================================
    CATEGORIES
-========================================================= */
+===================================================== */
 
 function setupCategories() {
+
   const container =
     getElement(
       "categoryFilters"
     );
 
-  if (!container) {
-    return;
-  }
+  if (!container) return;
 
-  container.innerHTML =
-    CATEGORIES
-      .map(category => `
-        <button
-          type="button"
-          class="category-filter ${
-            category === currentCategory
-              ? "active"
-              : ""
-          }"
-          data-category="${escapeHTML(category)}"
-        >
-          ${escapeHTML(category)}
-        </button>
-      `)
-      .join("");
 
-  container
-    .querySelectorAll(
-      ".category-filter"
-    )
-    .forEach(button => {
+  container.innerHTML = "";
+
+
+  CATEGORIES.forEach(
+    category => {
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+
+      button.type =
+        "button";
+
+
+      button.className =
+        "category-button";
+
+
+      if (
+        category ===
+        currentCategory
+      ) {
+
+        button.classList.add(
+          "active"
+        );
+
+      }
+
+
+      button.textContent =
+        category;
+
 
       button.addEventListener(
         "click",
         () => {
 
           currentCategory =
-            button.dataset.category ||
-            "All";
+            category;
 
-          container
-            .querySelectorAll(
-              ".category-filter"
-            )
-            .forEach(item => {
-              item.classList.remove(
-                "active"
-              );
-            });
-
-          button.classList.add(
-            "active"
-          );
+          setupCategories();
 
           renderProducts();
+
         }
       );
-    });
+
+
+      container.appendChild(
+        button
+      );
+
+    }
+  );
+
 }
 
 
+/* =====================================================
+   SELLER CATEGORY
+===================================================== */
+
 function setupSellerCategory() {
+
   const select =
     getElement(
       "productCategory"
     );
 
-  if (!select) {
-    return;
-  }
+  if (!select) return;
 
-  select.innerHTML =
-    CATEGORIES
-      .filter(
-        category =>
-          category !== "All"
-      )
-      .map(category => `
-        <option value="${escapeHTML(category)}">
-          ${escapeHTML(category)}
-        </option>
-      `)
-      .join("");
+
+  select.innerHTML = "";
+
+
+  CATEGORIES
+    .filter(
+      category =>
+        category !== "All"
+    )
+    .forEach(
+      category => {
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+
+        option.value =
+          category;
+
+
+        option.textContent =
+          category;
+
+
+        select.appendChild(
+          option
+        );
+
+      }
+    );
+
 }
 
 
-/* =========================================================
-   PRODUCT RENDERING
-========================================================= */
+/* =====================================================
+   RENDER PRODUCTS
+===================================================== */
 
 function renderProducts() {
+
   const grid =
     getElement(
       "productsGrid"
     );
 
-  if (!grid) {
-    return;
-  }
+  if (!grid) return;
+
 
   const search =
     currentSearch
       .trim()
       .toLowerCase();
 
-  const products =
-    getAllProducts()
-      .filter(product => {
 
-        const matchesCategory =
-          currentCategory === "All" ||
+  let products =
+    getAllProducts();
+
+
+  if (
+    currentCategory !==
+    "All"
+  ) {
+
+    products =
+      products.filter(
+        product =>
           product.category ===
-            currentCategory;
+          currentCategory
+      );
 
-        const searchable = `
-          ${product.name}
-          ${product.description}
-          ${product.category}
-        `.toLowerCase();
+  }
 
-        const matchesSearch =
-          !search ||
-          searchable.includes(
+
+  if (search) {
+
+    products =
+      products.filter(
+        product => {
+
+          const text =
+            [
+              product.name,
+              product.description,
+              product.category
+            ]
+              .join(" ")
+              .toLowerCase();
+
+
+          return text.includes(
             search
           );
 
-        return (
-          matchesCategory &&
-          matchesSearch
-        );
-      });
+        }
+      );
+
+  }
+
 
   if (!products.length) {
+
     grid.innerHTML = `
+
       <div class="empty-state">
-        <h3>No products found</h3>
+
+        <strong>
+          No products found.
+        </strong>
+
         <p>
           Try another search or category.
         </p>
+
       </div>
+
     `;
 
     return;
+
   }
 
+
   grid.innerHTML =
-    products
-      .map(product => `
+    products.map(
+      product => `
+
         <article class="product-card">
 
           <button
             type="button"
             class="product-image-button"
-            onclick="openProductModal('${escapeHTML(product.id)}')"
+            onclick="openProductModal('${product.id}')"
           >
+
             <img
-              src="${escapeHTML(product.image)}"
+              src="${escapeHTML(product.image || "")}"
               alt="${escapeHTML(product.name)}"
               loading="lazy"
-              onerror="this.src='https://via.placeholder.com/900x700?text=SM1THX+Product'"
             >
+
           </button>
+
 
           <div class="product-card-body">
 
@@ -613,13 +1153,16 @@ function renderProducts() {
               ${escapeHTML(product.category)}
             </span>
 
+
             <h3>
               ${escapeHTML(product.name)}
             </h3>
 
+
             <p>
               ${escapeHTML(product.description)}
             </p>
+
 
             <div class="product-card-bottom">
 
@@ -627,10 +1170,11 @@ function renderProducts() {
                 ${formatKES(product.price)}
               </strong>
 
+
               <button
                 type="button"
                 class="primary-button small-button"
-                onclick="addToCart('${escapeHTML(product.id)}')"
+                onclick="addToCart('${product.id}')"
               >
                 Add to cart
               </button>
@@ -640,24 +1184,24 @@ function renderProducts() {
           </div>
 
         </article>
-      `)
-      .join("");
+
+      `
+    )
+    .join("");
+
 }
 
 
-/* =========================================================
+/* =====================================================
    PRODUCT MODAL
-========================================================= */
+===================================================== */
 
 function openProductModal(
   productId
 ) {
+
   const product =
     findProduct(productId);
-
-  if (!product) {
-    return;
-  }
 
   const modal =
     getElement(
@@ -669,46 +1213,54 @@ function openProductModal(
       "productModalContent"
     );
 
-  if (!modal || !content) {
-    return;
-  }
+
+  if (
+    !product ||
+    !modal ||
+    !content
+  ) return;
+
 
   content.innerHTML = `
+
     <div class="product-modal-layout">
 
-      <div class="product-modal-image">
+      <div>
+
         <img
-          src="${escapeHTML(product.image)}"
+          src="${escapeHTML(product.image || "")}"
           alt="${escapeHTML(product.name)}"
-          onerror="this.src='https://via.placeholder.com/900x700?text=SM1THX+Product'"
         >
+
       </div>
 
-      <div class="product-modal-info">
+
+      <div>
 
         <span class="product-category">
           ${escapeHTML(product.category)}
         </span>
 
+
         <h2>
           ${escapeHTML(product.name)}
         </h2>
 
-        <div class="modal-price">
+
+        <strong class="product-modal-price">
           ${formatKES(product.price)}
-        </div>
+        </strong>
+
 
         <p>
           ${escapeHTML(product.description)}
         </p>
 
+
         <button
           type="button"
           class="primary-button"
-          onclick="
-            addToCart('${escapeHTML(product.id)}');
-            closeProductModal();
-          "
+          onclick="addToCart('${product.id}'); closeProductModal();"
         >
           Add to cart
         </button>
@@ -716,644 +1268,144 @@ function openProductModal(
       </div>
 
     </div>
+
   `;
 
+
   modal.classList.add(
-    "active"
+    "open"
   );
+
 
   modal.setAttribute(
     "aria-hidden",
     "false"
   );
 
-  trackEvent(
-    "productView"
-  );
 }
 
 
 function closeProductModal() {
+
   const modal =
     getElement(
       "productModal"
     );
 
-  if (!modal) {
-    return;
-  }
+  if (!modal) return;
+
 
   modal.classList.remove(
-    "active"
+    "open"
   );
+
 
   modal.setAttribute(
     "aria-hidden",
     "true"
   );
+
 }
 
 
-/* =========================================================
-   CART — ADD
-========================================================= */
-
-function addToCart(
-  productId
-) {
-  const product =
-    findProduct(productId);
-
-  if (!product) {
-    showToast(
-      "Product could not be added."
-    );
-
-    return;
-  }
-
-  const cart =
-    getCart();
-
-  const existing =
-    cart.find(
-      item =>
-        item.id === productId
-    );
-
-  if (existing) {
-    existing.quantity =
-      Math.max(
-        1,
-        Number(existing.quantity) || 1
-      ) + 1;
-  } else {
-    cart.push({
-      id: productId,
-      quantity: 1
-    });
-  }
-
-  saveCart(cart);
-
-  updateCartUI();
-
-  showToast(
-    `${product.name} added to cart.`
-  );
-}
-
-
-/* =========================================================
-   CART — REMOVE
-========================================================= */
-
-function removeFromCart(
-  productId
-) {
-  const product =
-    findProduct(productId);
-
-  const cart =
-    getCart().filter(
-      item =>
-        item.id !== productId
-    );
-
-  saveCart(cart);
-
-  updateCartUI();
-
-  if (product) {
-    showToast(
-      `${product.name} removed from cart.`
-    );
-  }
-}
-
-
-/* =========================================================
-   CART — QUANTITY
-========================================================= */
-
-function changeCartQuantity(
-  productId,
-  amount
-) {
-  const change =
-    Number.parseInt(
-      amount,
-      10
-    );
-
-  if (!Number.isFinite(change)) {
-    return;
-  }
-
-  const cart =
-    getCart();
-
-  const item =
-    cart.find(
-      cartItem =>
-        cartItem.id === productId
-    );
-
-  if (!item) {
-    return;
-  }
-
-  const currentQuantity =
-    Math.max(
-      1,
-      Number.parseInt(
-        item.quantity,
-        10
-      ) || 1
-    );
-
-  const newQuantity =
-    currentQuantity + change;
-
-  if (newQuantity <= 0) {
-    removeFromCart(
-      productId
-    );
-
-    return;
-  }
-
-  item.quantity =
-    newQuantity;
-
-  saveCart(cart);
-
-  updateCartUI();
-}
-
-
-/* =========================================================
-   CART — SET EXACT QUANTITY
-========================================================= */
-
-function setCartQuantity(
-  productId,
-  quantity
-) {
-  const newQuantity =
-    Number.parseInt(
-      quantity,
-      10
-    );
-
-  if (
-    !Number.isFinite(
-      newQuantity
-    )
-  ) {
-    return;
-  }
-
-  if (newQuantity <= 0) {
-    removeFromCart(
-      productId
-    );
-
-    return;
-  }
-
-  const cart =
-    getCart();
-
-  const item =
-    cart.find(
-      cartItem =>
-        cartItem.id === productId
-    );
-
-  if (!item) {
-    return;
-  }
-
-  item.quantity =
-    newQuantity;
-
-  saveCart(cart);
-
-  updateCartUI();
-}
-
-
-/* =========================================================
-   CART — CLEAR
-========================================================= */
-
-function clearShoppingCart(
-  showMessage = true
-) {
-  clearCart();
-
-  updateCartUI();
-
-  if (showMessage) {
-    showToast(
-      "Cart cleared."
-    );
-  }
-}
-
-
-/* =========================================================
-   CART — RENDER
-========================================================= */
-
-function renderCart() {
-  const container =
-    getElement(
-      "cartItems"
-    );
-
-  const subtotalElement =
-    getElement(
-      "cartSubtotal"
-    );
-
-  const totalElement =
-    getElement(
-      "cartTotal"
-    );
-
-  if (!container) {
-    return;
-  }
-
-  const totals =
-    calculateCartTotals();
-
-  /*
-    Save cleaned cart.
-    This prevents deleted products
-    from remaining inside the cart.
-  */
-  saveCart(
-    totals.validItems
-  );
-
-  if (!totals.validItems.length) {
-
-    container.innerHTML = `
-      <div class="empty-state">
-
-        <div style="font-size:42px;">
-          🛒
-        </div>
-
-        <h3>
-          Your cart is empty
-        </h3>
-
-        <p>
-          Add products from the marketplace.
-        </p>
-
-      </div>
-    `;
-
-    if (subtotalElement) {
-      subtotalElement.textContent =
-        formatKES(0);
-    }
-
-    if (totalElement) {
-      totalElement.textContent =
-        formatKES(0);
-    }
-
-    return;
-  }
-
-  container.innerHTML =
-    totals.validItems
-      .map(item => {
-
-        const product =
-          findProduct(
-            item.id
-          );
-
-        if (!product) {
-          return "";
-        }
-
-        const quantity =
-          Math.max(
-            1,
-            Number.parseInt(
-              item.quantity,
-              10
-            ) || 1
-          );
-
-        const lineTotal =
-          Number(product.price) *
-          quantity;
-
-        return `
-          <div class="cart-item">
-
-            <img
-              src="${escapeHTML(product.image)}"
-              alt="${escapeHTML(product.name)}"
-              onerror="this.src='https://via.placeholder.com/200x150?text=SM1THX'"
-            >
-
-            <div>
-
-              <h4>
-                ${escapeHTML(product.name)}
-              </h4>
-
-              <p>
-                ${formatKES(product.price)}
-              </p>
-
-              <p>
-                <strong>
-                  ${formatKES(lineTotal)}
-                </strong>
-              </p>
-
-              <div
-                style="
-                  display:flex;
-                  align-items:center;
-                  gap:8px;
-                  margin-top:8px;
-                "
-              >
-
-                <button
-                  type="button"
-                  aria-label="Decrease quantity"
-                  onclick="
-                    changeCartQuantity(
-                      '${escapeHTML(product.id)}',
-                      -1
-                    )
-                  "
-                >
-                  −
-                </button>
-
-                <strong>
-                  ${quantity}
-                </strong>
-
-                <button
-                  type="button"
-                  aria-label="Increase quantity"
-                  onclick="
-                    changeCartQuantity(
-                      '${escapeHTML(product.id)}',
-                      1
-                    )
-                  "
-                >
-                  +
-                </button>
-
-              </div>
-
-              <button
-                type="button"
-                style="
-                  margin-top:7px;
-                  border:0;
-                  background:none;
-                  color:#dc2626;
-                  font-size:12px;
-                  font-weight:800;
-                  cursor:pointer;
-                "
-                onclick="
-                  removeFromCart(
-                    '${escapeHTML(product.id)}'
-                  )
-                "
-              >
-                Remove
-              </button>
-
-            </div>
-
-          </div>
-        `;
-      })
-      .join("");
-
-  if (subtotalElement) {
-    subtotalElement.textContent =
-      formatKES(
-        totals.subtotal
-      );
-  }
-
-  if (totalElement) {
-    totalElement.textContent =
-      formatKES(
-        totals.total
-      );
-  }
-}
-
-
-/* =========================================================
-   CART — COUNT
-========================================================= */
-
-function updateCartCount() {
-  const element =
-    getElement(
-      "cartCount"
-    );
-
-  if (!element) {
-    return;
-  }
-
-  element.textContent =
-    getCartCount();
-}
-
-
-/* =========================================================
-   CART — FULL UI REFRESH
-========================================================= */
-
-function updateCartUI() {
-  renderCart();
-  updateCartCount();
-}
-
-
-/* =========================================================
-   CART — OPEN
-========================================================= */
-
-function openCart() {
-  const panel =
-    getElement(
-      "cartPanel"
-    );
-
-  if (!panel) {
-    console.error(
-      "SM1THX: cartPanel not found."
-    );
-
-    return;
-  }
-
-  updateCartUI();
-
-  panel.classList.add(
-    "active"
-  );
-
-  /*
-    Some versions of the CSS use
-    active, others may use open.
-    Keeping both makes the control
-    more reliable without changing CSS.
-  */
-  panel.classList.add(
-    "open"
-  );
-
-  panel.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
-  document.body.classList.add(
-    "cart-open"
-  );
-}
-
-
-/* =========================================================
-   CART — CLOSE
-========================================================= */
-
-function closeCart() {
-  const panel =
-    getElement(
-      "cartPanel"
-    );
-
-  if (!panel) {
-    return;
-  }
-
-  panel.classList.remove(
-    "active"
-  );
-
-  panel.classList.remove(
-    "open"
-  );
-
-  panel.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-  document.body.classList.remove(
-    "cart-open"
-  );
-}
-
-
-/* =========================================================
+/* =====================================================
    DEMO CHECKOUT
-========================================================= */
+===================================================== */
 
 function demoCheckout() {
-  const totals =
-    calculateCartTotals();
 
-  if (
-    !totals.validItems.length ||
-    totals.total <= 0
-  ) {
+  const cart =
+    getCart();
+
+
+  if (!cart.length) {
+
     showToast(
       "Your cart is empty."
     );
 
     return;
+
   }
 
-  const order = {
-    id:
-      "SMX-DEMO-" +
-      Date.now(),
 
-    items:
-      totals.validItems.map(
-        item => ({
-          id: item.id,
-          quantity: item.quantity
-        })
-      ),
+  const totals =
+    calculateCartTotals();
 
-    total:
-      totals.total,
 
-    createdAt:
-      new Date().toISOString()
-  };
+  const analytics =
+    getAnalytics();
 
-  /*
-    Demo checkout does not charge
-    real money.
-  */
 
-  trackEvent(
-    "order",
-    totals.total
+  analytics.orders =
+    Number(analytics.orders || 0) + 1;
+
+
+  analytics.revenue =
+    Number(analytics.revenue || 0) +
+    Number(totals.total || 0);
+
+
+  saveAnalytics(
+    analytics
   );
 
-  /*
-    Store the latest demo order
-    for MVP demonstration purposes.
-  */
+
+  const orderId =
+    `SMX-DEMO-${Date.now()}`;
+
+
   localStorage.setItem(
     "smithx_last_demo_order",
-    JSON.stringify(order)
+    JSON.stringify({
+
+      orderId,
+
+      total:
+        totals.total,
+
+      createdAt:
+        new Date().toISOString()
+
+    })
   );
 
-  /*
-    Clear cart only after the
-    order has been successfully
-    prepared.
-  */
+
+  trackEvent(
+    "demo_order",
+    {
+
+      orderId,
+
+      total:
+        totals.total
+
+    }
+  );
+
+
   clearCart();
 
   updateCartUI();
 
   closeCart();
 
+  updateDashboard();
+
+
   showToast(
-    `Demo checkout complete! Order ${order.id}`
+    `Demo order ${orderId} created!`
   );
+
 }
 
 
-/* =========================================================
+/* =====================================================
    IMAGE PREVIEW
-========================================================= */
+===================================================== */
 
 function setupImagePreview() {
+
   const input =
     getElement(
       "productImage"
@@ -1364,36 +1416,40 @@ function setupImagePreview() {
       "imagePreview"
     );
 
-  const previewImage =
+  const image =
     getElement(
       "previewImage"
     );
 
+
   if (
     !input ||
     !preview ||
-    !previewImage
-  ) {
-    return;
-  }
+    !image
+  ) return;
+
 
   input.addEventListener(
     "change",
     () => {
 
       const file =
-        input.files?.[0];
+        input.files &&
+        input.files[0];
+
 
       if (!file) {
 
-        preview.style.display =
-          "none";
+        preview.classList.add(
+          "hidden"
+        );
 
-        previewImage.src =
-          "";
+        image.src = "";
 
         return;
+
       }
+
 
       if (
         !file.type.startsWith(
@@ -1405,67 +1461,67 @@ function setupImagePreview() {
           "Please choose an image file."
         );
 
-        input.value =
-          "";
-
-        preview.style.display =
-          "none";
-
-        previewImage.src =
-          "";
+        input.value = "";
 
         return;
+
       }
+
 
       const reader =
         new FileReader();
 
+
       reader.onload =
         event => {
 
-          previewImage.src =
+          image.src =
             event.target.result;
 
-          preview.style.display =
-            "block";
-        };
-
-      reader.onerror =
-        () => {
-
-          showToast(
-            "Could not preview the image."
+          preview.classList.remove(
+            "hidden"
           );
+
         };
+
 
       reader.readAsDataURL(
         file
       );
+
     }
   );
+
 }
 
 
-/* =========================================================
-   IMAGE COMPRESSION
-========================================================= */
+/* =====================================================
+   COMPRESS IMAGE
+===================================================== */
 
 function compressImage(
   file,
   maxWidth = 1200,
   quality = 0.82
 ) {
+
   return new Promise(
     (resolve, reject) => {
 
       const reader =
         new FileReader();
 
+
+      reader.onerror =
+        reject;
+
+
       reader.onload =
         event => {
 
           const img =
             new Image();
+
 
           img.onload =
             () => {
@@ -1476,28 +1532,29 @@ function compressImage(
               let height =
                 img.height;
 
+
               if (
-                width > maxWidth
+                width >
+                maxWidth
               ) {
-
-                const ratio =
-                  maxWidth /
-                  width;
-
-                width =
-                  maxWidth;
 
                 height =
                   Math.round(
                     height *
-                    ratio
+                    (maxWidth / width)
                   );
+
+                width =
+                  maxWidth;
+
               }
+
 
               const canvas =
                 document.createElement(
                   "canvas"
                 );
+
 
               canvas.width =
                 width;
@@ -1505,20 +1562,12 @@ function compressImage(
               canvas.height =
                 height;
 
+
               const context =
                 canvas.getContext(
                   "2d"
                 );
 
-              if (!context) {
-                reject(
-                  new Error(
-                    "Canvas unavailable"
-                  )
-                );
-
-                return;
-              }
 
               context.drawImage(
                 img,
@@ -1528,56 +1577,42 @@ function compressImage(
                 height
               );
 
+
               resolve(
                 canvas.toDataURL(
                   "image/jpeg",
                   quality
                 )
               );
+
             };
+
 
           img.onerror =
-            () => {
+            reject;
 
-              reject(
-                new Error(
-                  "Image could not load"
-                )
-              );
-            };
 
           img.src =
             event.target.result;
+
         };
 
-      reader.onerror =
-        () => {
-
-          reject(
-            new Error(
-              "File could not be read"
-            )
-          );
-        };
 
       reader.readAsDataURL(
         file
       );
+
     }
   );
+
 }
 
 
-/* =========================================================
+/* =====================================================
    PUBLISH PRODUCT
-========================================================= */
+===================================================== */
 
-async function publishProduct(
-  event
-) {
-  if (event) {
-    event.preventDefault();
-  }
+async function publishProduct() {
 
   const nameInput =
     getElement(
@@ -1604,120 +1639,200 @@ async function publishProduct(
       "productImage"
     );
 
-  if (
-    !nameInput ||
-    !priceInput ||
-    !descriptionInput
-  ) {
-    return;
-  }
 
   const name =
-    nameInput.value.trim();
+    nameInput?.value.trim();
+
 
   const price =
     Number(
-      priceInput.value
+      priceInput?.value
     );
 
+
   const category =
-    categoryInput?.value ||
-    "Electronics";
+    categoryInput?.value;
+
 
   const description =
-    descriptionInput.value.trim();
+    descriptionInput?.value.trim();
+
 
   if (!name) {
+
     showToast(
       "Please enter a product name."
     );
 
+    nameInput?.focus();
+
     return;
+
   }
 
+
   if (
-    !Number.isFinite(price) ||
+    !price ||
     price <= 0
   ) {
+
     showToast(
       "Please enter a valid price."
     );
 
+    priceInput?.focus();
+
     return;
+
   }
 
+
+  if (!category) {
+
+    showToast(
+      "Please select a category."
+    );
+
+    categoryInput?.focus();
+
+    return;
+
+  }
+
+
   if (!description) {
+
     showToast(
       "Please add a product description."
     );
 
+    descriptionInput?.focus();
+
     return;
+
   }
 
-  let image =
-    "https://via.placeholder.com/900x700?text=SM1THX+Product";
 
-  if (
-    imageInput?.files?.[0]
-  ) {
+  let image = "";
 
-    try {
+
+  try {
+
+    const file =
+      imageInput?.files?.[0];
+
+
+    if (file) {
 
       image =
         await compressImage(
-          imageInput.files[0]
+          file
         );
 
-    } catch {
-
-      showToast(
-        "Could not process the product image."
-      );
-
-      return;
     }
+
+  } catch (error) {
+
+    console.error(
+      "Image processing error:",
+      error
+    );
+
+    showToast(
+      "Could not process the image."
+    );
+
+    return;
+
   }
 
-  const customProducts =
-    getCustomProducts();
+
+  /*
+    If seller does not upload an image,
+    use a clean placeholder.
+  */
+
+  if (!image) {
+
+    image =
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80";
+
+  }
+
 
   const product = {
+
     id:
-      "custom-" +
-      Date.now() +
-      "-" +
-      Math.random()
+      `custom-${Date.now()}-${Math.random()
         .toString(36)
-        .slice(2, 8),
+        .slice(2, 8)}`,
 
     name,
+
     price,
+
     category,
+
     description,
+
     image
+
   };
 
-  customProducts.push(
+
+  const products =
+    getCustomProducts();
+
+
+  products.push(
     product
   );
 
+
   saveCustomProducts(
-    customProducts
+    products
   );
 
-  nameInput.value =
-    "";
 
-  priceInput.value =
-    "";
+  trackEvent(
+    "product_published",
+    {
+      productId:
+        product.id,
 
-  descriptionInput.value =
-    "";
+      name:
+        product.name,
 
-  if (imageInput) {
-    imageInput.value =
-      "";
-  }
+      price:
+        product.price,
+
+      category:
+        product.category
+
+    }
+  );
+
+
+  /*
+    Reset form.
+  */
+
+  if (nameInput)
+    nameInput.value = "";
+
+  if (priceInput)
+    priceInput.value = "";
+
+  if (descriptionInput)
+    descriptionInput.value = "";
+
+  if (imageInput)
+    imageInput.value = "";
+
+
+  if (categoryInput)
+    categoryInput.selectedIndex = 0;
+
 
   const preview =
     getElement(
@@ -1729,266 +1844,961 @@ async function publishProduct(
       "previewImage"
     );
 
-  if (preview) {
-    preview.style.display =
-      "none";
-  }
 
-  if (previewImage) {
-    previewImage.src =
-      "";
-  }
+  if (preview)
+    preview.classList.add(
+      "hidden"
+    );
+
+  if (previewImage)
+    previewImage.src = "";
+
+
+  /*
+    Reset AI state.
+  */
+
+  latestAIProduct = null;
+
+
+  const aiResult =
+    getElement(
+      "aiProductResult"
+    );
+
+  if (aiResult)
+    aiResult.style.display =
+      "none";
+
 
   renderProducts();
 
   updateDashboard();
 
+
   showToast(
-    "Product published successfully!"
+    "✓ Product published successfully!"
   );
 
-  getElement(
+
+  scrollToSection(
     "market"
-  )?.scrollIntoView({
-    behavior: "smooth"
-  });
+  );
+
 }
 
 
-/* =========================================================
+/* =====================================================
+   SM1THX AI PRODUCT ASSISTANT
+===================================================== */
+
+async function generateProductListing() {
+
+  const productNameInput =
+    getElement(
+      "productName"
+    );
+
+
+  const generateButton =
+    getElement(
+      "generateProductButton"
+    );
+
+
+  const resultBox =
+    getElement(
+      "aiProductResult"
+    );
+
+
+  if (!productNameInput) {
+
+    showToast(
+      "Product name field not found."
+    );
+
+    return;
+
+  }
+
+
+  const productName =
+    productNameInput.value.trim();
+
+
+  if (!productName) {
+
+    showToast(
+      "Enter a product name first."
+    );
+
+    productNameInput.focus();
+
+    return;
+
+  }
+
+
+  const currentPrice =
+    getElement(
+      "productPrice"
+    )?.value || "";
+
+
+  const currentCategory =
+    getElement(
+      "productCategory"
+    )?.value || "";
+
+
+  const currentDescription =
+    getElement(
+      "productDescription"
+    )?.value.trim() || "";
+
+
+  /*
+    Loading state.
+  */
+
+  if (generateButton) {
+
+    generateButton.disabled =
+      true;
+
+    generateButton.innerHTML =
+      "✨ Generating Listing...";
+
+  }
+
+
+  if (resultBox) {
+
+    resultBox.style.display =
+      "block";
+
+    resultBox.innerHTML = `
+
+      <div class="ai-result-item">
+
+        <span>
+          SM1THX AI
+        </span>
+
+        <strong>
+          Creating your product listing...
+        </strong>
+
+        <p>
+          SM1THX is analyzing your product.
+        </p>
+
+      </div>
+
+    `;
+
+  }
+
+
+  try {
+
+    /*
+      Send product information
+      to Python backend.
+    */
+
+    const response =
+      await fetch(
+        AI_API_URL,
+        {
+
+          method: "POST",
+
+          headers: {
+
+            "Content-Type":
+              "application/json"
+
+          },
+
+          body:
+            JSON.stringify({
+
+              productName,
+
+              currentPrice,
+
+              category:
+                currentCategory,
+
+              description:
+                currentDescription
+
+            })
+
+        }
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        `AI server returned ${response.status}`
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    latestAIProduct =
+      data;
+
+
+    /*
+      TITLE
+    */
+
+    const titleElement =
+      getElement(
+        "aiGeneratedTitle"
+      );
+
+
+    if (titleElement) {
+
+      titleElement.textContent =
+        data.title ||
+        productName;
+
+    }
+
+
+    /*
+      DESCRIPTION
+    */
+
+    const descriptionElement =
+      getElement(
+        "aiGeneratedDescription"
+      );
+
+
+    if (descriptionElement) {
+
+      descriptionElement.textContent =
+        data.description || "";
+
+    }
+
+
+    /*
+      CATEGORY
+    */
+
+    const categoryElement =
+      getElement(
+        "aiGeneratedCategory"
+      );
+
+
+    if (categoryElement) {
+
+      categoryElement.textContent =
+        data.category ||
+        "Other";
+
+    }
+
+
+    /*
+      PRICE
+    */
+
+    const priceElement =
+      getElement(
+        "aiGeneratedPrice"
+      );
+
+
+    if (priceElement) {
+
+      const price =
+        Number(
+          data.price || 0
+        );
+
+
+      priceElement.textContent =
+        price > 0
+          ? formatKES(price)
+          : "Not available";
+
+    }
+
+
+    /*
+      FEATURES
+    */
+
+    const featuresElement =
+      getElement(
+        "aiGeneratedFeatures"
+      );
+
+
+    if (featuresElement) {
+
+      featuresElement.innerHTML =
+        "";
+
+
+      const features =
+        Array.isArray(
+          data.features
+        )
+          ? data.features
+          : [];
+
+
+      features.forEach(
+        feature => {
+
+          const li =
+            document.createElement(
+              "li"
+            );
+
+
+          li.textContent =
+            feature;
+
+
+          featuresElement.appendChild(
+            li
+          );
+
+        }
+      );
+
+    }
+
+
+    /*
+      SEO KEYWORDS
+    */
+
+    const seoElement =
+      getElement(
+        "aiGeneratedSEO"
+      );
+
+
+    if (seoElement) {
+
+      if (
+        Array.isArray(
+          data.seo_keywords
+        )
+      ) {
+
+        seoElement.textContent =
+          data.seo_keywords.join(
+            ", "
+          );
+
+      } else {
+
+        seoElement.textContent =
+          data.seo_keywords || "";
+
+      }
+
+    }
+
+
+    /*
+      AD CAPTION
+    */
+
+    const adElement =
+      getElement(
+        "aiGeneratedAd"
+      );
+
+
+    if (adElement) {
+
+      adElement.textContent =
+        data.ad_caption || "";
+
+    }
+
+
+    if (resultBox) {
+
+      resultBox.style.display =
+        "block";
+
+    }
+
+
+    showToast(
+      "✨ AI listing generated!"
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "SM1THX AI error:",
+      error
+    );
+
+
+    if (resultBox) {
+
+      resultBox.innerHTML = `
+
+        <div class="ai-result-item">
+
+          <span>
+            SM1THX AI
+          </span>
+
+          <strong>
+            AI backend not connected yet
+          </strong>
+
+          <p>
+            The SM1THX frontend is ready.
+            Next we need to connect the
+            Python AI backend.
+          </p>
+
+        </div>
+
+      `;
+
+    }
+
+
+    showToast(
+      "AI backend is not connected yet."
+    );
+
+
+  } finally {
+
+    if (generateButton) {
+
+      generateButton.disabled =
+        false;
+
+      generateButton.innerHTML =
+        "✨ Generate Listing";
+
+    }
+
+  }
+
+}
+
+
+/* =====================================================
+   APPLY AI LISTING
+===================================================== */
+
+function applyAIProductListing() {
+
+  if (!latestAIProduct) {
+
+    showToast(
+      "Generate an AI listing first."
+    );
+
+    return;
+
+  }
+
+
+  const productName =
+    getElement(
+      "productName"
+    );
+
+
+  const productPrice =
+    getElement(
+      "productPrice"
+    );
+
+
+  const productCategory =
+    getElement(
+      "productCategory"
+    );
+
+
+  const productDescription =
+    getElement(
+      "productDescription"
+    );
+
+
+  /*
+    TITLE
+  */
+
+  if (
+    productName &&
+    latestAIProduct.title
+  ) {
+
+    productName.value =
+      latestAIProduct.title;
+
+  }
+
+
+  /*
+    PRICE
+  */
+
+  if (
+    productPrice &&
+    latestAIProduct.price
+  ) {
+
+    productPrice.value =
+      Number(
+        latestAIProduct.price
+      );
+
+  }
+
+
+  /*
+    CATEGORY
+  */
+
+  if (
+    productCategory &&
+    latestAIProduct.category
+  ) {
+
+    const category =
+      latestAIProduct.category;
+
+
+    const matchingOption =
+      Array.from(
+        productCategory.options
+      ).find(
+        option =>
+          option.value.toLowerCase() ===
+          String(category).toLowerCase()
+      );
+
+
+    if (matchingOption) {
+
+      productCategory.value =
+        matchingOption.value;
+
+    }
+
+  }
+
+
+  /*
+    DESCRIPTION + FEATURES
+  */
+
+  if (productDescription) {
+
+    let description =
+      latestAIProduct.description ||
+      "";
+
+
+    const features =
+      Array.isArray(
+        latestAIProduct.features
+      )
+        ? latestAIProduct.features
+        : [];
+
+
+    if (features.length) {
+
+      description +=
+        "\n\nKey Features:\n" +
+        features
+          .map(
+            feature =>
+              `• ${feature}`
+          )
+          .join("\n");
+
+    }
+
+
+    productDescription.value =
+      description;
+
+  }
+
+
+  /*
+    Return seller to form.
+  */
+
+  if (productName) {
+
+    productName.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+  }
+
+
+  showToast(
+    "✓ AI listing applied to your product form!"
+  );
+
+}
+
+
+/* =====================================================
    DASHBOARD
-========================================================= */
+===================================================== */
 
 function updateDashboard() {
+
   const products =
     getAllProducts();
 
+
   const analytics =
     getAnalytics();
+
+
+  const visitorData =
+    safeJSONParse(
+      localStorage.getItem(
+        STORAGE.visitor
+      ),
+      {
+        count: 0
+      }
+    );
+
 
   const productsElement =
     getElement(
       "dashboardProducts"
     );
 
+
   const ordersElement =
     getElement(
       "dashboardOrders"
     );
+
 
   const revenueElement =
     getElement(
       "dashboardRevenue"
     );
 
+
   const visitorsElement =
     getElement(
       "dashboardVisitors"
     );
 
+
   if (productsElement) {
+
     productsElement.textContent =
       products.length;
+
   }
+
 
   if (ordersElement) {
+
     ordersElement.textContent =
-      analytics.orders;
+      Number(
+        analytics.orders || 0
+      );
+
   }
+
 
   if (revenueElement) {
+
     revenueElement.textContent =
       formatKES(
-        analytics.revenue
+        analytics.revenue || 0
       );
+
   }
 
+
   if (visitorsElement) {
+
     visitorsElement.textContent =
-      analytics.visitors;
+      Number(
+        visitorData.count || 0
+      );
+
   }
+
 }
 
 
+/* =====================================================
+   RESET ANALYTICS
+===================================================== */
+
 function resetAnalytics() {
-  localStorage.removeItem(
-    STORAGE.analytics
-  );
+
+  saveAnalytics({
+
+    orders: 0,
+
+    revenue: 0,
+
+    events: []
+
+  });
+
 
   updateDashboard();
 
+
   showToast(
-    "Demo analytics have been reset."
+    "Demo analytics reset."
   );
+
 }
 
 
-/* =========================================================
-   UPDATE HISTORY
-========================================================= */
+/* =====================================================
+   UPDATES
+===================================================== */
 
 function toggleUpdateHistory() {
+
   const history =
     getElement(
       "updateHistory"
     );
+
 
   const button =
     getElement(
       "updatesToggle"
     );
 
-  if (!history) {
-    return;
-  }
 
-  const hidden =
+  if (!history) return;
+
+
+  const isHidden =
     history.style.display ===
-      "none" ||
-    history.style.display ===
-      "";
+    "none" ||
+    !history.style.display;
+
 
   history.style.display =
-    hidden
+    isHidden
       ? "block"
       : "none";
 
+
   if (button) {
+
     button.textContent =
-      hidden
-        ? "Hide updates"
+      isHidden
+        ? "Hide Updates"
         : "View Updates";
+
   }
+
 }
 
 
 function setupUpdatesToggle() {
-  /*
-    HTML already controls this.
-  */
+
+  const history =
+    getElement(
+      "updateHistory"
+    );
+
+
+  if (history) {
+
+    history.style.display =
+      "none";
+
+  }
+
 }
 
 
-/* =========================================================
+/* =====================================================
    SEARCH
-========================================================= */
+===================================================== */
 
 function setupSearch() {
+
   const input =
     getElement(
       "productSearch"
     );
 
-  if (!input) {
-    return;
-  }
+
+  if (!input) return;
+
 
   input.addEventListener(
     "input",
-    () => {
+    event => {
 
       currentSearch =
-        input.value || "";
+        event.target.value;
+
 
       renderProducts();
+
     }
   );
+
 }
 
 
-/* =========================================================
+/* =====================================================
    NAVIGATION
-========================================================= */
+===================================================== */
 
 function scrollToSection(
-  id
+  sectionId
 ) {
-  const element =
-    getElement(id);
 
-  if (!element) {
-    return;
-  }
+  const section =
+    getElement(
+      sectionId
+    );
 
-  element.scrollIntoView({
+
+  if (!section) return;
+
+
+  section.scrollIntoView({
+
     behavior: "smooth",
+
     block: "start"
+
   });
+
 }
 
 
 function setupNavigation() {
+
   document
     .querySelectorAll(
       'a[href^="#"]'
     )
-    .forEach(link => {
+    .forEach(
+      link => {
 
-      link.addEventListener(
-        "click",
-        event => {
+        link.addEventListener(
+          "click",
+          event => {
 
-          const id =
-            link.getAttribute(
-              "href"
+            const targetId =
+              link
+                .getAttribute("href")
+                .slice(1);
+
+
+            const target =
+              getElement(
+                targetId
+              );
+
+
+            if (!target) return;
+
+
+            event.preventDefault();
+
+
+            scrollToSection(
+              targetId
             );
 
-          if (
-            !id ||
-            id === "#"
-          ) {
-            return;
           }
+        );
 
-          const target =
-            document.querySelector(
-              id
-            );
+      }
+    );
 
-          if (!target) {
-            return;
-          }
-
-          event.preventDefault();
-
-          target.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-        }
-      );
-    });
 }
 
 
-/* =========================================================
+/* =====================================================
    TOAST
-========================================================= */
+===================================================== */
+
+let toastTimer = null;
+
 
 function showToast(
   message
 ) {
+
   const toast =
     getElement(
       "toast"
     );
 
+
   if (!toast) {
+
+    console.log(
+      message
+    );
+
     return;
+
   }
+
 
   toast.textContent =
     message;
+
 
   toast.classList.add(
     "show"
   );
 
+
   clearTimeout(
-    showToast.timeout
+    toastTimer
   );
 
-  showToast.timeout =
+
+  toastTimer =
     setTimeout(
       () => {
 
@@ -1997,166 +2807,211 @@ function showToast(
         );
 
       },
-      2800
+      3000
     );
+
 }
 
 
-/* =========================================================
-   REMOVE LOGIN UI
-========================================================= */
+/* =====================================================
+   LOGIN COMPATIBILITY
+===================================================== */
 
 function removeLoginUI() {
 
-  /*
-    Remove the login button from
-    the navigation.
-  */
+  const overlay =
+    getElement(
+      "loginOverlay"
+    );
+
 
   const loginButton =
     getElement(
       "loginNavButton"
     );
 
+
+  /*
+    The current MVP does not yet
+    require authentication.
+  */
+
+  if (overlay) {
+
+    overlay.remove();
+
+  }
+
+
   if (loginButton) {
+
     loginButton.remove();
+
   }
 
-
-  /*
-    Remove the login overlay
-    completely.
-  */
-
-  const loginOverlay =
-    getElement(
-      "loginOverlay"
-    );
-
-  if (loginOverlay) {
-    loginOverlay.remove();
-  }
-
-
-  /*
-    Hide any remaining login/register
-    sections if another HTML version
-    contains them outside the overlay.
-  */
-
-  document
-    .querySelectorAll(
-      "#loginFormSection, #registerFormSection"
-    )
-    .forEach(element => {
-      element.remove();
-    });
 }
 
 
-/* =========================================================
+function disableOldLoginHandlers() {
+
+  /*
+    Keep these functions available so
+    older HTML does not throw errors.
+  */
+
+  window.openLogin =
+    function () {
+
+      removeLoginUI();
+
+    };
+
+
+  window.closeLogin =
+    function () {
+
+      removeLoginUI();
+
+    };
+
+}
+
+
+function showRegisterForm() {
+
+  const login =
+    getElement(
+      "loginFormSection"
+    );
+
+
+  const register =
+    getElement(
+      "registerFormSection"
+    );
+
+
+  if (login)
+    login.style.display =
+      "none";
+
+
+  if (register)
+    register.style.display =
+      "block";
+
+}
+
+
+function showLoginForm() {
+
+  const login =
+    getElement(
+      "loginFormSection"
+    );
+
+
+  const register =
+    getElement(
+      "registerFormSection"
+    );
+
+
+  if (login)
+    login.style.display =
+      "block";
+
+
+  if (register)
+    register.style.display =
+      "none";
+
+}
+
+
+function togglePassword(
+  inputId,
+  button
+) {
+
+  const input =
+    getElement(
+      inputId
+    );
+
+
+  if (!input) return;
+
+
+  if (
+    input.type ===
+    "password"
+  ) {
+
+    input.type =
+      "text";
+
+
+    if (button)
+      button.textContent =
+        "🙈";
+
+  } else {
+
+    input.type =
+      "password";
+
+
+    if (button)
+      button.textContent =
+        "👁";
+
+  }
+
+}
+
+
+/* =====================================================
    CART CONTROLS
-========================================================= */
+===================================================== */
 
 function setupCartControls() {
 
-  /*
-    Force every cart button to
-    open the same cart function.
-  */
-
-  document
-    .querySelectorAll(
-      ".cart-button"
-    )
-    .forEach(button => {
-
-      button.onclick =
-        openCart;
-    });
-
-
-  /*
-    Make close buttons inside
-    the cart close the cart.
-  */
-
-  const panel =
-    getElement(
-      "cartPanel"
-    );
-
-  if (!panel) {
-    return;
-  }
-
-  panel
-    .querySelectorAll(
-      ".modal-close, [data-close-cart]"
-    )
-    .forEach(button => {
-
-      button.onclick =
-        closeCart;
-    });
-
-
-  /*
-    If the cart has a backdrop,
-    clicking the backdrop closes it.
-  */
-
-  panel.addEventListener(
-    "click",
-    event => {
-
-      if (
-        event.target ===
-        panel
-      ) {
-        closeCart();
-      }
-    }
-  );
-}
-
-
-/* =========================================================
-   KEYBOARD CONTROLS
-========================================================= */
-
-function setupKeyboardControls() {
   document.addEventListener(
     "keydown",
     event => {
 
       if (
-        event.key !==
+        event.key ===
         "Escape"
       ) {
-        return;
+
+        closeCart();
+
+        closeProductModal();
+
       }
 
-      closeProductModal();
-      closeCart();
     }
   );
+
 }
 
 
-/* =========================================================
+/* =====================================================
    PRODUCT BACKDROP
-========================================================= */
+===================================================== */
 
 function setupProductBackdrop() {
+
   const modal =
     getElement(
       "productModal"
     );
 
-  if (!modal) {
-    return;
-  }
+
+  if (!modal) return;
+
 
   modal.addEventListener(
     "click",
@@ -2166,49 +3021,53 @@ function setupProductBackdrop() {
         event.target ===
         modal
       ) {
+
         closeProductModal();
+
       }
+
     }
   );
+
 }
 
 
-/* =========================================================
-   PREVENT BROKEN LOGIN INLINE HANDLERS
-========================================================= */
+/* =====================================================
+   KEYBOARD CONTROLS
+===================================================== */
 
-function disableOldLoginHandlers() {
+function setupKeyboardControls() {
 
-  /*
-    The old HTML may still contain
-    onclick="openLogin()".
+  document.addEventListener(
+    "keydown",
+    event => {
 
-    We remove the element above,
-    but this harmless fallback prevents
-    a ReferenceError if an old cached
-    HTML element is encountered.
-  */
+      if (
+        event.key ===
+        "Escape"
+      ) {
 
-  window.openLogin =
-    function () {
-      removeLoginUI();
-    };
+        closeProductModal();
 
-  window.closeLogin =
-    function () {
-      removeLoginUI();
-    };
+        closeCart();
+
+      }
+
+    }
+  );
+
 }
 
 
-/* =========================================================
-   INITIALIZE
-========================================================= */
+/* =====================================================
+   INITIALIZE SM1THX
+===================================================== */
 
 function initializeSmithX() {
 
   /*
-    Remove Login immediately.
+    Authentication is not active
+    in this MVP.
   */
 
   removeLoginUI();
@@ -2217,7 +3076,7 @@ function initializeSmithX() {
 
 
   /*
-    Marketplace.
+    Marketplace
   */
 
   setupCategories();
@@ -2228,7 +3087,7 @@ function initializeSmithX() {
 
 
   /*
-    Cart.
+    Cart
   */
 
   updateCartUI();
@@ -2237,80 +3096,56 @@ function initializeSmithX() {
 
 
   /*
-    Seller Studio.
+    Seller
   */
 
   setupImagePreview();
 
 
   /*
-    Search.
+    Search/navigation
   */
 
   setupSearch();
-
-
-  /*
-    Navigation.
-  */
 
   setupNavigation();
 
 
   /*
-    Updates.
+    Updates
   */
 
   setupUpdatesToggle();
 
 
   /*
-    Product modal.
+    Product modal
   */
 
   setupProductBackdrop();
-
-
-  /*
-    Keyboard.
-  */
 
   setupKeyboardControls();
 
 
   /*
-    Analytics.
+    Visitor analytics
   */
 
   trackDailyVisitor();
 
+
+  /*
+    Dashboard
+  */
+
   updateDashboard();
+
 }
 
 
-/* =========================================================
-   DOM READY
-========================================================= */
-
-if (
-  document.readyState ===
-  "loading"
-) {
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    initializeSmithX
-  );
-
-} else {
-
-  initializeSmithX();
-}
-
-
-/* =========================================================
+/* =====================================================
    GLOBAL FUNCTIONS
-========================================================= */
+===================================================== */
 
 window.addToCart =
   addToCart;
@@ -2368,3 +3203,35 @@ window.renderProducts =
 
 window.showToast =
   showToast;
+
+
+/*
+   AI functions
+*/
+
+window.generateProductListing =
+  generateProductListing;
+
+window.applyAIProductListing =
+  applyAIProductListing;
+
+
+/* =====================================================
+   DOM READY
+===================================================== */
+
+if (
+  document.readyState ===
+  "loading"
+) {
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    initializeSmithX
+  );
+
+} else {
+
+  initializeSmithX();
+
+}
