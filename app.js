@@ -2,7 +2,7 @@
 
 /* =====================================================
    SM1THX 🛒
-   APP.JS
+   APP.JS — CART + MARKETPLACE + AI ASSISTANT
 ===================================================== */
 
 
@@ -11,7 +11,6 @@
 ===================================================== */
 
 const DEFAULT_PRODUCTS = [
-
   {
     id: "default-1",
     name: "Samsung Galaxy S26 Ultra",
@@ -77,7 +76,6 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
   }
-
 ];
 
 
@@ -96,23 +94,14 @@ const CATEGORIES = [
 
 
 /* =====================================================
-   LOCAL STORAGE
+   STORAGE
 ===================================================== */
 
 const STORAGE = {
-
-  products:
-    "smithx_custom_products_v2",
-
-  cart:
-    "smithx_cart_v2",
-
-  analytics:
-    "smithx_analytics_v2",
-
-  visitor:
-    "smithx_daily_visitor_v2"
-
+  products: "smithx_custom_products_v2",
+  cart: "smithx_cart_v2",
+  analytics: "smithx_analytics_v2",
+  visitor: "smithx_daily_visitor_v2"
 };
 
 
@@ -122,7 +111,6 @@ const STORAGE = {
 
 let currentCategory = "All";
 let currentSearch = "";
-
 let latestAIProduct = null;
 
 
@@ -131,12 +119,8 @@ let latestAIProduct = null;
 ===================================================== */
 
 /*
-   IMPORTANT
-
-   Do NOT put an AI API key in this file.
-
-   This URL will be replaced when we create
-   the Python backend.
+  Leave this unchanged until the Python backend
+  is actually deployed.
 */
 
 const AI_API_URL =
@@ -147,49 +131,34 @@ const AI_API_URL =
    HELPERS
 ===================================================== */
 
-function formatKES(value) {
+function getElement(id) {
+  return document.getElementById(id);
+}
 
+
+function formatKES(value) {
   const number = Number(value) || 0;
 
-  return (
-    "KES " +
-    number.toLocaleString("en-KE")
-  );
-
+  return "KES " + number.toLocaleString("en-KE");
 }
 
 
 function escapeHTML(value) {
-
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-
 }
 
 
 function safeJSONParse(value, fallback) {
-
   try {
-
     return JSON.parse(value);
-
   } catch {
-
     return fallback;
-
   }
-
-}
-
-
-function getElement(id) {
-
-  return document.getElementById(id);
-
 }
 
 
@@ -198,123 +167,110 @@ function getElement(id) {
 ===================================================== */
 
 function getCustomProducts() {
-
-  const saved =
-    localStorage.getItem(
-      STORAGE.products
-    );
-
   return safeJSONParse(
-    saved,
+    localStorage.getItem(STORAGE.products),
     []
   );
-
 }
 
 
 function saveCustomProducts(products) {
-
   localStorage.setItem(
     STORAGE.products,
     JSON.stringify(products)
   );
-
 }
 
 
 function getAllProducts() {
-
   return [
     ...DEFAULT_PRODUCTS,
     ...getCustomProducts()
   ];
-
 }
 
 
 function findProduct(productId) {
-
   return getAllProducts().find(
-    product =>
-      product.id === productId
+    product => String(product.id) === String(productId)
   );
-
 }
 
 
 /* =====================================================
-   CART
+   CART STORAGE
 ===================================================== */
 
 function getCart() {
-
-  const saved =
-    localStorage.getItem(
-      STORAGE.cart
-    );
-
-  return safeJSONParse(
-    saved,
+  const cart = safeJSONParse(
+    localStorage.getItem(STORAGE.cart),
     []
   );
 
+  return Array.isArray(cart) ? cart : [];
 }
 
 
 function saveCart(cart) {
-
   localStorage.setItem(
     STORAGE.cart,
     JSON.stringify(cart)
   );
-
 }
 
 
 function clearCart() {
-
   saveCart([]);
-
 }
 
+
+/* =====================================================
+   CART COUNT
+===================================================== */
 
 function getCartCount() {
-
   return getCart().reduce(
     (total, item) =>
-      total + Number(item.quantity || 0),
+      total + Math.max(0, Number(item.quantity) || 0),
     0
   );
-
 }
 
 
-function calculateCartTotals() {
+function updateCartCount() {
+  const element = getElement("cartCount");
 
+  if (element) {
+    element.textContent = getCartCount();
+  }
+}
+
+
+/* =====================================================
+   CART TOTALS
+===================================================== */
+
+function calculateCartTotals() {
   const cart = getCart();
 
   let subtotal = 0;
 
   cart.forEach(item => {
-
-    const product =
-      findProduct(item.productId);
+    const product = findProduct(item.productId);
 
     if (!product) return;
 
-    subtotal +=
-      Number(product.price) *
-      Number(item.quantity || 0);
+    const quantity =
+      Math.max(0, Number(item.quantity) || 0);
 
+    subtotal +=
+      Number(product.price) * quantity;
   });
 
   return {
-
     subtotal,
     total: subtotal
-
   };
-
 }
 
 
@@ -323,59 +279,42 @@ function calculateCartTotals() {
 ===================================================== */
 
 function addToCart(productId) {
-
-  const product =
-    findProduct(productId);
+  const product = findProduct(productId);
 
   if (!product) {
-
-    showToast(
-      "Product not found."
-    );
-
+    showToast("Product not found.");
     return;
-
   }
-
 
   const cart = getCart();
 
-  const existing =
-    cart.find(
-      item =>
-        item.productId === productId
-    );
-
+  const existing = cart.find(
+    item =>
+      String(item.productId) === String(productId)
+  );
 
   if (existing) {
-
     existing.quantity =
-      Number(existing.quantity || 0) + 1;
-
+      Math.max(0, Number(existing.quantity) || 0) + 1;
   } else {
-
     cart.push({
-
-      productId,
+      productId: product.id,
       quantity: 1
-
     });
-
   }
-
 
   saveCart(cart);
 
   updateCartUI();
 
   trackEvent("cart_add", {
-    productId
+    productId: product.id,
+    productName: product.name
   });
 
   showToast(
     `${product.name} added to cart.`
   );
-
 }
 
 
@@ -384,17 +323,16 @@ function addToCart(productId) {
 ===================================================== */
 
 function removeFromCart(productId) {
-
-  const cart =
-    getCart().filter(
-      item =>
-        item.productId !== productId
-    );
+  const cart = getCart().filter(
+    item =>
+      String(item.productId) !== String(productId)
+  );
 
   saveCart(cart);
 
   updateCartUI();
 
+  showToast("Item removed from cart.");
 }
 
 
@@ -402,47 +340,32 @@ function removeFromCart(productId) {
    CHANGE CART QUANTITY
 ===================================================== */
 
-function changeCartQuantity(
-  productId,
-  change
-) {
-
+function changeCartQuantity(productId, change) {
   const cart = getCart();
 
-  const item =
-    cart.find(
-      cartItem =>
-        cartItem.productId === productId
-    );
-
+  const item = cart.find(
+    cartItem =>
+      String(cartItem.productId) === String(productId)
+  );
 
   if (!item) return;
 
-
   item.quantity =
-    Number(item.quantity || 0) +
-    Number(change);
-
+    (Number(item.quantity) || 0) +
+    Number(change || 0);
 
   if (item.quantity <= 0) {
-
-    const newCart =
+    saveCart(
       cart.filter(
         cartItem =>
-          cartItem.productId !== productId
-      );
-
-    saveCart(newCart);
-
+          String(cartItem.productId) !== String(productId)
+      )
+    );
   } else {
-
     saveCart(cart);
-
   }
 
-
   updateCartUI();
-
 }
 
 
@@ -450,52 +373,32 @@ function changeCartQuantity(
    SET CART QUANTITY
 ===================================================== */
 
-function setCartQuantity(
-  productId,
-  quantity
-) {
-
+function setCartQuantity(productId, quantity) {
   const cart = getCart();
 
-  const item =
-    cart.find(
-      cartItem =>
-        cartItem.productId === productId
-    );
-
+  const item = cart.find(
+    cartItem =>
+      String(cartItem.productId) === String(productId)
+  );
 
   if (!item) return;
 
-
   const newQuantity =
-    Math.max(
-      0,
-      Number(quantity) || 0
-    );
-
-
-  item.quantity =
-    newQuantity;
-
+    Math.max(0, Number(quantity) || 0);
 
   if (newQuantity === 0) {
-
     saveCart(
       cart.filter(
         cartItem =>
-          cartItem.productId !== productId
+          String(cartItem.productId) !== String(productId)
       )
     );
-
   } else {
-
+    item.quantity = newQuantity;
     saveCart(cart);
-
   }
 
-
   updateCartUI();
-
 }
 
 
@@ -504,15 +407,11 @@ function setCartQuantity(
 ===================================================== */
 
 function clearShoppingCart() {
-
   clearCart();
 
   updateCartUI();
 
-  showToast(
-    "Cart cleared."
-  );
-
+  showToast("Cart cleared.");
 }
 
 
@@ -521,87 +420,58 @@ function clearShoppingCart() {
 ===================================================== */
 
 function renderCart() {
-
-  const container =
-    getElement("cartItems");
+  const container = getElement("cartItems");
 
   if (!container) return;
 
-
   const cart = getCart();
 
-
   if (!cart.length) {
-
     container.innerHTML = `
-
       <div class="empty-state">
-
-        <strong>
-          Your cart is empty.
-        </strong>
-
+        <strong>Your cart is empty.</strong>
         <p>
           Add products from the marketplace
           to get started.
         </p>
-
       </div>
-
     `;
 
-    const subtotal =
-      getElement("cartSubtotal");
+    const subtotal = getElement("cartSubtotal");
+    const total = getElement("cartTotal");
 
-    const total =
-      getElement("cartTotal");
+    if (subtotal) {
+      subtotal.textContent = formatKES(0);
+    }
 
-
-    if (subtotal)
-      subtotal.textContent =
-        formatKES(0);
-
-    if (total)
-      total.textContent =
-        formatKES(0);
+    if (total) {
+      total.textContent = formatKES(0);
+    }
 
     return;
-
   }
-
 
   container.innerHTML = "";
 
-
   cart.forEach(item => {
-
-    const product =
-      findProduct(item.productId);
+    const product = findProduct(item.productId);
 
     if (!product) return;
 
-
     const quantity =
-      Number(item.quantity || 1);
-
+      Math.max(1, Number(item.quantity) || 1);
 
     const itemElement =
       document.createElement("div");
 
-
-    itemElement.className =
-      "cart-item";
-
+    itemElement.className = "cart-item";
 
     itemElement.innerHTML = `
-
       <div class="cart-item-image">
-
         <img
           src="${escapeHTML(product.image || "")}"
           alt="${escapeHTML(product.name)}"
         >
-
       </div>
 
       <div class="cart-item-info">
@@ -618,25 +488,23 @@ function renderCart() {
 
           <button
             type="button"
-            onclick="changeCartQuantity('${product.id}', -1)"
+            onclick="changeCartQuantity('${escapeHTML(product.id)}', -1)"
           >
             −
           </button>
 
-          <span>
-            ${quantity}
-          </span>
+          <span>${quantity}</span>
 
           <button
             type="button"
-            onclick="changeCartQuantity('${product.id}', 1)"
+            onclick="changeCartQuantity('${escapeHTML(product.id)}', 1)"
           >
             +
           </button>
 
           <button
             type="button"
-            onclick="removeFromCart('${product.id}')"
+            onclick="removeFromCart('${escapeHTML(product.id)}')"
           >
             Remove
           </button>
@@ -644,53 +512,25 @@ function renderCart() {
         </div>
 
       </div>
-
     `;
 
-
-    container.appendChild(
-      itemElement
-    );
-
+    container.appendChild(itemElement);
   });
 
+  const totals = calculateCartTotals();
 
-  const totals =
-    calculateCartTotals();
+  const subtotal = getElement("cartSubtotal");
+  const total = getElement("cartTotal");
 
-
-  const subtotal =
-    getElement("cartSubtotal");
-
-  const total =
-    getElement("cartTotal");
-
-
-  if (subtotal)
+  if (subtotal) {
     subtotal.textContent =
       formatKES(totals.subtotal);
+  }
 
-  if (total)
+  if (total) {
     total.textContent =
       formatKES(totals.total);
-
-}
-
-
-/* =====================================================
-   CART COUNT
-===================================================== */
-
-function updateCartCount() {
-
-  const element =
-    getElement("cartCount");
-
-  if (!element) return;
-
-  element.textContent =
-    getCartCount();
-
+  }
 }
 
 
@@ -699,52 +539,32 @@ function updateCartCount() {
 ===================================================== */
 
 function updateCartUI() {
-
   updateCartCount();
-
   renderCart();
-
 }
 
 
 /* =====================================================
-   OPEN CART
+   OPEN / CLOSE CART
 ===================================================== */
 
 function openCart() {
-
-  const panel =
-    getElement("cartPanel");
+  const panel = getElement("cartPanel");
 
   if (!panel) return;
 
-
-  panel.classList.add(
-    "open"
-  );
-
+  panel.classList.add("open");
 
   renderCart();
-
 }
 
 
-/* =====================================================
-   CLOSE CART
-===================================================== */
-
 function closeCart() {
-
-  const panel =
-    getElement("cartPanel");
+  const panel = getElement("cartPanel");
 
   if (!panel) return;
 
-
-  panel.classList.remove(
-    "open"
-  );
-
+  panel.classList.remove("open");
 }
 
 
@@ -753,86 +573,47 @@ function closeCart() {
 ===================================================== */
 
 function getAnalytics() {
-
-  const saved =
-    localStorage.getItem(
-      STORAGE.analytics
-    );
-
-
   return safeJSONParse(
-    saved,
+    localStorage.getItem(STORAGE.analytics),
     {
       orders: 0,
       revenue: 0,
       events: []
     }
   );
-
 }
 
 
-function saveAnalytics(
-  analytics
-) {
-
+function saveAnalytics(analytics) {
   localStorage.setItem(
     STORAGE.analytics,
     JSON.stringify(analytics)
   );
-
 }
 
 
-function trackEvent(
-  eventName,
-  data = {}
-) {
-
-  const analytics =
-    getAnalytics();
-
+function trackEvent(eventName, data = {}) {
+  const analytics = getAnalytics();
 
   analytics.events =
-    analytics.events || [];
-
+    Array.isArray(analytics.events)
+      ? analytics.events
+      : [];
 
   analytics.events.push({
-
-    event:
-      eventName,
-
+    event: eventName,
     data,
-
-    timestamp:
-      new Date().toISOString()
-
+    timestamp: new Date().toISOString()
   });
 
-
-  /*
-    Keep the demo analytics
-    lightweight.
-  */
-
-  if (
-    analytics.events.length >
-    500
-  ) {
-
+  if (analytics.events.length > 500) {
     analytics.events =
       analytics.events.slice(-500);
-
   }
 
-
-  saveAnalytics(
-    analytics
-  );
-
+  saveAnalytics(analytics);
 
   updateDashboard();
-
 }
 
 
@@ -841,76 +622,43 @@ function trackEvent(
 ===================================================== */
 
 function trackDailyVisitor() {
-
   const today =
-    new Date()
-      .toISOString()
-      .slice(0, 10);
-
+    new Date().toISOString().slice(0, 10);
 
   const saved =
     safeJSONParse(
-      localStorage.getItem(
-        STORAGE.visitor
-      ),
+      localStorage.getItem(STORAGE.visitor),
       null
     );
 
-
-  if (
-    !saved ||
-    saved.date !== today
+  if (!saved || saved.date !== today) {
+    localStorage.setItem(
+      STORAGE.visitor,
+      JSON.stringify({
+        date: today,
+        count: 1
+      })
+    );
+  } else if (
+    !sessionStorage.getItem(
+      "smithx_visitor_counted"
+    )
   ) {
-
-    const data = {
-
-      date: today,
-
-      count: 1
-
-    };
-
+    saved.count =
+      Number(saved.count || 0) + 1;
 
     localStorage.setItem(
       STORAGE.visitor,
-      JSON.stringify(data)
+      JSON.stringify(saved)
     );
-
-
-  } else {
-
-    /*
-      Only count once per page load.
-    */
-
-    if (
-      !sessionStorage.getItem(
-        "smithx_visitor_counted"
-      )
-    ) {
-
-      saved.count =
-        Number(saved.count || 0) + 1;
-
-
-      localStorage.setItem(
-        STORAGE.visitor,
-        JSON.stringify(saved)
-      );
-
-    }
-
   }
-
 
   sessionStorage.setItem(
     "smithx_visitor_counted",
     "true"
   );
 
-
   updateDashboard();
-
 }
 
 
@@ -919,73 +667,35 @@ function trackDailyVisitor() {
 ===================================================== */
 
 function setupCategories() {
-
   const container =
-    getElement(
-      "categoryFilters"
-    );
+    getElement("categoryFilters");
 
   if (!container) return;
 
-
   container.innerHTML = "";
 
+  CATEGORIES.forEach(category => {
+    const button =
+      document.createElement("button");
 
-  CATEGORIES.forEach(
-    category => {
+    button.type = "button";
+    button.className = "category-button";
 
-      const button =
-        document.createElement(
-          "button"
-        );
-
-
-      button.type =
-        "button";
-
-
-      button.className =
-        "category-button";
-
-
-      if (
-        category ===
-        currentCategory
-      ) {
-
-        button.classList.add(
-          "active"
-        );
-
-      }
-
-
-      button.textContent =
-        category;
-
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          currentCategory =
-            category;
-
-          setupCategories();
-
-          renderProducts();
-
-        }
-      );
-
-
-      container.appendChild(
-        button
-      );
-
+    if (category === currentCategory) {
+      button.classList.add("active");
     }
-  );
 
+    button.textContent = category;
+
+    button.addEventListener("click", () => {
+      currentCategory = category;
+
+      setupCategories();
+      renderProducts();
+    });
+
+    container.appendChild(button);
+  });
 }
 
 
@@ -994,47 +704,24 @@ function setupCategories() {
 ===================================================== */
 
 function setupSellerCategory() {
-
   const select =
-    getElement(
-      "productCategory"
-    );
+    getElement("productCategory");
 
   if (!select) return;
 
-
   select.innerHTML = "";
 
-
   CATEGORIES
-    .filter(
-      category =>
-        category !== "All"
-    )
-    .forEach(
-      category => {
+    .filter(category => category !== "All")
+    .forEach(category => {
+      const option =
+        document.createElement("option");
 
-        const option =
-          document.createElement(
-            "option"
-          );
+      option.value = category;
+      option.textContent = category;
 
-
-        option.value =
-          category;
-
-
-        option.textContent =
-          category;
-
-
-        select.appendChild(
-          option
-        );
-
-      }
-    );
-
+      select.appendChild(option);
+    });
 }
 
 
@@ -1043,152 +730,102 @@ function setupSellerCategory() {
 ===================================================== */
 
 function renderProducts() {
-
   const grid =
-    getElement(
-      "productsGrid"
-    );
+    getElement("productsGrid");
 
   if (!grid) return;
 
-
   const search =
-    currentSearch
-      .trim()
-      .toLowerCase();
+    currentSearch.trim().toLowerCase();
 
+  let products = getAllProducts();
 
-  let products =
-    getAllProducts();
-
-
-  if (
-    currentCategory !==
-    "All"
-  ) {
-
+  if (currentCategory !== "All") {
     products =
       products.filter(
         product =>
-          product.category ===
-          currentCategory
+          product.category === currentCategory
       );
-
   }
-
 
   if (search) {
-
     products =
-      products.filter(
-        product => {
+      products.filter(product => {
+        const text = [
+          product.name,
+          product.description,
+          product.category
+        ]
+          .join(" ")
+          .toLowerCase();
 
-          const text =
-            [
-              product.name,
-              product.description,
-              product.category
-            ]
-              .join(" ")
-              .toLowerCase();
-
-
-          return text.includes(
-            search
-          );
-
-        }
-      );
-
+        return text.includes(search);
+      });
   }
 
-
   if (!products.length) {
-
     grid.innerHTML = `
-
       <div class="empty-state">
-
-        <strong>
-          No products found.
-        </strong>
-
+        <strong>No products found.</strong>
         <p>
           Try another search or category.
         </p>
-
       </div>
-
     `;
 
     return;
-
   }
 
-
   grid.innerHTML =
-    products.map(
-      product => `
+    products.map(product => `
+      <article class="product-card">
 
-        <article class="product-card">
-
-          <button
-            type="button"
-            class="product-image-button"
-            onclick="openProductModal('${product.id}')"
+        <button
+          type="button"
+          class="product-image-button"
+          onclick="openProductModal('${escapeHTML(product.id)}')"
+        >
+          <img
+            src="${escapeHTML(product.image || "")}"
+            alt="${escapeHTML(product.name)}"
+            loading="lazy"
           >
+        </button>
 
-            <img
-              src="${escapeHTML(product.image || "")}"
-              alt="${escapeHTML(product.name)}"
-              loading="lazy"
+        <div class="product-card-body">
+
+          <span class="product-category">
+            ${escapeHTML(product.category)}
+          </span>
+
+          <h3>
+            ${escapeHTML(product.name)}
+          </h3>
+
+          <p>
+            ${escapeHTML(product.description)}
+          </p>
+
+          <div class="product-card-bottom">
+
+            <strong>
+              ${formatKES(product.price)}
+            </strong>
+
+            <button
+              type="button"
+              class="primary-button small-button"
+              onclick="addToCart('${escapeHTML(product.id)}')"
             >
-
-          </button>
-
-
-          <div class="product-card-body">
-
-            <span class="product-category">
-              ${escapeHTML(product.category)}
-            </span>
-
-
-            <h3>
-              ${escapeHTML(product.name)}
-            </h3>
-
-
-            <p>
-              ${escapeHTML(product.description)}
-            </p>
-
-
-            <div class="product-card-bottom">
-
-              <strong>
-                ${formatKES(product.price)}
-              </strong>
-
-
-              <button
-                type="button"
-                class="primary-button small-button"
-                onclick="addToCart('${product.id}')"
-              >
-                Add to cart
-              </button>
-
-            </div>
+              Add to cart
+            </button>
 
           </div>
 
-        </article>
+        </div>
 
-      `
-    )
-    .join("");
-
+      </article>
+    `).join("");
 }
 
 
@@ -1196,44 +833,26 @@ function renderProducts() {
    PRODUCT MODAL
 ===================================================== */
 
-function openProductModal(
-  productId
-) {
-
-  const product =
-    findProduct(productId);
+function openProductModal(productId) {
+  const product = findProduct(productId);
 
   const modal =
-    getElement(
-      "productModal"
-    );
+    getElement("productModal");
 
   const content =
-    getElement(
-      "productModalContent"
-    );
+    getElement("productModalContent");
 
-
-  if (
-    !product ||
-    !modal ||
-    !content
-  ) return;
-
+  if (!product || !modal || !content) return;
 
   content.innerHTML = `
-
     <div class="product-modal-layout">
 
       <div>
-
         <img
           src="${escapeHTML(product.image || "")}"
           alt="${escapeHTML(product.name)}"
         >
-
       </div>
-
 
       <div>
 
@@ -1241,26 +860,22 @@ function openProductModal(
           ${escapeHTML(product.category)}
         </span>
 
-
         <h2>
           ${escapeHTML(product.name)}
         </h2>
-
 
         <strong class="product-modal-price">
           ${formatKES(product.price)}
         </strong>
 
-
         <p>
           ${escapeHTML(product.description)}
         </p>
 
-
         <button
           type="button"
           class="primary-button"
-          onclick="addToCart('${product.id}'); closeProductModal();"
+          onclick="addToCart('${escapeHTML(product.id)}'); closeProductModal();"
         >
           Add to cart
         </button>
@@ -1268,43 +883,21 @@ function openProductModal(
       </div>
 
     </div>
-
   `;
 
-
-  modal.classList.add(
-    "open"
-  );
-
-
-  modal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
 }
 
 
 function closeProductModal() {
-
   const modal =
-    getElement(
-      "productModal"
-    );
+    getElement("productModal");
 
   if (!modal) return;
 
-
-  modal.classList.remove(
-    "open"
-  );
-
-
-  modal.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
 }
 
 
@@ -1313,90 +906,53 @@ function closeProductModal() {
 ===================================================== */
 
 function demoCheckout() {
-
-  const cart =
-    getCart();
-
+  const cart = getCart();
 
   if (!cart.length) {
-
-    showToast(
-      "Your cart is empty."
-    );
-
+    showToast("Your cart is empty.");
     return;
-
   }
-
 
   const totals =
     calculateCartTotals();
 
-
   const analytics =
     getAnalytics();
 
-
   analytics.orders =
     Number(analytics.orders || 0) + 1;
-
 
   analytics.revenue =
     Number(analytics.revenue || 0) +
     Number(totals.total || 0);
 
-
-  saveAnalytics(
-    analytics
-  );
-
+  saveAnalytics(analytics);
 
   const orderId =
     `SMX-DEMO-${Date.now()}`;
 
-
   localStorage.setItem(
     "smithx_last_demo_order",
     JSON.stringify({
-
       orderId,
-
-      total:
-        totals.total,
-
-      createdAt:
-        new Date().toISOString()
-
+      total: totals.total,
+      createdAt: new Date().toISOString()
     })
   );
 
-
-  trackEvent(
-    "demo_order",
-    {
-
-      orderId,
-
-      total:
-        totals.total
-
-    }
-  );
-
+  trackEvent("demo_order", {
+    orderId,
+    total: totals.total
+  });
 
   clearCart();
-
   updateCartUI();
-
   closeCart();
-
   updateDashboard();
-
 
   showToast(
     `Demo order ${orderId} created!`
   );
-
 }
 
 
@@ -1405,93 +961,48 @@ function demoCheckout() {
 ===================================================== */
 
 function setupImagePreview() {
-
   const input =
-    getElement(
-      "productImage"
-    );
+    getElement("productImage");
 
   const preview =
-    getElement(
-      "imagePreview"
-    );
+    getElement("imagePreview");
 
   const image =
-    getElement(
-      "previewImage"
-    );
+    getElement("previewImage");
 
+  if (!input || !preview || !image) return;
 
-  if (
-    !input ||
-    !preview ||
-    !image
-  ) return;
+  input.addEventListener("change", () => {
+    const file =
+      input.files && input.files[0];
 
+    if (!file) {
+      preview.classList.add("hidden");
+      image.src = "";
+      return;
+    }
 
-  input.addEventListener(
-    "change",
-    () => {
-
-      const file =
-        input.files &&
-        input.files[0];
-
-
-      if (!file) {
-
-        preview.classList.add(
-          "hidden"
-        );
-
-        image.src = "";
-
-        return;
-
-      }
-
-
-      if (
-        !file.type.startsWith(
-          "image/"
-        )
-      ) {
-
-        showToast(
-          "Please choose an image file."
-        );
-
-        input.value = "";
-
-        return;
-
-      }
-
-
-      const reader =
-        new FileReader();
-
-
-      reader.onload =
-        event => {
-
-          image.src =
-            event.target.result;
-
-          preview.classList.remove(
-            "hidden"
-          );
-
-        };
-
-
-      reader.readAsDataURL(
-        file
+    if (!file.type.startsWith("image/")) {
+      showToast(
+        "Please choose an image file."
       );
 
+      input.value = "";
+      return;
     }
-  );
 
+    const reader =
+      new FileReader();
+
+    reader.onload = event => {
+      image.src =
+        event.target.result;
+
+      preview.classList.remove("hidden");
+    };
+
+    reader.readAsDataURL(file);
+  });
 }
 
 
@@ -1504,107 +1015,60 @@ function compressImage(
   maxWidth = 1200,
   quality = 0.82
 ) {
+  return new Promise((resolve, reject) => {
+    const reader =
+      new FileReader();
 
-  return new Promise(
-    (resolve, reject) => {
+    reader.onerror = reject;
 
-      const reader =
-        new FileReader();
+    reader.onload = event => {
+      const img = new Image();
 
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
 
-      reader.onerror =
-        reject;
+        if (width > maxWidth) {
+          height =
+            Math.round(
+              height *
+              (maxWidth / width)
+            );
 
+          width = maxWidth;
+        }
 
-      reader.onload =
-        event => {
+        const canvas =
+          document.createElement("canvas");
 
-          const img =
-            new Image();
+        canvas.width = width;
+        canvas.height = height;
 
+        const context =
+          canvas.getContext("2d");
 
-          img.onload =
-            () => {
+        context.drawImage(
+          img,
+          0,
+          0,
+          width,
+          height
+        );
 
-              let width =
-                img.width;
+        resolve(
+          canvas.toDataURL(
+            "image/jpeg",
+            quality
+          )
+        );
+      };
 
-              let height =
-                img.height;
+      img.onerror = reject;
+      img.src = event.target.result;
+    };
 
-
-              if (
-                width >
-                maxWidth
-              ) {
-
-                height =
-                  Math.round(
-                    height *
-                    (maxWidth / width)
-                  );
-
-                width =
-                  maxWidth;
-
-              }
-
-
-              const canvas =
-                document.createElement(
-                  "canvas"
-                );
-
-
-              canvas.width =
-                width;
-
-              canvas.height =
-                height;
-
-
-              const context =
-                canvas.getContext(
-                  "2d"
-                );
-
-
-              context.drawImage(
-                img,
-                0,
-                0,
-                width,
-                height
-              );
-
-
-              resolve(
-                canvas.toDataURL(
-                  "image/jpeg",
-                  quality
-                )
-              );
-
-            };
-
-
-          img.onerror =
-            reject;
-
-
-          img.src =
-            event.target.result;
-
-        };
-
-
-      reader.readAsDataURL(
-        file
-      );
-
-    }
-  );
-
+    reader.readAsDataURL(file);
+  });
 }
 
 
@@ -1613,126 +1077,80 @@ function compressImage(
 ===================================================== */
 
 async function publishProduct() {
-
   const nameInput =
-    getElement(
-      "productName"
-    );
+    getElement("productName");
 
   const priceInput =
-    getElement(
-      "productPrice"
-    );
+    getElement("productPrice");
 
   const categoryInput =
-    getElement(
-      "productCategory"
-    );
+    getElement("productCategory");
 
   const descriptionInput =
-    getElement(
-      "productDescription"
-    );
+    getElement("productDescription");
 
   const imageInput =
-    getElement(
-      "productImage"
-    );
-
+    getElement("productImage");
 
   const name =
     nameInput?.value.trim();
 
-
   const price =
-    Number(
-      priceInput?.value
-    );
-
+    Number(priceInput?.value);
 
   const category =
     categoryInput?.value;
 
-
   const description =
     descriptionInput?.value.trim();
 
-
   if (!name) {
-
     showToast(
       "Please enter a product name."
     );
 
     nameInput?.focus();
-
     return;
-
   }
 
-
-  if (
-    !price ||
-    price <= 0
-  ) {
-
+  if (!price || price <= 0) {
     showToast(
       "Please enter a valid price."
     );
 
     priceInput?.focus();
-
     return;
-
   }
 
-
   if (!category) {
-
     showToast(
       "Please select a category."
     );
 
     categoryInput?.focus();
-
     return;
-
   }
 
-
   if (!description) {
-
     showToast(
       "Please add a product description."
     );
 
     descriptionInput?.focus();
-
     return;
-
   }
-
 
   let image = "";
 
-
   try {
-
     const file =
       imageInput?.files?.[0];
 
-
     if (file) {
-
       image =
-        await compressImage(
-          file
-        );
-
+        await compressImage(file);
     }
-
   } catch (error) {
-
     console.error(
       "Image processing error:",
       error
@@ -1743,248 +1161,171 @@ async function publishProduct() {
     );
 
     return;
-
   }
-
-
-  /*
-    If seller does not upload an image,
-    use a clean placeholder.
-  */
 
   if (!image) {
-
     image =
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80";
-
   }
 
-
   const product = {
-
     id:
       `custom-${Date.now()}-${Math.random()
         .toString(36)
         .slice(2, 8)}`,
 
     name,
-
     price,
-
     category,
-
     description,
-
     image
-
   };
-
 
   const products =
     getCustomProducts();
 
+  products.push(product);
 
-  products.push(
-    product
-  );
+  saveCustomProducts(products);
 
+  trackEvent("product_published", {
+    productId: product.id,
+    name: product.name,
+    price: product.price,
+    category: product.category
+  });
 
-  saveCustomProducts(
-    products
-  );
+  if (nameInput) nameInput.value = "";
+  if (priceInput) priceInput.value = "";
+  if (descriptionInput) descriptionInput.value = "";
+  if (imageInput) imageInput.value = "";
 
-
-  trackEvent(
-    "product_published",
-    {
-      productId:
-        product.id,
-
-      name:
-        product.name,
-
-      price:
-        product.price,
-
-      category:
-        product.category
-
-    }
-  );
-
-
-  /*
-    Reset form.
-  */
-
-  if (nameInput)
-    nameInput.value = "";
-
-  if (priceInput)
-    priceInput.value = "";
-
-  if (descriptionInput)
-    descriptionInput.value = "";
-
-  if (imageInput)
-    imageInput.value = "";
-
-
-  if (categoryInput)
+  if (categoryInput) {
     categoryInput.selectedIndex = 0;
-
+  }
 
   const preview =
-    getElement(
-      "imagePreview"
-    );
+    getElement("imagePreview");
 
   const previewImage =
-    getElement(
-      "previewImage"
-    );
+    getElement("previewImage");
 
+  if (preview) {
+    preview.classList.add("hidden");
+  }
 
-  if (preview)
-    preview.classList.add(
-      "hidden"
-    );
-
-  if (previewImage)
+  if (previewImage) {
     previewImage.src = "";
-
-
-  /*
-    Reset AI state.
-  */
+  }
 
   latestAIProduct = null;
 
-
   const aiResult =
-    getElement(
-      "aiProductResult"
-    );
+    getElement("aiProductResult");
 
-  if (aiResult)
-    aiResult.style.display =
-      "none";
-
+  if (aiResult) {
+    aiResult.style.display = "none";
+  }
 
   renderProducts();
-
   updateDashboard();
-
 
   showToast(
     "✓ Product published successfully!"
   );
 
-
-  scrollToSection(
-    "market"
-  );
-
+  scrollToSection("market");
 }
 
 
 /* =====================================================
-   SM1THX AI PRODUCT ASSISTANT
+   AI PRODUCT ASSISTANT
 ===================================================== */
 
 async function generateProductListing() {
-
   const productNameInput =
-    getElement(
-      "productName"
-    );
-
+    getElement("productName");
 
   const generateButton =
-    getElement(
-      "generateProductButton"
-    );
-
+    getElement("generateProductButton");
 
   const resultBox =
-    getElement(
-      "aiProductResult"
-    );
-
+    getElement("aiProductResult");
 
   if (!productNameInput) {
-
     showToast(
       "Product name field not found."
     );
 
     return;
-
   }
-
 
   const productName =
     productNameInput.value.trim();
 
-
   if (!productName) {
-
     showToast(
       "Enter a product name first."
     );
 
     productNameInput.focus();
-
     return;
-
   }
-
 
   const currentPrice =
-    getElement(
-      "productPrice"
-    )?.value || "";
-
+    getElement("productPrice")?.value || "";
 
   const currentCategory =
-    getElement(
-      "productCategory"
-    )?.value || "";
-
+    getElement("productCategory")?.value || "";
 
   const currentDescription =
-    getElement(
-      "productDescription"
-    )?.value.trim() || "";
+    getElement("productDescription")
+      ?.value.trim() || "";
 
+  if (
+    !AI_API_URL ||
+    AI_API_URL.includes(
+      "YOUR_PYTHON_BACKEND_URL"
+    )
+  ) {
+    showToast(
+      "AI backend is not connected yet."
+    );
 
-  /*
-    Loading state.
-  */
+    if (resultBox) {
+      resultBox.style.display = "block";
 
-  if (generateButton) {
+      resultBox.innerHTML = `
+        <div class="ai-result-item">
+          <span>SM1THX AI</span>
 
-    generateButton.disabled =
-      true;
+          <strong>
+            AI assistant is ready.
+          </strong>
 
-    generateButton.innerHTML =
-      "✨ Generating Listing...";
+          <p>
+            The Python AI backend still needs
+            to be connected.
+          </p>
+        </div>
+      `;
+    }
 
+    return;
   }
 
+  if (generateButton) {
+    generateButton.disabled = true;
+    generateButton.innerHTML =
+      "✨ Generating Listing...";
+  }
 
   if (resultBox) {
-
-    resultBox.style.display =
-      "block";
+    resultBox.style.display = "block";
 
     resultBox.innerHTML = `
-
       <div class="ai-result-item">
-
-        <span>
-          SM1THX AI
-        </span>
+        <span>SM1THX AI</span>
 
         <strong>
           Creating your product listing...
@@ -1993,318 +1334,175 @@ async function generateProductListing() {
         <p>
           SM1THX is analyzing your product.
         </p>
-
       </div>
-
     `;
-
   }
 
-
   try {
-
-    /*
-      Send product information
-      to Python backend.
-    */
-
     const response =
       await fetch(
         AI_API_URL,
         {
-
           method: "POST",
 
           headers: {
-
             "Content-Type":
               "application/json"
-
           },
 
-          body:
-            JSON.stringify({
-
-              productName,
-
-              currentPrice,
-
-              category:
-                currentCategory,
-
-              description:
-                currentDescription
-
-            })
-
+          body: JSON.stringify({
+            product_name: productName,
+            price: currentPrice,
+            category: currentCategory,
+            description: currentDescription
+          })
         }
       );
 
-
     if (!response.ok) {
-
       throw new Error(
         `AI server returned ${response.status}`
       );
-
     }
-
 
     const data =
       await response.json();
 
-
-    latestAIProduct =
-      data;
-
-
-    /*
-      TITLE
-    */
-
-    const titleElement =
-      getElement(
-        "aiGeneratedTitle"
-      );
-
-
-    if (titleElement) {
-
-      titleElement.textContent =
-        data.title ||
-        productName;
-
+    if (data.error) {
+      throw new Error(data.error);
     }
 
+    latestAIProduct = data;
 
-    /*
-      DESCRIPTION
-    */
+    const titleElement =
+      getElement("aiGeneratedTitle");
+
+    if (titleElement) {
+      titleElement.textContent =
+        data.title || productName;
+    }
 
     const descriptionElement =
       getElement(
         "aiGeneratedDescription"
       );
 
-
     if (descriptionElement) {
-
       descriptionElement.textContent =
         data.description || "";
-
     }
-
-
-    /*
-      CATEGORY
-    */
 
     const categoryElement =
       getElement(
         "aiGeneratedCategory"
       );
 
-
     if (categoryElement) {
-
       categoryElement.textContent =
-        data.category ||
-        "Other";
-
+        data.category || "";
     }
-
-
-    /*
-      PRICE
-    */
 
     const priceElement =
       getElement(
         "aiGeneratedPrice"
       );
 
-
     if (priceElement) {
-
       const price =
-        Number(
-          data.price || 0
-        );
-
+        Number(data.price || 0);
 
       priceElement.textContent =
         price > 0
           ? formatKES(price)
           : "Not available";
-
     }
-
-
-    /*
-      FEATURES
-    */
 
     const featuresElement =
       getElement(
         "aiGeneratedFeatures"
       );
 
-
     if (featuresElement) {
-
-      featuresElement.innerHTML =
-        "";
-
+      featuresElement.innerHTML = "";
 
       const features =
-        Array.isArray(
-          data.features
-        )
+        Array.isArray(data.features)
           ? data.features
           : [];
 
+      features.forEach(feature => {
+        const li =
+          document.createElement("li");
 
-      features.forEach(
-        feature => {
+        li.textContent = feature;
 
-          const li =
-            document.createElement(
-              "li"
-            );
-
-
-          li.textContent =
-            feature;
-
-
-          featuresElement.appendChild(
-            li
-          );
-
-        }
-      );
-
+        featuresElement.appendChild(li);
+      });
     }
-
-
-    /*
-      SEO KEYWORDS
-    */
 
     const seoElement =
-      getElement(
-        "aiGeneratedSEO"
-      );
-
+      getElement("aiGeneratedSEO");
 
     if (seoElement) {
-
-      if (
-        Array.isArray(
-          data.seo_keywords
-        )
-      ) {
-
-        seoElement.textContent =
-          data.seo_keywords.join(
-            ", "
-          );
-
-      } else {
-
-        seoElement.textContent =
-          data.seo_keywords || "";
-
-      }
-
+      seoElement.textContent =
+        Array.isArray(data.seo_keywords)
+          ? data.seo_keywords.join(", ")
+          : data.seo_keywords || "";
     }
-
-
-    /*
-      AD CAPTION
-    */
 
     const adElement =
-      getElement(
-        "aiGeneratedAd"
-      );
-
+      getElement("aiGeneratedAd");
 
     if (adElement) {
-
       adElement.textContent =
         data.ad_caption || "";
-
     }
-
 
     if (resultBox) {
-
-      resultBox.style.display =
-        "block";
-
+      resultBox.style.display = "block";
     }
-
 
     showToast(
       "✨ AI listing generated!"
     );
 
-
   } catch (error) {
-
     console.error(
       "SM1THX AI error:",
       error
     );
 
-
     if (resultBox) {
-
       resultBox.innerHTML = `
-
         <div class="ai-result-item">
-
-          <span>
-            SM1THX AI
-          </span>
+          <span>SM1THX AI</span>
 
           <strong>
-            AI backend not connected yet
+            AI connection error
           </strong>
 
           <p>
-            The SM1THX frontend is ready.
-            Next we need to connect the
-            Python AI backend.
+            ${escapeHTML(
+              error.message ||
+              "The AI service is unavailable."
+            )}
           </p>
-
         </div>
-
       `;
-
     }
 
-
     showToast(
-      "AI backend is not connected yet."
+      "AI could not generate the listing."
     );
 
-
   } finally {
-
     if (generateButton) {
-
-      generateButton.disabled =
-        false;
+      generateButton.disabled = false;
 
       generateButton.innerHTML =
         "✨ Generate Listing";
-
     }
-
   }
-
 }
 
 
@@ -2313,117 +1511,66 @@ async function generateProductListing() {
 ===================================================== */
 
 function applyAIProductListing() {
-
   if (!latestAIProduct) {
-
     showToast(
       "Generate an AI listing first."
     );
 
     return;
-
   }
 
-
   const productName =
-    getElement(
-      "productName"
-    );
-
+    getElement("productName");
 
   const productPrice =
-    getElement(
-      "productPrice"
-    );
-
+    getElement("productPrice");
 
   const productCategory =
-    getElement(
-      "productCategory"
-    );
-
+    getElement("productCategory");
 
   const productDescription =
-    getElement(
-      "productDescription"
-    );
-
-
-  /*
-    TITLE
-  */
+    getElement("productDescription");
 
   if (
     productName &&
     latestAIProduct.title
   ) {
-
     productName.value =
       latestAIProduct.title;
-
   }
-
-
-  /*
-    PRICE
-  */
 
   if (
     productPrice &&
     latestAIProduct.price
   ) {
-
     productPrice.value =
-      Number(
-        latestAIProduct.price
-      );
-
+      Number(latestAIProduct.price);
   }
-
-
-  /*
-    CATEGORY
-  */
 
   if (
     productCategory &&
     latestAIProduct.category
   ) {
-
-    const category =
-      latestAIProduct.category;
-
-
     const matchingOption =
       Array.from(
         productCategory.options
       ).find(
         option =>
           option.value.toLowerCase() ===
-          String(category).toLowerCase()
+          String(
+            latestAIProduct.category
+          ).toLowerCase()
       );
 
-
     if (matchingOption) {
-
       productCategory.value =
         matchingOption.value;
-
     }
-
   }
 
-
-  /*
-    DESCRIPTION + FEATURES
-  */
-
   if (productDescription) {
-
     let description =
-      latestAIProduct.description ||
-      "";
-
+      latestAIProduct.description || "";
 
     const features =
       Array.isArray(
@@ -2432,9 +1579,7 @@ function applyAIProductListing() {
         ? latestAIProduct.features
         : [];
 
-
     if (features.length) {
-
       description +=
         "\n\nKey Features:\n" +
         features
@@ -2443,34 +1588,22 @@ function applyAIProductListing() {
               `• ${feature}`
           )
           .join("\n");
-
     }
-
 
     productDescription.value =
       description;
-
   }
 
-
-  /*
-    Return seller to form.
-  */
-
   if (productName) {
-
     productName.scrollIntoView({
       behavior: "smooth",
       block: "center"
     });
-
   }
-
 
   showToast(
     "✓ AI listing applied to your product form!"
   );
-
 }
 
 
@@ -2479,87 +1612,53 @@ function applyAIProductListing() {
 ===================================================== */
 
 function updateDashboard() {
-
   const products =
     getAllProducts();
 
-
   const analytics =
     getAnalytics();
-
 
   const visitorData =
     safeJSONParse(
       localStorage.getItem(
         STORAGE.visitor
       ),
-      {
-        count: 0
-      }
+      { count: 0 }
     );
-
 
   const productsElement =
-    getElement(
-      "dashboardProducts"
-    );
-
+    getElement("dashboardProducts");
 
   const ordersElement =
-    getElement(
-      "dashboardOrders"
-    );
-
+    getElement("dashboardOrders");
 
   const revenueElement =
-    getElement(
-      "dashboardRevenue"
-    );
-
+    getElement("dashboardRevenue");
 
   const visitorsElement =
-    getElement(
-      "dashboardVisitors"
-    );
-
+    getElement("dashboardVisitors");
 
   if (productsElement) {
-
     productsElement.textContent =
       products.length;
-
   }
-
 
   if (ordersElement) {
-
     ordersElement.textContent =
-      Number(
-        analytics.orders || 0
-      );
-
+      Number(analytics.orders || 0);
   }
 
-
   if (revenueElement) {
-
     revenueElement.textContent =
       formatKES(
         analytics.revenue || 0
       );
-
   }
-
 
   if (visitorsElement) {
-
     visitorsElement.textContent =
-      Number(
-        visitorData.count || 0
-      );
-
+      Number(visitorData.count || 0);
   }
-
 }
 
 
@@ -2568,25 +1667,17 @@ function updateDashboard() {
 ===================================================== */
 
 function resetAnalytics() {
-
   saveAnalytics({
-
     orders: 0,
-
     revenue: 0,
-
     events: []
-
   });
 
-
   updateDashboard();
-
 
   showToast(
     "Demo analytics reset."
   );
-
 }
 
 
@@ -2595,61 +1686,37 @@ function resetAnalytics() {
 ===================================================== */
 
 function toggleUpdateHistory() {
-
   const history =
-    getElement(
-      "updateHistory"
-    );
-
+    getElement("updateHistory");
 
   const button =
-    getElement(
-      "updatesToggle"
-    );
-
+    getElement("updatesToggle");
 
   if (!history) return;
 
-
   const isHidden =
-    history.style.display ===
-    "none" ||
+    history.style.display === "none" ||
     !history.style.display;
 
-
   history.style.display =
-    isHidden
-      ? "block"
-      : "none";
-
+    isHidden ? "block" : "none";
 
   if (button) {
-
     button.textContent =
       isHidden
         ? "Hide Updates"
         : "View Updates";
-
   }
-
 }
 
 
 function setupUpdatesToggle() {
-
   const history =
-    getElement(
-      "updateHistory"
-    );
-
+    getElement("updateHistory");
 
   if (history) {
-
-    history.style.display =
-      "none";
-
+    history.style.display = "none";
   }
-
 }
 
 
@@ -2658,29 +1725,20 @@ function setupUpdatesToggle() {
 ===================================================== */
 
 function setupSearch() {
-
   const input =
-    getElement(
-      "productSearch"
-    );
-
+    getElement("productSearch");
 
   if (!input) return;
-
 
   input.addEventListener(
     "input",
     event => {
-
       currentSearch =
         event.target.value;
 
-
       renderProducts();
-
     }
   );
-
 }
 
 
@@ -2688,71 +1746,46 @@ function setupSearch() {
    NAVIGATION
 ===================================================== */
 
-function scrollToSection(
-  sectionId
-) {
-
+function scrollToSection(sectionId) {
   const section =
-    getElement(
-      sectionId
-    );
-
+    getElement(sectionId);
 
   if (!section) return;
 
-
   section.scrollIntoView({
-
     behavior: "smooth",
-
     block: "start"
-
   });
-
 }
 
 
 function setupNavigation() {
-
   document
     .querySelectorAll(
       'a[href^="#"]'
     )
-    .forEach(
-      link => {
+    .forEach(link => {
+      link.addEventListener(
+        "click",
+        event => {
+          const targetId =
+            link
+              .getAttribute("href")
+              .slice(1);
 
-        link.addEventListener(
-          "click",
-          event => {
+          const target =
+            getElement(targetId);
 
-            const targetId =
-              link
-                .getAttribute("href")
-                .slice(1);
+          if (!target) return;
 
+          event.preventDefault();
 
-            const target =
-              getElement(
-                targetId
-              );
-
-
-            if (!target) return;
-
-
-            event.preventDefault();
-
-
-            scrollToSection(
-              targetId
-            );
-
-          }
-        );
-
-      }
-    );
-
+          scrollToSection(
+            targetId
+          );
+        }
+      );
+    });
 }
 
 
@@ -2763,53 +1796,25 @@ function setupNavigation() {
 let toastTimer = null;
 
 
-function showToast(
-  message
-) {
-
+function showToast(message) {
   const toast =
-    getElement(
-      "toast"
-    );
-
+    getElement("toast");
 
   if (!toast) {
-
-    console.log(
-      message
-    );
-
+    console.log(message);
     return;
-
   }
 
+  toast.textContent = message;
 
-  toast.textContent =
-    message;
+  toast.classList.add("show");
 
-
-  toast.classList.add(
-    "show"
-  );
-
-
-  clearTimeout(
-    toastTimer
-  );
-
+  clearTimeout(toastTimer);
 
   toastTimer =
-    setTimeout(
-      () => {
-
-        toast.classList.remove(
-          "show"
-        );
-
-      },
-      3000
-    );
-
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
 }
 
 
@@ -2818,114 +1823,66 @@ function showToast(
 ===================================================== */
 
 function removeLoginUI() {
-
   const overlay =
-    getElement(
-      "loginOverlay"
-    );
-
+    getElement("loginOverlay");
 
   const loginButton =
-    getElement(
-      "loginNavButton"
-    );
-
-
-  /*
-    The current MVP does not yet
-    require authentication.
-  */
+    getElement("loginNavButton");
 
   if (overlay) {
-
     overlay.remove();
-
   }
-
 
   if (loginButton) {
-
     loginButton.remove();
-
   }
-
 }
 
 
 function disableOldLoginHandlers() {
-
-  /*
-    Keep these functions available so
-    older HTML does not throw errors.
-  */
-
   window.openLogin =
     function () {
-
       removeLoginUI();
-
     };
-
 
   window.closeLogin =
     function () {
-
       removeLoginUI();
-
     };
-
 }
 
 
 function showRegisterForm() {
-
   const login =
-    getElement(
-      "loginFormSection"
-    );
-
+    getElement("loginFormSection");
 
   const register =
-    getElement(
-      "registerFormSection"
-    );
+    getElement("registerFormSection");
 
+  if (login) {
+    login.style.display = "none";
+  }
 
-  if (login)
-    login.style.display =
-      "none";
-
-
-  if (register)
-    register.style.display =
-      "block";
-
+  if (register) {
+    register.style.display = "block";
+  }
 }
 
 
 function showLoginForm() {
-
   const login =
-    getElement(
-      "loginFormSection"
-    );
-
+    getElement("loginFormSection");
 
   const register =
-    getElement(
-      "registerFormSection"
-    );
+    getElement("registerFormSection");
 
+  if (login) {
+    login.style.display = "block";
+  }
 
-  if (login)
-    login.style.display =
-      "block";
-
-
-  if (register)
-    register.style.display =
-      "none";
-
+  if (register) {
+    register.style.display = "none";
+  }
 }
 
 
@@ -2933,68 +1890,49 @@ function togglePassword(
   inputId,
   button
 ) {
-
   const input =
-    getElement(
-      inputId
-    );
-
+    getElement(inputId);
 
   if (!input) return;
 
+  if (input.type === "password") {
+    input.type = "text";
 
-  if (
-    input.type ===
-    "password"
-  ) {
-
-    input.type =
-      "text";
-
-
-    if (button)
-      button.textContent =
-        "🙈";
-
+    if (button) {
+      button.textContent = "🙈";
+    }
   } else {
+    input.type = "password";
 
-    input.type =
-      "password";
-
-
-    if (button)
-      button.textContent =
-        "👁";
-
+    if (button) {
+      button.textContent = "👁";
+    }
   }
-
 }
 
 
 /* =====================================================
-   CART CONTROLS
+   CART / KEYBOARD CONTROLS
 ===================================================== */
 
 function setupCartControls() {
+  /*
+    Cart buttons use inline onclick handlers,
+    so they remain available globally.
+  */
+}
 
+
+function setupKeyboardControls() {
   document.addEventListener(
     "keydown",
     event => {
-
-      if (
-        event.key ===
-        "Escape"
-      ) {
-
-        closeCart();
-
+      if (event.key === "Escape") {
         closeProductModal();
-
+        closeCart();
       }
-
     }
   );
-
 }
 
 
@@ -3003,143 +1941,51 @@ function setupCartControls() {
 ===================================================== */
 
 function setupProductBackdrop() {
-
   const modal =
-    getElement(
-      "productModal"
-    );
-
+    getElement("productModal");
 
   if (!modal) return;
-
 
   modal.addEventListener(
     "click",
     event => {
-
-      if (
-        event.target ===
-        modal
-      ) {
-
+      if (event.target === modal) {
         closeProductModal();
-
       }
-
     }
   );
-
 }
 
 
 /* =====================================================
-   KEYBOARD CONTROLS
-===================================================== */
-
-function setupKeyboardControls() {
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key ===
-        "Escape"
-      ) {
-
-        closeProductModal();
-
-        closeCart();
-
-      }
-
-    }
-  );
-
-}
-
-
-/* =====================================================
-   INITIALIZE SM1THX
+   INITIALIZE
 ===================================================== */
 
 function initializeSmithX() {
-
-  /*
-    Authentication is not active
-    in this MVP.
-  */
-
   removeLoginUI();
-
   disableOldLoginHandlers();
 
-
-  /*
-    Marketplace
-  */
-
   setupCategories();
-
   setupSellerCategory();
 
   renderProducts();
 
-
-  /*
-    Cart
-  */
-
   updateCartUI();
-
   setupCartControls();
-
-
-  /*
-    Seller
-  */
 
   setupImagePreview();
 
-
-  /*
-    Search/navigation
-  */
-
   setupSearch();
-
   setupNavigation();
-
-
-  /*
-    Updates
-  */
 
   setupUpdatesToggle();
 
-
-  /*
-    Product modal
-  */
-
   setupProductBackdrop();
-
   setupKeyboardControls();
-
-
-  /*
-    Visitor analytics
-  */
 
   trackDailyVisitor();
 
-
-  /*
-    Dashboard
-  */
-
   updateDashboard();
-
 }
 
 
@@ -3147,30 +1993,18 @@ function initializeSmithX() {
    GLOBAL FUNCTIONS
 ===================================================== */
 
-window.addToCart =
-  addToCart;
-
-window.removeFromCart =
-  removeFromCart;
-
-window.changeCartQuantity =
-  changeCartQuantity;
-
-window.setCartQuantity =
-  setCartQuantity;
+window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+window.changeCartQuantity = changeCartQuantity;
+window.setCartQuantity = setCartQuantity;
 
 window.clearShoppingCart =
   clearShoppingCart;
 
-window.openCart =
-  openCart;
+window.openCart = openCart;
+window.closeCart = closeCart;
 
-window.closeCart =
-  closeCart;
-
-window.renderCart =
-  renderCart;
-
+window.renderCart = renderCart;
 window.updateCartCount =
   updateCartCount;
 
@@ -3204,11 +2038,6 @@ window.renderProducts =
 window.showToast =
   showToast;
 
-
-/*
-   AI functions
-*/
-
 window.generateProductListing =
   generateProductListing;
 
@@ -3221,17 +2050,12 @@ window.applyAIProductListing =
 ===================================================== */
 
 if (
-  document.readyState ===
-  "loading"
+  document.readyState === "loading"
 ) {
-
   document.addEventListener(
     "DOMContentLoaded",
     initializeSmithX
   );
-
 } else {
-
   initializeSmithX();
-
 }
