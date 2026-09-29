@@ -37,6 +37,7 @@
       <a href="#market">Marketplace</a>
       <a href="#seller">Sell</a>
       <a href="#dashboard">Dashboard</a>
+      <a href="#profile">Profile</a>
       <a href="#updates">Updates</a>
     </nav>
 
@@ -226,8 +227,6 @@
 
     <div class="seller-layout">
 
-      <!-- CREATE PRODUCT -->
-
       <div class="seller-card">
 
         <h3>
@@ -252,8 +251,6 @@
 
         </div>
 
-
-        <!-- AI PRODUCT ASSISTANT -->
 
         <div class="ai-assistant-card">
 
@@ -290,59 +287,38 @@
           >
 
             <div class="ai-result-item">
-
               <span>AI Title</span>
-
               <strong id="aiGeneratedTitle"></strong>
-
             </div>
 
             <div class="ai-result-item">
-
               <span>Description</span>
-
               <p id="aiGeneratedDescription"></p>
-
             </div>
 
             <div class="ai-result-item">
-
               <span>Category</span>
-
               <strong id="aiGeneratedCategory"></strong>
-
             </div>
 
             <div class="ai-result-item">
-
               <span>Suggested Price</span>
-
               <strong id="aiGeneratedPrice"></strong>
-
             </div>
 
             <div class="ai-result-item">
-
               <span>Key Features</span>
-
               <ul id="aiGeneratedFeatures"></ul>
-
             </div>
 
             <div class="ai-result-item">
-
               <span>SEO Keywords</span>
-
               <p id="aiGeneratedSEO"></p>
-
             </div>
 
             <div class="ai-result-item">
-
               <span>Ad Caption</span>
-
               <p id="aiGeneratedAd"></p>
-
             </div>
 
             <button
@@ -440,8 +416,6 @@
       </div>
 
 
-      <!-- SELLER INFO -->
-
       <div class="seller-info-card">
 
         <p class="hero-eyebrow">
@@ -517,7 +491,7 @@
     <div class="section-heading">
 
       <p class="section-eyebrow">
-        SELLER DASHBOARD
+        BUSINESS DASHBOARD
       </p>
 
       <h2>
@@ -526,7 +500,7 @@
 
       <p>
         Demo analytics showing how the
-        SM1THX 🛒 seller dashboard can work.
+        SM1THX 🛒 dashboard can work.
       </p>
 
     </div>
@@ -573,6 +547,267 @@
 
 
 <!-- =====================================================
+     PROFILE
+===================================================== -->
+
+<section id="profile" class="section profile-section">
+
+  <div class="section-inner">
+
+    <div class="section-heading">
+
+      <p class="section-eyebrow">
+        MY SM1THX
+      </p>
+
+      <h2>
+        Account & Profile
+      </h2>
+
+      <p>
+        Manage your demo buyer and seller account.
+      </p>
+
+    </div>
+
+    <div id="profileLoggedOut" class="profile-card">
+
+      <div class="profile-avatar">
+        👤
+      </div>
+
+      <div class="profile-card-content">
+
+        <h3>
+          You're not logged in
+        </h3>
+
+        <p>
+          Sign in to access your SM1THX buyer and
+          seller dashboard.
+        </p>
+
+        <button
+          type="button"
+          class="primary-button"
+          onclick="openLogin()"
+        >
+          Login to SM1THX
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="profileLoggedIn"
+      class="profile-dashboard"
+      style="display:none;"
+    >
+
+      <div class="profile-card profile-main-card">
+
+        <div class="profile-avatar" id="profileAvatar">
+          👤
+        </div>
+
+        <div class="profile-card-content">
+
+          <p class="section-eyebrow">
+            SM1THX ACCOUNT
+          </p>
+
+          <h3 id="profileName">
+            John Muchina
+          </h3>
+
+          <p id="profileUsername">
+            @john
+          </p>
+
+          <span class="profile-role" id="profileRole">
+            BUYER • SELLER
+          </span>
+
+        </div>
+
+        <button
+          type="button"
+          class="secondary-button"
+          onclick="demoLogoutAndRefresh()"
+        >
+          Logout
+        </button>
+
+      </div>
+
+
+      <div class="profile-grid">
+
+        <div class="profile-info-card">
+
+          <p class="section-eyebrow">
+            PERSONAL INFORMATION
+          </p>
+
+          <h3>
+            Profile Details
+          </h3>
+
+          <div class="profile-detail">
+            <span>Name</span>
+            <strong id="profileDetailName">—</strong>
+          </div>
+
+          <div class="profile-detail">
+            <span>Username</span>
+            <strong id="profileDetailUsername">—</strong>
+          </div>
+
+          <div class="profile-detail">
+            <span>Email</span>
+            <strong id="profileDetailEmail">—</strong>
+          </div>
+
+          <div class="profile-detail">
+            <span>Phone</span>
+            <strong id="profileDetailPhone">Not added</strong>
+          </div>
+
+          <div class="profile-detail">
+            <span>Location</span>
+            <strong id="profileDetailLocation">—</strong>
+          </div>
+
+        </div>
+
+
+        <div class="profile-info-card">
+
+          <p class="section-eyebrow">
+            COMMERCE
+          </p>
+
+          <h3>
+            Your SM1THX Activity
+          </h3>
+
+          <div class="profile-stat-grid">
+
+            <div class="profile-stat">
+              <span>Cart Items</span>
+              <strong id="profileCartCount">0</strong>
+            </div>
+
+            <div class="profile-stat">
+              <span>Orders</span>
+              <strong id="profileOrderCount">0</strong>
+            </div>
+
+            <div class="profile-stat">
+              <span>Products</span>
+              <strong id="profileProductCount">0</strong>
+            </div>
+
+            <div class="profile-stat">
+              <span>Wishlist</span>
+              <strong id="profileWishlistCount">0</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="profile-grid">
+
+        <div class="profile-info-card">
+
+          <p class="section-eyebrow">
+            BUYER
+          </p>
+
+          <h3>
+            Shopping
+          </h3>
+
+          <p>
+            Discover products, manage your cart,
+            view orders and build your wishlist.
+          </p>
+
+          <button
+            type="button"
+            class="secondary-button"
+            onclick="scrollToSection('market')"
+          >
+            Continue Shopping
+          </button>
+
+        </div>
+
+
+        <div class="profile-info-card">
+
+          <p class="section-eyebrow">
+            SELLER
+          </p>
+
+          <h3>
+            Your Store
+          </h3>
+
+          <p>
+            Create products, publish listings and
+            monitor your demo business activity.
+          </p>
+
+          <button
+            type="button"
+            class="secondary-button"
+            onclick="scrollToSection('seller')"
+          >
+            Open Seller Studio
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="profile-info-card">
+
+        <p class="section-eyebrow">
+          SECURITY
+        </p>
+
+        <h3>
+          Demo Account Security
+        </h3>
+
+        <p>
+          This MVP uses local demo authentication.
+          No real password or payment information is
+          being processed.
+        </p>
+
+        <span class="security-status">
+          ✓ DEMO ACCOUNT ACTIVE
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
      FEATURES
 ===================================================== -->
 
@@ -600,74 +835,39 @@
     <div class="feature-grid">
 
       <div class="feature-card">
-
-        <div class="feature-icon">
-          AI
-        </div>
-
-        <h3>
-          AI Seller Assistant
-        </h3>
-
+        <div class="feature-icon">AI</div>
+        <h3>AI Seller Assistant</h3>
         <p>
           Intelligent tools designed to help sellers
           create and manage products.
         </p>
-
       </div>
 
-
       <div class="feature-card">
-
-        <div class="feature-icon">
-          🛍
-        </div>
-
-        <h3>
-          Smart Marketplace
-        </h3>
-
+        <div class="feature-icon">🛍</div>
+        <h3>Smart Marketplace</h3>
         <p>
           A marketplace designed around easier
           product discovery.
         </p>
-
       </div>
 
-
       <div class="feature-card">
-
-        <div class="feature-icon">
-          📊
-        </div>
-
-        <h3>
-          Seller Analytics
-        </h3>
-
+        <div class="feature-icon">📊</div>
+        <h3>Seller Analytics</h3>
         <p>
           Understand products, orders, visitors
           and business activity.
         </p>
-
       </div>
 
-
       <div class="feature-card">
-
-        <div class="feature-icon">
-          🌍
-        </div>
-
-        <h3>
-          Global Commerce
-        </h3>
-
+        <div class="feature-icon">🌍</div>
+        <h3>Global Commerce</h3>
         <p>
           A foundation for expanding commerce
           beyond local markets.
         </p>
-
       </div>
 
     </div>
@@ -711,7 +911,7 @@
           This MVP demonstrates the foundation:
           marketplace discovery, shopping cart,
           seller product creation, image uploads,
-          analytics and an AI product assistant.
+          analytics, accounts and an AI product assistant.
         </p>
 
       </div>
@@ -789,6 +989,13 @@
         </p>
       </div>
 
+      <div class="update-item">
+        <strong>Demo Accounts</strong>
+        <p>
+          Buyer and seller profile foundation added.
+        </p>
+      </div>
+
     </div>
 
   </div>
@@ -827,6 +1034,106 @@
 
 
 <!-- =====================================================
+     LOGIN MODAL
+===================================================== -->
+
+<div
+  id="loginModal"
+  class="modal"
+  aria-hidden="true"
+>
+
+  <div class="modal-content login-modal-content">
+
+    <button
+      type="button"
+      class="modal-close"
+      onclick="closeLogin()"
+      aria-label="Close login"
+    >
+      ×
+    </button>
+
+    <div class="login-header">
+
+      <p class="section-eyebrow">
+        SM1THX ACCOUNT
+      </p>
+
+      <h2>
+        Welcome to SM1THX
+      </h2>
+
+      <p>
+        This is a demo account system for the MVP.
+      </p>
+
+    </div>
+
+    <form
+      id="demoLoginForm"
+      onsubmit="handleDemoLogin(event)"
+    >
+
+      <div class="form-group">
+
+        <label for="demoEmail">
+          Email
+        </label>
+
+        <input
+          id="demoEmail"
+          type="email"
+          value="john@smithx.demo"
+          required
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="demoPassword">
+          Demo Password
+        </label>
+
+        <input
+          id="demoPassword"
+          type="password"
+          value="smithx"
+          required
+        >
+
+      </div>
+
+      <button
+        type="submit"
+        class="primary-button full-width"
+      >
+        Login
+      </button>
+
+    </form>
+
+    <div class="demo-login-info">
+
+      <strong>Demo credentials</strong>
+
+      <p>
+        Email: john@smithx.demo
+      </p>
+
+      <p>
+        Password: smithx
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
      CART
 ===================================================== -->
 
@@ -839,6 +1146,7 @@
   <div class="cart-header">
 
     <div>
+
       <p class="section-eyebrow">
         SM1THX 🛒
       </p>
@@ -846,6 +1154,7 @@
       <h2>
         Your Cart
       </h2>
+
     </div>
 
     <button
@@ -943,7 +1252,12 @@
 </footer>
 
 
+<!-- =====================================================
+     SCRIPTS
+===================================================== -->
+
 <script src="app.js"></script>
+<script src="profile.js"></script>
 
 </body>
 </html>
