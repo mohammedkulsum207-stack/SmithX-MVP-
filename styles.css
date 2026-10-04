@@ -29,7 +29,10 @@
   --container: 1180px;
 }
 
-/* RESET */
+
+/* =========================================================
+   RESET
+========================================================= */
 
 * {
   box-sizing: border-box;
@@ -83,7 +86,10 @@ a {
   color: var(--muted);
 }
 
-/* CONTAINERS */
+
+/* =========================================================
+   CONTAINERS
+========================================================= */
 
 .section-inner,
 .topbar-inner,
@@ -93,7 +99,10 @@ a {
   margin: 0 auto;
 }
 
-/* TOPBAR */
+
+/* =========================================================
+   TOPBAR
+========================================================= */
 
 .topbar {
   position: sticky;
@@ -212,7 +221,10 @@ a {
   font-weight: 800;
 }
 
-/* HERO */
+
+/* =========================================================
+   HERO
+========================================================= */
 
 .hero {
   position: relative;
@@ -326,7 +338,10 @@ a {
   color: rgba(255,255,255,.78);
 }
 
-/* BUTTONS */
+
+/* =========================================================
+   BUTTONS
+========================================================= */
 
 .primary-button,
 .secondary-button {
@@ -376,7 +391,10 @@ a {
   width: 100%;
 }
 
-/* SECTIONS */
+
+/* =========================================================
+   SECTIONS
+========================================================= */
 
 .section {
   padding: 90px 0;
@@ -399,7 +417,10 @@ a {
   color: var(--muted);
 }
 
-/* MARKETPLACE */
+
+/* =========================================================
+   MARKETPLACE
+========================================================= */
 
 .marketplace-section {
   background: white;
@@ -465,7 +486,10 @@ a {
   color: white;
 }
 
-/* PRODUCTS */
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
 
 .products-grid {
   display: grid;
@@ -544,7 +568,10 @@ a {
   font-size: 16px;
 }
 
-/* SELLER */
+
+/* =========================================================
+   SELLER
+========================================================= */
 
 .seller-section {
   background: var(--blue-soft);
@@ -647,9 +674,10 @@ a {
   font-size: 13px;
 }
 
-/* =====================================================
+
+/* =========================================================
    AI PRODUCT ASSISTANT
-===================================================== */
+========================================================= */
 
 .ai-assistant-card {
   position: relative;
@@ -753,7 +781,10 @@ a {
   margin-top: 20px;
 }
 
-/* DASHBOARD */
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
 
 .dashboard-section {
   background: white;
@@ -786,7 +817,295 @@ a {
   margin-top: 22px;
 }
 
-/* FEATURES */
+
+/* =========================================================
+   ORDER MANAGEMENT
+========================================================= */
+
+.orders-section {
+  margin-top: 36px;
+}
+
+.orders-section-header {
+  margin-bottom: 20px;
+}
+
+.orders-section-header h3 {
+  margin-top: 7px;
+  font-size: 25px;
+  line-height: 1.2;
+}
+
+.orders-list {
+  display: grid;
+  gap: 18px;
+}
+
+.order-card {
+  padding: 22px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.order-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.order-card-header strong {
+  display: block;
+  margin-top: 5px;
+  word-break: break-word;
+}
+
+.order-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.order-date {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.order-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--blue-light);
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.order-status.confirmed {
+  background: #ecfdf3;
+  color: #087443;
+}
+
+.order-status.shipped {
+  background: #fff7e6;
+  color: #b54708;
+}
+
+.order-status.delivered {
+  background: #ecfdf3;
+  color: #027a48;
+}
+
+.order-products {
+  display: grid;
+  gap: 13px;
+  margin: 20px 0;
+}
+
+.order-product {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.order-product-image {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  overflow: hidden;
+  border-radius: 11px;
+  background: var(--blue-soft);
+}
+
+.order-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.order-product-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.order-product-info strong {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.order-product-info span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.order-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding-top: 17px;
+  border-top: 1px solid var(--border);
+}
+
+.order-card-footer > strong {
+  color: var(--blue);
+  font-size: 18px;
+}
+
+.order-status-control {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.order-status-control label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.order-status-control select {
+  min-width: 135px;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--white);
+  color: var(--text);
+  outline: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.order-status-control select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(20,99,255,.10);
+}
+
+
+/* =========================================================
+   ORDER CONFIRMATION
+========================================================= */
+
+.order-confirmation-content {
+  width: min(560px, 100%);
+}
+
+.order-confirmation {
+  padding: 12px 4px 4px;
+}
+
+.confirmation-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: #ecfdf3;
+  color: var(--success);
+  font-size: 27px;
+  font-weight: 900;
+}
+
+.order-confirmation h2 {
+  margin-top: 5px;
+  font-size: 30px;
+  line-height: 1.15;
+}
+
+.order-confirmation > p {
+  margin-top: 10px;
+  color: var(--muted);
+}
+
+.confirmation-order-id {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 22px 0;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--blue-soft);
+}
+
+.confirmation-order-id span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.confirmation-order-id strong {
+  word-break: break-word;
+}
+
+.confirmation-items {
+  display: grid;
+  gap: 0;
+}
+
+.confirmation-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.confirmation-item span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.confirmation-item strong {
+  font-size: 14px;
+}
+
+.confirmation-total,
+.confirmation-status {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.confirmation-total {
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+}
+
+.confirmation-total strong {
+  color: var(--blue);
+  font-size: 19px;
+}
+
+.confirmation-status {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.confirmation-status strong {
+  color: var(--text);
+}
+
+
+/* =========================================================
+   FEATURES
+========================================================= */
 
 .feature-grid {
   display: grid;
@@ -821,7 +1140,10 @@ a {
   font-size: 14px;
 }
 
-/* ABOUT */
+
+/* =========================================================
+   ABOUT
+========================================================= */
 
 .about-section {
   background: var(--blue-soft);
@@ -848,7 +1170,10 @@ a {
   margin-top: 15px;
 }
 
-/* UPDATES */
+
+/* =========================================================
+   UPDATES
+========================================================= */
 
 .update-history {
   margin-top: 20px;
@@ -882,7 +1207,10 @@ a {
   font-size: 14px;
 }
 
-/* MODAL */
+
+/* =========================================================
+   MODAL
+========================================================= */
 
 .modal {
   position: fixed;
@@ -966,7 +1294,10 @@ a {
   margin-top: 22px;
 }
 
-/* CART */
+
+/* =========================================================
+   CART
+========================================================= */
 
 .cart-panel {
   position: fixed;
@@ -1087,7 +1418,10 @@ a {
   margin-top: 22px;
 }
 
-/* LOGIN */
+
+/* =========================================================
+   LOGIN COMPATIBILITY
+========================================================= */
 
 .login-overlay {
   position: fixed;
@@ -1133,7 +1467,10 @@ a {
   border-radius: 50%;
 }
 
-/* TOAST */
+
+/* =========================================================
+   TOAST
+========================================================= */
 
 .toast {
   position: fixed;
@@ -1156,7 +1493,10 @@ a {
   transform: translate(-50%,0);
 }
 
-/* EMPTY STATE */
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
 
 .empty-state {
   grid-column: 1 / -1;
@@ -1173,7 +1513,10 @@ a {
   color: var(--text);
 }
 
-/* FOOTER */
+
+/* =========================================================
+   FOOTER
+========================================================= */
 
 footer {
   padding: 45px 0;
@@ -1193,7 +1536,10 @@ footer p {
   font-size: 13px;
 }
 
-/* RESPONSIVE */
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
 
 @media (max-width: 950px) {
 
@@ -1227,6 +1573,11 @@ footer p {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
 
 @media (max-width: 700px) {
 
@@ -1304,9 +1655,40 @@ footer p {
   .modal-content {
     padding: 22px;
   }
+
+  .order-card-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .order-card-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .order-status-control {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .order-status-control select {
+    flex: 1;
+  }
 }
 
+
+/* =========================================================
+   RESPONSIVE — SMALL PHONES
+========================================================= */
+
 @media (max-width: 480px) {
+
+  .section-inner,
+  .topbar-inner,
+  .footer-inner,
+  .hero-inner {
+    width: calc(100% - 24px);
+  }
 
   .smithx-logo-image {
     width: 40px;
@@ -1317,45 +1699,76 @@ footer p {
     font-size: 15px;
   }
 
+  .nav-login-btn {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
   .cart-button {
     width: 40px;
     height: 40px;
   }
 
-  .nav-login-btn {
-    padding: 8px 10px;
-    font-size: 13px;
+  .hero {
+    padding: 55px 0 60px;
+  }
+
+  .hero h1 {
+    font-size: 43px;
+    letter-spacing: -2.5px;
+  }
+
+  .hero-description {
+    margin-top: 20px;
+    font-size: 15px;
+    line-height: 1.65;
   }
 
   .hero-actions {
     flex-direction: column;
   }
 
-  .hero-actions button {
+  .hero-actions .primary-button,
+  .hero-actions .secondary-button {
     width: 100%;
   }
 
-  .dashboard-grid,
-  .feature-grid {
-    grid-template-columns: 1fr;
+  .hero-panel-card {
+    min-height: 240px;
+    padding: 25px;
+    border-radius: 24px;
   }
 
-  .seller-card,
-  .seller-info-card {
-    padding: 22px;
+  .hero-panel-card strong {
+    font-size: 24px;
   }
 
-  .ai-assistant-card {
-    padding: 22px;
+  .section {
+    padding: 55px 0;
   }
 
-  .ai-assistant-header h3 {
-    font-size: 20px;
+  .section-heading {
+    margin-bottom: 28px;
   }
 
-  .ai-result-item p,
-  .ai-result-item ul {
-    font-size: 13px;
+  .section-heading h2 {
+    font-size: 31px;
+  }
+
+  .products-grid {
+    gap: 16px;
+  }
+
+  .product-image-button {
+    height: 235px;
+  }
+
+  .product-card-body {
+    padding: 16px;
+  }
+
+  .product-card h3 {
+    font-size: 17px;
   }
 
   .product-card-bottom {
@@ -1367,19 +1780,109 @@ footer p {
     width: 100%;
   }
 
-  .footer-inner {
-    flex-direction: column;
-    align-items: flex-start;
+  .seller-card,
+  .seller-info-card {
+    padding: 20px;
   }
-}
 
-/* ACCESSIBILITY */
+  .ai-assistant-card {
+    padding: 20px;
+  }
 
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 3px solid rgba(20,99,255,.3);
-  outline-offset: 2px;
+  .dashboard-grid,
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-card {
+    padding: 20px;
+  }
+
+  .dashboard-card strong {
+    font-size: 25px;
+  }
+
+  .about-card {
+    padding: 22px;
+    gap: 25px;
+  }
+
+  .about-card h2 {
+    font-size: 31px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .modal {
+    padding: 12px;
+  }
+
+  .modal-content {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .product-modal-layout h2 {
+    font-size: 26px;
+  }
+
+  .cart-panel {
+    padding: 18px;
+  }
+
+  .cart-item {
+    grid-template-columns: 60px 1fr;
+  }
+
+  .cart-item-image img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .order-card {
+    padding: 16px;
+  }
+
+  .order-products {
+    gap: 10px;
+  }
+
+  .order-product-image {
+    width: 50px;
+    height: 50px;
+    flex-basis: 50px;
+  }
+
+  .order-card-footer > strong {
+    font-size: 17px;
+  }
+
+  .order-status-control {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .order-status-control select {
+    width: 100%;
+  }
+
+  .confirmation-item,
+  .confirmation-total,
+  .confirmation-status {
+    font-size: 13px;
+  }
+
+  .confirmation-item {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .footer-inner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
 }
