@@ -3,8 +3,10 @@
 /* =====================================================
    SM1THX 🛒
    APP.JS — STABLE MVP
-   CART + MARKETPLACE + SELLER STUDIO + AI ASSISTANT
+   CART + MARKETPLACE + SELLER STUDIO
+   + AI ASSISTANT + ORDERS
 ===================================================== */
+
 
 /* =====================================================
    DEFAULT PRODUCTS
@@ -21,6 +23,7 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: "default-2",
     name: "Smart Wireless Headphones",
@@ -31,6 +34,7 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: "default-3",
     name: "Minimal Desk Lamp",
@@ -41,6 +45,7 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: "default-4",
     name: "Everyday Travel Backpack",
@@ -51,6 +56,7 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: "default-5",
     name: "Smart Watch",
@@ -61,6 +67,7 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: "default-6",
     name: "Premium Sneakers",
@@ -72,6 +79,7 @@ const DEFAULT_PRODUCTS = [
       "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
   }
 ];
+
 
 /* =====================================================
    CATEGORIES
@@ -86,6 +94,7 @@ const CATEGORIES = [
   "Accessories"
 ];
 
+
 /* =====================================================
    STORAGE
 ===================================================== */
@@ -94,8 +103,24 @@ const STORAGE = {
   products: "smithx_custom_products_v2",
   cart: "smithx_cart_v2",
   analytics: "smithx_analytics_v2",
-  visitor: "smithx_daily_visitor_v2"
+  visitor: "smithx_daily_visitor_v2",
+
+  /* NEW */
+  orders: "smithx_orders_v2"
 };
+
+
+/* =====================================================
+   ORDER STATUSES
+===================================================== */
+
+const ORDER_STATUSES = [
+  "Pending",
+  "Confirmed",
+  "Shipped",
+  "Delivered"
+];
+
 
 /* =====================================================
    STATE
@@ -106,12 +131,15 @@ let currentSearch = "";
 let latestAIProduct = null;
 let toastTimer = null;
 
+
 /* =====================================================
    AI BACKEND
 ===================================================== */
 
 const AI_API_URL =
   "https://smithx-ai-backend.onrender.com/api/generate-product";
+
+
 /* =====================================================
    HELPERS
 ===================================================== */
@@ -120,10 +148,16 @@ function getElement(id) {
   return document.getElementById(id);
 }
 
+
 function formatKES(value) {
   const number = Number(value) || 0;
-  return "KES " + number.toLocaleString("en-KE");
+
+  return (
+    "KES " +
+    number.toLocaleString("en-KE")
+  );
 }
+
 
 function escapeHTML(value) {
   return String(value ?? "")
@@ -134,6 +168,7 @@ function escapeHTML(value) {
     .replace(/'/g, "&#039;");
 }
 
+
 function safeJSONParse(value, fallback) {
   try {
     return JSON.parse(value);
@@ -142,13 +177,16 @@ function safeJSONParse(value, fallback) {
   }
 }
 
+
 /* =====================================================
    PRODUCTS
 ===================================================== */
 
 function getCustomProducts() {
   const products = safeJSONParse(
-    localStorage.getItem(STORAGE.products),
+    localStorage.getItem(
+      STORAGE.products
+    ),
     []
   );
 
@@ -157,6 +195,7 @@ function getCustomProducts() {
     : [];
 }
 
+
 function saveCustomProducts(products) {
   localStorage.setItem(
     STORAGE.products,
@@ -164,12 +203,14 @@ function saveCustomProducts(products) {
   );
 }
 
+
 function getAllProducts() {
   return [
     ...DEFAULT_PRODUCTS,
     ...getCustomProducts()
   ];
 }
+
 
 function findProduct(productId) {
   return getAllProducts().find(
@@ -179,19 +220,25 @@ function findProduct(productId) {
   );
 }
 
+
 /* =====================================================
    CART
 ===================================================== */
 
 function normalizeCart() {
 
-  const stored = safeJSONParse(
-    localStorage.getItem(STORAGE.cart),
-    []
-  );
+  const stored =
+    safeJSONParse(
+      localStorage.getItem(
+        STORAGE.cart
+      ),
+      []
+    );
 
   if (!Array.isArray(stored)) {
+
     saveCart([]);
+
     return [];
   }
 
@@ -252,6 +299,7 @@ function normalizeCart() {
         );
 
       if (existing) {
+
         existing.quantity +=
           quantity;
       }
@@ -272,9 +320,11 @@ function normalizeCart() {
   return normalized;
 }
 
+
 function getCart() {
   return normalizeCart();
 }
+
 
 function saveCart(cart) {
 
@@ -288,9 +338,11 @@ function saveCart(cart) {
   );
 }
 
+
 function clearCart() {
   saveCart([]);
 }
+
 
 /* =====================================================
    CART COUNT
@@ -309,16 +361,21 @@ function getCartCount() {
   );
 }
 
+
 function updateCartCount() {
 
   const element =
     getElement("cartCount");
 
   if (element) {
+
     element.textContent =
-      String(getCartCount());
+      String(
+        getCartCount()
+      );
   }
 }
+
 
 /* =====================================================
    CART TOTALS
@@ -358,6 +415,7 @@ function calculateCartTotals() {
     total: subtotal
   };
 }
+
 
 /* =====================================================
    ADD TO CART
@@ -400,6 +458,7 @@ function addToCart(productId) {
     cart.push({
       productId:
         String(product.id),
+
       quantity: 1
     });
   }
@@ -413,6 +472,7 @@ function addToCart(productId) {
     {
       productId:
         product.id,
+
       productName:
         product.name
     }
@@ -422,6 +482,7 @@ function addToCart(productId) {
     `${product.name} added to cart.`
   );
 }
+
 
 /* =====================================================
    REMOVE FROM CART
@@ -444,6 +505,7 @@ function removeFromCart(productId) {
     "Item removed from cart."
   );
 }
+
 
 /* =====================================================
    CHANGE CART QUANTITY
@@ -501,6 +563,7 @@ function changeCartQuantity(
   updateCartUI();
 }
 
+
 /* =====================================================
    SET CART QUANTITY
 ===================================================== */
@@ -557,6 +620,7 @@ function setCartQuantity(
   updateCartUI();
 }
 
+
 /* =====================================================
    CLEAR CART
 ===================================================== */
@@ -571,6 +635,7 @@ function clearShoppingCart() {
     "Cart cleared."
   );
 }
+
 
 /* =====================================================
    RENDER CART
@@ -592,11 +657,16 @@ function renderCart() {
 
     container.innerHTML = `
       <div class="empty-state">
-        <strong>Your cart is empty.</strong>
+
+        <strong>
+          Your cart is empty.
+        </strong>
+
         <p>
           Add products from the marketplace
           to get started.
         </p>
+
       </div>
     `;
 
@@ -651,10 +721,13 @@ function renderCart() {
       "cart-item";
 
     const safeId =
-      escapeHTML(product.id);
+      escapeHTML(
+        product.id
+      );
 
     itemElement.innerHTML = `
       <div class="cart-item-image">
+
         <img
           src="${escapeHTML(
             product.image || ""
@@ -663,6 +736,7 @@ function renderCart() {
             product.name
           )}"
         >
+
       </div>
 
       <div class="cart-item-info">
@@ -732,6 +806,7 @@ function renderCart() {
     );
 
   if (subtotal) {
+
     subtotal.textContent =
       formatKES(
         totals.subtotal
@@ -739,12 +814,14 @@ function renderCart() {
   }
 
   if (total) {
+
     total.textContent =
       formatKES(
         totals.total
       );
   }
 }
+
 
 /* =====================================================
    UPDATE CART UI
@@ -757,6 +834,7 @@ function updateCartUI() {
   renderCart();
 }
 
+
 /* =====================================================
    OPEN / CLOSE CART
 ===================================================== */
@@ -764,7 +842,9 @@ function updateCartUI() {
 function openCart() {
 
   const panel =
-    getElement("cartPanel");
+    getElement(
+      "cartPanel"
+    );
 
   if (!panel) {
     return;
@@ -782,10 +862,13 @@ function openCart() {
   renderCart();
 }
 
+
 function closeCart() {
 
   const panel =
-    getElement("cartPanel");
+    getElement(
+      "cartPanel"
+    );
 
   if (!panel) {
     return;
@@ -800,6 +883,493 @@ function closeCart() {
     "true"
   );
 }
+
+
+/* =====================================================
+   ORDERS
+===================================================== */
+
+function getOrders() {
+
+  const orders =
+    safeJSONParse(
+      localStorage.getItem(
+        STORAGE.orders
+      ),
+      []
+    );
+
+  return Array.isArray(orders)
+    ? orders
+    : [];
+}
+
+
+function saveOrders(orders) {
+
+  if (!Array.isArray(orders)) {
+    orders = [];
+  }
+
+  localStorage.setItem(
+    STORAGE.orders,
+    JSON.stringify(orders)
+  );
+}
+
+
+function generateOrderId() {
+
+  const timestamp =
+    Date.now()
+      .toString(36)
+      .toUpperCase();
+
+  const random =
+    Math.random()
+      .toString(36)
+      .substring(2, 7)
+      .toUpperCase();
+
+  return (
+    "SMX-" +
+    timestamp +
+    "-" +
+    random
+  );
+}
+
+
+function getOrder(orderId) {
+
+  return getOrders().find(
+    order =>
+      String(
+        order.orderId
+      ) ===
+      String(orderId)
+  );
+}
+
+
+/* =====================================================
+   CREATE ORDER FROM CART
+===================================================== */
+
+function createOrderFromCart() {
+
+  const cart =
+    getCart();
+
+  if (!cart.length) {
+    return null;
+  }
+
+  const items = [];
+
+  cart.forEach(item => {
+
+    const product =
+      findProduct(
+        item.productId
+      );
+
+    if (!product) {
+      return;
+    }
+
+    const quantity =
+      Math.max(
+        1,
+        Number(item.quantity) || 1
+      );
+
+    items.push({
+      productId:
+        String(product.id),
+
+      name:
+        product.name,
+
+      price:
+        Number(product.price) || 0,
+
+      quantity,
+
+      image:
+        product.image || "",
+
+      category:
+        product.category || ""
+    });
+  });
+
+  if (!items.length) {
+    return null;
+  }
+
+  const subtotal =
+    items.reduce(
+      (total, item) =>
+        total +
+        item.price *
+        item.quantity,
+      0
+    );
+
+  const now =
+    new Date().toISOString();
+
+  const order = {
+
+    orderId:
+      generateOrderId(),
+
+    status:
+      "Pending",
+
+    items,
+
+    subtotal,
+
+    total:
+      subtotal,
+
+    currency:
+      "KES",
+
+    customer: {
+      type:
+        "Demo Customer"
+    },
+
+    createdAt:
+      now,
+
+    updatedAt:
+      now
+  };
+
+  const orders =
+    getOrders();
+
+  orders.unshift(
+    order
+  );
+
+  saveOrders(
+    orders
+  );
+
+  return order;
+}
+
+
+/* =====================================================
+   UPDATE ORDER STATUS
+===================================================== */
+
+function updateOrderStatus(
+  orderId,
+  newStatus
+) {
+
+  if (
+    !ORDER_STATUSES.includes(
+      newStatus
+    )
+  ) {
+
+    showToast(
+      "Invalid order status."
+    );
+
+    return;
+  }
+
+  const orders =
+    getOrders();
+
+  const order =
+    orders.find(
+      item =>
+        String(
+          item.orderId
+        ) ===
+        String(orderId)
+    );
+
+  if (!order) {
+
+    showToast(
+      "Order could not be found."
+    );
+
+    return;
+  }
+
+  order.status =
+    newStatus;
+
+  order.updatedAt =
+    new Date().toISOString();
+
+  saveOrders(
+    orders
+  );
+
+  trackEvent(
+    "order_status_updated",
+    {
+      orderId:
+        order.orderId,
+
+      status:
+        newStatus
+    }
+  );
+
+  renderOrders();
+
+  showToast(
+    `Order ${order.orderId} is now ${newStatus}.`
+  );
+}
+
+
+/* =====================================================
+   ORDER STATUS CLASS
+===================================================== */
+
+function getOrderStatusClass(
+  status
+) {
+
+  return String(
+    status || "Pending"
+  )
+    .toLowerCase()
+    .replace(
+      /\s+/g,
+      "-"
+    );
+}
+
+
+/* =====================================================
+   RENDER ORDERS
+===================================================== */
+
+function renderOrders() {
+
+  const container =
+    getElement(
+      "ordersList"
+    );
+
+  if (!container) {
+    return;
+  }
+
+  const orders =
+    getOrders();
+
+  if (!orders.length) {
+
+    container.innerHTML = `
+      <div class="empty-state">
+
+        <strong>
+          No orders yet.
+        </strong>
+
+        <p>
+          Orders created through Demo Checkout
+          will appear here.
+        </p>
+
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML =
+    orders
+      .map(order => {
+
+        const safeOrderId =
+          escapeHTML(
+            order.orderId
+          );
+
+        const itemsHTML =
+          order.items
+            .map(
+              item => `
+                <div class="order-product">
+
+                  <div class="order-product-image">
+
+                    <img
+                      src="${escapeHTML(
+                        item.image || ""
+                      )}"
+                      alt="${escapeHTML(
+                        item.name
+                      )}"
+                    >
+
+                  </div>
+
+                  <div class="order-product-info">
+
+                    <strong>
+                      ${escapeHTML(
+                        item.name
+                      )}
+                    </strong>
+
+                    <span>
+                      ${item.quantity}
+                      ×
+                      ${formatKES(
+                        item.price
+                      )}
+                    </span>
+
+                  </div>
+
+                </div>
+              `
+            )
+            .join("");
+
+        const statusClass =
+          getOrderStatusClass(
+            order.status
+          );
+
+        const statusOptions =
+          ORDER_STATUSES
+            .map(
+              status => `
+                <option
+                  value="${escapeHTML(
+                    status
+                  )}"
+                  ${
+                    status ===
+                    order.status
+                      ? "selected"
+                      : ""
+                  }
+                >
+                  ${escapeHTML(
+                    status
+                  )}
+                </option>
+              `
+            )
+            .join("");
+
+        const createdDate =
+          new Date(
+            order.createdAt
+          );
+
+        const formattedDate =
+          Number.isNaN(
+            createdDate.getTime()
+          )
+            ? "Unknown date"
+            : createdDate.toLocaleString(
+                "en-KE",
+                {
+                  dateStyle:
+                    "medium",
+
+                  timeStyle:
+                    "short"
+                }
+              );
+
+        return `
+          <article
+            class="order-card"
+          >
+
+            <div class="order-card-header">
+
+              <div>
+
+                <span class="order-label">
+                  ORDER
+                </span>
+
+                <strong>
+                  ${safeOrderId}
+                </strong>
+
+              </div>
+
+              <span
+                class="order-status ${statusClass}"
+              >
+                ${escapeHTML(
+                  order.status
+                )}
+              </span>
+
+            </div>
+
+            <div class="order-date">
+              ${escapeHTML(
+                formattedDate
+              )}
+            </div>
+
+            <div class="order-products">
+
+              ${itemsHTML}
+
+            </div>
+
+            <div class="order-card-footer">
+
+              <strong>
+                ${formatKES(
+                  order.total
+                )}
+              </strong>
+
+              <div
+                class="order-status-control"
+              >
+
+                <label
+                  for="status-${safeOrderId}"
+                >
+                  Status
+                </label>
+
+                <select
+                  id="status-${safeOrderId}"
+                  onchange="updateOrderStatus('${safeOrderId}', this.value)"
+                >
+                  ${statusOptions}
+                </select>
+
+              </div>
+
+            </div>
+
+          </article>
+        `;
+      })
+      .join("");
+}
+
 
 /* =====================================================
    ANALYTICS
@@ -829,6 +1399,7 @@ function getAnalytics() {
   }
 
   return {
+
     orders:
       Number(
         analytics.orders
@@ -848,6 +1419,7 @@ function getAnalytics() {
   };
 }
 
+
 function saveAnalytics(
   analytics
 ) {
@@ -860,6 +1432,7 @@ function saveAnalytics(
   );
 }
 
+
 function trackEvent(
   eventName,
   data = {}
@@ -869,8 +1442,12 @@ function trackEvent(
     getAnalytics();
 
   analytics.events.push({
-    event: eventName,
+
+    event:
+      eventName,
+
     data,
+
     timestamp:
       new Date().toISOString()
   });
@@ -893,6 +1470,7 @@ function trackEvent(
   updateDashboard();
 }
 
+
 /* =====================================================
    DAILY VISITOR
 ===================================================== */
@@ -902,7 +1480,10 @@ function trackDailyVisitor() {
   const today =
     new Date()
       .toISOString()
-      .slice(0, 10);
+      .slice(
+        0,
+        10
+      );
 
   const saved =
     safeJSONParse(
@@ -920,8 +1501,11 @@ function trackDailyVisitor() {
     localStorage.setItem(
       STORAGE.visitor,
       JSON.stringify({
-        date: today,
-        count: 1
+        date:
+          today,
+
+        count:
+          1
       })
     );
 
@@ -952,6 +1536,7 @@ function trackDailyVisitor() {
   updateDashboard();
 }
 
+
 /* =====================================================
    CATEGORIES
 ===================================================== */
@@ -981,8 +1566,6 @@ function setupCategories() {
       button.type =
         "button";
 
-      /* FIXED:
-         CSS uses .category-filter */
       button.className =
         "category-filter";
 
@@ -1018,6 +1601,7 @@ function setupCategories() {
     }
   );
 }
+
 
 /* =====================================================
    SELLER CATEGORY
@@ -1063,6 +1647,7 @@ function setupSellerCategory() {
       }
     );
 }
+
 
 /* =====================================================
    RENDER PRODUCTS
@@ -1125,10 +1710,15 @@ function renderProducts() {
 
     grid.innerHTML = `
       <div class="empty-state">
-        <strong>No products found.</strong>
+
+        <strong>
+          No products found.
+        </strong>
+
         <p>
           Try another search or category.
         </p>
+
       </div>
     `;
 
@@ -1146,13 +1736,16 @@ function renderProducts() {
             );
 
           return `
-            <article class="product-card">
+            <article
+              class="product-card"
+            >
 
               <button
                 type="button"
                 class="product-image-button"
                 onclick="openProductModal('${safeId}')"
               >
+
                 <img
                   src="${escapeHTML(
                     product.image || ""
@@ -1162,11 +1755,16 @@ function renderProducts() {
                   )}"
                   loading="lazy"
                 >
+
               </button>
 
-              <div class="product-card-body">
+              <div
+                class="product-card-body"
+              >
 
-                <span class="product-category">
+                <span
+                  class="product-category"
+                >
                   ${escapeHTML(
                     product.category
                   )}
@@ -1184,7 +1782,9 @@ function renderProducts() {
                   )}
                 </p>
 
-                <div class="product-card-bottom">
+                <div
+                  class="product-card-bottom"
+                >
 
                   <strong>
                     ${formatKES(
@@ -1210,6 +1810,7 @@ function renderProducts() {
       )
       .join("");
 }
+
 
 /* =====================================================
    PRODUCT MODAL
@@ -1246,9 +1847,12 @@ function openProductModal(
     );
 
   content.innerHTML = `
-    <div class="product-modal-layout">
+    <div
+      class="product-modal-layout"
+    >
 
       <div>
+
         <img
           src="${escapeHTML(
             product.image || ""
@@ -1257,11 +1861,14 @@ function openProductModal(
             product.name
           )}"
         >
+
       </div>
 
       <div>
 
-        <span class="product-category">
+        <span
+          class="product-category"
+        >
           ${escapeHTML(
             product.category
           )}
@@ -1273,7 +1880,9 @@ function openProductModal(
           )}
         </h2>
 
-        <strong class="product-modal-price">
+        <strong
+          class="product-modal-price"
+        >
           ${formatKES(
             product.price
           )}
@@ -1308,6 +1917,7 @@ function openProductModal(
   );
 }
 
+
 function closeProductModal() {
 
   const modal =
@@ -1329,6 +1939,7 @@ function closeProductModal() {
   );
 }
 
+
 /* =====================================================
    DEMO CHECKOUT
 ===================================================== */
@@ -1347,8 +1958,21 @@ function demoCheckout() {
     return;
   }
 
-  const totals =
-    calculateCartTotals();
+  const order =
+    createOrderFromCart();
+
+  if (!order) {
+
+    showToast(
+      "Could not create the order."
+    );
+
+    return;
+  }
+
+  /*
+    Update analytics exactly once.
+  */
 
   const analytics =
     getAnalytics();
@@ -1357,35 +1981,57 @@ function demoCheckout() {
 
   analytics.revenue +=
     Number(
-      totals.total
+      order.total
     ) || 0;
 
   saveAnalytics(
     analytics
   );
 
-  const orderId =
-    `SMX-DEMO-${Date.now()}`;
+  /*
+    Record the event.
+  */
+
+  trackEvent(
+    "order_created",
+    {
+      orderId:
+        order.orderId,
+
+      total:
+        order.total,
+
+      itemCount:
+        order.items.length
+    }
+  );
+
+  /*
+    Keep compatibility with
+    the previous demo order system.
+  */
 
   localStorage.setItem(
     "smithx_last_demo_order",
     JSON.stringify({
-      orderId,
+      orderId:
+        order.orderId,
+
       total:
-        totals.total,
+        order.total,
+
       createdAt:
-        new Date().toISOString()
+        order.createdAt,
+
+      status:
+        order.status
     })
   );
 
-  trackEvent(
-    "demo_order",
-    {
-      orderId,
-      total:
-        totals.total
-    }
-  );
+  /*
+    Clear cart after successful
+    order creation.
+  */
 
   clearCart();
 
@@ -1395,10 +2041,220 @@ function demoCheckout() {
 
   updateDashboard();
 
+  renderOrders();
+
   showToast(
-    `Demo order ${orderId} created!`
+    `✓ Order ${order.orderId} created!`
+  );
+
+  /*
+    Show confirmation.
+  */
+
+  setTimeout(
+    () => {
+
+      showOrderConfirmation(
+        order
+      );
+
+    },
+    350
   );
 }
+
+
+/* =====================================================
+   ORDER CONFIRMATION
+===================================================== */
+
+function showOrderConfirmation(
+  order
+) {
+
+  if (!order) {
+    return;
+  }
+
+  const existing =
+    getElement(
+      "orderConfirmation"
+    );
+
+  if (existing) {
+    existing.remove();
+  }
+
+  const overlay =
+    document.createElement(
+      "div"
+    );
+
+  overlay.id =
+    "orderConfirmation";
+
+  overlay.className =
+    "modal open";
+
+  overlay.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  const items =
+    order.items
+      .map(
+        item => `
+          <div
+            class="confirmation-item"
+          >
+
+            <span>
+              ${escapeHTML(
+                item.name
+              )}
+              ×
+              ${item.quantity}
+            </span>
+
+            <strong>
+              ${formatKES(
+                item.price *
+                item.quantity
+              )}
+            </strong>
+
+          </div>
+        `
+      )
+      .join("");
+
+  overlay.innerHTML = `
+    <div
+      class="modal-content order-confirmation-content"
+    >
+
+      <button
+        type="button"
+        class="modal-close"
+        onclick="closeOrderConfirmation()"
+        aria-label="Close order confirmation"
+      >
+        ×
+      </button>
+
+      <div
+        class="order-confirmation"
+      >
+
+        <div
+          class="confirmation-icon"
+        >
+          ✓
+        </div>
+
+        <p
+          class="section-eyebrow"
+        >
+          ORDER CONFIRMED
+        </p>
+
+        <h2>
+          Thank you for your order!
+        </h2>
+
+        <p class="muted">
+          Your SM1THX demo order has been
+          successfully created.
+        </p>
+
+        <div
+          class="confirmation-order-id"
+        >
+
+          <span>
+            Order ID
+          </span>
+
+          <strong>
+            ${escapeHTML(
+              order.orderId
+            )}
+          </strong>
+
+        </div>
+
+        <div
+          class="confirmation-items"
+        >
+          ${items}
+        </div>
+
+        <div
+          class="confirmation-total"
+        >
+
+          <span>
+            Total
+          </span>
+
+          <strong>
+            ${formatKES(
+              order.total
+            )}
+          </strong>
+
+        </div>
+
+        <div
+          class="confirmation-status"
+        >
+
+          <span>
+            Status
+          </span>
+
+          <strong>
+            ${escapeHTML(
+              order.status
+            )}
+          </strong>
+
+        </div>
+
+        <button
+          type="button"
+          class="primary-button full-width"
+          onclick="closeOrderConfirmation(); scrollToSection('dashboard');"
+        >
+          View Orders
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(
+    overlay
+  );
+}
+
+
+function closeOrderConfirmation() {
+
+  const modal =
+    getElement(
+      "orderConfirmation"
+    );
+
+  if (!modal) {
+    return;
+  }
+
+  modal.remove();
+}
+
 
 /* =====================================================
    IMAGE PREVIEW
@@ -1443,7 +2299,8 @@ function setupImagePreview() {
           "hidden"
         );
 
-        image.src = "";
+        image.src =
+          "";
 
         return;
       }
@@ -1484,6 +2341,7 @@ function setupImagePreview() {
     }
   );
 }
+
 
 /* =====================================================
    COMPRESS IMAGE
@@ -1597,6 +2455,7 @@ function compressImage(
   );
 }
 
+
 /* =====================================================
    PUBLISH PRODUCT
 ===================================================== */
@@ -1689,7 +2548,8 @@ async function publishProduct() {
     return;
   }
 
-  let image = "";
+  let image =
+    "";
 
   try {
 
@@ -1732,9 +2592,13 @@ async function publishProduct() {
         .slice(2, 8)}`,
 
     name,
+
     price,
+
     category,
+
     description,
+
     image
   };
 
@@ -1754,10 +2618,13 @@ async function publishProduct() {
     {
       productId:
         product.id,
+
       name:
         product.name,
+
       price:
         product.price,
+
       category:
         product.category
     }
@@ -1794,12 +2661,14 @@ async function publishProduct() {
     );
 
   if (preview) {
+
     preview.classList.add(
       "hidden"
     );
   }
 
   if (previewImage) {
+
     previewImage.src =
       "";
   }
@@ -1813,6 +2682,7 @@ async function publishProduct() {
     );
 
   if (aiResult) {
+
     aiResult.style.display =
       "none";
   }
@@ -1829,6 +2699,7 @@ async function publishProduct() {
     "market"
   );
 }
+
 
 /* =====================================================
    AI PRODUCT ASSISTANT
@@ -1908,7 +2779,9 @@ async function generateProductListing() {
       resultBox.innerHTML = `
         <div class="ai-result-item">
 
-          <span>SM1THX AI</span>
+          <span>
+            SM1THX AI
+          </span>
 
           <strong>
             AI assistant is ready.
@@ -1943,7 +2816,9 @@ async function generateProductListing() {
     resultBox.innerHTML = `
       <div class="ai-result-item">
 
-        <span>SM1THX AI</span>
+        <span>
+          SM1THX AI
+        </span>
 
         <strong>
           Creating your product listing...
@@ -2152,7 +3027,9 @@ async function generateProductListing() {
       resultBox.innerHTML = `
         <div class="ai-result-item">
 
-          <span>SM1THX AI</span>
+          <span>
+            SM1THX AI
+          </span>
 
           <strong>
             AI connection error
@@ -2185,6 +3062,7 @@ async function generateProductListing() {
     }
   }
 }
+
 
 /* =====================================================
    APPLY AI LISTING
@@ -2298,6 +3176,7 @@ function applyAIProductListing() {
     productName.scrollIntoView({
       behavior:
         "smooth",
+
       block:
         "center"
     });
@@ -2307,6 +3186,7 @@ function applyAIProductListing() {
     "✓ AI listing applied to your product form!"
   );
 }
+
 
 /* =====================================================
    DASHBOARD
@@ -2325,7 +3205,9 @@ function updateDashboard() {
       localStorage.getItem(
         STORAGE.visitor
       ),
-      { count: 0 }
+      {
+        count: 0
+      }
     );
 
   const productsElement =
@@ -2377,6 +3259,7 @@ function updateDashboard() {
   }
 }
 
+
 /* =====================================================
    RESET ANALYTICS
 ===================================================== */
@@ -2384,17 +3267,31 @@ function updateDashboard() {
 function resetAnalytics() {
 
   saveAnalytics({
-    orders: 0,
-    revenue: 0,
-    events: []
+
+    orders:
+      0,
+
+    revenue:
+      0,
+
+    events:
+      []
   });
 
   updateDashboard();
 
+  /*
+    Orders are deliberately NOT deleted.
+    Analytics and order records are separate.
+  */
+
+  renderOrders();
+
   showToast(
-    "Demo analytics reset."
+    "Demo analytics reset. Orders were kept."
   );
 }
+
 
 /* =====================================================
    UPDATES
@@ -2435,6 +3332,7 @@ function toggleUpdateHistory() {
   }
 }
 
+
 function setupUpdatesToggle() {
 
   const history =
@@ -2448,6 +3346,7 @@ function setupUpdatesToggle() {
       "none";
   }
 }
+
 
 /* =====================================================
    SEARCH
@@ -2476,6 +3375,7 @@ function setupSearch() {
   );
 }
 
+
 /* =====================================================
    NAVIGATION
 ===================================================== */
@@ -2496,10 +3396,12 @@ function scrollToSection(
   section.scrollIntoView({
     behavior:
       "smooth",
+
     block:
       "start"
   });
 }
+
 
 function setupNavigation() {
 
@@ -2546,6 +3448,7 @@ function setupNavigation() {
     );
 }
 
+
 /* =====================================================
    TOAST
 ===================================================== */
@@ -2561,7 +3464,9 @@ function showToast(
 
   if (!toast) {
 
-    console.log(message);
+    console.log(
+      message
+    );
 
     return;
   }
@@ -2590,6 +3495,7 @@ function showToast(
     );
 }
 
+
 /* =====================================================
    LOGIN COMPATIBILITY
 ===================================================== */
@@ -2615,6 +3521,7 @@ function removeLoginUI() {
   }
 }
 
+
 function disableOldLoginHandlers() {
 
   window.openLogin =
@@ -2629,6 +3536,7 @@ function disableOldLoginHandlers() {
       removeLoginUI();
     };
 }
+
 
 /* =====================================================
    OLD LOGIN COMPATIBILITY
@@ -2647,15 +3555,18 @@ function showRegisterForm() {
     );
 
   if (login) {
+
     login.style.display =
       "none";
   }
 
   if (register) {
+
     register.style.display =
       "block";
   }
 }
+
 
 function showLoginForm() {
 
@@ -2670,15 +3581,18 @@ function showLoginForm() {
     );
 
   if (login) {
+
     login.style.display =
       "block";
   }
 
   if (register) {
+
     register.style.display =
       "none";
   }
 }
+
 
 function togglePassword(
   inputId,
@@ -2703,6 +3617,7 @@ function togglePassword(
       "text";
 
     if (button) {
+
       button.textContent =
         "🙈";
     }
@@ -2713,19 +3628,24 @@ function togglePassword(
       "password";
 
     if (button) {
+
       button.textContent =
         "👁";
     }
   }
 }
 
+
 /* =====================================================
    CONTROLS
 ===================================================== */
 
 function setupCartControls() {
-  // Cart buttons use global functions.
+  /*
+    Cart buttons use global functions.
+  */
 }
+
 
 function setupKeyboardControls() {
 
@@ -2741,10 +3661,13 @@ function setupKeyboardControls() {
         closeProductModal();
 
         closeCart();
+
+        closeOrderConfirmation();
       }
     }
   );
 }
+
 
 function setupProductBackdrop() {
 
@@ -2771,6 +3694,7 @@ function setupProductBackdrop() {
     }
   );
 }
+
 
 /* =====================================================
    INITIALIZE
@@ -2810,6 +3734,13 @@ function initializeSmithX() {
 
     updateDashboard();
 
+    /*
+      NEW:
+      Render saved orders when the app loads.
+    */
+
+    renderOrders();
+
     console.log(
       "SM1THX initialized successfully."
     );
@@ -2826,6 +3757,7 @@ function initializeSmithX() {
     );
   }
 }
+
 
 /* =====================================================
    GLOBAL FUNCTIONS
@@ -2893,6 +3825,24 @@ window.generateProductListing =
 
 window.applyAIProductListing =
   applyAIProductListing;
+
+
+/* =====================================================
+   NEW ORDER GLOBAL FUNCTIONS
+===================================================== */
+
+window.updateOrderStatus =
+  updateOrderStatus;
+
+window.renderOrders =
+  renderOrders;
+
+window.showOrderConfirmation =
+  showOrderConfirmation;
+
+window.closeOrderConfirmation =
+  closeOrderConfirmation;
+
 
 /* =====================================================
    DOM READY
