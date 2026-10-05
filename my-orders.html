@@ -2,75 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="description"
-    content="SM1THX My Orders — Track your purchases."
-  >
-
-  <title>My Orders — SM1THX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SM1THX — My Orders</title>
 
   <style>
-    /* =====================================================
-       SM1THX — MY ORDERS
-       CUSTOMER ORDER TRACKING PORTAL
-    ===================================================== */
-
-    :root {
-      --primary: #1769d1;
-      --primary-dark: #0f4e9d;
-      --primary-soft: #eef6ff;
-
-      --bg: #f6f9fc;
-      --surface: #ffffff;
-
-      --text: #0f172a;
-      --muted: #64748b;
-
-      --border: #e2e8f0;
-
-      --success: #16a34a;
-      --success-soft: #ecfdf3;
-
-      --warning: #d97706;
-      --warning-soft: #fff7ed;
-
-      --shadow-sm:
-        0 4px 14px rgba(15, 23, 42, 0.06);
-
-      --shadow-md:
-        0 12px 35px rgba(15, 23, 42, 0.08);
-
-      --radius: 18px;
-    }
-
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-      line-height: 1.5;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f9ff;
+      color: #10233f;
     }
 
     button,
@@ -78,1412 +23,511 @@
       font: inherit;
     }
 
-    button {
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+      height: 68px;
+      background: #ffffff;
+      border-bottom: 1px solid #e5edf7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #1264d8;
+    }
+
+    .logo span {
+      color: #111827;
+    }
+
+    .back-btn {
+      border: 0;
+      background: #eef5ff;
+      color: #1264d8;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 700;
       cursor: pointer;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    .back-btn:hover {
+      background: #dceaff;
     }
 
-
-    /* =====================================================
-       HEADER
-    ===================================================== */
-
-    .orders-header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-
-      height: 68px;
-
-      display: flex;
-      align-items: center;
-
-      background: rgba(255, 255, 255, 0.96);
-      border-bottom: 1px solid var(--border);
-
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-    }
-
-    .header-inner {
-      width: min(1200px, calc(100% - 32px));
-      margin: 0 auto;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 20px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-
-      min-width: 0;
-    }
-
-    .brand-logo {
-      width: 40px;
-      height: 40px;
-
-      object-fit: contain;
-
-      border-radius: 9px;
-
-      display: block;
-    }
-
-    .brand-copy {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.05;
-    }
-
-    .brand-name {
-      font-size: 17px;
-      font-weight: 900;
-      letter-spacing: 0.04em;
-    }
-
-    .brand-tagline {
-      margin-top: 3px;
-
-      font-size: 8px;
-      font-weight: 700;
-
-      color: var(--muted);
-
-      letter-spacing: 0.12em;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .header-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      min-height: 38px;
-      padding: 0 13px;
-
-      border: 1px solid var(--border);
-      border-radius: 10px;
-
-      background: white;
-
-      color: var(--text);
-
-      font-size: 13px;
-      font-weight: 700;
-
-      transition:
-        border-color 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
-    }
-
-    .header-link:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-      transform: translateY(-1px);
-    }
-
-
-    /* =====================================================
+    /* =========================
        HERO
-    ===================================================== */
+    ========================= */
 
-    .orders-hero {
-      width: min(1200px, calc(100% - 32px));
-      margin: 30px auto 22px;
-
-      padding: 30px;
-
-      border-radius: 24px;
-
-      background:
-        radial-gradient(
-          circle at 90% 20%,
-          rgba(255, 255, 255, 0.24),
-          transparent 30%
-        ),
-        linear-gradient(
-          135deg,
-          #0f4e9d,
-          #1769d1 55%,
-          #3185eb
-        );
-
-      color: white;
-
-      box-shadow: var(--shadow-md);
+    .hero {
+      padding: 42px 24px 28px;
+      text-align: center;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
     }
 
-    .hero-eyebrow {
-      margin-bottom: 7px;
-
-      font-size: 11px;
-      font-weight: 800;
-
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-
-      opacity: 0.8;
+    .hero h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
     }
 
-    .orders-hero h1 {
-      font-size: clamp(28px, 5vw, 42px);
-      line-height: 1.05;
-      font-weight: 900;
-
-      letter-spacing: -0.035em;
+    .hero p {
+      color: #667085;
+      font-size: 16px;
     }
 
-    .orders-hero p {
-      max-width: 650px;
-
-      margin-top: 10px;
-
-      font-size: 14px;
-
-      color: rgba(255, 255, 255, 0.88);
-    }
-
-
-    /* =====================================================
+    /* =========================
        SEARCH
-    ===================================================== */
-
-    .search-card {
-      width: min(1200px, calc(100% - 32px));
-      margin: 0 auto 20px;
-
-      padding: 16px;
-
-      background: var(--surface);
-
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-
-      box-shadow: var(--shadow-sm);
-    }
+    ========================= */
 
     .search-wrap {
-      position: relative;
+      max-width: 720px;
+      margin: 0 auto 30px;
+      padding: 0 20px;
     }
 
-    .search-icon {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-
-      width: 17px;
-      height: 17px;
-
-      transform: translateY(-50%);
-
-      color: var(--muted);
-
-      pointer-events: none;
-    }
-
-    .search-input {
+    .search {
       width: 100%;
       height: 48px;
-
-      padding: 0 16px 0 45px;
-
-      border: 1px solid var(--border);
-      border-radius: 12px;
-
+      border: 1px solid #d5dfec;
+      border-radius: 14px;
+      padding: 0 16px;
       outline: none;
-
-      background: #fbfdff;
-
-      color: var(--text);
-
-      font-size: 14px;
-
-      transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
-    }
-
-    .search-input:focus {
       background: white;
-
-      border-color: var(--primary);
-
-      box-shadow:
-        0 0 0 4px rgba(23, 105, 209, 0.1);
     }
 
+    .search:focus {
+      border-color: #1264d8;
+      box-shadow: 0 0 0 3px rgba(18, 100, 216, 0.10);
+    }
 
-    /* =====================================================
-       MAIN LAYOUT
-    ===================================================== */
+    /* =========================
+       LAYOUT
+    ========================= */
 
-    .orders-layout {
-      width: min(1200px, calc(100% - 32px));
-      margin: 0 auto 50px;
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 50px;
+    }
 
+    .layout {
       display: grid;
-
-      grid-template-columns:
-        minmax(280px, 340px)
-        minmax(0, 1fr);
-
-      gap: 20px;
-
-      align-items: start;
+      grid-template-columns: 360px 1fr;
+      gap: 22px;
     }
 
-    .panel {
-      background: var(--surface);
-
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-
-      box-shadow: var(--shadow-sm);
+    .card {
+      background: #ffffff;
+      border: 1px solid #e4ebf4;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(25, 65, 110, 0.06);
     }
 
-
-    /* =====================================================
+    /* =========================
        ORDER LIST
-    ===================================================== */
+    ========================= */
 
-    .orders-list-panel {
-      overflow: hidden;
-    }
-
-    .panel-header {
-      padding: 18px 18px 14px;
-
-      border-bottom: 1px solid var(--border);
-    }
-
-    .panel-title-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 10px;
+    .orders-panel {
+      padding: 18px;
+      min-height: 500px;
     }
 
     .panel-title {
-      font-size: 16px;
-      font-weight: 850;
-    }
-
-    .order-count {
-      min-width: 28px;
-      height: 25px;
-
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      padding: 0 8px;
-
-      border-radius: 999px;
-
-      background: var(--primary-soft);
-      color: var(--primary);
-
-      font-size: 11px;
-      font-weight: 850;
+      font-size: 19px;
+      font-weight: 800;
+      margin-bottom: 15px;
     }
 
     .order-list {
-      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     .order-item {
       width: 100%;
-
-      display: block;
-
-      padding: 14px;
-
-      border: 1px solid transparent;
-      border-radius: 13px;
-
-      background: white;
-
       text-align: left;
-
-      color: var(--text);
-
-      transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease;
-    }
-
-    .order-item + .order-item {
-      margin-top: 5px;
+      border: 1px solid #e2eaf4;
+      background: #ffffff;
+      padding: 14px;
+      border-radius: 13px;
+      cursor: pointer;
+      transition: 0.2s;
     }
 
     .order-item:hover {
-      background: #f8fbff;
-      border-color: #d9e8fa;
+      border-color: #9fc2f2;
+      transform: translateY(-1px);
     }
 
-    .order-item.selected {
-      background: var(--primary-soft);
-      border-color: #bdd9fa;
-    }
-
-    .order-item-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-
-      gap: 10px;
+    .order-item.active {
+      border-color: #1264d8;
+      background: #f2f7ff;
     }
 
     .order-id {
-      font-size: 12px;
-      font-weight: 850;
-
-      color: var(--text);
+      font-weight: 800;
+      color: #1264d8;
+      margin-bottom: 7px;
     }
 
-    .order-date {
-      margin-top: 3px;
-
-      color: var(--muted);
-
-      font-size: 11px;
+    .order-meta {
+      font-size: 13px;
+      color: #667085;
+      margin-bottom: 8px;
     }
 
-    .status-badge {
-      flex-shrink: 0;
-
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-
-      padding: 5px 8px;
-
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
       border-radius: 999px;
-
-      font-size: 9px;
-      font-weight: 850;
-
-      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 800;
+      background: #eef2f7;
+      color: #475467;
     }
 
-    .status-dot {
-      width: 6px;
-      height: 6px;
-
-      border-radius: 50%;
-
-      background: currentColor;
+    .status-confirmed {
+      background: #eaf4ff;
+      color: #1264d8;
     }
 
-    .status-pending {
-      color: var(--warning);
-      background: var(--warning-soft);
-    }
-
-    .status-confirmed,
-    .status-packed,
-    .status-shipped,
-    .status-out_for_delivery {
-      color: var(--primary);
-      background: var(--primary-soft);
+    .status-shipped {
+      background: #edf8ff;
+      color: #0877b8;
     }
 
     .status-delivered {
-      color: var(--success);
-      background: var(--success-soft);
+      background: #eaf9ef;
+      color: #16803c;
     }
 
-    .order-item-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 10px;
-
-      margin-top: 11px;
-    }
-
-    .order-item-product {
-      overflow: hidden;
-
-      color: var(--muted);
-
-      font-size: 11px;
-
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    .order-item-total {
-      flex-shrink: 0;
-
-      font-size: 12px;
-      font-weight: 850;
-    }
-
-
-    /* =====================================================
+    /* =========================
        DETAILS
-    ===================================================== */
+    ========================= */
 
     .details-panel {
-      min-width: 0;
-
-      overflow: hidden;
+      padding: 24px;
+      min-height: 500px;
     }
 
-    .details-content {
-      padding: 22px;
+    .empty {
+      min-height: 430px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #667085;
+    }
+
+    .empty-icon {
+      font-size: 50px;
+      margin-bottom: 12px;
     }
 
     .details-header {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
-
-      gap: 15px;
-
-      padding-bottom: 18px;
-
-      border-bottom: 1px solid var(--border);
-    }
-
-    .details-kicker {
-      margin-bottom: 4px;
-
-      color: var(--muted);
-
-      font-size: 10px;
-      font-weight: 800;
-
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      gap: 20px;
+      align-items: flex-start;
+      margin-bottom: 25px;
     }
 
     .details-header h2 {
-      font-size: clamp(20px, 3vw, 27px);
-      line-height: 1.15;
-
-      font-weight: 900;
-
-      letter-spacing: -0.025em;
+      font-size: 25px;
+      margin-bottom: 7px;
     }
 
-    .copy-button {
-      flex-shrink: 0;
-
-      min-height: 36px;
-
-      padding: 0 11px;
-
-      border: 1px solid var(--border);
-      border-radius: 9px;
-
-      background: white;
-
-      color: var(--text);
-
-      font-size: 11px;
-      font-weight: 750;
-
-      transition:
-        border-color 0.2s ease,
-        color 0.2s ease;
-    }
-
-    .copy-button:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-
-    /* =====================================================
-       SUMMARY
-    ===================================================== */
-
-    .summary-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(3, minmax(0, 1fr));
-
-      gap: 10px;
-
-      margin: 18px 0;
-    }
-
-    .summary-card {
-      padding: 14px;
-
-      border: 1px solid var(--border);
-      border-radius: 13px;
-
-      background: #fbfdff;
-    }
-
-    .summary-label {
-      color: var(--muted);
-
-      font-size: 10px;
-      font-weight: 700;
-
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .summary-value {
-      margin-top: 5px;
-
-      font-size: 15px;
-      font-weight: 850;
-    }
-
-
-    /* =====================================================
-       TRACKING CARD
-    ===================================================== */
-
-    .tracking-card {
-      margin-top: 18px;
-
-      padding: 20px;
-
-      border: 1px solid #d7e7f8;
-      border-radius: 17px;
-
-      background:
-        linear-gradient(
-          180deg,
-          #fbfdff,
-          #ffffff
-        );
-    }
-
-    .tracking-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 15px;
-
-      margin-bottom: 22px;
-    }
-
-    .tracking-title {
-      font-size: 16px;
-      font-weight: 900;
+    .details-header p {
+      color: #667085;
+      font-size: 14px;
     }
 
     .demo-label {
-      display: inline-flex;
-      align-items: center;
-
-      padding: 5px 9px;
-
+      display: inline-block;
+      padding: 6px 10px;
       border-radius: 999px;
-
-      background: #f1f5f9;
-      color: var(--muted);
-
-      font-size: 9px;
-      font-weight: 800;
-
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .tracking-current {
-      margin-bottom: 20px;
-
-      padding: 13px 15px;
-
-      border-radius: 12px;
-
-      background: var(--primary-soft);
-
-      color: var(--primary);
-    }
-
-    .tracking-current-label {
-      font-size: 9px;
-      font-weight: 800;
-
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .tracking-current-status {
-      margin-top: 2px;
-
-      font-size: 18px;
-      font-weight: 900;
-    }
-
-    .tracking-current-location {
-      margin-top: 2px;
-
-      color: var(--muted);
-
+      background: #fff4d6;
+      color: #8a6200;
       font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
     }
 
+    /* =========================
+       TRACKING
+    ========================= */
 
-    /* =====================================================
-       PROGRESS BAR
-    ===================================================== */
-
-    .progress-wrapper {
-      padding: 5px 4px 0;
+    .tracking-card {
+      border: 1px solid #e3ebf5;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 22px;
     }
 
-    .progress-track {
+    .tracking-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .tracking-title {
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .tracking-location {
+      color: #667085;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .progress {
       position: relative;
-
       height: 7px;
-
-      margin: 0 24px;
-
-      border-radius: 999px;
-
-      background: #e5edf6;
-
-      overflow: visible;
+      background: #e6edf6;
+      border-radius: 20px;
+      margin: 28px 5px 35px;
     }
 
     .progress-fill {
       position: absolute;
-      left: 0;
-      top: 0;
-
-      width: 0%;
       height: 100%;
-
-      border-radius: inherit;
-
-      background:
-        linear-gradient(
-          90deg,
-          #1769d1,
-          #3b82f6
-        );
-
-      transition:
-        width 0.8s ease;
+      width: 0%;
+      background: #1264d8;
+      border-radius: 20px;
+      transition: width 0.4s ease;
     }
 
     .progress-points {
       position: absolute;
-      left: -24px;
-      right: -24px;
       top: 50%;
-
+      left: 0;
+      width: 100%;
       transform: translateY(-50%);
-
       display: flex;
       justify-content: space-between;
     }
 
-    .progress-point {
-      width: 18px;
-      height: 18px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      border: 3px solid white;
+    .point {
+      width: 19px;
+      height: 19px;
       border-radius: 50%;
-
-      background: #d9e4ef;
-
-      box-shadow:
-        0 0 0 1px #d9e4ef;
-
-      transition:
-        background 0.4s ease,
-        box-shadow 0.4s ease,
-        transform 0.4s ease;
+      background: #d9e3ef;
+      border: 3px solid white;
+      box-shadow: 0 0 0 1px #d9e3ef;
+      transition: 0.3s;
     }
 
-    .progress-point.active,
-    .progress-point.completed {
-      background: var(--primary);
-
-      box-shadow:
-        0 0 0 1px var(--primary);
+    .point.active {
+      background: #1264d8;
+      box-shadow: 0 0 0 1px #1264d8;
     }
-
-    .progress-point.current {
-      transform: scale(1.25);
-
-      box-shadow:
-        0 0 0 4px rgba(23, 105, 209, 0.12);
-    }
-
-    .progress-labels {
-      display: grid;
-
-      grid-template-columns:
-        repeat(5, 1fr);
-
-      gap: 4px;
-
-      margin-top: 17px;
-    }
-
-    .progress-label {
-      color: #94a3b8;
-
-      font-size: 9px;
-      font-weight: 750;
-
-      text-align: center;
-      line-height: 1.25;
-    }
-
-    .progress-label.active,
-    .progress-label.completed {
-      color: var(--primary);
-    }
-
-
-    /* =====================================================
-       TIMELINE
-    ===================================================== */
 
     .timeline {
-      margin-top: 24px;
-    }
-
-    .timeline-title {
-      margin-bottom: 14px;
-
-      font-size: 13px;
-      font-weight: 850;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
     .timeline-item {
-      position: relative;
-
-      display: grid;
-
-      grid-template-columns: 28px minmax(0, 1fr);
-
-      gap: 11px;
-
-      min-height: 62px;
-    }
-
-    .timeline-marker-column {
-      position: relative;
-
       display: flex;
-      justify-content: center;
+      gap: 12px;
     }
 
-    .timeline-marker {
-      position: relative;
-      z-index: 2;
-
-      width: 13px;
-      height: 13px;
-
-      margin-top: 3px;
-
-      border: 3px solid white;
+    .timeline-dot {
+      width: 11px;
+      height: 11px;
       border-radius: 50%;
-
-      background: #d7e2ed;
-
-      box-shadow:
-        0 0 0 1px #d7e2ed;
-
-      transition:
-        background 0.4s ease,
-        transform 0.4s ease,
-        box-shadow 0.4s ease;
+      background: #d5deea;
+      margin-top: 4px;
+      flex-shrink: 0;
     }
 
-    .timeline-line {
-      position: absolute;
-
-      top: 16px;
-      bottom: -4px;
-
-      width: 2px;
-
-      background: #e4ebf3;
+    .timeline-item.active .timeline-dot {
+      background: #1264d8;
     }
 
-    .timeline-item.completed .timeline-marker,
-    .timeline-item.current .timeline-marker {
-      background: var(--primary);
-
-      box-shadow:
-        0 0 0 1px var(--primary);
-    }
-
-    .timeline-item.current .timeline-marker {
-      transform: scale(1.2);
-
-      box-shadow:
-        0 0 0 4px rgba(23, 105, 209, 0.1);
-    }
-
-    .timeline-item.completed .timeline-line {
-      background: var(--primary);
-    }
-
-    .timeline-content {
-      padding-bottom: 16px;
-    }
-
-    .timeline-status {
-      font-size: 12px;
-      font-weight: 850;
+    .timeline-label {
+      font-weight: 700;
+      font-size: 14px;
     }
 
     .timeline-description {
-      margin-top: 2px;
-
-      color: var(--muted);
-
-      font-size: 11px;
-    }
-
-    .timeline-time {
-      margin-top: 4px;
-
-      color: #94a3b8;
-
-      font-size: 9px;
-    }
-
-
-    /* =====================================================
-       INFORMATION
-    ===================================================== */
-
-    .info-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-      gap: 12px;
-
-      margin-top: 20px;
-    }
-
-    .info-card {
-      padding: 15px;
-
-      border: 1px solid var(--border);
-      border-radius: 13px;
-
-      background: #fbfdff;
-    }
-
-    .info-label {
-      color: var(--muted);
-
-      font-size: 9px;
-      font-weight: 800;
-
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .info-value {
-      margin-top: 5px;
-
-      font-size: 12px;
-      font-weight: 750;
-
-      word-break: break-word;
-    }
-
-
-    /* =====================================================
-       ORDER ITEMS
-    ===================================================== */
-
-    .items-section {
-      margin-top: 22px;
-    }
-
-    .section-heading {
-      margin-bottom: 12px;
-
-      font-size: 14px;
-      font-weight: 850;
-    }
-
-    .order-product {
-      display: flex;
-      align-items: center;
-
-      gap: 12px;
-
-      padding: 11px 0;
-
-      border-bottom: 1px solid var(--border);
-    }
-
-    .order-product:last-child {
-      border-bottom: 0;
-    }
-
-    .product-image {
-      width: 58px;
-      height: 58px;
-
-      flex-shrink: 0;
-
-      object-fit: cover;
-
-      border: 1px solid var(--border);
-      border-radius: 11px;
-
-      background: #f8fafc;
-    }
-
-    .product-info {
-      min-width: 0;
-      flex: 1;
-    }
-
-    .product-name {
-      overflow: hidden;
-
-      font-size: 12px;
-      font-weight: 800;
-
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    .product-meta {
+      font-size: 13px;
+      color: #667085;
       margin-top: 3px;
+    }
 
-      color: var(--muted);
+    /* =========================
+       ORDER ITEMS
+    ========================= */
 
-      font-size: 10px;
+    .section-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin: 22px 0 12px;
+    }
+
+    .product-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 13px 0;
+      border-bottom: 1px solid #edf1f6;
+    }
+
+    .product-info strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .product-info span {
+      font-size: 13px;
+      color: #667085;
     }
 
     .product-price {
-      flex-shrink: 0;
-
-      font-size: 12px;
-      font-weight: 850;
-    }
-
-
-    /* =====================================================
-       ACTIONS
-    ===================================================== */
-
-    .details-actions {
-      display: flex;
-      flex-wrap: wrap;
-
-      gap: 10px;
-
-      margin-top: 22px;
-      padding-top: 20px;
-
-      border-top: 1px solid var(--border);
-    }
-
-    .primary-button,
-    .secondary-button {
-      min-height: 42px;
-
-      padding: 0 15px;
-
-      border-radius: 10px;
-
-      font-size: 12px;
       font-weight: 800;
-
-      transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
+      white-space: nowrap;
     }
 
-    .primary-button {
-      border: 1px solid var(--primary);
-
-      background: var(--primary);
-      color: white;
-    }
-
-    .primary-button:hover {
-      background: var(--primary-dark);
-
-      transform: translateY(-1px);
-
-      box-shadow:
-        0 7px 16px rgba(23, 105, 209, 0.2);
-    }
-
-    .secondary-button {
-      border: 1px solid var(--border);
-
-      background: white;
-      color: var(--text);
-    }
-
-    .secondary-button:hover {
-      border-color: var(--primary);
-
-      color: var(--primary);
-
-      transform: translateY(-1px);
-    }
-
-
-    /* =====================================================
-       EMPTY STATES
-    ===================================================== */
-
-    .empty-state {
-      padding: 45px 22px;
-
-      text-align: center;
-    }
-
-    .empty-icon {
-      width: 50px;
-      height: 50px;
-
+    .total {
       display: flex;
-      align-items: center;
-      justify-content: center;
-
-      margin: 0 auto 13px;
-
-      border-radius: 14px;
-
-      background: var(--primary-soft);
-      color: var(--primary);
-
-      font-size: 22px;
-    }
-
-    .empty-state h2 {
+      justify-content: space-between;
+      padding-top: 17px;
       font-size: 18px;
-      font-weight: 850;
-    }
-
-    .empty-state p {
-      max-width: 380px;
-
-      margin: 7px auto 17px;
-
-      color: var(--muted);
-
-      font-size: 12px;
-    }
-
-    .no-results {
-      padding: 28px 15px;
-
-      color: var(--muted);
-
-      text-align: center;
-
-      font-size: 12px;
-    }
-
-
-    /* =====================================================
-       DELIVERED STATE
-    ===================================================== */
-
-    .delivered-banner {
-      display: none;
-
-      margin-top: 18px;
-
-      padding: 14px 16px;
-
-      border: 1px solid #bce8ca;
-      border-radius: 13px;
-
-      background: var(--success-soft);
-
-      color: #166534;
-    }
-
-    .delivered-banner.visible {
-      display: block;
-
-      animation:
-        deliveredIn 0.5s ease;
-    }
-
-    .delivered-title {
-      font-size: 14px;
       font-weight: 900;
     }
 
-    .delivered-text {
-      margin-top: 2px;
+    /* =========================
+       DELIVERY INFO
+    ========================= */
 
-      font-size: 11px;
+    .delivery-box {
+      background: #f5f9ff;
+      border-radius: 14px;
+      padding: 15px;
+      margin-top: 20px;
     }
 
-    @keyframes deliveredIn {
-      from {
-        opacity: 0;
-        transform: translateY(7px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .delivery-box strong {
+      display: block;
+      margin-bottom: 5px;
     }
 
+    .delivery-box span {
+      color: #667085;
+      font-size: 14px;
+    }
 
-    /* =====================================================
+    /* =========================
+       BUTTONS
+    ========================= */
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 11px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .btn-primary {
+      background: #1264d8;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #edf4ff;
+      color: #1264d8;
+    }
+
+    /* =========================
        TOAST
-    ===================================================== */
+    ========================= */
 
     .toast {
       position: fixed;
-
+      bottom: 24px;
       left: 50%;
-      bottom: 22px;
-
-      z-index: 2000;
-
-      max-width: calc(100% - 30px);
-
-      padding: 11px 15px;
-
-      border-radius: 10px;
-
-      background: #0f172a;
+      transform: translateX(-50%) translateY(100px);
+      background: #10233f;
       color: white;
-
-      font-size: 12px;
+      padding: 13px 18px;
+      border-radius: 11px;
+      font-size: 14px;
       font-weight: 700;
-
-      box-shadow: var(--shadow-md);
-
-      transform:
-        translate(-50%, 20px);
-
       opacity: 0;
-      pointer-events: none;
-
-      transition:
-        opacity 0.25s ease,
-        transform 0.25s ease;
+      transition: 0.3s;
+      z-index: 999;
     }
 
     .toast.show {
       opacity: 1;
-
-      transform:
-        translate(-50%, 0);
+      transform: translateX(-50%) translateY(0);
     }
 
+    /* =========================
+       MOBILE
+    ========================= */
 
-    /* =====================================================
-       FOOTER
-    ===================================================== */
-
-    footer {
-      width: min(1200px, calc(100% - 32px));
-
-      margin: 0 auto;
-
-      padding: 0 0 35px;
-
-      color: var(--muted);
-
-      text-align: center;
-
-      font-size: 10px;
-    }
-
-
-    /* =====================================================
-       RESPONSIVE
-    ===================================================== */
-
-    @media (max-width: 900px) {
-      .orders-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .orders-list-panel {
-        order: 1;
-      }
-
-      .details-panel {
-        order: 2;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .orders-header {
+    @media (max-width: 800px) {
+      header {
         height: 62px;
+        padding: 0 16px;
       }
 
-      .header-inner,
-      .orders-hero,
-      .search-card,
-      .orders-layout,
-      footer {
-        width: min(100% - 20px, 1200px);
+      .logo {
+        font-size: 22px;
       }
 
-      .brand-logo {
-        width: 36px;
-        height: 36px;
+      .hero {
+        padding: 30px 18px 22px;
       }
 
-      .brand-name {
-        font-size: 15px;
-      }
-
-      .brand-tagline {
-        display: none;
-      }
-
-      .header-link {
-        min-height: 35px;
-
-        padding: 0 10px;
-
-        font-size: 11px;
-      }
-
-      .orders-hero {
-        margin-top: 18px;
-
-        padding: 23px 20px;
-
-        border-radius: 18px;
-      }
-
-      .orders-hero h1 {
+      .hero h1 {
         font-size: 29px;
       }
 
-      .orders-hero p {
-        font-size: 12px;
-      }
-
-      .orders-layout {
-        gap: 14px;
-      }
-
-      .details-content {
-        padding: 16px;
-      }
-
-      .summary-grid {
+      .layout {
         grid-template-columns: 1fr;
       }
 
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .tracking-card {
-        padding: 15px;
-      }
-
-      .progress-track {
-        margin: 0 18px;
-      }
-
-      .progress-points {
-        left: -18px;
-        right: -18px;
-      }
-
-      .progress-label {
-        font-size: 8px;
-      }
-
-      .details-header {
-        align-items: center;
-      }
-
-      .details-actions {
-        flex-direction: column;
-      }
-
-      .primary-button,
-      .secondary-button {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 390px) {
-      .brand-copy {
-        display: none;
-      }
-
-      .header-actions {
-        gap: 6px;
-      }
-
-      .progress-label:nth-child(3) {
-        font-size: 0;
-      }
-
-      .progress-label:nth-child(3)::after {
-        content: "Shipped";
-        font-size: 8px;
-      }
-    }
-
-    @media print {
-      .orders-header,
-      .search-card,
-      .orders-list-panel,
-      .details-actions,
-      footer {
-        display: none !important;
-      }
-
-      .orders-hero {
-        box-shadow: none;
-      }
-
-      .orders-layout {
-        width: 100%;
+      .orders-panel {
+        min-height: auto;
       }
 
       .details-panel {
-        box-shadow: none;
+        min-height: auto;
+      }
+
+      .details-header {
+        flex-direction: column;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
       }
     }
   </style>
@@ -1491,344 +535,124 @@
 
 <body>
 
-  <!-- =====================================================
-       HEADER
-  ===================================================== -->
-
-  <header class="orders-header">
-    <div class="header-inner">
-
-      <a
-        href="index.html"
-        class="brand"
-        aria-label="SM1THX home"
-      >
-        <img
-          src="assets/smithx-logo.jpg"
-          alt="SM1THX"
-          class="brand-logo"
-        >
-
-        <span class="brand-copy">
-          <span class="brand-name">
-            SM1THX
-          </span>
-
-          <span class="brand-tagline">
-            SHOP • BUY • GROW
-          </span>
-        </span>
-      </a>
-
-      <nav class="header-actions">
-        <a
-          href="index.html#market"
-          class="header-link"
-        >
-          Continue Shopping
-        </a>
-      </nav>
-
+  <header>
+    <div class="logo">
+      SM1<span>TH</span>X
     </div>
+
+    <button class="back-btn" onclick="goBackToStore()">
+      ← Marketplace
+    </button>
   </header>
 
-
-  <!-- =====================================================
-       HERO
-  ===================================================== -->
-
-  <section class="orders-hero">
-
-    <div class="hero-eyebrow">
-      SM1THX CUSTOMER PORTAL
-    </div>
-
-    <h1>
-      My Orders
-    </h1>
-
-    <p>
-      View your purchases and follow every stage of your
-      order from placement to delivery.
-    </p>
-
+  <section class="hero">
+    <h1>My Orders</h1>
+    <p>Track your SM1THX orders from checkout to delivery.</p>
   </section>
 
-
-  <!-- =====================================================
-       SEARCH
-  ===================================================== -->
-
-  <section class="search-card">
-
-    <div class="search-wrap">
-
-      <svg
-        class="search-icon"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        aria-hidden="true"
-      >
-        <circle
-          cx="11"
-          cy="11"
-          r="7"
-        />
-
-        <path
-          d="m20 20-4-4"
-        />
-      </svg>
-
-      <input
-        id="orderSearch"
-        class="search-input"
-        type="search"
-        placeholder="Search by order number or product..."
-        autocomplete="off"
-        aria-label="Search orders"
-      >
-
-    </div>
-
-  </section>
-
-
-  <!-- =====================================================
-       MAIN
-  ===================================================== -->
-
-  <main class="orders-layout">
-
-    <!-- ORDER LIST -->
-
-    <section class="panel orders-list-panel">
-
-      <div class="panel-header">
-
-        <div class="panel-title-row">
-
-          <h2 class="panel-title">
-            Your Orders
-          </h2>
-
-          <span
-            id="orderCount"
-            class="order-count"
-          >
-            0
-          </span>
-
-        </div>
-
-      </div>
-
-      <div
-        id="ordersList"
-        class="order-list"
-      ></div>
-
-    </section>
-
-
-    <!-- ORDER DETAILS -->
-
-    <section
-      id="detailsPanel"
-      class="panel details-panel"
+  <div class="search-wrap">
+    <input
+      id="orderSearch"
+      class="search"
+      type="search"
+      placeholder="Search order ID..."
+      autocomplete="off"
     >
+  </div>
 
-      <div
-        id="detailsContent"
-        class="details-content"
-      >
+  <main class="page">
 
-        <div class="empty-state">
+    <div class="layout">
 
-          <div class="empty-icon">
-            📦
-          </div>
+      <!-- ORDER LIST -->
+      <section class="card orders-panel">
 
-          <h2>
-            Select an order
-          </h2>
-
-          <p>
-            Choose an order from the list to view its
-            status, tracking timeline and items.
-          </p>
-
+        <div class="panel-title">
+          Your Orders
         </div>
 
-      </div>
+        <div id="orderList" class="order-list"></div>
 
-    </section>
+      </section>
+
+      <!-- ORDER DETAILS -->
+      <section class="card details-panel">
+
+        <div id="details"></div>
+
+      </section>
+
+    </div>
 
   </main>
 
-
-  <footer>
-    © 2026 SM1THX • The Future of Commerce
-  </footer>
-
-
-  <div
-    id="toast"
-    class="toast"
-    role="status"
-    aria-live="polite"
-  ></div>
-
-
-  <!-- =====================================================
-       JAVASCRIPT
-  ===================================================== -->
+  <div id="toast" class="toast"></div>
 
   <script>
+    "use strict";
 
     /* =====================================================
        STORAGE
     ===================================================== */
 
-    const ORDERS_KEY =
-      "smithx_orders_v2";
+    const ORDERS_KEY = "smithx_orders_v2";
+    const SELECTED_ORDER_KEY = "smithx_selected_order";
+    const DEMO_KEY_PREFIX = "smithx_tracking_demo_";
 
-    const SELECTED_ORDER_KEY =
-      "smithx_selected_order";
+    const DEMO_DURATION = 120000;
 
-    const DEMO_KEY_PREFIX =
-      "smithx_tracking_demo_";
-
+    let orders = [];
+    let selectedOrderId = null;
+    let searchText = "";
+    let demoTimer = null;
 
     /* =====================================================
        TRACKING STAGES
     ===================================================== */
 
-    const TRACKING_STAGES = [
-
+    const TRACKING_STEPS = [
       {
-        step: "placed",
-        status: "Pending",
-        label: "Placed",
-        location: "Nairobi, Kenya",
-        description:
-          "Your order has been received by SM1THX."
+        key: "placed",
+        label: "Order placed",
+        description: "Your order has been received."
       },
-
       {
-        step: "confirmed",
-        status: "Confirmed",
-        label: "Confirmed",
-        location: "SM1THX Fulfillment Center",
-        description:
-          "Your order has been confirmed and is being prepared."
+        key: "confirmed",
+        label: "Order confirmed",
+        description: "The seller has confirmed your order."
       },
-
       {
-        step: "shipped",
-        status: "Shipped",
+        key: "packed",
+        label: "Order packed",
+        description: "Your order has been prepared for shipment."
+      },
+      {
+        key: "shipped",
         label: "Shipped",
-        location: "Nairobi Distribution Hub",
-        description:
-          "Your package has left the fulfillment center."
+        description: "Your package is on its way."
       },
-
       {
-        step: "out_for_delivery",
-        status: "Out for Delivery",
-        label: "Out for Delivery",
-        location: "Nairobi, Kenya",
-        description:
-          "Your package is on the way to your delivery address."
+        key: "out_for_delivery",
+        label: "Out for delivery",
+        description: "Your package is approaching its destination."
       },
-
       {
-        step: "delivered",
-        status: "Delivered",
+        key: "delivered",
         label: "Delivered",
-        location: "Customer Address",
-        description:
-          "Your order has been delivered successfully."
+        description: "Your order has been delivered."
       }
-
     ];
 
-
-    /*
-      Each stage gets approximately 30 seconds.
-
-      0:00  Placed
-      0:30  Confirmed
-      1:00  Shipped
-      1:30  Out for Delivery
-      2:00  Delivered
-    */
-
-    const DEMO_DURATION =
-      120000;
-
-
     /* =====================================================
-       HELPERS
+       BASIC HELPERS
     ===================================================== */
 
-    function getOrders() {
-
-      try {
-
-        const orders =
-          JSON.parse(
-            localStorage.getItem(
-              ORDERS_KEY
-            ) || "[]"
-          );
-
-        return Array.isArray(orders)
-          ? orders
-          : [];
-
-      } catch (error) {
-
-        console.error(
-          "Unable to load orders:",
-          error
-        );
-
-        return [];
-      }
+    function formatKES(amount) {
+      return "KES " + Number(amount || 0).toLocaleString("en-KE");
     }
-
-
-    function saveOrders(orders) {
-
-      localStorage.setItem(
-        ORDERS_KEY,
-        JSON.stringify(orders)
-      );
-    }
-
-
-    function formatKES(value) {
-
-      const number =
-        Number(value) || 0;
-
-      return (
-        "KES " +
-        number.toLocaleString(
-          "en-KE"
-        )
-      );
-    }
-
 
     function escapeHTML(value) {
-
-      return String(
-        value ?? ""
-      )
+      return String(value ?? "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -1836,424 +660,566 @@
         .replace(/'/g, "&#039;");
     }
 
+    function formatDate(value) {
+      if (!value) return "Unknown date";
 
-    function getOrderItems(order) {
+      const date = new Date(value);
 
-      if (
-        Array.isArray(order.items)
-      ) {
-        return order.items;
+      if (Number.isNaN(date.getTime())) {
+        return "Unknown date";
       }
 
-      if (
-        Array.isArray(order.products)
-      ) {
-        return order.products;
-      }
-
-      return [];
+      return date.toLocaleString("en-KE", {
+        dateStyle: "medium",
+        timeStyle: "short"
+      });
     }
 
+    function showToast(message) {
+      const toast = document.getElementById("toast");
 
-    function getItemName(item) {
+      if (!toast) return;
 
-      return (
-        item.name ||
-        item.title ||
-        item.productName ||
-        "Product"
-      );
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(showToast.timer);
+
+      showToast.timer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2800);
     }
-
-
-    function getItemPrice(item) {
-
-      return Number(
-        item.price ??
-        item.unitPrice ??
-        0
-      );
-    }
-
-
-    function getItemQuantity(item) {
-
-      return Number(
-        item.quantity ??
-        item.qty ??
-        1
-      );
-    }
-
-
-    function getItemImage(item) {
-
-      return (
-        item.image ||
-        item.imageUrl ||
-        item.img ||
-        ""
-      );
-    }
-
 
     /* =====================================================
-       STATUS NORMALISATION
+       STORAGE HELPERS
     ===================================================== */
 
-    function normaliseStatus(status) {
+    function getOrders() {
+      try {
+        const raw = localStorage.getItem(ORDERS_KEY);
 
-      return String(
-        status || "Pending"
-      )
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, "_");
+        if (!raw) {
+          return [];
+        }
+
+        const parsed = JSON.parse(raw);
+
+        return Array.isArray(parsed)
+          ? parsed
+          : [];
+      } catch (error) {
+        console.error("Could not read orders:", error);
+        return [];
+      }
     }
 
-
-    function getTrackingStep(order) {
-
-      const possibleStep =
-        order.trackingStep ||
-        order.trackingStatus ||
-        order.status ||
-        "pending";
-
-      const normalised =
-        String(possibleStep)
-          .trim()
-          .toLowerCase()
-          .replace(/\s+/g, "_");
-
-      if (
-        normalised === "pending"
-      ) {
-        return "placed";
+    function saveOrders() {
+      try {
+        localStorage.setItem(
+          ORDERS_KEY,
+          JSON.stringify(orders)
+        );
+      } catch (error) {
+        console.error("Could not save orders:", error);
       }
-
-      if (
-        normalised === "order_placed"
-      ) {
-        return "placed";
-      }
-
-      if (
-        normalised === "confirmed"
-      ) {
-        return "confirmed";
-      }
-
-      if (
-        normalised === "packed"
-      ) {
-        return "confirmed";
-      }
-
-      if (
-        normalised === "shipped"
-      ) {
-        return "shipped";
-      }
-
-      if (
-        normalised === "out_for_delivery"
-      ) {
-        return "out_for_delivery";
-      }
-
-      if (
-        normalised === "delivered"
-      ) {
-        return "delivered";
-      }
-
-      return "placed";
     }
 
-
-    function getStageIndex(order) {
-
-      const step =
-        getTrackingStep(order);
-
-      const index =
-        TRACKING_STAGES.findIndex(
-          stage =>
-            stage.step === step
+    function getSelectedOrderId() {
+      try {
+        const params = new URLSearchParams(
+          window.location.search
         );
 
-      return index >= 0
-        ? index
-        : 0;
+        const urlOrder = params.get("order");
+
+        if (urlOrder) {
+          return urlOrder;
+        }
+
+        return localStorage.getItem(
+          SELECTED_ORDER_KEY
+        );
+      } catch (error) {
+        return null;
+      }
     }
 
-
     /* =====================================================
-       STATUS BADGE
+       ORDER STATUS
     ===================================================== */
 
-    function statusBadge(status) {
+    function normalizeStatus(status) {
+      const value = String(status || "")
+        .trim()
+        .toLowerCase();
 
-      const className =
-        "status-" +
-        normaliseStatus(status);
+      if (value === "confirmed") return "Confirmed";
+      if (value === "shipped") return "Shipped";
+      if (value === "delivered") return "Delivered";
 
-      return `
-        <span class="status-badge ${className}">
-          <span class="status-dot"></span>
-          ${escapeHTML(status || "Pending")}
-        </span>
-      `;
+      return "Pending";
     }
 
+    function statusClass(status) {
+      const normalized = normalizeStatus(status);
 
-    /* =====================================================
-       ORDER DATE
-    ===================================================== */
-
-    function formatOrderDate(order) {
-
-      const raw =
-        order.createdAt ||
-        order.date ||
-        order.created ||
-        order.orderDate;
-
-      if (!raw) {
-        return "Recent order";
+      if (normalized === "Confirmed") {
+        return "status-confirmed";
       }
 
-      const date =
-        new Date(raw);
+      if (normalized === "Shipped") {
+        return "status-shipped";
+      }
+
+      if (normalized === "Delivered") {
+        return "status-delivered";
+      }
+
+      return "";
+    }
+
+    /* =====================================================
+       DEMO TRACKING STORAGE
+    ===================================================== */
+
+    function demoStorageKey(orderId) {
+      return DEMO_KEY_PREFIX + orderId;
+    }
+
+    function getDemoState(orderId) {
+      try {
+        const raw = localStorage.getItem(
+          demoStorageKey(orderId)
+        );
+
+        if (!raw) {
+          return null;
+        }
+
+        return JSON.parse(raw);
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function saveDemoState(orderId, state) {
+      try {
+        localStorage.setItem(
+          demoStorageKey(orderId),
+          JSON.stringify(state)
+        );
+      } catch (error) {
+        console.error("Could not save demo tracking:", error);
+      }
+    }
+
+    /* =====================================================
+       CALCULATE TRACKING STAGE
+    ===================================================== */
+
+    function calculateStage(elapsed) {
+
+      if (elapsed >= 120000) {
+        return {
+          stage: "delivered",
+          status: "Delivered",
+          step: 5
+        };
+      }
+
+      if (elapsed >= 90000) {
+        return {
+          stage: "out_for_delivery",
+          status: "Shipped",
+          step: 4
+        };
+      }
+
+      if (elapsed >= 60000) {
+        return {
+          stage: "shipped",
+          status: "Shipped",
+          step: 3
+        };
+      }
+
+      if (elapsed >= 30000) {
+        return {
+          stage: "confirmed",
+          status: "Confirmed",
+          step: 1
+        };
+      }
+
+      return {
+        stage: "placed",
+        status: "Pending",
+        step: 0
+      };
+    }
+
+    /* =====================================================
+       AUTOMATIC TRACKING
+    ===================================================== */
+
+    function startDemoTracking(order) {
+
+      if (!order || !order.orderId) {
+        return;
+      }
+
+      stopDemoTracking();
+
+      let state = getDemoState(order.orderId);
+
+      if (!state) {
+
+        state = {
+          startedAt: Date.now(),
+          completed: false
+        };
+
+        saveDemoState(
+          order.orderId,
+          state
+        );
+      }
+
+      runDemoTracking(order);
+    }
+
+    function runDemoTracking(order) {
+
+      if (!order || !order.orderId) {
+        return;
+      }
+
+      stopDemoTracking();
+
+      const tick = () => {
+
+        const state =
+          getDemoState(order.orderId);
+
+        if (!state || !state.startedAt) {
+          return;
+        }
+
+        const elapsed =
+          Date.now() - Number(state.startedAt);
+
+        const stage =
+          calculateStage(elapsed);
+
+        /*
+         * Update order in storage.
+         */
+        const index =
+          orders.findIndex(
+            item =>
+              String(item.orderId) ===
+              String(order.orderId)
+          );
+
+        if (index === -1) {
+          stopDemoTracking();
+          return;
+        }
+
+        orders[index].status =
+          stage.status;
+
+        orders[index].updatedAt =
+          new Date().toISOString();
+
+        orders[index].tracking =
+          orders[index].tracking || {};
+
+        orders[index].tracking.mode =
+          "demo";
+
+        orders[index].tracking.currentStep =
+          stage.step;
+
+        orders[index].tracking.currentStage =
+          stage.stage;
+
+        orders[index].tracking.completed =
+          stage.stage === "delivered";
+
+        saveOrders();
+
+        /*
+         * IMPORTANT:
+         * Delivered orders are automatically removed
+         * from the customer-facing order list.
+         */
+        if (stage.stage === "delivered") {
+
+          removeDeliveredOrder(
+            order.orderId
+          );
+
+          stopDemoTracking();
+
+          showToast(
+            "Order delivered."
+          );
+
+          return;
+        }
+
+        /*
+         * Refresh the visible details.
+         */
+        selectedOrderId =
+          order.orderId;
+
+        renderOrders();
+        renderSelectedOrder();
+
+      };
+
+      tick();
+
+      demoTimer =
+        setInterval(
+          tick,
+          1000
+        );
+    }
+
+    function stopDemoTracking() {
+
+      if (demoTimer) {
+        clearInterval(demoTimer);
+        demoTimer = null;
+      }
+    }
+
+    /* =====================================================
+       REMOVE DELIVERED ORDER
+    ===================================================== */
+
+    function removeDeliveredOrder(orderId) {
+
+      if (!orderId) {
+        return;
+      }
+
+      const cleanId =
+        String(orderId);
+
+      /*
+       * Remove the delivered order from the
+       * visible order database.
+       */
+      orders =
+        orders.filter(
+          order =>
+            String(order.orderId) !==
+            cleanId
+        );
+
+      saveOrders();
+
+      /*
+       * Remove selection.
+       */
+      if (
+        String(selectedOrderId) ===
+        cleanId
+      ) {
+        selectedOrderId = null;
+
+        try {
+          localStorage.removeItem(
+            SELECTED_ORDER_KEY
+          );
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      /*
+       * Remove demo tracking data too.
+       */
+      try {
+        localStorage.removeItem(
+          demoStorageKey(cleanId)
+        );
+      } catch (error) {
+        console.error(error);
+      }
+
+      renderOrders();
+      renderSelectedOrder();
+    }
+
+    /* =====================================================
+       CLEAN UP ALREADY DELIVERED ORDERS
+    ===================================================== */
+
+    function removeAlreadyDeliveredOrders() {
+
+      const deliveredIds =
+        orders
+          .filter(
+            order =>
+              normalizeStatus(
+                order.status
+              ) === "Delivered"
+          )
+          .map(
+            order =>
+              String(order.orderId)
+          );
+
+      if (!deliveredIds.length) {
+        return;
+      }
+
+      orders =
+        orders.filter(
+          order =>
+            normalizeStatus(
+              order.status
+            ) !== "Delivered"
+        );
+
+      saveOrders();
 
       if (
-        Number.isNaN(
-          date.getTime()
+        selectedOrderId &&
+        deliveredIds.includes(
+          String(selectedOrderId)
         )
       ) {
-        return escapeHTML(
-          String(raw)
-        );
+        selectedOrderId = null;
+
+        try {
+          localStorage.removeItem(
+            SELECTED_ORDER_KEY
+          );
+        } catch (error) {}
       }
 
-      return date.toLocaleDateString(
-        "en-KE",
-        {
-          day: "numeric",
-          month: "short",
-          year: "numeric"
-        }
-      );
+      deliveredIds.forEach(id => {
+
+        try {
+          localStorage.removeItem(
+            demoStorageKey(id)
+          );
+        } catch (error) {}
+
+      });
     }
 
-
     /* =====================================================
-       ORDER LIST
+       RENDER ORDER LIST
     ===================================================== */
 
-    let currentOrders = [];
+    function renderOrders() {
 
-
-    function renderOrders(
-      orders = getOrders()
-    ) {
-
-      currentOrders = orders;
-
-      const list =
+      const container =
         document.getElementById(
-          "ordersList"
+          "orderList"
         );
 
-      const count =
-        document.getElementById(
-          "orderCount"
-        );
+      if (!container) {
+        return;
+      }
 
-      count.textContent =
-        orders.length;
+      const filtered =
+        orders.filter(order => {
 
+          if (!searchText) {
+            return true;
+          }
 
-      if (!orders.length) {
+          return String(
+            order.orderId || ""
+          )
+            .toLowerCase()
+            .includes(
+              searchText.toLowerCase()
+            );
+        });
 
-        list.innerHTML = `
-          <div class="no-results">
-            No orders found.
+      if (!filtered.length) {
+
+        container.innerHTML = `
+          <div style="
+            text-align:center;
+            padding:40px 15px;
+            color:#667085;
+          ">
+            <div style="
+              font-size:40px;
+              margin-bottom:10px;
+            ">📦</div>
+
+            <strong>
+              No active orders
+            </strong>
+
+            <div style="
+              margin-top:7px;
+              font-size:13px;
+            ">
+              Delivered orders are automatically
+              removed from this list.
+            </div>
           </div>
         `;
 
         return;
       }
 
+      container.innerHTML =
+        filtered.map(order => {
 
-      const selected =
-        localStorage.getItem(
-          SELECTED_ORDER_KEY
-        );
+          const active =
+            String(order.orderId) ===
+            String(selectedOrderId);
 
-
-      list.innerHTML =
-        orders.map(order => {
-
-          const orderId =
-            order.orderId ||
-            order.id ||
-            "ORDER";
-
-          const items =
-            getOrderItems(order);
-
-          const firstItem =
-            items.length
-              ? getItemName(items[0])
-              : "SM1THX purchase";
-
-          const total =
-            Number(
-              order.total ??
-              order.amount ??
-              order.grandTotal ??
-              0
+          const status =
+            normalizeStatus(
+              order.status
             );
 
+          const total =
+            order.total ??
+            order.subtotal ??
+            0;
 
           return `
             <button
-              type="button"
-              class="order-item ${
-                selected === String(orderId)
-                  ? "selected"
-                  : ""
-              }"
-              data-order-id="${escapeHTML(orderId)}"
-              aria-label="View order ${escapeHTML(orderId)}"
+              class="order-item ${active ? "active" : ""}"
+              onclick="selectOrder('${escapeHTML(order.orderId)}')"
             >
 
-              <div class="order-item-top">
-
-                <div>
-                  <div class="order-id">
-                    ${escapeHTML(orderId)}
-                  </div>
-
-                  <div class="order-date">
-                    ${formatOrderDate(order)}
-                  </div>
-                </div>
-
-                ${statusBadge(
-                  order.status || "Pending"
-                )}
-
+              <div class="order-id">
+                ${escapeHTML(order.orderId)}
               </div>
 
-              <div class="order-item-bottom">
-
-                <div class="order-item-product">
-                  ${escapeHTML(firstItem)}
-                  ${
-                    items.length > 1
-                      ? ` + ${items.length - 1} more`
-                      : ""
-                  }
-                </div>
-
-                <div class="order-item-total">
-                  ${formatKES(total)}
-                </div>
-
+              <div class="order-meta">
+                ${formatDate(order.createdAt)}
               </div>
+
+              <div class="order-meta">
+                ${formatKES(total)}
+              </div>
+
+              <span class="status ${statusClass(status)}">
+                ${escapeHTML(status)}
+              </span>
 
             </button>
           `;
 
         }).join("");
-
-
-      list
-        .querySelectorAll(
-          ".order-item"
-        )
-        .forEach(button => {
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              const orderId =
-                button.dataset.orderId;
-
-              selectOrder(orderId);
-
-            }
-          );
-
-        });
     }
-
-
-    /* =====================================================
-       SEARCH
-    ===================================================== */
-
-    document
-      .getElementById("orderSearch")
-      .addEventListener(
-        "input",
-        event => {
-
-          const query =
-            event.target.value
-              .trim()
-              .toLowerCase();
-
-          if (!query) {
-
-            renderOrders(
-              getOrders()
-            );
-
-            return;
-          }
-
-
-          const filtered =
-            getOrders()
-              .filter(order => {
-
-                const orderId =
-                  String(
-                    order.orderId ||
-                    order.id ||
-                    ""
-                  )
-                    .toLowerCase();
-
-                const names =
-                  getOrderItems(order)
-                    .map(
-                      item =>
-                        getItemName(item)
-                    )
-                    .join(" ")
-                    .toLowerCase();
-
-                return (
-                  orderId.includes(query) ||
-                  names.includes(query)
-                );
-
-              });
-
-
-          renderOrders(
-            filtered
-          );
-
-        }
-      );
-
 
     /* =====================================================
        SELECT ORDER
@@ -2261,366 +1227,223 @@
 
     function selectOrder(orderId) {
 
-      localStorage.setItem(
-        SELECTED_ORDER_KEY,
-        orderId
-      );
+      if (!orderId) {
+        return;
+      }
 
-      const url =
-        new URL(
-          window.location.href
+      const order =
+        orders.find(
+          item =>
+            String(item.orderId) ===
+            String(orderId)
         );
 
-      url.searchParams.set(
-        "order",
-        orderId
-      );
+      if (!order) {
+        return;
+      }
 
-      window.history.replaceState(
-        {},
-        "",
-        url
-      );
+      selectedOrderId =
+        order.orderId;
 
-      renderOrders(
-        getOrders()
-      );
+      try {
+        localStorage.setItem(
+          SELECTED_ORDER_KEY,
+          order.orderId
+        );
+      } catch (error) {}
 
+      renderOrders();
       renderSelectedOrder();
 
-      resumeOrStartDemoTracking(
-        orderId
-      );
+      startDemoTracking(order);
     }
-
 
     /* =====================================================
-       LOAD SELECTED ORDER
+       RENDER DETAILS
     ===================================================== */
-
-    function getSelectedOrderId() {
-
-      const url =
-        new URL(
-          window.location.href
-        );
-
-      return (
-        url.searchParams.get("order") ||
-        localStorage.getItem(
-          SELECTED_ORDER_KEY
-        )
-      );
-    }
-
 
     function renderSelectedOrder() {
 
-      const orderId =
-        getSelectedOrderId();
-
-      const orders =
-        getOrders();
-
-      let order =
-        orders.find(
-          item =>
-            String(
-              item.orderId ||
-              item.id
-            ) === String(orderId)
+      const container =
+        document.getElementById(
+          "details"
         );
 
+      if (!container) {
+        return;
+      }
+
+      if (!selectedOrderId) {
+
+        container.innerHTML = `
+          <div class="empty">
+
+            <div>
+
+              <div class="empty-icon">
+                📦
+              </div>
+
+              <h2>
+                Select an order
+              </h2>
+
+              <p style="
+                margin-top:8px;
+              ">
+                Choose an order from the list
+                to view its tracking details.
+              </p>
+
+            </div>
+
+          </div>
+        `;
+
+        return;
+      }
+
+      const order =
+        orders.find(
+          item =>
+            String(item.orderId) ===
+            String(selectedOrderId)
+        );
 
       if (!order) {
 
-        if (orders.length) {
+        container.innerHTML = `
+          <div class="empty">
 
-          order = orders[0];
+            <div>
 
-          const firstId =
-            order.orderId ||
-            order.id;
+              <div class="empty-icon">
+                🛍️
+              </div>
 
-          localStorage.setItem(
-            SELECTED_ORDER_KEY,
-            firstId
-          );
+              <h2>
+                No active order
+              </h2>
 
-          renderOrders(
-            orders
-          );
+              <p style="
+                margin-top:8px;
+              ">
+                Your delivered orders have been
+                removed from the active list.
+              </p>
 
-        } else {
-
-          renderEmptyDetails();
-
-          return;
-        }
-      }
-
-
-      renderOrderDetails(
-        order
-      );
-    }
-
-
-    /* =====================================================
-       EMPTY DETAILS
-    ===================================================== */
-
-    function renderEmptyDetails() {
-
-      document
-        .getElementById(
-          "detailsContent"
-        )
-        .innerHTML = `
-
-          <div class="empty-state">
-
-            <div class="empty-icon">
-              📦
             </div>
 
-            <h2>
-              No orders yet
-            </h2>
-
-            <p>
-              Your SM1THX purchases will appear here
-              after you place an order.
-            </p>
-
-            <a
-              href="index.html#market"
-              class="primary-button"
-              style="
-                display:inline-flex;
-                align-items:center;
-                justify-content:center;
-              "
-            >
-              Start Shopping
-            </a>
-
           </div>
-
         `;
-    }
 
+        return;
+      }
 
-    /* =====================================================
-       RENDER ORDER DETAILS
-    ===================================================== */
-
-    function renderOrderDetails(
-      order
-    ) {
-
-      const details =
-        document.getElementById(
-          "detailsContent"
+      const status =
+        normalizeStatus(
+          order.status
         );
 
-      const orderId =
-        order.orderId ||
-        order.id ||
-        "ORDER";
+      const tracking =
+        order.tracking || {};
+
+      const currentStep =
+        Number(
+          tracking.currentStep ?? 0
+        );
+
+      const progress =
+        Math.min(
+          100,
+          Math.max(
+            0,
+            (currentStep / 5) * 100
+          )
+        );
+
+      const location =
+        getTrackingLocation(
+          status,
+          currentStep
+        );
+
+      const estimated =
+        getEstimatedDelivery(
+          order
+        );
 
       const items =
-        getOrderItems(order);
+        Array.isArray(order.items)
+          ? order.items
+          : [];
 
-      const total =
-        Number(
-          order.total ??
-          order.amount ??
-          order.grandTotal ??
-          0
-        );
-
-      const stageIndex =
-        getStageIndex(order);
-
-      const stage =
-        TRACKING_STAGES[
-          stageIndex
-        ];
-
-      const delivered =
-        stage.step === "delivered";
-
-
-      details.innerHTML = `
+      container.innerHTML = `
 
         <div class="details-header">
 
           <div>
 
-            <div class="details-kicker">
-              Order Details
-            </div>
-
             <h2>
-              ${escapeHTML(orderId)}
+              Order ${escapeHTML(order.orderId)}
             </h2>
 
-          </div>
-
-          <button
-            type="button"
-            class="copy-button"
-            id="copyOrderButton"
-          >
-            Copy ID
-          </button>
-
-        </div>
-
-
-        <div class="summary-grid">
-
-          <div class="summary-card">
-
-            <div class="summary-label">
-              Status
-            </div>
-
-            <div class="summary-value">
-              ${escapeHTML(stage.status)}
-            </div>
+            <p>
+              Placed ${formatDate(order.createdAt)}
+            </p>
 
           </div>
 
-
-          <div class="summary-card">
-
-            <div class="summary-label">
-              Total
-            </div>
-
-            <div class="summary-value">
-              ${formatKES(total)}
-            </div>
-
-          </div>
-
-
-          <div class="summary-card">
-
-            <div class="summary-label">
-              Items
-            </div>
-
-            <div class="summary-value">
-              ${items.length}
-            </div>
-
-          </div>
+          <span class="demo-label">
+            DEMO TRACKING
+          </span>
 
         </div>
 
 
         <div class="tracking-card">
 
-          <div class="tracking-card-header">
+          <div class="tracking-top">
 
-            <div class="tracking-title">
-              Order Tracking
-            </div>
+            <div>
 
-            <span class="demo-label">
-              Demo Tracking
-            </span>
+              <div class="tracking-title">
+                ${escapeHTML(status)}
+              </div>
 
-          </div>
-
-
-          <div class="tracking-current">
-
-            <div class="tracking-current-label">
-              Current Status
-            </div>
-
-            <div
-              class="tracking-current-status"
-              id="currentTrackingStatus"
-            >
-              ${escapeHTML(stage.status)}
-            </div>
-
-            <div
-              class="tracking-current-location"
-              id="currentTrackingLocation"
-            >
-              ${escapeHTML(
-                order.currentLocation ||
-                stage.location
-              )}
-            </div>
-
-          </div>
-
-
-          <div class="progress-wrapper">
-
-            <div class="progress-track">
-
-              <div
-                class="progress-fill"
-                id="trackingProgressFill"
-              ></div>
-
-              <div
-                class="progress-points"
-                id="trackingProgressPoints"
-              >
-
-                ${TRACKING_STAGES
-                  .map(
-                    (item, index) => `
-                      <span
-                        class="progress-point ${
-                          index < stageIndex
-                            ? "completed"
-                            : ""
-                        } ${
-                          index === stageIndex
-                            ? "current active"
-                            : ""
-                        }"
-                        data-step-index="${index}"
-                      ></span>
-                    `
-                  )
-                  .join("")}
-
+              <div class="tracking-location">
+                ${escapeHTML(location)}
               </div>
 
             </div>
 
+            <strong>
+              ${Math.round(progress)}%
+            </strong>
 
-            <div class="progress-labels">
+          </div>
 
-              ${TRACKING_STAGES
-                .map(
-                  (item, index) => `
-                    <span
-                      class="progress-label ${
-                        index <= stageIndex
-                          ? "completed"
-                          : ""
-                      }"
-                      data-label-index="${index}"
-                    >
-                      ${escapeHTML(
-                        item.label
-                      )}
-                    </span>
-                  `
-                )
-                .join("")}
+
+          <div class="progress">
+
+            <div
+              class="progress-fill"
+              style="width:${progress}%"
+            ></div>
+
+            <div class="progress-points">
+
+              ${TRACKING_STEPS.map(
+                (step, index) => `
+                  <div
+                    class="point ${
+                      index <= currentStep
+                        ? "active"
+                        : ""
+                    }"
+                  ></div>
+                `
+              ).join("")}
 
             </div>
 
@@ -2629,143 +1452,147 @@
 
           <div class="timeline">
 
-            <div class="timeline-title">
-              Tracking Timeline
-            </div>
+            ${TRACKING_STEPS.map(
+              (step, index) => {
 
-            <div
-              id="trackingTimeline"
-            ></div>
+                const active =
+                  index <= currentStep;
 
-          </div>
+                return `
+                  <div
+                    class="timeline-item ${
+                      active ? "active" : ""
+                    }"
+                  >
 
+                    <div class="timeline-dot"></div>
 
-          <div
-            id="deliveredBanner"
-            class="delivered-banner ${
-              delivered
-                ? "visible"
-                : ""
-            }"
-          >
+                    <div>
 
-            <div class="delivered-title">
-              ✓ Order Delivered
-            </div>
+                      <div class="timeline-label">
+                        ${escapeHTML(step.label)}
+                      </div>
 
-            <div class="delivered-text">
-              Your SM1THX order has successfully reached
-              its destination.
-            </div>
+                      <div class="timeline-description">
+                        ${escapeHTML(step.description)}
+                      </div>
 
-          </div>
+                    </div>
 
-        </div>
-
-
-        <div class="info-grid">
-
-          <div class="info-card">
-
-            <div class="info-label">
-              Estimated Delivery
-            </div>
-
-            <div
-              class="info-value"
-              id="estimatedDelivery"
-            >
-              ${getEstimatedDelivery(order)}
-            </div>
-
-          </div>
-
-
-          <div class="info-card">
-
-            <div class="info-label">
-              Current Location
-            </div>
-
-            <div
-              class="info-value"
-              id="infoLocation"
-            >
-              ${escapeHTML(
-                order.currentLocation ||
-                stage.location
-              )}
-            </div>
-
-          </div>
-
-
-          <div class="info-card">
-
-            <div class="info-label">
-              Payment Method
-            </div>
-
-            <div class="info-value">
-              ${escapeHTML(
-                order.paymentMethod ||
-                "Demo Checkout"
-              )}
-            </div>
-
-          </div>
-
-
-          <div class="info-card">
-
-            <div class="info-label">
-              Delivery Address
-            </div>
-
-            <div class="info-value">
-              ${escapeHTML(
-                order.deliveryAddress ||
-                order.address ||
-                "Customer Address"
-              )}
-            </div>
+                  </div>
+                `;
+              }
+            ).join("")}
 
           </div>
 
         </div>
 
 
-        <div class="items-section">
+        <div class="delivery-box">
 
-          <div class="section-heading">
-            Items in this Order
-          </div>
+          <strong>
+            Estimated delivery
+          </strong>
 
-          <div>
-            ${renderOrderItems(items)}
-          </div>
+          <span>
+            ${escapeHTML(estimated)}
+          </span>
 
         </div>
 
 
-        <div class="details-actions">
+        <div class="section-title">
+          Order Items
+        </div>
 
-          <a
-            href="index.html#market"
-            class="primary-button"
-            style="
-              display:inline-flex;
-              align-items:center;
-              justify-content:center;
-            "
-          >
-            Continue Shopping
-          </a>
+
+        <div>
+
+          ${
+            items.length
+              ? items.map(item => {
+
+                  const quantity =
+                    Number(
+                      item.quantity || 1
+                    );
+
+                  const price =
+                    Number(
+                      item.price || 0
+                    );
+
+                  return `
+                    <div class="product-row">
+
+                      <div class="product-info">
+
+                        <strong>
+                          ${escapeHTML(
+                            item.name ||
+                            "Product"
+                          )}
+                        </strong>
+
+                        <span>
+                          Quantity: ${quantity}
+                        </span>
+
+                      </div>
+
+                      <div class="product-price">
+                        ${formatKES(
+                          price * quantity
+                        )}
+                      </div>
+
+                    </div>
+                  `;
+
+                }).join("")
+              : `
+                <div style="
+                  color:#667085;
+                  padding:10px 0;
+                ">
+                  No item details available.
+                </div>
+              `
+          }
+
+        </div>
+
+
+        <div class="total">
+
+          <span>
+            Total
+          </span>
+
+          <span>
+            ${formatKES(
+              order.total ??
+              order.subtotal ??
+              0
+            )}
+          </span>
+
+        </div>
+
+
+        <div class="actions">
 
           <button
-            type="button"
-            class="secondary-button"
-            id="supportButton"
+            class="btn btn-secondary"
+            onclick="goBackToStore()"
+          >
+            Continue Shopping
+          </button>
+
+          <button
+            class="btn btn-primary"
+            onclick="contactSupport()"
           >
             Contact Support
           </button>
@@ -2773,1031 +1600,260 @@
         </div>
 
       `;
-
-
-      document
-        .getElementById(
-          "copyOrderButton"
-        )
-        .addEventListener(
-          "click",
-          () => copyOrderId(orderId)
-        );
-
-
-      document
-        .getElementById(
-          "supportButton"
-        )
-        .addEventListener(
-          "click",
-          () => {
-
-            showToast(
-              "SM1THX support will be available soon."
-            );
-
-          }
-        );
-
-
-      renderTimeline(
-        order
-      );
-
-      updateProgressVisual(
-        stageIndex
-      );
     }
 
+    /* =====================================================
+       TRACKING LOCATION
+    ===================================================== */
+
+    function getTrackingLocation(
+      status,
+      step
+    ) {
+
+      if (step >= 5 || status === "Delivered") {
+        return "Delivered";
+      }
+
+      if (step >= 4) {
+        return "Out for delivery";
+      }
+
+      if (status === "Shipped") {
+        return "In transit";
+      }
+
+      if (status === "Confirmed") {
+        return "Seller processing";
+      }
+
+      return "Order received";
+    }
 
     /* =====================================================
        ESTIMATED DELIVERY
     ===================================================== */
 
-    function getEstimatedDelivery(
-      order
-    ) {
+    function getEstimatedDelivery(order) {
 
       if (
-        order.estimatedDelivery
+        normalizeStatus(
+          order.status
+        ) === "Delivered"
       ) {
-        return escapeHTML(
-          order.estimatedDelivery
-        );
+        return "Delivered";
       }
 
-
-      const base =
-        order.createdAt ||
-        order.date ||
-        Date.now();
+      if (!order.createdAt) {
+        return "Being prepared";
+      }
 
       const date =
-        new Date(base);
+        new Date(
+          order.createdAt
+        );
 
       if (
         Number.isNaN(
           date.getTime()
         )
       ) {
-        return "Calculating...";
+        return "Being prepared";
       }
 
-
       date.setDate(
-        date.getDate() + 5
+        date.getDate() + 3
       );
-
 
       return date.toLocaleDateString(
         "en-KE",
         {
-          day: "numeric",
-          month: "short",
-          year: "numeric"
+          dateStyle: "medium"
         }
       );
     }
 
-
     /* =====================================================
-       ORDER ITEMS
+       START SELECTED ORDER
     ===================================================== */
 
-    function renderOrderItems(
-      items
-    ) {
+    function startSelectedOrderTracking() {
 
-      if (!items.length) {
-
-        return `
-          <div class="no-results">
-            No item information available.
-          </div>
-        `;
+      if (!selectedOrderId) {
+        return;
       }
-
-
-      return items
-        .map(item => {
-
-          const name =
-            getItemName(item);
-
-          const price =
-            getItemPrice(item);
-
-          const quantity =
-            getItemQuantity(item);
-
-          const image =
-            getItemImage(item);
-
-
-          const imageHTML =
-            image
-              ? `
-                <img
-                  src="${escapeHTML(image)}"
-                  alt="${escapeHTML(name)}"
-                  class="product-image"
-                  loading="lazy"
-                  onerror="this.style.display='none'"
-                >
-              `
-              : `
-                <div
-                  class="product-image"
-                  aria-hidden="true"
-                  style="
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                    font-size:20px;
-                  "
-                >
-                  📦
-                </div>
-              `;
-
-
-          return `
-
-            <div class="order-product">
-
-              ${imageHTML}
-
-              <div class="product-info">
-
-                <div class="product-name">
-                  ${escapeHTML(name)}
-                </div>
-
-                <div class="product-meta">
-                  Quantity: ${quantity}
-                </div>
-
-              </div>
-
-              <div class="product-price">
-                ${formatKES(
-                  price * quantity
-                )}
-              </div>
-
-            </div>
-
-          `;
-
-        })
-        .join("");
-    }
-
-
-    /* =====================================================
-       TIMELINE
-    ===================================================== */
-
-    function renderTimeline(
-      order
-    ) {
-
-      const container =
-        document.getElementById(
-          "trackingTimeline"
-        );
-
-      if (!container) return;
-
-
-      const currentIndex =
-        getStageIndex(order);
-
-
-      container.innerHTML =
-        TRACKING_STAGES
-          .map(
-            (stage, index) => {
-
-              const completed =
-                index < currentIndex;
-
-              const current =
-                index === currentIndex;
-
-
-              let timeText =
-                "Waiting";
-
-
-              if (completed) {
-                timeText =
-                  "Completed";
-              }
-
-              if (current) {
-                timeText =
-                  "Current status";
-              }
-
-
-              return `
-
-                <div
-                  class="
-                    timeline-item
-                    ${
-                      completed
-                        ? "completed"
-                        : ""
-                    }
-                    ${
-                      current
-                        ? "current"
-                        : ""
-                    }
-                  "
-                >
-
-                  <div class="timeline-marker-column">
-
-                    <span
-                      class="timeline-marker"
-                    ></span>
-
-                    ${
-                      index <
-                      TRACKING_STAGES.length - 1
-                        ? `
-                          <span
-                            class="timeline-line"
-                          ></span>
-                        `
-                        : ""
-                    }
-
-                  </div>
-
-
-                  <div class="timeline-content">
-
-                    <div class="timeline-status">
-                      ${escapeHTML(
-                        stage.status
-                      )}
-                    </div>
-
-                    <div class="timeline-description">
-                      ${escapeHTML(
-                        stage.description
-                      )}
-                    </div>
-
-                    <div class="timeline-time">
-                      ${timeText}
-                    </div>
-
-                  </div>
-
-                </div>
-
-              `;
-
-            }
-          )
-          .join("");
-    }
-
-
-    /* =====================================================
-       PROGRESS VISUAL
-    ===================================================== */
-
-    function updateProgressVisual(
-      stageIndex
-    ) {
-
-      const fill =
-        document.getElementById(
-          "trackingProgressFill"
-        );
-
-      if (!fill) return;
-
-
-      const percentage =
-        stageIndex /
-        (TRACKING_STAGES.length - 1) *
-        100;
-
-
-      fill.style.width =
-        percentage + "%";
-
-
-      document
-        .querySelectorAll(
-          ".progress-point"
-        )
-        .forEach(
-          (point, index) => {
-
-            point.classList.toggle(
-              "completed",
-              index < stageIndex
-            );
-
-            point.classList.toggle(
-              "active",
-              index === stageIndex
-            );
-
-            point.classList.toggle(
-              "current",
-              index === stageIndex
-            );
-
-          }
-        );
-
-
-      document
-        .querySelectorAll(
-          ".progress-label"
-        )
-        .forEach(
-          (label, index) => {
-
-            label.classList.toggle(
-              "completed",
-              index <= stageIndex
-            );
-
-            label.classList.toggle(
-              "active",
-              index === stageIndex
-            );
-
-          }
-        );
-    }
-
-
-    /* =====================================================
-       UPDATE TRACKING UI
-    ===================================================== */
-
-    function updateTrackingUI(
-      order
-    ) {
-
-      renderOrderDetails(
-        order
-      );
-    }
-
-
-    /* =====================================================
-       DEMO TRACKING
-    ===================================================== */
-
-    function startDemoTracking(
-      orderId
-    ) {
-
-      if (!orderId) return;
-
-
-      const orders =
-        getOrders();
-
 
       const order =
         orders.find(
           item =>
-            String(
-              item.orderId ||
-              item.id
-            ) === String(orderId)
+            String(item.orderId) ===
+            String(selectedOrderId)
         );
 
-
-      if (!order) return;
-
-
-      /*
-        If already delivered, don't restart.
-      */
+      if (!order) {
+        return;
+      }
 
       if (
-        normaliseStatus(
+        normalizeStatus(
           order.status
-        ) === "delivered"
+        ) === "Delivered"
       ) {
-        return;
-      }
-
-
-      const existing =
-        localStorage.getItem(
-          DEMO_KEY_PREFIX +
-          orderId
-        );
-
-
-      if (existing) {
-
-        resumeDemoTracking(
-          orderId
+        removeDeliveredOrder(
+          order.orderId
         );
 
         return;
       }
 
+      startDemoTracking(order);
+    }
 
-      const startTime =
-        Date.now();
+    /* =====================================================
+       NAVIGATION
+    ===================================================== */
 
+    function goBackToStore() {
 
-      localStorage.setItem(
-        DEMO_KEY_PREFIX +
-        orderId,
-        JSON.stringify({
-          startTime
-        })
-      );
+      window.location.href =
+        "index.html#market";
+    }
 
-
-      runDemoTracking(
-        orderId,
-        startTime
+    function contactSupport() {
+      showToast(
+        "Support is available in the SM1THX demo."
       );
     }
 
-
-    function resumeDemoTracking(
-      orderId
-    ) {
-
-      if (!orderId) return;
-
-
-      const saved =
-        localStorage.getItem(
-          DEMO_KEY_PREFIX +
-          orderId
-        );
-
-
-      if (!saved) {
-
-        /*
-          If this is a new Pending order,
-          automatically begin the demo.
-        */
-
-        const orders =
-          getOrders();
-
-        const order =
-          orders.find(
-            item =>
-              String(
-                item.orderId ||
-                item.id
-              ) === String(orderId)
-          );
-
-
-        if (
-          order &&
-          normaliseStatus(
-            order.status
-          ) !== "delivered"
-        ) {
-
-          startDemoTracking(
-            orderId
-          );
-        }
-
-        return;
-      }
-
-
-      try {
-
-        const data =
-          JSON.parse(saved);
-
-
-        if (
-          data.startTime
-        ) {
-
-          runDemoTracking(
-            orderId,
-            data.startTime
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Unable to resume tracking:",
-          error
-        );
-
-      }
-    }
-
-
-    function resumeOrStartDemoTracking(
-      orderId
-    ) {
-
-      if (!orderId) return;
-
-
-      const saved =
-        localStorage.getItem(
-          DEMO_KEY_PREFIX +
-          orderId
-        );
-
-
-      if (saved) {
-
-        resumeDemoTracking(
-          orderId
-        );
-
-        return;
-      }
-
-
-      const orders =
-        getOrders();
-
-
-      const order =
-        orders.find(
-          item =>
-            String(
-              item.orderId ||
-              item.id
-            ) === String(orderId)
-        );
-
-
-      if (!order) return;
-
-
-      /*
-        Only automatically animate
-        Pending/active demo orders.
-      */
-
-      const status =
-        normaliseStatus(
-          order.status
-        );
-
-
-      if (
-        status !== "delivered"
-      ) {
-
-        startDemoTracking(
-          orderId
-        );
-      }
-    }
-
-
-    function runDemoTracking(
-      orderId,
-      startTime
-    ) {
-
-      let timer;
-
-
-      const update =
-        () => {
-
-          const elapsed =
-            Date.now() -
-            startTime;
-
-
-          const progress =
-            Math.min(
-              elapsed /
-              DEMO_DURATION,
-              1
-            );
-
-
-          let stageIndex;
-
-
-          /*
-            0.00 - 0.25
-            0:00 - 0:30
-          */
-
-          if (
-            progress < 0.25
-          ) {
-
-            stageIndex = 0;
-
-          }
-
-          /*
-            0.25 - 0.50
-            0:30 - 1:00
-          */
-
-          else if (
-            progress < 0.50
-          ) {
-
-            stageIndex = 1;
-
-          }
-
-          /*
-            0.50 - 0.75
-            1:00 - 1:30
-          */
-
-          else if (
-            progress < 0.75
-          ) {
-
-            stageIndex = 2;
-
-          }
-
-          /*
-            0.75 - 1.00
-            1:30 - 2:00
-          */
-
-          else if (
-            progress < 1
-          ) {
-
-            stageIndex = 3;
-
-          }
-
-          /*
-            2:00
-          */
-
-          else {
-
-            stageIndex = 4;
-
-          }
-
-
-          const stage =
-            TRACKING_STAGES[
-              stageIndex
-            ];
-
-
-          updateDemoOrder(
-            orderId,
-            stage,
-            stageIndex
-          );
-
-
-          if (
-            progress < 1
-          ) {
-
-            timer =
-              setTimeout(
-                update,
-                1000
-              );
-
-          } else {
-
-            localStorage.removeItem(
-              DEMO_KEY_PREFIX +
-              orderId
-            );
-
-          }
-
-        };
-
-
-      update();
-
-
-      return timer;
-    }
-
-
     /* =====================================================
-       UPDATE ORDER DATA
+       SEARCH
     ===================================================== */
 
-    function updateDemoOrder(
-      orderId,
-      stage,
-      stageIndex
-    ) {
+    function setupSearch() {
 
-      const orders =
-        getOrders();
-
-
-      const index =
-        orders.findIndex(
-          item =>
-            String(
-              item.orderId ||
-              item.id
-            ) === String(orderId)
-        );
-
-
-      if (index === -1) {
-        return;
-      }
-
-
-      orders[index].status =
-        stage.status;
-
-
-      orders[index].trackingStep =
-        stage.step;
-
-
-      orders[index].currentLocation =
-        stage.location;
-
-
-      orders[index].trackingProgress =
-        stageIndex;
-
-
-      /*
-        Store tracking timestamps.
-      */
-
-      if (
-        !orders[index]
-          .trackingHistory
-      ) {
-
-        orders[index]
-          .trackingHistory = {};
-
-      }
-
-
-      orders[index]
-        .trackingHistory[
-          stage.step
-        ] = new Date()
-          .toISOString();
-
-
-      saveOrders(
-        orders
-      );
-
-
-      /*
-        Only redraw if this order
-        is currently selected.
-      */
-
-      const selected =
-        getSelectedOrderId();
-
-
-      if (
-        String(selected) ===
-        String(orderId)
-      ) {
-
-        renderOrders(
-          orders
-        );
-
-        renderOrderDetails(
-          orders[index]
-        );
-
-      }
-
-
-      /*
-        Delivered message.
-      */
-
-      if (
-        stage.step ===
-        "delivered"
-      ) {
-
-        showToast(
-          "✓ Your SM1THX order has been delivered."
-        );
-
-      }
-
-    }
-
-
-    /* =====================================================
-       COPY ORDER ID
-    ===================================================== */
-
-    async function copyOrderId(
-      orderId
-    ) {
-
-      try {
-
-        await navigator.clipboard.writeText(
-          String(orderId)
-        );
-
-        showToast(
-          "Order ID copied."
-        );
-
-      } catch (error) {
-
-        showToast(
-          "Order ID: " +
-          orderId
-        );
-
-      }
-    }
-
-
-    /* =====================================================
-       TOAST
-    ===================================================== */
-
-    let toastTimer;
-
-
-    function showToast(
-      message
-    ) {
-
-      const toast =
+      const search =
         document.getElementById(
-          "toast"
+          "orderSearch"
         );
 
+      if (!search) {
+        return;
+      }
 
-      toast.textContent =
-        message;
+      search.addEventListener(
+        "input",
+        event => {
 
+          searchText =
+            event.target.value
+              .trim();
 
-      toast.classList.add(
-        "show"
+          renderOrders();
+        }
       );
-
-
-      clearTimeout(
-        toastTimer
-      );
-
-
-      toastTimer =
-        setTimeout(
-          () => {
-
-            toast.classList.remove(
-              "show"
-            );
-
-          },
-          2800
-        );
     }
-
 
     /* =====================================================
        INITIALIZE
     ===================================================== */
 
-    function initializeOrdersPage() {
+    function initialize() {
 
-      const orders =
+      stopDemoTracking();
+
+      orders =
         getOrders();
 
+      /*
+       * Remove any delivered orders that may
+       * already exist from an earlier version.
+       */
+      removeAlreadyDeliveredOrders();
 
-      renderOrders(
-        orders
-      );
+      selectedOrderId =
+        getSelectedOrderId();
 
+      /*
+       * If selected order no longer exists,
+       * automatically select the newest active order.
+       */
+      const selectedExists =
+        orders.some(
+          order =>
+            String(order.orderId) ===
+            String(selectedOrderId)
+        );
 
       if (
+        !selectedExists &&
         orders.length
       ) {
+        selectedOrderId =
+          orders[0].orderId;
 
-        let selected =
-          getSelectedOrderId();
-
-
-        const exists =
-          orders.some(
-            order =>
-              String(
-                order.orderId ||
-                order.id
-              ) === String(selected)
-          );
-
-
-        if (
-          !selected ||
-          !exists
-        ) {
-
-          selected =
-            orders[0].orderId ||
-            orders[0].id;
-
-
+        try {
           localStorage.setItem(
             SELECTED_ORDER_KEY,
-            selected
+            selectedOrderId
           );
-
-        }
-
-
-        renderOrders(
-          orders
-        );
-
-
-        renderSelectedOrder();
-
-
-        /*
-          Start/resume the automatic
-          2-minute demo.
-        */
-
-        resumeOrStartDemoTracking(
-          selected
-        );
-
-      } else {
-
-        renderEmptyDetails();
-
+        } catch (error) {}
       }
 
+      setupSearch();
+
+      renderOrders();
+      renderSelectedOrder();
+
+      startSelectedOrderTracking();
     }
 
+    /* =====================================================
+       PAGE EVENTS
+    ===================================================== */
 
-    /*
-      Expose functions in case the
-      main SM1THX application needs them.
-    */
+    window.addEventListener(
+      "beforeunload",
+      () => {
+        stopDemoTracking();
+      }
+    );
 
-    window.startDemoTracking =
-      startDemoTracking;
+    window.addEventListener(
+      "storage",
+      event => {
 
-    window.resumeDemoTracking =
-      resumeDemoTracking;
+        if (
+          event.key === ORDERS_KEY
+        ) {
+          orders =
+            getOrders();
 
-    window.renderOrders =
-      renderOrders;
+          removeAlreadyDeliveredOrders();
 
+          renderOrders();
+          renderSelectedOrder();
+        }
 
-    /*
-      Start page.
-    */
+      }
+    );
 
     document.addEventListener(
       "DOMContentLoaded",
-      initializeOrdersPage
+      initialize
     );
+
+    /* =====================================================
+       GLOBAL FUNCTIONS
+    ===================================================== */
+
+    window.selectOrder =
+      selectOrder;
+
+    window.goBackToStore =
+      goBackToStore;
+
+    window.contactSupport =
+      contactSupport;
 
   </script>
 
