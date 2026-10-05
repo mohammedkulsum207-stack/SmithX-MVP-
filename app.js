@@ -2,9 +2,10 @@
 
 /* =====================================================
    SM1THX 🛒
-   APP.JS — STABLE MVP
+   APP.JS — MVP
    CART + MARKETPLACE + SELLER STUDIO
    + AI ASSISTANT + ORDERS
+   + ORDER TRACKING
 ===================================================== */
 
 
@@ -104,14 +105,12 @@ const STORAGE = {
   cart: "smithx_cart_v2",
   analytics: "smithx_analytics_v2",
   visitor: "smithx_daily_visitor_v2",
-
-  /* NEW */
   orders: "smithx_orders_v2"
 };
 
 
 /* =====================================================
-   ORDER STATUSES
+   SELLER ORDER STATUSES
 ===================================================== */
 
 const ORDER_STATUSES = [
@@ -119,6 +118,49 @@ const ORDER_STATUSES = [
   "Confirmed",
   "Shipped",
   "Delivered"
+];
+
+
+/* =====================================================
+   TRACKING MILESTONES
+===================================================== */
+
+const TRACKING_STEPS = [
+  {
+    key: "placed",
+    label: "Order placed",
+    description: "Your order has been received."
+  },
+
+  {
+    key: "confirmed",
+    label: "Order confirmed",
+    description: "The seller has confirmed your order."
+  },
+
+  {
+    key: "packed",
+    label: "Order packed",
+    description: "Your order has been prepared for shipment."
+  },
+
+  {
+    key: "shipped",
+    label: "Shipped",
+    description: "Your package is on its way."
+  },
+
+  {
+    key: "out_for_delivery",
+    label: "Out for delivery",
+    description: "Your package is approaching its destination."
+  },
+
+  {
+    key: "delivered",
+    label: "Delivered",
+    description: "Your order has been delivered."
+  }
 ];
 
 
@@ -178,15 +220,27 @@ function safeJSONParse(value, fallback) {
 }
 
 
+function formatDate(value) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Unknown date";
+  }
+
+  return date.toLocaleString("en-KE", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
+}
+
+
 /* =====================================================
    PRODUCTS
 ===================================================== */
 
 function getCustomProducts() {
   const products = safeJSONParse(
-    localStorage.getItem(
-      STORAGE.products
-    ),
+    localStorage.getItem(STORAGE.products),
     []
   );
 
@@ -226,19 +280,13 @@ function findProduct(productId) {
 ===================================================== */
 
 function normalizeCart() {
-
-  const stored =
-    safeJSONParse(
-      localStorage.getItem(
-        STORAGE.cart
-      ),
-      []
-    );
+  const stored = safeJSONParse(
+    localStorage.getItem(STORAGE.cart),
+    []
+  );
 
   if (!Array.isArray(stored)) {
-
     saveCart([]);
-
     return [];
   }
 
@@ -246,11 +294,7 @@ function normalizeCart() {
   const seen = new Set();
 
   stored.forEach(item => {
-
-    if (
-      !item ||
-      typeof item !== "object"
-    ) {
+    if (!item || typeof item !== "object") {
       return;
     }
 
@@ -278,20 +322,14 @@ function normalizeCart() {
         10
       );
 
-    if (
-      !Number.isFinite(quantity)
-    ) {
+    if (!Number.isFinite(quantity)) {
       quantity = 1;
     }
 
     quantity =
-      Math.max(
-        1,
-        quantity
-      );
+      Math.max(1, quantity);
 
     if (seen.has(id)) {
-
       const existing =
         normalized.find(
           cartItem =>
@@ -299,9 +337,7 @@ function normalizeCart() {
         );
 
       if (existing) {
-
-        existing.quantity +=
-          quantity;
+        existing.quantity += quantity;
       }
 
       return;
@@ -327,7 +363,6 @@ function getCart() {
 
 
 function saveCart(cart) {
-
   if (!Array.isArray(cart)) {
     cart = [];
   }
@@ -349,7 +384,6 @@ function clearCart() {
 ===================================================== */
 
 function getCartCount() {
-
   return getCart().reduce(
     (total, item) =>
       total +
@@ -363,16 +397,12 @@ function getCartCount() {
 
 
 function updateCartCount() {
-
   const element =
     getElement("cartCount");
 
   if (element) {
-
     element.textContent =
-      String(
-        getCartCount()
-      );
+      String(getCartCount());
   }
 }
 
@@ -382,18 +412,13 @@ function updateCartCount() {
 ===================================================== */
 
 function calculateCartTotals() {
-
-  const cart =
-    getCart();
+  const cart = getCart();
 
   let subtotal = 0;
 
   cart.forEach(item => {
-
     const product =
-      findProduct(
-        item.productId
-      );
+      findProduct(item.productId);
 
     if (!product) {
       return;
@@ -422,12 +447,10 @@ function calculateCartTotals() {
 ===================================================== */
 
 function addToCart(productId) {
-
   const product =
     findProduct(productId);
 
   if (!product) {
-
     showToast(
       "Product could not be added."
     );
@@ -446,19 +469,15 @@ function addToCart(productId) {
     );
 
   if (existing) {
-
     existing.quantity =
       Math.max(
         1,
         Number(existing.quantity) || 1
       ) + 1;
-
   } else {
-
     cart.push({
       productId:
         String(product.id),
-
       quantity: 1
     });
   }
@@ -470,11 +489,8 @@ function addToCart(productId) {
   trackEvent(
     "cart_add",
     {
-      productId:
-        product.id,
-
-      productName:
-        product.name
+      productId: product.id,
+      productName: product.name
     }
   );
 
@@ -489,7 +505,6 @@ function addToCart(productId) {
 ===================================================== */
 
 function removeFromCart(productId) {
-
   const cart =
     getCart().filter(
       item =>
@@ -515,7 +530,6 @@ function changeCartQuantity(
   productId,
   change
 ) {
-
   const cart =
     getCart();
 
@@ -541,10 +555,7 @@ function changeCartQuantity(
       Number(item.quantity) || 0
     ) + amount;
 
-  if (
-    item.quantity <= 0
-  ) {
-
+  if (item.quantity <= 0) {
     saveCart(
       cart.filter(
         cartItem =>
@@ -554,9 +565,7 @@ function changeCartQuantity(
           String(productId)
       )
     );
-
   } else {
-
     saveCart(cart);
   }
 
@@ -572,7 +581,6 @@ function setCartQuantity(
   productId,
   quantity
 ) {
-
   const cart =
     getCart();
 
@@ -595,10 +603,7 @@ function setCartQuantity(
       Number(quantity) || 0
     );
 
-  if (
-    newQuantity === 0
-  ) {
-
+  if (newQuantity === 0) {
     saveCart(
       cart.filter(
         cartItem =>
@@ -608,9 +613,7 @@ function setCartQuantity(
           String(productId)
       )
     );
-
   } else {
-
     item.quantity =
       newQuantity;
 
@@ -626,7 +629,6 @@ function setCartQuantity(
 ===================================================== */
 
 function clearShoppingCart() {
-
   clearCart();
 
   updateCartUI();
@@ -642,7 +644,6 @@ function clearShoppingCart() {
 ===================================================== */
 
 function renderCart() {
-
   const container =
     getElement("cartItems");
 
@@ -654,31 +655,21 @@ function renderCart() {
     getCart();
 
   if (!cart.length) {
-
     container.innerHTML = `
       <div class="empty-state">
-
-        <strong>
-          Your cart is empty.
-        </strong>
-
+        <strong>Your cart is empty.</strong>
         <p>
           Add products from the marketplace
           to get started.
         </p>
-
       </div>
     `;
 
     const subtotal =
-      getElement(
-        "cartSubtotal"
-      );
+      getElement("cartSubtotal");
 
     const total =
-      getElement(
-        "cartTotal"
-      );
+      getElement("cartTotal");
 
     if (subtotal) {
       subtotal.textContent =
@@ -696,11 +687,8 @@ function renderCart() {
   container.innerHTML = "";
 
   cart.forEach(item => {
-
     const product =
-      findProduct(
-        item.productId
-      );
+      findProduct(item.productId);
 
     if (!product) {
       return;
@@ -713,44 +701,30 @@ function renderCart() {
       );
 
     const itemElement =
-      document.createElement(
-        "div"
-      );
+      document.createElement("div");
 
     itemElement.className =
       "cart-item";
 
     const safeId =
-      escapeHTML(
-        product.id
-      );
+      escapeHTML(product.id);
 
     itemElement.innerHTML = `
       <div class="cart-item-image">
-
         <img
-          src="${escapeHTML(
-            product.image || ""
-          )}"
-          alt="${escapeHTML(
-            product.name
-          )}"
+          src="${escapeHTML(product.image || "")}"
+          alt="${escapeHTML(product.name)}"
         >
-
       </div>
 
       <div class="cart-item-info">
 
         <strong>
-          ${escapeHTML(
-            product.name
-          )}
+          ${escapeHTML(product.name)}
         </strong>
 
         <span>
-          ${formatKES(
-            product.price
-          )}
+          ${formatKES(product.price)}
         </span>
 
         <div class="cart-item-controls">
@@ -783,42 +757,29 @@ function renderCart() {
           </button>
 
         </div>
-
       </div>
     `;
 
-    container.appendChild(
-      itemElement
-    );
+    container.appendChild(itemElement);
   });
 
   const totals =
     calculateCartTotals();
 
   const subtotal =
-    getElement(
-      "cartSubtotal"
-    );
+    getElement("cartSubtotal");
 
   const total =
-    getElement(
-      "cartTotal"
-    );
+    getElement("cartTotal");
 
   if (subtotal) {
-
     subtotal.textContent =
-      formatKES(
-        totals.subtotal
-      );
+      formatKES(totals.subtotal);
   }
 
   if (total) {
-
     total.textContent =
-      formatKES(
-        totals.total
-      );
+      formatKES(totals.total);
   }
 }
 
@@ -828,9 +789,7 @@ function renderCart() {
 ===================================================== */
 
 function updateCartUI() {
-
   updateCartCount();
-
   renderCart();
 }
 
@@ -840,19 +799,14 @@ function updateCartUI() {
 ===================================================== */
 
 function openCart() {
-
   const panel =
-    getElement(
-      "cartPanel"
-    );
+    getElement("cartPanel");
 
   if (!panel) {
     return;
   }
 
-  panel.classList.add(
-    "open"
-  );
+  panel.classList.add("open");
 
   panel.setAttribute(
     "aria-hidden",
@@ -864,19 +818,14 @@ function openCart() {
 
 
 function closeCart() {
-
   const panel =
-    getElement(
-      "cartPanel"
-    );
+    getElement("cartPanel");
 
   if (!panel) {
     return;
   }
 
-  panel.classList.remove(
-    "open"
-  );
+  panel.classList.remove("open");
 
   panel.setAttribute(
     "aria-hidden",
@@ -890,7 +839,6 @@ function closeCart() {
 ===================================================== */
 
 function getOrders() {
-
   const orders =
     safeJSONParse(
       localStorage.getItem(
@@ -906,7 +854,6 @@ function getOrders() {
 
 
 function saveOrders(orders) {
-
   if (!Array.isArray(orders)) {
     orders = [];
   }
@@ -919,7 +866,6 @@ function saveOrders(orders) {
 
 
 function generateOrderId() {
-
   const timestamp =
     Date.now()
       .toString(36)
@@ -941,13 +887,116 @@ function generateOrderId() {
 
 
 function getOrder(orderId) {
-
   return getOrders().find(
     order =>
-      String(
-        order.orderId
-      ) ===
+      String(order.orderId)
+        .toUpperCase() ===
       String(orderId)
+        .trim()
+        .toUpperCase()
+  );
+}
+
+
+/* =====================================================
+   TRACKING DATA
+===================================================== */
+
+/*
+  The seller status is deliberately kept simple:
+
+  Pending
+  Confirmed
+  Shipped
+  Delivered
+
+  The customer-facing tracker translates
+  those statuses into a richer delivery timeline.
+*/
+
+function getTrackingStepForOrder(order) {
+  if (!order) {
+    return 0;
+  }
+
+  switch (String(order.status)) {
+    case "Pending":
+      return 0;
+
+    case "Confirmed":
+      return 1;
+
+    case "Shipped":
+      return 3;
+
+    case "Delivered":
+      return 5;
+
+    default:
+      return 0;
+  }
+}
+
+
+function getTrackingLocation(order) {
+  if (!order) {
+    return "Awaiting order information";
+  }
+
+  switch (String(order.status)) {
+    case "Pending":
+      return "Order received";
+
+    case "Confirmed":
+      return "Seller processing";
+
+    case "Shipped":
+      return "In transit";
+
+    case "Delivered":
+      return "Delivered";
+
+    default:
+      return "Processing";
+  }
+}
+
+
+function getEstimatedDelivery(order) {
+  if (!order) {
+    return "Not available";
+  }
+
+  if (order.status === "Delivered") {
+    return "Delivered";
+  }
+
+  const created =
+    new Date(order.createdAt);
+
+  if (Number.isNaN(created.getTime())) {
+    return "Calculating...";
+  }
+
+  const estimated =
+    new Date(created);
+
+  /*
+    Demo estimate:
+    3 days after order creation.
+  */
+
+  estimated.setDate(
+    estimated.getDate() + 3
+  );
+
+  return estimated.toLocaleDateString(
+    "en-KE",
+    {
+      day: "numeric",
+      month: "short",
+      year: "numeric"
+    }
   );
 }
 
@@ -957,7 +1006,6 @@ function getOrder(orderId) {
 ===================================================== */
 
 function createOrderFromCart() {
-
   const cart =
     getCart();
 
@@ -968,11 +1016,8 @@ function createOrderFromCart() {
   const items = [];
 
   cart.forEach(item => {
-
     const product =
-      findProduct(
-        item.productId
-      );
+      findProduct(item.productId);
 
     if (!product) {
       return;
@@ -1021,7 +1066,6 @@ function createOrderFromCart() {
     new Date().toISOString();
 
   const order = {
-
     orderId:
       generateOrderId(),
 
@@ -1053,13 +1097,9 @@ function createOrderFromCart() {
   const orders =
     getOrders();
 
-  orders.unshift(
-    order
-  );
+  orders.unshift(order);
 
-  saveOrders(
-    orders
-  );
+  saveOrders(orders);
 
   return order;
 }
@@ -1073,13 +1113,11 @@ function updateOrderStatus(
   orderId,
   newStatus
 ) {
-
   if (
     !ORDER_STATUSES.includes(
       newStatus
     )
   ) {
-
     showToast(
       "Invalid order status."
     );
@@ -1093,14 +1131,11 @@ function updateOrderStatus(
   const order =
     orders.find(
       item =>
-        String(
-          item.orderId
-        ) ===
+        String(item.orderId) ===
         String(orderId)
     );
 
   if (!order) {
-
     showToast(
       "Order could not be found."
     );
@@ -1108,15 +1143,16 @@ function updateOrderStatus(
     return;
   }
 
+  const oldStatus =
+    order.status;
+
   order.status =
     newStatus;
 
   order.updatedAt =
     new Date().toISOString();
 
-  saveOrders(
-    orders
-  );
+  saveOrders(orders);
 
   trackEvent(
     "order_status_updated",
@@ -1124,12 +1160,17 @@ function updateOrderStatus(
       orderId:
         order.orderId,
 
+      previousStatus:
+        oldStatus,
+
       status:
         newStatus
     }
   );
 
   renderOrders();
+
+  renderOrderTracker();
 
   showToast(
     `Order ${order.orderId} is now ${newStatus}.`
@@ -1141,10 +1182,7 @@ function updateOrderStatus(
    ORDER STATUS CLASS
 ===================================================== */
 
-function getOrderStatusClass(
-  status
-) {
-
+function getOrderStatusClass(status) {
   return String(
     status || "Pending"
   )
@@ -1161,11 +1199,8 @@ function getOrderStatusClass(
 ===================================================== */
 
 function renderOrders() {
-
   const container =
-    getElement(
-      "ordersList"
-    );
+    getElement("ordersList");
 
   if (!container) {
     return;
@@ -1175,19 +1210,14 @@ function renderOrders() {
     getOrders();
 
   if (!orders.length) {
-
     container.innerHTML = `
       <div class="empty-state">
-
-        <strong>
-          No orders yet.
-        </strong>
+        <strong>No orders yet.</strong>
 
         <p>
           Orders created through Demo Checkout
           will appear here.
         </p>
-
       </div>
     `;
 
@@ -1197,53 +1227,54 @@ function renderOrders() {
   container.innerHTML =
     orders
       .map(order => {
-
         const safeOrderId =
-          escapeHTML(
-            order.orderId
-          );
+          escapeHTML(order.orderId);
 
         const itemsHTML =
-          order.items
-            .map(
-              item => `
-                <div class="order-product">
+          Array.isArray(order.items)
+            ? order.items
+                .map(
+                  item => `
+                    <div class="order-product">
 
-                  <div class="order-product-image">
+                      <div class="order-product-image">
 
-                    <img
-                      src="${escapeHTML(
-                        item.image || ""
-                      )}"
-                      alt="${escapeHTML(
-                        item.name
-                      )}"
-                    >
+                        <img
+                          src="${escapeHTML(
+                            item.image || ""
+                          )}"
+                          alt="${escapeHTML(
+                            item.name
+                          )}"
+                        >
 
-                  </div>
+                      </div>
 
-                  <div class="order-product-info">
+                      <div class="order-product-info">
 
-                    <strong>
-                      ${escapeHTML(
-                        item.name
-                      )}
-                    </strong>
+                        <strong>
+                          ${escapeHTML(
+                            item.name
+                          )}
+                        </strong>
 
-                    <span>
-                      ${item.quantity}
-                      ×
-                      ${formatKES(
-                        item.price
-                      )}
-                    </span>
+                        <span>
+                          ${Number(
+                            item.quantity
+                          ) || 1}
+                          ×
+                          ${formatKES(
+                            item.price
+                          )}
+                        </span>
 
-                  </div>
+                      </div>
 
-                </div>
-              `
-            )
-            .join("");
+                    </div>
+                  `
+                )
+                .join("")
+            : "";
 
         const statusClass =
           getOrderStatusClass(
@@ -1255,49 +1286,21 @@ function renderOrders() {
             .map(
               status => `
                 <option
-                  value="${escapeHTML(
-                    status
-                  )}"
+                  value="${escapeHTML(status)}"
                   ${
-                    status ===
-                    order.status
+                    status === order.status
                       ? "selected"
                       : ""
                   }
                 >
-                  ${escapeHTML(
-                    status
-                  )}
+                  ${escapeHTML(status)}
                 </option>
               `
             )
             .join("");
 
-        const createdDate =
-          new Date(
-            order.createdAt
-          );
-
-        const formattedDate =
-          Number.isNaN(
-            createdDate.getTime()
-          )
-            ? "Unknown date"
-            : createdDate.toLocaleString(
-                "en-KE",
-                {
-                  dateStyle:
-                    "medium",
-
-                  timeStyle:
-                    "short"
-                }
-              );
-
         return `
-          <article
-            class="order-card"
-          >
+          <article class="order-card">
 
             <div class="order-card-header">
 
@@ -1325,14 +1328,14 @@ function renderOrders() {
 
             <div class="order-date">
               ${escapeHTML(
-                formattedDate
+                formatDate(
+                  order.createdAt
+                )
               )}
             </div>
 
             <div class="order-products">
-
               ${itemsHTML}
-
             </div>
 
             <div class="order-card-footer">
@@ -1343,9 +1346,7 @@ function renderOrders() {
                 )}
               </strong>
 
-              <div
-                class="order-status-control"
-              >
+              <div class="order-status-control">
 
                 <label
                   for="status-${safeOrderId}"
@@ -1364,6 +1365,14 @@ function renderOrders() {
 
             </div>
 
+            <button
+              type="button"
+              class="secondary-button track-order-inline-button"
+              onclick="trackOrder('${safeOrderId}')"
+            >
+              Track this order
+            </button>
+
           </article>
         `;
       })
@@ -1372,11 +1381,559 @@ function renderOrders() {
 
 
 /* =====================================================
+   ORDER TRACKER
+===================================================== */
+
+function createTrackerSection() {
+  if (
+    getElement(
+      "smithxOrderTracker"
+    )
+  ) {
+    return;
+  }
+
+  const dashboard =
+    getElement("dashboard");
+
+  if (!dashboard) {
+    return;
+  }
+
+  const section =
+    document.createElement("section");
+
+  section.id =
+    "smithxOrderTracker";
+
+  section.className =
+    "smithx-tracker-section";
+
+  section.innerHTML = `
+    <div class="tracker-header">
+
+      <div>
+        <p class="section-eyebrow">
+          SM1THX LOGISTICS
+        </p>
+
+        <h3>
+          Track Your Order
+        </h3>
+
+        <p class="muted">
+          Enter your SMX order number to see
+          the latest delivery status.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="tracker-search">
+
+      <input
+        id="orderTrackingInput"
+        type="text"
+        placeholder="Enter order number e.g. SMX-..."
+        autocomplete="off"
+      >
+
+      <button
+        type="button"
+        class="primary-button"
+        onclick="trackOrderFromInput()"
+      >
+        Track Order
+      </button>
+
+    </div>
+
+    <div
+      id="orderTrackerResult"
+      class="order-tracker-result"
+    >
+
+      <div class="tracker-empty">
+        <strong>
+          Ready to track
+        </strong>
+
+        <p>
+          Enter an SMX order number above.
+        </p>
+      </div>
+
+    </div>
+  `;
+
+  dashboard.appendChild(section);
+}
+
+
+/* =====================================================
+   TRACK ORDER FROM INPUT
+===================================================== */
+
+function trackOrderFromInput() {
+  const input =
+    getElement(
+      "orderTrackingInput"
+    );
+
+  if (!input) {
+    return;
+  }
+
+  const orderId =
+    input.value.trim();
+
+  if (!orderId) {
+    showToast(
+      "Enter an order number first."
+    );
+
+    input.focus();
+
+    return;
+  }
+
+  trackOrder(orderId);
+}
+
+
+/* =====================================================
+   TRACK ORDER
+===================================================== */
+
+function trackOrder(orderId) {
+  createTrackerSection();
+
+  const input =
+    getElement(
+      "orderTrackingInput"
+    );
+
+  if (input) {
+    input.value =
+      String(orderId || "");
+  }
+
+  const order =
+    getOrder(orderId);
+
+  if (!order) {
+    renderTrackerNotFound(
+      orderId
+    );
+
+    scrollToSection(
+      "smithxOrderTracker"
+    );
+
+    return;
+  }
+
+  renderOrderTracker(order);
+
+  scrollToSection(
+    "smithxOrderTracker"
+  );
+
+  trackEvent(
+    "order_tracking_viewed",
+    {
+      orderId:
+        order.orderId
+    }
+  );
+}
+
+
+/* =====================================================
+   TRACKER NOT FOUND
+===================================================== */
+
+function renderTrackerNotFound(
+  orderId
+) {
+  const result =
+    getElement(
+      "orderTrackerResult"
+    );
+
+  if (!result) {
+    return;
+  }
+
+  result.innerHTML = `
+    <div class="tracker-empty">
+
+      <div class="tracker-error-icon">
+        !
+      </div>
+
+      <strong>
+        Order not found
+      </strong>
+
+      <p>
+        We couldn't find
+        <strong>
+          ${escapeHTML(orderId)}
+        </strong>
+        in this SM1THX demo.
+      </p>
+
+      <small>
+        Check the order number and try again.
+      </small>
+
+    </div>
+  `;
+}
+
+
+/* =====================================================
+   RENDER TRACKER
+===================================================== */
+
+function renderOrderTracker(
+  providedOrder = null
+) {
+  createTrackerSection();
+
+  const result =
+    getElement(
+      "orderTrackerResult"
+    );
+
+  if (!result) {
+    return;
+  }
+
+  const order =
+    providedOrder;
+
+  if (!order) {
+    result.innerHTML = `
+      <div class="tracker-empty">
+        <strong>
+          Ready to track
+        </strong>
+
+        <p>
+          Enter an SMX order number above.
+        </p>
+      </div>
+    `;
+
+    return;
+  }
+
+  const currentStep =
+    getTrackingStepForOrder(
+      order
+    );
+
+  const location =
+    getTrackingLocation(
+      order
+    );
+
+  const estimated =
+    getEstimatedDelivery(
+      order
+    );
+
+  const progress =
+    Math.round(
+      (
+        currentStep /
+        (TRACKING_STEPS.length - 1)
+      ) * 100
+    );
+
+  const timeline =
+    TRACKING_STEPS
+      .map(
+        (step, index) => {
+
+          const complete =
+            index <= currentStep;
+
+          const active =
+            index === currentStep;
+
+          let dateText =
+            "";
+
+          if (complete) {
+
+            if (
+              index === 0
+            ) {
+              dateText =
+                formatDate(
+                  order.createdAt
+                );
+            } else if (
+              index === currentStep
+            ) {
+              dateText =
+                formatDate(
+                  order.updatedAt ||
+                  order.createdAt
+                );
+            } else {
+              dateText =
+                "Completed";
+            }
+          }
+
+          return `
+            <div
+              class="
+                tracker-step
+                ${complete ? "complete" : ""}
+                ${active ? "active" : ""}
+              "
+            >
+
+              <div class="tracker-step-marker">
+                ${
+                  complete
+                    ? "✓"
+                    : index + 1
+                }
+              </div>
+
+              <div class="tracker-step-content">
+
+                <strong>
+                  ${escapeHTML(
+                    step.label
+                  )}
+                </strong>
+
+                <p>
+                  ${escapeHTML(
+                    step.description
+                  )}
+                </p>
+
+                ${
+                  dateText
+                    ? `
+                      <small>
+                        ${escapeHTML(
+                          dateText
+                        )}
+                      </small>
+                    `
+                    : ""
+                }
+
+              </div>
+
+            </div>
+          `;
+        }
+      )
+      .join("");
+
+  const itemHTML =
+    Array.isArray(order.items)
+      ? order.items
+          .map(
+            item => `
+              <div class="tracker-product">
+
+                <div class="tracker-product-image">
+
+                  <img
+                    src="${escapeHTML(
+                      item.image || ""
+                    )}"
+                    alt="${escapeHTML(
+                      item.name
+                    )}"
+                  >
+
+                </div>
+
+                <div>
+
+                  <strong>
+                    ${escapeHTML(
+                      item.name
+                    )}
+                  </strong>
+
+                  <span>
+                    Qty:
+                    ${Number(
+                      item.quantity
+                    ) || 1}
+                  </span>
+
+                </div>
+
+              </div>
+            `
+          )
+          .join("")
+      : "";
+
+  result.innerHTML = `
+    <div class="tracker-card">
+
+      <div class="tracker-card-top">
+
+        <div>
+
+          <span class="tracker-label">
+            ORDER NUMBER
+          </span>
+
+          <h4>
+            ${escapeHTML(
+              order.orderId
+            )}
+          </h4>
+
+          <p>
+            Placed
+            ${escapeHTML(
+              formatDate(
+                order.createdAt
+              )
+            )}
+          </p>
+
+        </div>
+
+        <span
+          class="
+            order-status
+            ${getOrderStatusClass(
+              order.status
+            )}
+          "
+        >
+          ${escapeHTML(
+            order.status
+          )}
+        </span>
+
+      </div>
+
+
+      <div class="tracker-summary">
+
+        <div class="tracker-summary-item">
+
+          <span>
+            CURRENT LOCATION
+          </span>
+
+          <strong>
+            ${escapeHTML(
+              location
+            )}
+          </strong>
+
+        </div>
+
+        <div class="tracker-summary-item">
+
+          <span>
+            ESTIMATED DELIVERY
+          </span>
+
+          <strong>
+            ${escapeHTML(
+              estimated
+            )}
+          </strong>
+
+        </div>
+
+        <div class="tracker-summary-item">
+
+          <span>
+            ORDER TOTAL
+          </span>
+
+          <strong>
+            ${formatKES(
+              order.total
+            )}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="tracker-progress">
+
+        <div
+          class="tracker-progress-bar"
+          style="width:${progress}%"
+        ></div>
+
+      </div>
+
+
+      <div class="tracker-timeline">
+
+        ${timeline}
+
+      </div>
+
+
+      <div class="tracker-items">
+
+        <div class="tracker-items-header">
+
+          <strong>
+            Items in this order
+          </strong>
+
+        </div>
+
+        ${itemHTML}
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* =====================================================
+   REFRESH CURRENT TRACKER
+===================================================== */
+
+function refreshTrackerForOrder(
+  orderId
+) {
+  const order =
+    getOrder(orderId);
+
+  if (!order) {
+    return;
+  }
+
+  renderOrderTracker(order);
+}
+
+
+/* =====================================================
    ANALYTICS
 ===================================================== */
 
 function getAnalytics() {
-
   const analytics =
     safeJSONParse(
       localStorage.getItem(
@@ -1387,10 +1944,8 @@ function getAnalytics() {
 
   if (
     !analytics ||
-    typeof analytics !==
-      "object"
+    typeof analytics !== "object"
   ) {
-
     return {
       orders: 0,
       revenue: 0,
@@ -1399,7 +1954,6 @@ function getAnalytics() {
   }
 
   return {
-
     orders:
       Number(
         analytics.orders
@@ -1423,12 +1977,9 @@ function getAnalytics() {
 function saveAnalytics(
   analytics
 ) {
-
   localStorage.setItem(
     STORAGE.analytics,
-    JSON.stringify(
-      analytics
-    )
+    JSON.stringify(analytics)
   );
 }
 
@@ -1437,12 +1988,10 @@ function trackEvent(
   eventName,
   data = {}
 ) {
-
   const analytics =
     getAnalytics();
 
   analytics.events.push({
-
     event:
       eventName,
 
@@ -1456,11 +2005,8 @@ function trackEvent(
     analytics.events.length >
     500
   ) {
-
     analytics.events =
-      analytics.events.slice(
-        -500
-      );
+      analytics.events.slice(-500);
   }
 
   saveAnalytics(
@@ -1476,14 +2022,10 @@ function trackEvent(
 ===================================================== */
 
 function trackDailyVisitor() {
-
   const today =
     new Date()
       .toISOString()
-      .slice(
-        0,
-        10
-      );
+      .slice(0, 10);
 
   const saved =
     safeJSONParse(
@@ -1497,7 +2039,6 @@ function trackDailyVisitor() {
     !saved ||
     saved.date !== today
   ) {
-
     localStorage.setItem(
       STORAGE.visitor,
       JSON.stringify({
@@ -1508,23 +2049,17 @@ function trackDailyVisitor() {
           1
       })
     );
-
   } else if (
     !sessionStorage.getItem(
       "smithx_visitor_counted"
     )
   ) {
-
     saved.count =
-      Number(
-        saved.count || 0
-      ) + 1;
+      Number(saved.count || 0) + 1;
 
     localStorage.setItem(
       STORAGE.visitor,
-      JSON.stringify(
-        saved
-      )
+      JSON.stringify(saved)
     );
   }
 
@@ -1542,7 +2077,6 @@ function trackDailyVisitor() {
 ===================================================== */
 
 function setupCategories() {
-
   const container =
     getElement(
       "categoryFilters"
@@ -1552,8 +2086,7 @@ function setupCategories() {
     return;
   }
 
-  container.innerHTML =
-    "";
+  container.innerHTML = "";
 
   CATEGORIES.forEach(
     category => {
@@ -1573,7 +2106,6 @@ function setupCategories() {
         category ===
         currentCategory
       ) {
-
         button.classList.add(
           "active"
         );
@@ -1608,7 +2140,6 @@ function setupCategories() {
 ===================================================== */
 
 function setupSellerCategory() {
-
   const select =
     getElement(
       "productCategory"
@@ -1618,14 +2149,12 @@ function setupSellerCategory() {
     return;
   }
 
-  select.innerHTML =
-    "";
+  select.innerHTML = "";
 
   CATEGORIES
     .filter(
       category =>
-        category !==
-        "All"
+        category !== "All"
     )
     .forEach(
       category => {
@@ -1654,7 +2183,6 @@ function setupSellerCategory() {
 ===================================================== */
 
 function renderProducts() {
-
   const grid =
     getElement(
       "productsGrid"
@@ -1676,7 +2204,6 @@ function renderProducts() {
     currentCategory !==
     "All"
   ) {
-
     products =
       products.filter(
         product =>
@@ -1686,7 +2213,6 @@ function renderProducts() {
   }
 
   if (search) {
-
     products =
       products.filter(
         product => {
@@ -1707,10 +2233,8 @@ function renderProducts() {
   }
 
   if (!products.length) {
-
     grid.innerHTML = `
       <div class="empty-state">
-
         <strong>
           No products found.
         </strong>
@@ -1718,7 +2242,6 @@ function renderProducts() {
         <p>
           Try another search or category.
         </p>
-
       </div>
     `;
 
@@ -1736,9 +2259,7 @@ function renderProducts() {
             );
 
           return `
-            <article
-              class="product-card"
-            >
+            <article class="product-card">
 
               <button
                 type="button"
@@ -1819,7 +2340,6 @@ function renderProducts() {
 function openProductModal(
   productId
 ) {
-
   const product =
     findProduct(productId);
 
@@ -1842,14 +2362,10 @@ function openProductModal(
   }
 
   const safeId =
-    escapeHTML(
-      product.id
-    );
+    escapeHTML(product.id);
 
   content.innerHTML = `
-    <div
-      class="product-modal-layout"
-    >
+    <div class="product-modal-layout">
 
       <div>
 
@@ -1907,9 +2423,7 @@ function openProductModal(
     </div>
   `;
 
-  modal.classList.add(
-    "open"
-  );
+  modal.classList.add("open");
 
   modal.setAttribute(
     "aria-hidden",
@@ -1919,7 +2433,6 @@ function openProductModal(
 
 
 function closeProductModal() {
-
   const modal =
     getElement(
       "productModal"
@@ -1945,12 +2458,10 @@ function closeProductModal() {
 ===================================================== */
 
 function demoCheckout() {
-
   const cart =
     getCart();
 
   if (!cart.length) {
-
     showToast(
       "Your cart is empty."
     );
@@ -1962,7 +2473,6 @@ function demoCheckout() {
     createOrderFromCart();
 
   if (!order) {
-
     showToast(
       "Could not create the order."
     );
@@ -1970,27 +2480,17 @@ function demoCheckout() {
     return;
   }
 
-  /*
-    Update analytics exactly once.
-  */
-
   const analytics =
     getAnalytics();
 
   analytics.orders += 1;
 
   analytics.revenue +=
-    Number(
-      order.total
-    ) || 0;
+    Number(order.total) || 0;
 
   saveAnalytics(
     analytics
   );
-
-  /*
-    Record the event.
-  */
 
   trackEvent(
     "order_created",
@@ -2005,11 +2505,6 @@ function demoCheckout() {
         order.items.length
     }
   );
-
-  /*
-    Keep compatibility with
-    the previous demo order system.
-  */
 
   localStorage.setItem(
     "smithx_last_demo_order",
@@ -2028,11 +2523,6 @@ function demoCheckout() {
     })
   );
 
-  /*
-    Clear cart after successful
-    order creation.
-  */
-
   clearCart();
 
   updateCartUI();
@@ -2043,21 +2533,17 @@ function demoCheckout() {
 
   renderOrders();
 
+  createTrackerSection();
+
   showToast(
     `✓ Order ${order.orderId} created!`
   );
 
-  /*
-    Show confirmation.
-  */
-
   setTimeout(
     () => {
-
       showOrderConfirmation(
         order
       );
-
     },
     350
   );
@@ -2071,7 +2557,6 @@ function demoCheckout() {
 function showOrderConfirmation(
   order
 ) {
-
   if (!order) {
     return;
   }
@@ -2143,19 +2628,13 @@ function showOrderConfirmation(
         ×
       </button>
 
-      <div
-        class="order-confirmation"
-      >
+      <div class="order-confirmation">
 
-        <div
-          class="confirmation-icon"
-        >
+        <div class="confirmation-icon">
           ✓
         </div>
 
-        <p
-          class="section-eyebrow"
-        >
+        <p class="section-eyebrow">
           ORDER CONFIRMED
         </p>
 
@@ -2168,9 +2647,7 @@ function showOrderConfirmation(
           successfully created.
         </p>
 
-        <div
-          class="confirmation-order-id"
-        >
+        <div class="confirmation-order-id">
 
           <span>
             Order ID
@@ -2184,15 +2661,11 @@ function showOrderConfirmation(
 
         </div>
 
-        <div
-          class="confirmation-items"
-        >
+        <div class="confirmation-items">
           ${items}
         </div>
 
-        <div
-          class="confirmation-total"
-        >
+        <div class="confirmation-total">
 
           <span>
             Total
@@ -2206,9 +2679,7 @@ function showOrderConfirmation(
 
         </div>
 
-        <div
-          class="confirmation-status"
-        >
+        <div class="confirmation-status">
 
           <span>
             Status
@@ -2222,13 +2693,37 @@ function showOrderConfirmation(
 
         </div>
 
-        <button
-          type="button"
-          class="primary-button full-width"
-          onclick="closeOrderConfirmation(); scrollToSection('dashboard');"
+        <div
+          style="
+            display:grid;
+            gap:10px;
+            margin-top:18px;
+          "
         >
-          View Orders
-        </button>
+
+          <button
+            type="button"
+            class="primary-button full-width"
+            onclick="
+              closeOrderConfirmation();
+              trackOrder('${escapeHTML(order.orderId)}');
+            "
+          >
+            Track This Order
+          </button>
+
+          <button
+            type="button"
+            class="secondary-button full-width"
+            onclick="
+              closeOrderConfirmation();
+              scrollToSection('dashboard');
+            "
+          >
+            View Orders
+          </button>
+
+        </div>
 
       </div>
 
@@ -2242,7 +2737,6 @@ function showOrderConfirmation(
 
 
 function closeOrderConfirmation() {
-
   const modal =
     getElement(
       "orderConfirmation"
@@ -2261,7 +2755,6 @@ function closeOrderConfirmation() {
 ===================================================== */
 
 function setupImagePreview() {
-
   const input =
     getElement(
       "productImage"
@@ -2294,7 +2787,6 @@ function setupImagePreview() {
         input.files[0];
 
       if (!file) {
-
         preview.classList.add(
           "hidden"
         );
@@ -2310,7 +2802,6 @@ function setupImagePreview() {
           "image/"
         )
       ) {
-
         showToast(
           "Please choose an image file."
         );
@@ -2352,7 +2843,6 @@ function compressImage(
   maxWidth = 1200,
   quality = 0.82
 ) {
-
   return new Promise(
     (
       resolve,
@@ -2461,7 +2951,6 @@ function compressImage(
 ===================================================== */
 
 async function publishProduct() {
-
   const nameInput =
     getElement(
       "productName"
@@ -2502,7 +2991,6 @@ async function publishProduct() {
     descriptionInput?.value.trim();
 
   if (!name) {
-
     showToast(
       "Please enter a product name."
     );
@@ -2516,7 +3004,6 @@ async function publishProduct() {
     !price ||
     price <= 0
   ) {
-
     showToast(
       "Please enter a valid price."
     );
@@ -2527,7 +3014,6 @@ async function publishProduct() {
   }
 
   if (!category) {
-
     showToast(
       "Please select a category."
     );
@@ -2538,7 +3024,6 @@ async function publishProduct() {
   }
 
   if (!description) {
-
     showToast(
       "Please add a product description."
     );
@@ -2548,22 +3033,18 @@ async function publishProduct() {
     return;
   }
 
-  let image =
-    "";
+  let image = "";
 
   try {
-
     const file =
       imageInput?.files?.[0];
 
     if (file) {
-
       image =
         await compressImage(
           file
         );
     }
-
   } catch (error) {
 
     console.error(
@@ -2579,13 +3060,11 @@ async function publishProduct() {
   }
 
   if (!image) {
-
     image =
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80";
   }
 
   const product = {
-
     id:
       `custom-${Date.now()}-${Math.random()
         .toString(36)
@@ -2605,9 +3084,7 @@ async function publishProduct() {
   const products =
     getCustomProducts();
 
-  products.push(
-    product
-  );
+  products.push(product);
 
   saveCustomProducts(
     products
@@ -2631,23 +3108,19 @@ async function publishProduct() {
   );
 
   if (nameInput) {
-    nameInput.value =
-      "";
+    nameInput.value = "";
   }
 
   if (priceInput) {
-    priceInput.value =
-      "";
+    priceInput.value = "";
   }
 
   if (descriptionInput) {
-    descriptionInput.value =
-      "";
+    descriptionInput.value = "";
   }
 
   if (imageInput) {
-    imageInput.value =
-      "";
+    imageInput.value = "";
   }
 
   const preview =
@@ -2661,14 +3134,12 @@ async function publishProduct() {
     );
 
   if (preview) {
-
     preview.classList.add(
       "hidden"
     );
   }
 
   if (previewImage) {
-
     previewImage.src =
       "";
   }
@@ -2682,7 +3153,6 @@ async function publishProduct() {
     );
 
   if (aiResult) {
-
     aiResult.style.display =
       "none";
   }
@@ -2706,7 +3176,6 @@ async function publishProduct() {
 ===================================================== */
 
 async function generateProductListing() {
-
   const productNameInput =
     getElement(
       "productName"
@@ -2723,7 +3192,6 @@ async function generateProductListing() {
     );
 
   if (!productNameInput) {
-
     showToast(
       "Product name field not found."
     );
@@ -2735,7 +3203,6 @@ async function generateProductListing() {
     productNameInput.value.trim();
 
   if (!productName) {
-
     showToast(
       "Enter a product name first."
     );
@@ -2766,13 +3233,11 @@ async function generateProductListing() {
       "YOUR_PYTHON_BACKEND_URL"
     )
   ) {
-
     showToast(
       "AI backend is not connected yet."
     );
 
     if (resultBox) {
-
       resultBox.style.display =
         "block";
 
@@ -2800,7 +3265,6 @@ async function generateProductListing() {
   }
 
   if (generateButton) {
-
     generateButton.disabled =
       true;
 
@@ -2809,7 +3273,6 @@ async function generateProductListing() {
   }
 
   if (resultBox) {
-
     resultBox.style.display =
       "block";
 
@@ -2833,7 +3296,6 @@ async function generateProductListing() {
   }
 
   try {
-
     const response =
       await fetch(
         AI_API_URL,
@@ -2864,7 +3326,6 @@ async function generateProductListing() {
       );
 
     if (!response.ok) {
-
       throw new Error(
         `AI server returned ${response.status}`
       );
@@ -2874,7 +3335,6 @@ async function generateProductListing() {
       await response.json();
 
     if (data.error) {
-
       throw new Error(
         data.error
       );
@@ -2889,7 +3349,6 @@ async function generateProductListing() {
       );
 
     if (titleElement) {
-
       titleElement.textContent =
         data.title ||
         productName;
@@ -2901,7 +3360,6 @@ async function generateProductListing() {
       );
 
     if (descriptionElement) {
-
       descriptionElement.textContent =
         data.description ||
         "";
@@ -2913,7 +3371,6 @@ async function generateProductListing() {
       );
 
     if (categoryElement) {
-
       categoryElement.textContent =
         data.category ||
         "";
@@ -2925,7 +3382,6 @@ async function generateProductListing() {
       );
 
     if (priceElement) {
-
       const price =
         Number(
           data.price || 0
@@ -2943,7 +3399,6 @@ async function generateProductListing() {
       );
 
     if (featuresElement) {
-
       featuresElement.innerHTML =
         "";
 
@@ -2978,7 +3433,6 @@ async function generateProductListing() {
       );
 
     if (seoElement) {
-
       seoElement.textContent =
         Array.isArray(
           data.seo_keywords
@@ -2996,14 +3450,12 @@ async function generateProductListing() {
       );
 
     if (adElement) {
-
       adElement.textContent =
         data.ad_caption ||
         "";
     }
 
     if (resultBox) {
-
       resultBox.style.display =
         "block";
     }
@@ -3069,9 +3521,7 @@ async function generateProductListing() {
 ===================================================== */
 
 function applyAIProductListing() {
-
   if (!latestAIProduct) {
-
     showToast(
       "Generate an AI listing first."
     );
@@ -3103,7 +3553,6 @@ function applyAIProductListing() {
     productName &&
     latestAIProduct.title
   ) {
-
     productName.value =
       latestAIProduct.title;
   }
@@ -3112,7 +3561,6 @@ function applyAIProductListing() {
     productPrice &&
     latestAIProduct.price
   ) {
-
     productPrice.value =
       Number(
         latestAIProduct.price
@@ -3123,7 +3571,6 @@ function applyAIProductListing() {
     productCategory &&
     latestAIProduct.category
   ) {
-
     const matchingOption =
       Array.from(
         productCategory.options
@@ -3136,14 +3583,12 @@ function applyAIProductListing() {
       );
 
     if (matchingOption) {
-
       productCategory.value =
         matchingOption.value;
     }
   }
 
   if (productDescription) {
-
     let description =
       latestAIProduct.description ||
       "";
@@ -3156,7 +3601,6 @@ function applyAIProductListing() {
         : [];
 
     if (features.length) {
-
       description +=
         "\n\nKey Features:\n" +
         features
@@ -3172,7 +3616,6 @@ function applyAIProductListing() {
   }
 
   if (productName) {
-
     productName.scrollIntoView({
       behavior:
         "smooth",
@@ -3193,7 +3636,6 @@ function applyAIProductListing() {
 ===================================================== */
 
 function updateDashboard() {
-
   const products =
     getAllProducts();
 
@@ -3231,19 +3673,16 @@ function updateDashboard() {
     );
 
   if (productsElement) {
-
     productsElement.textContent =
       products.length;
   }
 
   if (ordersElement) {
-
     ordersElement.textContent =
       analytics.orders;
   }
 
   if (revenueElement) {
-
     revenueElement.textContent =
       formatKES(
         analytics.revenue
@@ -3251,7 +3690,6 @@ function updateDashboard() {
   }
 
   if (visitorsElement) {
-
     visitorsElement.textContent =
       Number(
         visitorData.count || 0
@@ -3265,25 +3703,13 @@ function updateDashboard() {
 ===================================================== */
 
 function resetAnalytics() {
-
   saveAnalytics({
-
-    orders:
-      0,
-
-    revenue:
-      0,
-
-    events:
-      []
+    orders: 0,
+    revenue: 0,
+    events: []
   });
 
   updateDashboard();
-
-  /*
-    Orders are deliberately NOT deleted.
-    Analytics and order records are separate.
-  */
 
   renderOrders();
 
@@ -3298,7 +3724,6 @@ function resetAnalytics() {
 ===================================================== */
 
 function toggleUpdateHistory() {
-
   const history =
     getElement(
       "updateHistory"
@@ -3324,7 +3749,6 @@ function toggleUpdateHistory() {
       : "none";
 
   if (button) {
-
     button.textContent =
       hidden
         ? "Hide Updates"
@@ -3334,14 +3758,12 @@ function toggleUpdateHistory() {
 
 
 function setupUpdatesToggle() {
-
   const history =
     getElement(
       "updateHistory"
     );
 
   if (history) {
-
     history.style.display =
       "none";
   }
@@ -3353,7 +3775,6 @@ function setupUpdatesToggle() {
 ===================================================== */
 
 function setupSearch() {
-
   const input =
     getElement(
       "productSearch"
@@ -3383,7 +3804,6 @@ function setupSearch() {
 function scrollToSection(
   sectionId
 ) {
-
   const section =
     getElement(
       sectionId
@@ -3404,7 +3824,6 @@ function scrollToSection(
 
 
 function setupNavigation() {
-
   document
     .querySelectorAll(
       'a[href^="#"]'
@@ -3456,18 +3875,13 @@ function setupNavigation() {
 function showToast(
   message
 ) {
-
   const toast =
     getElement(
       "toast"
     );
 
   if (!toast) {
-
-    console.log(
-      message
-    );
-
+    console.log(message);
     return;
   }
 
@@ -3501,7 +3915,6 @@ function showToast(
 ===================================================== */
 
 function removeLoginUI() {
-
   const overlay =
     getElement(
       "loginOverlay"
@@ -3523,16 +3936,13 @@ function removeLoginUI() {
 
 
 function disableOldLoginHandlers() {
-
   window.openLogin =
     function () {
-
       removeLoginUI();
     };
 
   window.closeLogin =
     function () {
-
       removeLoginUI();
     };
 }
@@ -3543,7 +3953,6 @@ function disableOldLoginHandlers() {
 ===================================================== */
 
 function showRegisterForm() {
-
   const login =
     getElement(
       "loginFormSection"
@@ -3555,13 +3964,11 @@ function showRegisterForm() {
     );
 
   if (login) {
-
     login.style.display =
       "none";
   }
 
   if (register) {
-
     register.style.display =
       "block";
   }
@@ -3569,7 +3976,6 @@ function showRegisterForm() {
 
 
 function showLoginForm() {
-
   const login =
     getElement(
       "loginFormSection"
@@ -3581,13 +3987,11 @@ function showLoginForm() {
     );
 
   if (login) {
-
     login.style.display =
       "block";
   }
 
   if (register) {
-
     register.style.display =
       "none";
   }
@@ -3598,7 +4002,6 @@ function togglePassword(
   inputId,
   button
 ) {
-
   const input =
     getElement(
       inputId
@@ -3612,23 +4015,18 @@ function togglePassword(
     input.type ===
     "password"
   ) {
-
     input.type =
       "text";
 
     if (button) {
-
       button.textContent =
         "🙈";
     }
-
   } else {
-
     input.type =
       "password";
 
     if (button) {
-
       button.textContent =
         "👁";
     }
@@ -3648,7 +4046,6 @@ function setupCartControls() {
 
 
 function setupKeyboardControls() {
-
   document.addEventListener(
     "keydown",
     event => {
@@ -3670,7 +4067,6 @@ function setupKeyboardControls() {
 
 
 function setupProductBackdrop() {
-
   const modal =
     getElement(
       "productModal"
@@ -3688,8 +4084,28 @@ function setupProductBackdrop() {
         event.target ===
         modal
       ) {
-
         closeProductModal();
+      }
+    }
+  );
+}
+
+
+/* =====================================================
+   TRACKER BACKDROP / INPUT
+===================================================== */
+
+function setupTrackerControls() {
+  document.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Enter" &&
+        document.activeElement?.id ===
+          "orderTrackingInput"
+      ) {
+        trackOrderFromInput();
       }
     }
   );
@@ -3701,7 +4117,6 @@ function setupProductBackdrop() {
 ===================================================== */
 
 function initializeSmithX() {
-
   try {
 
     removeLoginUI();
@@ -3730,16 +4145,20 @@ function initializeSmithX() {
 
     setupKeyboardControls();
 
+    setupTrackerControls();
+
     trackDailyVisitor();
 
     updateDashboard();
 
+    renderOrders();
+
     /*
-      NEW:
-      Render saved orders when the app loads.
+      Create the tracker immediately.
+      It is connected to real saved orders.
     */
 
-    renderOrders();
+    createTrackerSection();
 
     console.log(
       "SM1THX initialized successfully."
@@ -3828,7 +4247,7 @@ window.applyAIProductListing =
 
 
 /* =====================================================
-   NEW ORDER GLOBAL FUNCTIONS
+   ORDER GLOBAL FUNCTIONS
 ===================================================== */
 
 window.updateOrderStatus =
@@ -3842,6 +4261,20 @@ window.showOrderConfirmation =
 
 window.closeOrderConfirmation =
   closeOrderConfirmation;
+
+
+/* =====================================================
+   TRACKER GLOBAL FUNCTIONS
+===================================================== */
+
+window.trackOrder =
+  trackOrder;
+
+window.trackOrderFromInput =
+  trackOrderFromInput;
+
+window.renderOrderTracker =
+  renderOrderTracker;
 
 
 /* =====================================================
