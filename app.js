@@ -6,9 +6,8 @@
    CART + MARKETPLACE + SELLER STUDIO
    + AI ASSISTANT + ORDERS
    + ORDER TRACKING
-   + CUSTOMER MY ORDERS
+   + CUSTOMER MY ORDERS INTEGRATION
    + AUTOMATIC 2-MINUTE DEMO TRACKING
-   + DEMO ACCOUNT / PROFILE
 ===================================================== */
 
 
@@ -27,6 +26,7 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: "default-2",
     name: "Smart Wireless Headphones",
@@ -37,6 +37,7 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: "default-3",
     name: "Minimal Desk Lamp",
@@ -47,6 +48,7 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: "default-4",
     name: "Everyday Travel Backpack",
@@ -57,6 +59,7 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: "default-5",
     name: "Smart Watch",
@@ -67,6 +70,7 @@ const DEFAULT_PRODUCTS = [
     image:
       "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
   },
+
   {
     id: "default-6",
     name: "Premium Sneakers",
@@ -105,11 +109,7 @@ const STORAGE = {
   visitor: "smithx_daily_visitor_v2",
   orders: "smithx_orders_v2",
   selectedOrder: "smithx_selected_order",
-  lastDemoOrder: "smithx_last_demo_order",
-
-  /* NEW ACCOUNT STORAGE */
-  user: "smithx_demo_user_v1",
-  session: "smithx_demo_session_v1"
+  lastDemoOrder: "smithx_last_demo_order"
 };
 
 
@@ -136,30 +136,35 @@ const TRACKING_STEPS = [
     description:
       "Your order has been received."
   },
+
   {
     key: "confirmed",
     label: "Order confirmed",
     description:
       "The seller has confirmed your order."
   },
+
   {
     key: "packed",
     label: "Order packed",
     description:
       "Your order has been prepared for shipment."
   },
+
   {
     key: "shipped",
     label: "Shipped",
     description:
       "Your package is on its way."
   },
+
   {
     key: "out_for_delivery",
     label: "Out for delivery",
     description:
       "Your package is approaching its destination."
   },
+
   {
     key: "delivered",
     label: "Delivered",
@@ -171,8 +176,20 @@ const TRACKING_STEPS = [
 
 /* =====================================================
    AUTOMATIC DEMO TRACKING
-   DO NOT CHANGE
 ===================================================== */
+
+/*
+  Demo tracking timeline:
+
+  0 seconds    = Placed
+  30 seconds   = Confirmed
+  60 seconds   = Shipped
+  90 seconds   = Out for delivery
+  120 seconds  = Delivered
+
+  This is intentionally a DEMO system.
+  It does not claim to represent real carrier GPS.
+*/
 
 const DEMO_TRACKING = {
   storagePrefix:
@@ -487,6 +504,10 @@ function clearCart() {
 }
 
 
+/* =====================================================
+   CART COUNT
+===================================================== */
+
 function getCartCount() {
   return getCart().reduce(
     (total, item) =>
@@ -510,6 +531,10 @@ function updateCartCount() {
   }
 }
 
+
+/* =====================================================
+   CART TOTALS
+===================================================== */
 
 function calculateCartTotals() {
   const cart = getCart();
@@ -541,6 +566,10 @@ function calculateCartTotals() {
   };
 }
 
+
+/* =====================================================
+   ADD TO CART
+===================================================== */
 
 function addToCart(productId) {
   const product =
@@ -579,6 +608,7 @@ function addToCart(productId) {
   }
 
   saveCart(cart);
+
   updateCartUI();
 
   trackEvent(
@@ -595,6 +625,10 @@ function addToCart(productId) {
 }
 
 
+/* =====================================================
+   REMOVE FROM CART
+===================================================== */
+
 function removeFromCart(productId) {
   const cart =
     getCart().filter(
@@ -604,6 +638,7 @@ function removeFromCart(productId) {
     );
 
   saveCart(cart);
+
   updateCartUI();
 
   showToast(
@@ -611,6 +646,10 @@ function removeFromCart(productId) {
   );
 }
 
+
+/* =====================================================
+   CHANGE CART QUANTITY
+===================================================== */
 
 function changeCartQuantity(
   productId,
@@ -659,6 +698,10 @@ function changeCartQuantity(
 }
 
 
+/* =====================================================
+   SET CART QUANTITY
+===================================================== */
+
 function setCartQuantity(
   productId,
   quantity
@@ -706,8 +749,13 @@ function setCartQuantity(
 }
 
 
+/* =====================================================
+   CLEAR CART
+===================================================== */
+
 function clearShoppingCart() {
   clearCart();
+
   updateCartUI();
 
   showToast(
@@ -715,6 +763,10 @@ function clearShoppingCart() {
   );
 }
 
+
+/* =====================================================
+   RENDER CART
+===================================================== */
 
 function renderCart() {
   const container =
@@ -793,6 +845,7 @@ function renderCart() {
       </div>
 
       <div class="cart-item-info">
+
         <strong>
           ${escapeHTML(product.name)}
         </strong>
@@ -806,6 +859,7 @@ function renderCart() {
           <button
             type="button"
             onclick="changeCartQuantity('${safeId}', -1)"
+            aria-label="Decrease quantity"
           >
             −
           </button>
@@ -817,6 +871,7 @@ function renderCart() {
           <button
             type="button"
             onclick="changeCartQuantity('${safeId}', 1)"
+            aria-label="Increase quantity"
           >
             +
           </button>
@@ -856,11 +911,19 @@ function renderCart() {
 }
 
 
+/* =====================================================
+   UPDATE CART UI
+===================================================== */
+
 function updateCartUI() {
   updateCartCount();
   renderCart();
 }
 
+
+/* =====================================================
+   OPEN / CLOSE CART
+===================================================== */
 
 function openCart() {
   const panel =
@@ -962,6 +1025,10 @@ function getOrder(orderId) {
 }
 
 
+/* =====================================================
+   CUSTOMER ORDER NAVIGATION
+===================================================== */
+
 function openCustomerOrderTracking(orderId) {
   if (!orderId) {
     return;
@@ -998,11 +1065,19 @@ function openCustomerOrderTracking(orderId) {
 }
 
 
+/* =====================================================
+   CUSTOMER MY ORDERS
+===================================================== */
+
 function openCustomerOrders() {
   window.location.href =
     "my-orders.html";
 }
 
+
+/* =====================================================
+   TRACKING DATA
+===================================================== */
 
 function getTrackingStepForOrder(order) {
   if (!order) {
@@ -1098,6 +1173,10 @@ function getEstimatedDelivery(order) {
 }
 
 
+/* =====================================================
+   CREATE ORDER FROM CART
+===================================================== */
+
 function createOrderFromCart() {
   const cart =
     getCart();
@@ -1158,9 +1237,6 @@ function createOrderFromCart() {
   const now =
     new Date().toISOString();
 
-  const user =
-    getCurrentUser();
-
   const order = {
     orderId:
       generateOrderId(),
@@ -1178,16 +1254,10 @@ function createOrderFromCart() {
     currency:
       "KES",
 
-    customer: user
-      ? {
-          type: "Demo Customer",
-          name: user.name,
-          email: user.email
-        }
-      : {
-          type:
-            "Demo Customer"
-        },
+    customer: {
+      type:
+        "Demo Customer"
+    },
 
     createdAt:
       now,
@@ -1227,6 +1297,10 @@ function createOrderFromCart() {
   return order;
 }
 
+
+/* =====================================================
+   UPDATE ORDER STATUS
+===================================================== */
 
 function updateOrderStatus(
   orderId,
@@ -1270,6 +1344,11 @@ function updateOrderStatus(
 
   order.updatedAt =
     new Date().toISOString();
+
+  /*
+    If seller manually marks the order
+    as Delivered, stop the automatic demo.
+  */
 
   if (
     newStatus ===
@@ -1339,6 +1418,7 @@ function updateOrderStatus(
   );
 
   renderOrders();
+
   renderOrderTracker();
 
   showToast(
@@ -1346,6 +1426,10 @@ function updateOrderStatus(
   );
 }
 
+
+/* =====================================================
+   ORDER STATUS CLASS
+===================================================== */
 
 function getOrderStatusClass(status) {
   return String(
@@ -1358,6 +1442,10 @@ function getOrderStatusClass(status) {
     );
 }
 
+
+/* =====================================================
+   RENDER ORDERS
+===================================================== */
 
 function renderOrders() {
   const container =
@@ -1374,6 +1462,7 @@ function renderOrders() {
     container.innerHTML = `
       <div class="empty-state">
         <strong>No orders yet.</strong>
+
         <p>
           Orders created through Demo Checkout
           will appear here.
@@ -1398,6 +1487,7 @@ function renderOrders() {
                     <div class="order-product">
 
                       <div class="order-product-image">
+
                         <img
                           src="${escapeHTML(
                             item.image || ""
@@ -1406,9 +1496,11 @@ function renderOrders() {
                             item.name
                           )}"
                         >
+
                       </div>
 
                       <div class="order-product-info">
+
                         <strong>
                           ${escapeHTML(
                             item.name
@@ -1424,6 +1516,7 @@ function renderOrders() {
                             item.price
                           )}
                         </span>
+
                       </div>
 
                     </div>
@@ -1461,6 +1554,7 @@ function renderOrders() {
             <div class="order-card-header">
 
               <div>
+
                 <span class="order-label">
                   ORDER
                 </span>
@@ -1468,6 +1562,7 @@ function renderOrders() {
                 <strong>
                   ${safeOrderId}
                 </strong>
+
               </div>
 
               <span
@@ -1535,8 +1630,7 @@ function renderOrders() {
 
 
 /* =====================================================
-   TRACKING
-   EXISTING SYSTEM PRESERVED
+   CREATE DASHBOARD TRACKER
 ===================================================== */
 
 function createTrackerSection() {
@@ -1566,7 +1660,9 @@ function createTrackerSection() {
 
   section.innerHTML = `
     <div class="tracker-header">
+
       <div>
+
         <p class="section-eyebrow">
           SM1THX LOGISTICS
         </p>
@@ -1579,7 +1675,9 @@ function createTrackerSection() {
           Enter your SMX order number to see
           the latest delivery status.
         </p>
+
       </div>
+
     </div>
 
     <div class="tracker-search">
@@ -1605,6 +1703,7 @@ function createTrackerSection() {
       id="orderTrackerResult"
       class="order-tracker-result"
     >
+
       <div class="tracker-empty">
 
         <strong>
@@ -1616,12 +1715,19 @@ function createTrackerSection() {
         </p>
 
       </div>
+
     </div>
   `;
 
-  dashboard.appendChild(section);
+  dashboard.appendChild(
+    section
+  );
 }
 
+
+/* =====================================================
+   TRACK ORDER FROM INPUT
+===================================================== */
 
 function trackOrderFromInput() {
   const input =
@@ -1649,6 +1755,10 @@ function trackOrderFromInput() {
   trackOrder(orderId);
 }
 
+
+/* =====================================================
+   TRACK ORDER
+===================================================== */
 
 function trackOrder(orderId) {
   createTrackerSection();
@@ -1678,6 +1788,11 @@ function trackOrder(orderId) {
     return;
   }
 
+  /*
+    Start automatic demo tracking
+    when an order is tracked.
+  */
+
   initializeDemoTracking(
     order
   );
@@ -1697,6 +1812,10 @@ function trackOrder(orderId) {
   );
 }
 
+
+/* =====================================================
+   TRACKER NOT FOUND
+===================================================== */
 
 function renderTrackerNotFound(
   orderId
@@ -1738,6 +1857,10 @@ function renderTrackerNotFound(
 }
 
 
+/* =====================================================
+   RENDER TRACKER
+===================================================== */
+
 function renderOrderTracker(
   providedOrder = null
 ) {
@@ -1774,13 +1897,19 @@ function renderOrderTracker(
   }
 
   const currentStep =
-    getTrackingStepForOrder(order);
+    getTrackingStepForOrder(
+      order
+    );
 
   const location =
-    getTrackingLocation(order);
+    getTrackingLocation(
+      order
+    );
 
   const estimated =
-    getEstimatedDelivery(order);
+    getEstimatedDelivery(
+      order
+    );
 
   const progress =
     Math.round(
@@ -1801,11 +1930,14 @@ function renderOrderTracker(
           const active =
             index === currentStep;
 
-          let dateText = "";
+          let dateText =
+            "";
 
           if (complete) {
 
-            if (index === 0) {
+            if (
+              index === 0
+            ) {
 
               dateText =
                 formatDate(
@@ -1929,6 +2061,7 @@ function renderOrderTracker(
       ? `
         <span
           class="tracker-demo-badge"
+          title="This is a SM1THX demonstration tracking timeline."
         >
           DEMO TRACKING
         </span>
@@ -1980,6 +2113,7 @@ function renderOrderTracker(
 
       </div>
 
+
       <div class="tracker-summary">
 
         <div class="tracker-summary-item">
@@ -2026,6 +2160,7 @@ function renderOrderTracker(
 
       </div>
 
+
       <div class="tracker-progress">
 
         <div
@@ -2035,9 +2170,13 @@ function renderOrderTracker(
 
       </div>
 
+
       <div class="tracker-timeline">
+
         ${timeline}
+
       </div>
+
 
       <div class="tracker-items">
 
@@ -2059,10 +2198,12 @@ function renderOrderTracker(
 
 
 /* =====================================================
-   DEMO TRACKING STORAGE
+   DEMO TRACKING — STORAGE
 ===================================================== */
 
-function getDemoTrackingState(orderId) {
+function getDemoTrackingState(
+  orderId
+) {
   if (!orderId) {
     return null;
   }
@@ -2105,12 +2246,19 @@ function saveDemoTrackingState(
 }
 
 
-function calculateDemoStage(elapsed) {
+/* =====================================================
+   DEMO TRACKING — STAGE CALCULATION
+===================================================== */
+
+function calculateDemoStage(
+  elapsed
+) {
   let selected =
     DEMO_TRACKING.stages[0];
 
   DEMO_TRACKING.stages.forEach(
     stage => {
+
       if (
         elapsed >=
         stage.after
@@ -2124,6 +2272,10 @@ function calculateDemoStage(elapsed) {
   return selected;
 }
 
+
+/* =====================================================
+   DEMO TRACKING — UPDATE ORDER
+===================================================== */
 
 function updateDemoOrder(
   orderId,
@@ -2168,6 +2320,16 @@ function updateDemoOrder(
       stage.key ===
       "delivered"
   };
+
+  /*
+    The seller-facing order status remains
+    compatible with the existing system.
+
+    Out for delivery is represented as
+    "Shipped" because ORDER_STATUSES only
+    contains Pending / Confirmed / Shipped /
+    Delivered.
+  */
 
   order.status =
     stage.status;
@@ -2232,6 +2394,7 @@ function updateDemoOrder(
     previousStatus !==
     order.status
   ) {
+
     trackEvent(
       "demo_order_status_updated",
       {
@@ -2253,12 +2416,21 @@ function updateDemoOrder(
 }
 
 
-function runDemoTrackingTick(orderId) {
+/* =====================================================
+   DEMO TRACKING — TICK
+===================================================== */
+
+function runDemoTrackingTick(
+  orderId
+) {
   const order =
     getOrder(orderId);
 
   if (!order) {
-    stopDemoTracking(orderId);
+    stopDemoTracking(
+      orderId
+    );
+
     return;
   }
 
@@ -2326,6 +2498,11 @@ function runDemoTrackingTick(orderId) {
       elapsed
     );
 
+  /*
+    Don't repeatedly rewrite the same
+    stage every second.
+  */
+
   if (
     Number(state.currentStep) !==
       stage.step ||
@@ -2340,7 +2517,9 @@ function runDemoTrackingTick(orderId) {
       );
 
     if (updatedOrder) {
+
       renderOrders();
+
       renderOrderTracker(
         updatedOrder
       );
@@ -2350,6 +2529,11 @@ function runDemoTrackingTick(orderId) {
     stage.key ===
     "delivered"
   ) {
+
+    /*
+      Make sure a completed order remains
+      delivered even after refresh.
+    */
 
     if (
       normalizeOrderStatus(
@@ -2380,13 +2564,24 @@ function runDemoTrackingTick(orderId) {
 }
 
 
-function startDemoTracking(order) {
+/* =====================================================
+   DEMO TRACKING — START
+===================================================== */
+
+function startDemoTracking(
+  order
+) {
   if (!order || !order.orderId) {
     return;
   }
 
   const orderId =
     String(order.orderId);
+
+  /*
+    If seller already marked the order
+    delivered, don't restart the demo.
+  */
 
   if (
     normalizeOrderStatus(
@@ -2477,6 +2672,10 @@ function startDemoTracking(order) {
     orderId
   );
 
+  /*
+    Run immediately, then every second.
+  */
+
   runDemoTrackingTick(
     orderId
   );
@@ -2518,10 +2717,21 @@ function startDemoTracking(order) {
 }
 
 
-function initializeDemoTracking(order) {
+/* =====================================================
+   DEMO TRACKING — INITIALIZE
+===================================================== */
+
+function initializeDemoTracking(
+  order
+) {
   if (!order) {
     return;
   }
+
+  /*
+    Do not automatically run a second
+    independent timer for the same order.
+  */
 
   const state =
     getDemoTrackingState(
@@ -2541,7 +2751,13 @@ function initializeDemoTracking(order) {
 }
 
 
-function stopDemoTracking(orderId) {
+/* =====================================================
+   DEMO TRACKING — STOP
+===================================================== */
+
+function stopDemoTracking(
+  orderId
+) {
   if (!orderId) {
     return;
   }
@@ -2560,6 +2776,10 @@ function stopDemoTracking(orderId) {
   }
 }
 
+
+/* =====================================================
+   DEMO TRACKING — RESUME ALL
+===================================================== */
 
 function resumeDemoTracking() {
   const orders =
@@ -2584,6 +2804,11 @@ function resumeDemoTracking() {
         return;
       }
 
+      /*
+        Resume only orders that have
+        demo tracking state.
+      */
+
       if (
         state ||
         order.tracking?.mode ===
@@ -2597,6 +2822,10 @@ function resumeDemoTracking() {
   );
 }
 
+
+/* =====================================================
+   REFRESH CURRENT TRACKER
+===================================================== */
 
 function refreshTrackerForOrder(
   orderId
@@ -2663,7 +2892,9 @@ function getAnalytics() {
 }
 
 
-function saveAnalytics(analytics) {
+function saveAnalytics(
+  analytics
+) {
   localStorage.setItem(
     STORAGE.analytics,
     JSON.stringify(analytics)
@@ -2703,6 +2934,10 @@ function trackEvent(
   updateDashboard();
 }
 
+
+/* =====================================================
+   DAILY VISITOR
+===================================================== */
 
 function trackDailyVisitor() {
   const today =
@@ -2818,6 +3053,10 @@ function setupCategories() {
 }
 
 
+/* =====================================================
+   SELLER CATEGORY
+===================================================== */
+
 function setupSellerCategory() {
   const select =
     getElement(
@@ -2858,7 +3097,7 @@ function setupSellerCategory() {
 
 
 /* =====================================================
-   PRODUCTS
+   RENDER PRODUCTS
 ===================================================== */
 
 function renderProducts() {
@@ -2960,9 +3199,13 @@ function renderProducts() {
 
               </button>
 
-              <div class="product-card-body">
+              <div
+                class="product-card-body"
+              >
 
-                <span class="product-category">
+                <span
+                  class="product-category"
+                >
                   ${escapeHTML(
                     product.category
                   )}
@@ -2980,7 +3223,9 @@ function renderProducts() {
                   )}
                 </p>
 
-                <div class="product-card-bottom">
+                <div
+                  class="product-card-bottom"
+                >
 
                   <strong>
                     ${formatKES(
@@ -3012,7 +3257,9 @@ function renderProducts() {
    PRODUCT MODAL
 ===================================================== */
 
-function openProductModal(productId) {
+function openProductModal(
+  productId
+) {
   const product =
     findProduct(productId);
 
@@ -3055,7 +3302,9 @@ function openProductModal(productId) {
 
       <div>
 
-        <span class="product-category">
+        <span
+          class="product-category"
+        >
           ${escapeHTML(
             product.category
           )}
@@ -3067,7 +3316,9 @@ function openProductModal(productId) {
           )}
         </h2>
 
-        <strong class="product-modal-price">
+        <strong
+          class="product-modal-price"
+        >
           ${formatKES(
             product.price
           )}
@@ -3123,7 +3374,7 @@ function closeProductModal() {
 
 
 /* =====================================================
-   CHECKOUT
+   DEMO CHECKOUT
 ===================================================== */
 
 function demoCheckout() {
@@ -3200,10 +3451,19 @@ function demoCheckout() {
   clearCart();
 
   updateCartUI();
+
   closeCart();
+
   updateDashboard();
+
   renderOrders();
+
   createTrackerSection();
+
+  /*
+    Make sure the automatic demo tracking
+    starts immediately.
+  */
 
   initializeDemoTracking(
     order
@@ -3228,7 +3488,9 @@ function demoCheckout() {
    ORDER CONFIRMATION
 ===================================================== */
 
-function showOrderConfirmation(order) {
+function showOrderConfirmation(
+  order
+) {
   if (!order) {
     return;
   }
@@ -3267,7 +3529,9 @@ function showOrderConfirmation(order) {
     order.items
       .map(
         item => `
-          <div class="confirmation-item">
+          <div
+            class="confirmation-item"
+          >
 
             <span>
               ${escapeHTML(
@@ -3303,6 +3567,7 @@ function showOrderConfirmation(order) {
         type="button"
         class="modal-close"
         onclick="closeOrderConfirmation()"
+        aria-label="Close order confirmation"
       >
         ×
       </button>
@@ -3428,7 +3693,7 @@ function closeOrderConfirmation() {
 
 
 /* =====================================================
-   IMAGE
+   IMAGE PREVIEW
 ===================================================== */
 
 function setupImagePreview() {
@@ -3511,6 +3776,10 @@ function setupImagePreview() {
 }
 
 
+/* =====================================================
+   COMPRESS IMAGE
+===================================================== */
+
 function compressImage(
   file,
   maxWidth = 1200,
@@ -3578,6 +3847,7 @@ function compressImage(
                 );
 
               if (!context) {
+
                 reject(
                   new Error(
                     "Canvas unavailable."
@@ -3708,7 +3978,6 @@ async function publishProduct() {
   let image = "";
 
   try {
-
     const file =
       imageInput?.files?.[0];
 
@@ -3718,7 +3987,6 @@ async function publishProduct() {
           file
         );
     }
-
   } catch (error) {
 
     console.error(
@@ -3745,9 +4013,13 @@ async function publishProduct() {
         .slice(2, 8)}`,
 
     name,
+
     price,
+
     category,
+
     description,
+
     image
   };
 
@@ -3828,6 +4100,7 @@ async function publishProduct() {
   }
 
   renderProducts();
+
   updateDashboard();
 
   showToast(
@@ -3906,6 +4179,30 @@ async function generateProductListing() {
       "AI backend is not connected yet."
     );
 
+    if (resultBox) {
+      resultBox.style.display =
+        "block";
+
+      resultBox.innerHTML = `
+        <div class="ai-result-item">
+
+          <span>
+            SM1THX AI
+          </span>
+
+          <strong>
+            AI assistant is ready.
+          </strong>
+
+          <p>
+            The Python AI backend still
+            needs to be connected.
+          </p>
+
+        </div>
+      `;
+    }
+
     return;
   }
 
@@ -3941,7 +4238,6 @@ async function generateProductListing() {
   }
 
   try {
-
     const response =
       await fetch(
         AI_API_URL,
@@ -4028,7 +4324,6 @@ async function generateProductListing() {
       );
 
     if (priceElement) {
-
       const price =
         Number(
           data.price || 0
@@ -4046,7 +4341,6 @@ async function generateProductListing() {
       );
 
     if (featuresElement) {
-
       featuresElement.innerHTML =
         "";
 
@@ -4081,7 +4375,6 @@ async function generateProductListing() {
       );
 
     if (seoElement) {
-
       seoElement.textContent =
         Array.isArray(
           data.seo_keywords
@@ -4165,6 +4458,10 @@ async function generateProductListing() {
 }
 
 
+/* =====================================================
+   APPLY AI LISTING
+===================================================== */
+
 function applyAIProductListing() {
   if (!latestAIProduct) {
     showToast(
@@ -4216,7 +4513,6 @@ function applyAIProductListing() {
     productCategory &&
     latestAIProduct.category
   ) {
-
     const matchingOption =
       Array.from(
         productCategory.options
@@ -4235,7 +4531,6 @@ function applyAIProductListing() {
   }
 
   if (productDescription) {
-
     let description =
       latestAIProduct.description ||
       "";
@@ -4248,7 +4543,6 @@ function applyAIProductListing() {
         : [];
 
     if (features.length) {
-
       description +=
         "\n\nKey Features:\n" +
         features
@@ -4264,7 +4558,6 @@ function applyAIProductListing() {
   }
 
   if (productName) {
-
     productName.scrollIntoView({
       behavior:
         "smooth",
@@ -4347,6 +4640,10 @@ function updateDashboard() {
 }
 
 
+/* =====================================================
+   RESET ANALYTICS
+===================================================== */
+
 function resetAnalytics() {
   saveAnalytics({
     orders: 0,
@@ -4355,6 +4652,7 @@ function resetAnalytics() {
   });
 
   updateDashboard();
+
   renderOrders();
 
   showToast(
@@ -4445,9 +4743,13 @@ function setupSearch() {
    NAVIGATION
 ===================================================== */
 
-function scrollToSection(sectionId) {
+function scrollToSection(
+  sectionId
+) {
   const section =
-    getElement(sectionId);
+    getElement(
+      sectionId
+    );
 
   if (!section) {
     return;
@@ -4512,9 +4814,13 @@ function setupNavigation() {
    TOAST
 ===================================================== */
 
-function showToast(message) {
+function showToast(
+  message
+) {
   const toast =
-    getElement("toast");
+    getElement(
+      "toast"
+    );
 
   if (!toast) {
     console.log(message);
@@ -4547,1733 +4853,10 @@ function showToast(message) {
 
 
 /* =====================================================
-   DEMO ACCOUNT SYSTEM
-   NO FIREBASE
-===================================================== */
-
-function getDemoUser() {
-  return safeJSONParse(
-    localStorage.getItem(
-      STORAGE.user
-    ),
-    null
-  );
-}
-
-
-function saveDemoUser(user) {
-  localStorage.setItem(
-    STORAGE.user,
-    JSON.stringify(user)
-  );
-}
-
-
-function getDemoSession() {
-  return safeJSONParse(
-    localStorage.getItem(
-      STORAGE.session
-    ),
-    null
-  );
-}
-
-
-function setDemoSession(loggedIn) {
-  localStorage.setItem(
-    STORAGE.session,
-    JSON.stringify({
-      loggedIn:
-        Boolean(loggedIn),
-
-      updatedAt:
-        new Date().toISOString()
-    })
-  );
-}
-
-
-function getCurrentUser() {
-  const user =
-    getDemoUser();
-
-  const session =
-    getDemoSession();
-
-  if (
-    !user ||
-    !session ||
-    !session.loggedIn
-  ) {
-    return null;
-  }
-
-  return user;
-}
-
-
-function isLoggedIn() {
-  return Boolean(
-    getCurrentUser()
-  );
-}
-
-
-/* =====================================================
-   ACCOUNT STYLES
-===================================================== */
-
-function injectAccountStyles() {
-
-  if (
-    document.getElementById(
-      "smithxAccountStyles"
-    )
-  ) {
-    return;
-  }
-
-  const style =
-    document.createElement(
-      "style"
-    );
-
-  style.id =
-    "smithxAccountStyles";
-
-  style.textContent = `
-
-    .smithx-account-overlay {
-      position:fixed;
-      inset:0;
-      z-index:100000;
-      background:rgba(15,23,42,.72);
-      backdrop-filter:blur(8px);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      overflow:auto;
-    }
-
-    .smithx-account-modal {
-      width:min(460px,100%);
-      background:#fff;
-      border-radius:24px;
-      padding:30px;
-      position:relative;
-      box-shadow:0 30px 80px rgba(0,0,0,.3);
-    }
-
-    .smithx-account-close {
-      position:absolute;
-      top:15px;
-      right:15px;
-      width:38px;
-      height:38px;
-      border:0;
-      border-radius:50%;
-      background:#f1f5f9;
-      cursor:pointer;
-      font-size:22px;
-    }
-
-    .smithx-account-brand {
-      text-align:center;
-      margin-bottom:24px;
-    }
-
-    .smithx-account-brand h2 {
-      margin:0;
-      font-size:30px;
-      color:#0f172a;
-    }
-
-    .smithx-account-brand h2 span {
-      color:#2563eb;
-    }
-
-    .smithx-account-brand p {
-      color:#64748b;
-      margin:6px 0 0;
-    }
-
-    .smithx-account-tabs {
-      display:flex;
-      gap:6px;
-      background:#f1f5f9;
-      padding:5px;
-      border-radius:12px;
-      margin-bottom:20px;
-    }
-
-    .smithx-account-tab {
-      flex:1;
-      border:0;
-      background:transparent;
-      padding:11px;
-      border-radius:9px;
-      font-weight:700;
-      cursor:pointer;
-      color:#64748b;
-    }
-
-    .smithx-account-tab.active {
-      background:#fff;
-      color:#2563eb;
-      box-shadow:0 2px 8px rgba(0,0,0,.08);
-    }
-
-    .smithx-account-field {
-      margin-bottom:15px;
-    }
-
-    .smithx-account-field label {
-      display:block;
-      margin-bottom:6px;
-      font-weight:700;
-      font-size:14px;
-      color:#334155;
-    }
-
-    .smithx-account-field input {
-      width:100%;
-      box-sizing:border-box;
-      padding:13px;
-      border:1px solid #dbe5f0;
-      border-radius:12px;
-      outline:none;
-      font:inherit;
-    }
-
-    .smithx-account-field input:focus {
-      border-color:#2563eb;
-      box-shadow:0 0 0 3px rgba(37,99,235,.1);
-    }
-
-    .smithx-account-primary {
-      width:100%;
-      border:0;
-      background:#2563eb;
-      color:#fff;
-      padding:14px;
-      border-radius:12px;
-      font-weight:800;
-      cursor:pointer;
-    }
-
-    .smithx-account-primary:hover {
-      background:#1d4ed8;
-    }
-
-    .smithx-account-error {
-      display:none;
-      background:#fef2f2;
-      color:#b91c1c;
-      border:1px solid #fecaca;
-      padding:11px;
-      border-radius:10px;
-      margin-bottom:15px;
-      font-size:14px;
-    }
-
-    .smithx-profile-overlay {
-      position:fixed;
-      inset:0;
-      z-index:100001;
-      background:rgba(248,250,252,.98);
-      overflow:auto;
-      padding:20px;
-    }
-
-    .smithx-profile {
-      width:min(1050px,100%);
-      margin:20px auto;
-      background:#fff;
-      border:1px solid #e2e8f0;
-      border-radius:24px;
-      overflow:hidden;
-      box-shadow:0 20px 60px rgba(15,23,42,.08);
-    }
-
-    .smithx-profile-cover {
-      height:145px;
-      background:
-        linear-gradient(
-          135deg,
-          #2563eb,
-          #1d4ed8
-        );
-    }
-
-    .smithx-profile-body {
-      padding:0 28px 30px;
-    }
-
-    .smithx-profile-header {
-      display:flex;
-      align-items:flex-end;
-      gap:18px;
-      margin-top:-50px;
-      margin-bottom:28px;
-    }
-
-    .smithx-profile-avatar {
-      width:100px;
-      height:100px;
-      border-radius:50%;
-      object-fit:cover;
-      border:5px solid #fff;
-      background:#eff6ff;
-      box-shadow:0 5px 20px rgba(0,0,0,.12);
-    }
-
-    .smithx-profile-header h2 {
-      margin:0;
-      color:#0f172a;
-    }
-
-    .smithx-profile-header p {
-      margin:5px 0 0;
-      color:#64748b;
-    }
-
-    .smithx-profile-grid {
-      display:grid;
-      grid-template-columns:
-        repeat(4,1fr);
-      gap:14px;
-      margin-bottom:22px;
-    }
-
-    .smithx-profile-stat {
-      padding:18px;
-      border:1px solid #e2e8f0;
-      border-radius:16px;
-      background:#fff;
-    }
-
-    .smithx-profile-stat span {
-      display:block;
-      color:#64748b;
-      font-size:13px;
-      margin-bottom:6px;
-    }
-
-    .smithx-profile-stat strong {
-      font-size:23px;
-      color:#0f172a;
-    }
-
-    .smithx-profile-columns {
-      display:grid;
-      grid-template-columns:
-        1.4fr .8fr;
-      gap:18px;
-    }
-
-    .smithx-profile-card {
-      border:1px solid #e2e8f0;
-      border-radius:18px;
-      padding:22px;
-    }
-
-    .smithx-profile-card h3 {
-      margin-top:0;
-      color:#0f172a;
-    }
-
-    .smithx-profile-row {
-      display:flex;
-      justify-content:space-between;
-      gap:20px;
-      padding:13px 0;
-      border-bottom:1px solid #f1f5f9;
-    }
-
-    .smithx-profile-row:last-child {
-      border-bottom:0;
-    }
-
-    .smithx-profile-row span {
-      color:#64748b;
-    }
-
-    .smithx-profile-row strong {
-      color:#0f172a;
-      text-align:right;
-    }
-
-    .smithx-profile-actions {
-      display:grid;
-      gap:10px;
-    }
-
-    .smithx-profile-action {
-      width:100%;
-      padding:13px;
-      border-radius:11px;
-      border:1px solid #dbe5f0;
-      background:#fff;
-      cursor:pointer;
-      font-weight:700;
-      text-align:left;
-    }
-
-    .smithx-profile-action:hover {
-      border-color:#2563eb;
-      color:#2563eb;
-    }
-
-    .smithx-profile-danger {
-      color:#dc2626;
-      border-color:#fecaca;
-    }
-
-    .smithx-profile-photo-upload {
-      margin-top:10px;
-      display:inline-block;
-      padding:8px 12px;
-      border:1px solid #dbe5f0;
-      border-radius:9px;
-      cursor:pointer;
-      font-size:13px;
-      color:#2563eb;
-      font-weight:700;
-    }
-
-    .smithx-profile-photo-upload input {
-      display:none;
-    }
-
-    @media(max-width:760px) {
-
-      .smithx-account-modal {
-        padding:22px;
-      }
-
-      .smithx-profile-overlay {
-        padding:10px;
-      }
-
-      .smithx-profile-body {
-        padding:0 16px 20px;
-      }
-
-      .smithx-profile-grid {
-        grid-template-columns:
-          repeat(2,1fr);
-      }
-
-      .smithx-profile-columns {
-        grid-template-columns:1fr;
-      }
-
-      .smithx-profile-header {
-        align-items:center;
-      }
-
-      .smithx-profile-avatar {
-        width:80px;
-        height:80px;
-      }
-
-    }
-
-  `;
-
-  document.head.appendChild(
-    style
-  );
-}
-
-
-/* =====================================================
-   ACCOUNT LOGIN MODAL
-===================================================== */
-
-function openAccountLogin() {
-
-  injectAccountStyles();
-
-  closeAccountModal();
-
-  const overlay =
-    document.createElement(
-      "div"
-    );
-
-  overlay.id =
-    "smithxAccountModal";
-
-  overlay.className =
-    "smithx-account-overlay";
-
-  overlay.innerHTML = `
-    <div class="smithx-account-modal">
-
-      <button
-        class="smithx-account-close"
-        type="button"
-        onclick="closeAccountModal()"
-      >
-        ×
-      </button>
-
-      <div class="smithx-account-brand">
-
-        <h2>
-          SM1TH<span>X</span>
-        </h2>
-
-        <p>
-          Your commerce account
-        </p>
-
-      </div>
-
-      <div class="smithx-account-tabs">
-
-        <button
-          id="smithxLoginTab"
-          class="smithx-account-tab active"
-          type="button"
-          onclick="showAccountLoginForm()"
-        >
-          Login
-        </button>
-
-        <button
-          id="smithxRegisterTab"
-          class="smithx-account-tab"
-          type="button"
-          onclick="showAccountRegisterForm()"
-        >
-          Create Account
-        </button>
-
-      </div>
-
-      <div
-        id="smithxAccountError"
-        class="smithx-account-error"
-      ></div>
-
-      <div id="smithxLoginForm">
-
-        <div class="smithx-account-field">
-
-          <label>
-            Email
-          </label>
-
-          <input
-            id="smithxLoginEmail"
-            type="email"
-            placeholder="you@example.com"
-            autocomplete="email"
-          >
-
-        </div>
-
-        <div class="smithx-account-field">
-
-          <label>
-            Password
-          </label>
-
-          <input
-            id="smithxLoginPassword"
-            type="password"
-            placeholder="Enter password"
-            autocomplete="current-password"
-          >
-
-        </div>
-
-        <button
-          type="button"
-          class="smithx-account-primary"
-          onclick="loginDemoAccount()"
-        >
-          Login to SM1THX
-        </button>
-
-      </div>
-
-      <div
-        id="smithxRegisterForm"
-        style="display:none;"
-      >
-
-        <div class="smithx-account-field">
-
-          <label>
-            Full Name
-          </label>
-
-          <input
-            id="smithxRegisterName"
-            type="text"
-            placeholder="John Muchina"
-            autocomplete="name"
-          >
-
-        </div>
-
-        <div class="smithx-account-field">
-
-          <label>
-            Email
-          </label>
-
-          <input
-            id="smithxRegisterEmail"
-            type="email"
-            placeholder="you@example.com"
-            autocomplete="email"
-          >
-
-        </div>
-
-        <div class="smithx-account-field">
-
-          <label>
-            Password
-          </label>
-
-          <input
-            id="smithxRegisterPassword"
-            type="password"
-            placeholder="Create a password"
-            autocomplete="new-password"
-          >
-
-        </div>
-
-        <button
-          type="button"
-          class="smithx-account-primary"
-          onclick="registerDemoAccount()"
-        >
-          Create Demo Account
-        </button>
-
-      </div>
-
-    </div>
-  `;
-
-  document.body.appendChild(
-    overlay
-  );
-
-  overlay.addEventListener(
-    "click",
-    event => {
-      if (
-        event.target ===
-        overlay
-      ) {
-        closeAccountModal();
-      }
-    }
-  );
-}
-
-
-function closeAccountModal() {
-
-  const modal =
-    getElement(
-      "smithxAccountModal"
-    );
-
-  if (modal) {
-    modal.remove();
-  }
-}
-
-
-function showAccountLoginForm() {
-
-  const login =
-    getElement(
-      "smithxLoginForm"
-    );
-
-  const register =
-    getElement(
-      "smithxRegisterForm"
-    );
-
-  const loginTab =
-    getElement(
-      "smithxLoginTab"
-    );
-
-  const registerTab =
-    getElement(
-      "smithxRegisterTab"
-    );
-
-  if (login) {
-    login.style.display =
-      "block";
-  }
-
-  if (register) {
-    register.style.display =
-      "none";
-  }
-
-  loginTab?.classList.add(
-    "active"
-  );
-
-  registerTab?.classList.remove(
-    "active"
-  );
-
-  clearAccountError();
-}
-
-
-function showAccountRegisterForm() {
-
-  const login =
-    getElement(
-      "smithxLoginForm"
-    );
-
-  const register =
-    getElement(
-      "smithxRegisterForm"
-    );
-
-  const loginTab =
-    getElement(
-      "smithxLoginTab"
-    );
-
-  const registerTab =
-    getElement(
-      "smithxRegisterTab"
-    );
-
-  if (login) {
-    login.style.display =
-      "none";
-  }
-
-  if (register) {
-    register.style.display =
-      "block";
-  }
-
-  loginTab?.classList.remove(
-    "active"
-  );
-
-  registerTab?.classList.add(
-    "active"
-  );
-
-  clearAccountError();
-}
-
-
-function showAccountError(message) {
-
-  const box =
-    getElement(
-      "smithxAccountError"
-    );
-
-  if (!box) {
-    return;
-  }
-
-  box.textContent =
-    message;
-
-  box.style.display =
-    "block";
-}
-
-
-function clearAccountError() {
-
-  const box =
-    getElement(
-      "smithxAccountError"
-    );
-
-  if (!box) {
-    return;
-  }
-
-  box.textContent =
-    "";
-
-  box.style.display =
-    "none";
-}
-
-
-/* =====================================================
-   CREATE ACCOUNT
-===================================================== */
-
-function registerDemoAccount() {
-
-  clearAccountError();
-
-  const name =
-    getElement(
-      "smithxRegisterName"
-    )?.value.trim();
-
-  const email =
-    getElement(
-      "smithxRegisterEmail"
-    )?.value.trim()
-      .toLowerCase();
-
-  const password =
-    getElement(
-      "smithxRegisterPassword"
-    )?.value;
-
-  if (!name) {
-    showAccountError(
-      "Please enter your name."
-    );
-
-    return;
-  }
-
-  if (!email || !email.includes("@")) {
-    showAccountError(
-      "Please enter a valid email."
-    );
-
-    return;
-  }
-
-  if (
-    !password ||
-    password.length < 4
-  ) {
-    showAccountError(
-      "Password must contain at least 4 characters."
-    );
-
-    return;
-  }
-
-  const existing =
-    getDemoUser();
-
-  if (existing) {
-    showAccountError(
-      "A demo account already exists on this device. Login instead."
-    );
-
-    return;
-  }
-
-  const user = {
-
-    name,
-
-    email,
-
-    password,
-
-    username:
-      name
-        .toLowerCase()
-        .replace(
-          /[^a-z0-9]+/g,
-          "."
-        )
-        .replace(
-          /^\.+|\.+$/g,
-          ""
-        ),
-
-    bio:
-      "SM1THX customer and seller.",
-
-    location:
-      "Kenya",
-
-    photo:
-      "",
-
-    createdAt:
-      new Date().toISOString()
-  };
-
-  saveDemoUser(user);
-
-  setDemoSession(true);
-
-  closeAccountModal();
-
-  showToast(
-    `Welcome to SM1THX, ${name}!`
-  );
-
-  updateAccountButton();
-}
-
-
-/* =====================================================
-   LOGIN
-===================================================== */
-
-function loginDemoAccount() {
-
-  clearAccountError();
-
-  const email =
-    getElement(
-      "smithxLoginEmail"
-    )?.value.trim()
-      .toLowerCase();
-
-  const password =
-    getElement(
-      "smithxLoginPassword"
-    )?.value;
-
-  const user =
-    getDemoUser();
-
-  if (!user) {
-    showAccountError(
-      "No demo account exists yet. Create one first."
-    );
-
-    return;
-  }
-
-  if (
-    email !==
-    String(
-      user.email
-    ).toLowerCase()
-  ) {
-    showAccountError(
-      "Incorrect email."
-    );
-
-    return;
-  }
-
-  if (
-    password !==
-    user.password
-  ) {
-    showAccountError(
-      "Incorrect password."
-    );
-
-    return;
-  }
-
-  setDemoSession(true);
-
-  closeAccountModal();
-
-  showToast(
-    `Welcome back, ${user.name}!`
-  );
-
-  updateAccountButton();
-}
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-function logoutDemoAccount() {
-
-  setDemoSession(false);
-
-  closeProfileDashboard();
-
-  showToast(
-    "You have been logged out."
-  );
-
-  updateAccountButton();
-}
-
-
-/* =====================================================
-   PROFILE DASHBOARD
-===================================================== */
-
-function openProfileDashboard() {
-
-  const user =
-    getCurrentUser();
-
-  if (!user) {
-    openAccountLogin();
-    return;
-  }
-
-  injectAccountStyles();
-
-  closeProfileDashboard();
-
-  const orders =
-    getOrders();
-
-  const products =
-    getCustomProducts();
-
-  const analytics =
-    getAnalytics();
-
-  const photo =
-    user.photo ||
-    "https://ui-avatars.com/api/?name=" +
-      encodeURIComponent(
-        user.name
-      ) +
-      "&background=eff6ff&color=2563eb&size=200";
-
-  const overlay =
-    document.createElement(
-      "div"
-    );
-
-  overlay.id =
-    "smithxProfileDashboard";
-
-  overlay.className =
-    "smithx-profile-overlay";
-
-  overlay.innerHTML = `
-
-    <div class="smithx-profile">
-
-      <div class="smithx-profile-cover"></div>
-
-      <div class="smithx-profile-body">
-
-        <div class="smithx-profile-header">
-
-          <img
-            id="smithxProfileAvatar"
-            class="smithx-profile-avatar"
-            src="${escapeHTML(photo)}"
-            alt="${escapeHTML(user.name)}"
-          >
-
-          <div>
-
-            <h2>
-              ${escapeHTML(user.name)}
-            </h2>
-
-            <p>
-              @${escapeHTML(
-                user.username ||
-                "smithx-user"
-              )}
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="smithx-profile-grid">
-
-          <div class="smithx-profile-stat">
-
-            <span>
-              Orders
-            </span>
-
-            <strong>
-              ${orders.length}
-            </strong>
-
-          </div>
-
-          <div class="smithx-profile-stat">
-
-            <span>
-              Products
-            </span>
-
-            <strong>
-              ${products.length}
-            </strong>
-
-          </div>
-
-          <div class="smithx-profile-stat">
-
-            <span>
-              Total Spent
-            </span>
-
-            <strong>
-              ${formatKES(
-                orders.reduce(
-                  (total, order) =>
-                    total +
-                    Number(
-                      order.total
-                    || 0
-                    ),
-                  0
-                )
-              )}
-            </strong>
-
-          </div>
-
-          <div class="smithx-profile-stat">
-
-            <span>
-              Demo Revenue
-            </span>
-
-            <strong>
-              ${formatKES(
-                analytics.revenue
-              )}
-            </strong>
-
-          </div>
-
-        </div>
-
-
-        <div class="smithx-profile-columns">
-
-
-          <div class="smithx-profile-card">
-
-            <h3>
-              Profile
-            </h3>
-
-            <div class="smithx-profile-row">
-
-              <span>
-                Name
-              </span>
-
-              <strong>
-                ${escapeHTML(
-                  user.name
-                )}
-              </strong>
-
-            </div>
-
-            <div class="smithx-profile-row">
-
-              <span>
-                Email
-              </span>
-
-              <strong>
-                ${escapeHTML(
-                  user.email
-                )}
-              </strong>
-
-            </div>
-
-            <div class="smithx-profile-row">
-
-              <span>
-                Username
-              </span>
-
-              <strong>
-                @${escapeHTML(
-                  user.username ||
-                  "smithx-user"
-                )}
-              </strong>
-
-            </div>
-
-            <div class="smithx-profile-row">
-
-              <span>
-                Location
-              </span>
-
-              <strong>
-                ${escapeHTML(
-                  user.location ||
-                  "Not set"
-                )}
-              </strong>
-
-            </div>
-
-            <div class="smithx-profile-row">
-
-              <span>
-                Bio
-              </span>
-
-              <strong>
-                ${escapeHTML(
-                  user.bio ||
-                  "No bio yet."
-                )}
-              </strong>
-
-            </div>
-
-            <label
-              class="smithx-profile-photo-upload"
-            >
-              Change profile photo
-
-              <input
-                id="smithxProfilePhotoInput"
-                type="file"
-                accept="image/*"
-              >
-
-            </label>
-
-          </div>
-
-
-          <div class="smithx-profile-card">
-
-            <h3>
-              Account
-            </h3>
-
-            <div class="smithx-profile-actions">
-
-              <button
-                type="button"
-                class="smithx-profile-action"
-                onclick="editDemoProfile()"
-              >
-                ✏️ Edit Profile
-              </button>
-
-              <button
-                type="button"
-                class="smithx-profile-action"
-                onclick="openCustomerOrders()"
-              >
-                📦 My Orders
-              </button>
-
-              <button
-                type="button"
-                class="smithx-profile-action"
-                onclick="scrollToSection('seller')"
-              >
-                🛍️ Seller Studio
-              </button>
-
-              <button
-                type="button"
-                class="smithx-profile-action"
-                onclick="openProfileSettings()"
-              >
-                ⚙️ Account Settings
-              </button>
-
-              <button
-                type="button"
-                class="smithx-profile-action smithx-profile-danger"
-                onclick="logoutDemoAccount()"
-              >
-                🚪 Logout
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <div style="
-          display:flex;
-          gap:10px;
-          justify-content:flex-end;
-          margin-top:20px;
-        ">
-
-          <button
-            type="button"
-            class="secondary-button"
-            onclick="closeProfileDashboard()"
-          >
-            Close
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
-  `;
-
-  document.body.appendChild(
-    overlay
-  );
-
-  const photoInput =
-    getElement(
-      "smithxProfilePhotoInput"
-    );
-
-  if (photoInput) {
-
-    photoInput.addEventListener(
-      "change",
-      handleProfilePhoto
-    );
-  }
-}
-
-
-function closeProfileDashboard() {
-
-  const dashboard =
-    getElement(
-      "smithxProfileDashboard"
-    );
-
-  if (dashboard) {
-    dashboard.remove();
-  }
-}
-
-
-/* =====================================================
-   EDIT PROFILE
-===================================================== */
-
-function editDemoProfile() {
-
-  const user =
-    getCurrentUser();
-
-  if (!user) {
-    return;
-  }
-
-  const name =
-    prompt(
-      "Full name:",
-      user.name || ""
-    );
-
-  if (
-    name === null ||
-    !name.trim()
-  ) {
-    return;
-  }
-
-  const username =
-    prompt(
-      "Username:",
-      user.username || ""
-    );
-
-  const bio =
-    prompt(
-      "Bio:",
-      user.bio || ""
-    );
-
-  const location =
-    prompt(
-      "Location:",
-      user.location || ""
-    );
-
-  user.name =
-    name.trim();
-
-  user.username =
-    (
-      username ||
-      user.username ||
-      "smithx-user"
-    )
-      .trim()
-      .replace(
-        /^@/,
-        ""
-      );
-
-  user.bio =
-    (
-      bio ||
-      ""
-    ).trim();
-
-  user.location =
-    (
-      location ||
-      ""
-    ).trim();
-
-  saveDemoUser(user);
-
-  closeProfileDashboard();
-
-  openProfileDashboard();
-
-  updateAccountButton();
-
-  showToast(
-    "Profile updated."
-  );
-}
-
-
-/* =====================================================
-   PROFILE PHOTO
-===================================================== */
-
-function handleProfilePhoto(event) {
-
-  const file =
-    event.target.files?.[0];
-
-  if (!file) {
-    return;
-  }
-
-  if (
-    !file.type.startsWith(
-      "image/"
-    )
-  ) {
-    showToast(
-      "Please choose an image."
-    );
-
-    return;
-  }
-
-  const reader =
-    new FileReader();
-
-  reader.onload =
-    () => {
-
-      const user =
-        getDemoUser();
-
-      if (!user) {
-        return;
-      }
-
-      user.photo =
-        reader.result;
-
-      saveDemoUser(user);
-
-      const avatar =
-        getElement(
-          "smithxProfileAvatar"
-        );
-
-      if (avatar) {
-        avatar.src =
-          user.photo;
-      }
-
-      updateAccountButton();
-
-      showToast(
-        "Profile photo updated."
-      );
-    };
-
-  reader.readAsDataURL(
-    file
-  );
-}
-
-
-/* =====================================================
-   ACCOUNT SETTINGS
-===================================================== */
-
-function openProfileSettings() {
-
-  const user =
-    getCurrentUser();
-
-  if (!user) {
-    return;
-  }
-
-  const action =
-    prompt(
-      "Account settings:\n\n" +
-      "1 = Change password\n" +
-      "2 = Delete demo account\n\n" +
-      "Enter 1 or 2:"
-    );
-
-  if (action === "1") {
-
-    const current =
-      prompt(
-        "Current password:"
-      );
-
-    if (
-      current !==
-      user.password
-    ) {
-      showToast(
-        "Incorrect current password."
-      );
-
-      return;
-    }
-
-    const next =
-      prompt(
-        "New password:"
-      );
-
-    if (
-      !next ||
-      next.length < 4
-    ) {
-      showToast(
-        "Password must contain at least 4 characters."
-      );
-
-      return;
-    }
-
-    user.password =
-      next;
-
-    saveDemoUser(user);
-
-    showToast(
-      "Password changed."
-    );
-
-    return;
-  }
-
-  if (action === "2") {
-
-    const confirmed =
-      confirm(
-        "Delete your SM1THX demo account from this device?"
-      );
-
-    if (!confirmed) {
-      return;
-    }
-
-    localStorage.removeItem(
-      STORAGE.user
-    );
-
-    localStorage.removeItem(
-      STORAGE.session
-    );
-
-    closeProfileDashboard();
-
-    updateAccountButton();
-
-    showToast(
-      "Demo account deleted."
-    );
-  }
-}
-
-
-/* =====================================================
-   ACCOUNT BUTTON
-===================================================== */
-
-function createAccountButton() {
-
-  if (
-    getElement(
-      "smithxAccountButton"
-    )
-  ) {
-    return;
-  }
-
-  const button =
-    document.createElement(
-      "button"
-    );
-
-  button.id =
-    "smithxAccountButton";
-
-  button.type =
-    "button";
-
-  button.className =
-    "smithx-account-button";
-
-  button.onclick =
-    handleAccountButton;
-
-  /*
-    Try to place it in an existing
-    navigation/header first.
-  */
-
-  const nav =
-    document.querySelector(
-      "header nav, .nav-actions, .navbar-actions, .header-actions, nav"
-    );
-
-  if (nav) {
-    nav.appendChild(
-      button
-    );
-  } else {
-
-    button.style.position =
-      "fixed";
-
-    button.style.top =
-      "15px";
-
-    button.style.right =
-      "15px";
-
-    button.style.zIndex =
-      "9999";
-
-    document.body.appendChild(
-      button
-    );
-  }
-
-  updateAccountButton();
-}
-
-
-function updateAccountButton() {
-
-  const button =
-    getElement(
-      "smithxAccountButton"
-    );
-
-  if (!button) {
-    return;
-  }
-
-  const user =
-    getCurrentUser();
-
-  if (user) {
-
-    const photo =
-      user.photo ||
-      "https://ui-avatars.com/api/?name=" +
-        encodeURIComponent(
-          user.name
-        ) +
-        "&background=eff6ff&color=2563eb&size=100";
-
-    button.innerHTML = `
-      <img
-        class="smithx-account-avatar"
-        src="${escapeHTML(photo)}"
-        alt=""
-      >
-
-      <span>
-        ${escapeHTML(
-          user.name.split(" ")[0]
-        )}
-      </span>
-    `;
-
-  } else {
-
-    button.innerHTML = `
-      👤
-      <span>
-        Login
-      </span>
-    `;
-  }
-}
-
-
-function handleAccountButton() {
-
-  if (
-    isLoggedIn()
-  ) {
-    openProfileDashboard();
-  } else {
-    openAccountLogin();
-  }
-}
-
-
-/* =====================================================
-   ACCOUNT KEYBOARD CONTROLS
-===================================================== */
-
-function setupAccountKeyboard() {
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key !==
-        "Escape"
-      ) {
-        return;
-      }
-
-      closeAccountModal();
-      closeProfileDashboard();
-    }
-  );
-}
-
-
-/* =====================================================
    LOGIN COMPATIBILITY
 ===================================================== */
 
 function removeLoginUI() {
-
   const overlay =
     getElement(
       "loginOverlay"
@@ -6295,26 +4878,65 @@ function removeLoginUI() {
 
 
 function disableOldLoginHandlers() {
-
   window.openLogin =
     function () {
-      openAccountLogin();
+      removeLoginUI();
     };
 
   window.closeLogin =
     function () {
-      closeAccountModal();
+      removeLoginUI();
     };
 }
 
 
+/* =====================================================
+   OLD LOGIN COMPATIBILITY
+===================================================== */
+
 function showRegisterForm() {
-  showAccountRegisterForm();
+  const login =
+    getElement(
+      "loginFormSection"
+    );
+
+  const register =
+    getElement(
+      "registerFormSection"
+    );
+
+  if (login) {
+    login.style.display =
+      "none";
+  }
+
+  if (register) {
+    register.style.display =
+      "block";
+  }
 }
 
 
 function showLoginForm() {
-  showAccountLoginForm();
+  const login =
+    getElement(
+      "loginFormSection"
+    );
+
+  const register =
+    getElement(
+      "registerFormSection"
+    );
+
+  if (login) {
+    login.style.display =
+      "block";
+  }
+
+  if (register) {
+    register.style.display =
+      "none";
+  }
 }
 
 
@@ -6335,7 +4957,6 @@ function togglePassword(
     input.type ===
     "password"
   ) {
-
     input.type =
       "text";
 
@@ -6343,9 +4964,7 @@ function togglePassword(
       button.textContent =
         "🙈";
     }
-
   } else {
-
     input.type =
       "password";
 
@@ -6369,7 +4988,6 @@ function setupCartControls() {
 
 
 function setupKeyboardControls() {
-
   document.addEventListener(
     "keydown",
     event => {
@@ -6380,7 +4998,9 @@ function setupKeyboardControls() {
       ) {
 
         closeProductModal();
+
         closeCart();
+
         closeOrderConfirmation();
       }
     }
@@ -6389,7 +5009,6 @@ function setupKeyboardControls() {
 
 
 function setupProductBackdrop() {
-
   const modal =
     getElement(
       "productModal"
@@ -6414,15 +5033,17 @@ function setupProductBackdrop() {
 }
 
 
-function setupTrackerControls() {
+/* =====================================================
+   TRACKER BACKDROP / INPUT
+===================================================== */
 
+function setupTrackerControls() {
   document.addEventListener(
     "keydown",
     event => {
 
       if (
-        event.key ===
-          "Enter" &&
+        event.key === "Enter" &&
         document.activeElement?.id ===
           "orderTrackingInput"
       ) {
@@ -6434,11 +5055,19 @@ function setupTrackerControls() {
 
 
 /* =====================================================
-   URL
+   AUTO TRACKING FROM URL
 ===================================================== */
 
-function getOrderIdFromCurrentURL() {
+/*
+  Allows:
 
+  my-orders.html?order=SMX-XXXX
+
+  to remain compatible with the customer
+  tracking page and future integrations.
+*/
+
+function getOrderIdFromCurrentURL() {
   try {
 
     const params =
@@ -6452,7 +5081,6 @@ function getOrderIdFromCurrentURL() {
     ).trim();
 
   } catch {
-
     return "";
   }
 }
@@ -6463,14 +5091,11 @@ function getOrderIdFromCurrentURL() {
 ===================================================== */
 
 function initializeSmithX() {
-
   try {
 
     removeLoginUI();
 
     disableOldLoginHandlers();
-
-    injectAccountStyles();
 
     setupCategories();
 
@@ -6496,8 +5121,6 @@ function initializeSmithX() {
 
     setupTrackerControls();
 
-    setupAccountKeyboard();
-
     trackDailyVisitor();
 
     updateDashboard();
@@ -6506,9 +5129,17 @@ function initializeSmithX() {
 
     createTrackerSection();
 
+    /*
+      Resume any unfinished demo orders.
+      This is what makes tracking refresh-safe.
+    */
+
     resumeDemoTracking();
 
-    createAccountButton();
+    /*
+      If the current page has an order
+      parameter, load that order.
+    */
 
     const urlOrderId =
       getOrderIdFromCurrentURL();
@@ -6616,47 +5247,6 @@ window.generateProductListing =
 
 window.applyAIProductListing =
   applyAIProductListing;
-
-
-/* =====================================================
-   ACCOUNT GLOBAL FUNCTIONS
-===================================================== */
-
-window.openAccountLogin =
-  openAccountLogin;
-
-window.closeAccountModal =
-  closeAccountModal;
-
-window.showAccountLoginForm =
-  showAccountLoginForm;
-
-window.showAccountRegisterForm =
-  showAccountRegisterForm;
-
-window.loginDemoAccount =
-  loginDemoAccount;
-
-window.registerDemoAccount =
-  registerDemoAccount;
-
-window.logoutDemoAccount =
-  logoutDemoAccount;
-
-window.openProfileDashboard =
-  openProfileDashboard;
-
-window.closeProfileDashboard =
-  closeProfileDashboard;
-
-window.editDemoProfile =
-  editDemoProfile;
-
-window.openProfileSettings =
-  openProfileSettings;
-
-window.handleAccountButton =
-  handleAccountButton;
 
 
 /* =====================================================
