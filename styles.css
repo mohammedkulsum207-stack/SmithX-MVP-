@@ -2920,3 +2920,1414 @@ textarea:focus-visible {
     box-shadow: none;
   }
 }
+/* =========================================================
+   SM1THX 🛒 — MY ORDERS
+   CUSTOMER ORDER HISTORY + DELIVERY TRACKING
+========================================================= */
+
+.orders-page {
+  min-height: 100vh;
+  background: var(--background);
+}
+
+
+/* =========================================================
+   MY ORDERS HERO
+========================================================= */
+
+.orders-hero {
+  position: relative;
+  overflow: hidden;
+
+  padding: 70px 0 60px;
+
+  background:
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(20, 99, 255, .14),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f5f8ff 100%
+    );
+
+  border-bottom: 1px solid var(--border);
+}
+
+.orders-hero::after {
+  content: "";
+
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  right: -120px;
+  bottom: -180px;
+
+  border: 1px solid rgba(20, 99, 255, .12);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+.orders-hero-inner {
+  position: relative;
+  z-index: 2;
+
+  width: min(var(--container), calc(100% - 40px));
+
+  margin: 0 auto;
+}
+
+.orders-hero h1 {
+  margin-top: 9px;
+
+  font-size: clamp(38px, 6vw, 62px);
+
+  line-height: 1;
+
+  letter-spacing: -3px;
+}
+
+.orders-hero h1 span {
+  color: var(--blue);
+}
+
+.orders-hero-description {
+  max-width: 650px;
+
+  margin-top: 17px;
+
+  color: var(--muted);
+
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   MY ORDERS MAIN SECTION
+========================================================= */
+
+.my-orders-section {
+  padding: 60px 0 90px;
+
+  background: var(--background);
+}
+
+.my-orders-container {
+  width: min(var(--container), calc(100% - 40px));
+
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.orders-search-card {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 25px;
+
+  padding: 18px;
+
+  background: white;
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-md);
+
+  box-shadow: var(--shadow-sm);
+}
+
+.orders-search {
+  flex: 1;
+
+  position: relative;
+}
+
+.orders-search input {
+  width: 100%;
+
+  min-height: 48px;
+
+  padding: 12px 15px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 11px;
+
+  background: white;
+
+  color: var(--text);
+
+  outline: none;
+
+  font-size: 14px;
+}
+
+.orders-search input:focus {
+  border-color: var(--blue);
+
+  box-shadow:
+    0 0 0 3px rgba(20, 99, 255, .10);
+}
+
+.orders-search-label {
+  margin-bottom: 7px;
+
+  color: var(--muted);
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   ORDER COUNT
+========================================================= */
+
+.order-count-badge {
+  min-width: 42px;
+  height: 42px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 13px;
+
+  border-radius: 999px;
+
+  background: var(--blue-light);
+
+  color: var(--blue);
+
+  font-size: 13px;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ORDERS LAYOUT
+========================================================= */
+
+.orders-layout {
+  display: grid;
+
+  grid-template-columns: minmax(280px, .75fr) minmax(0, 1.45fr);
+
+  gap: 22px;
+
+  align-items: start;
+}
+
+
+/* =========================================================
+   ORDER LIST PANEL
+========================================================= */
+
+.orders-list-panel,
+.order-details-panel {
+  background: white;
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-sm);
+}
+
+.orders-list-panel {
+  overflow: hidden;
+}
+
+.orders-list-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 21px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.orders-list-header h2 {
+  font-size: 18px;
+}
+
+
+/* =========================================================
+   CUSTOMER ORDER LIST
+========================================================= */
+
+.customer-order-list {
+  display: grid;
+}
+
+.order-list-item {
+  position: relative;
+
+  display: block;
+
+  width: 100%;
+
+  padding: 19px;
+
+  border: 0;
+
+  border-bottom: 1px solid var(--border);
+
+  background: white;
+
+  color: var(--text);
+
+  text-align: left;
+
+  transition: .2s ease;
+}
+
+.order-list-item:last-child {
+  border-bottom: 0;
+}
+
+.order-list-item:hover {
+  background: var(--blue-soft);
+}
+
+.order-list-item.selected {
+  background: var(--blue-light);
+}
+
+.order-list-item.selected::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 4px;
+
+  background: var(--blue);
+}
+
+.order-list-item-top {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.order-list-item-id {
+  font-size: 14px;
+  font-weight: 800;
+
+  word-break: break-word;
+}
+
+.order-list-item-date {
+  margin-top: 4px;
+
+  color: var(--muted);
+
+  font-size: 12px;
+}
+
+.order-list-item-bottom {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-top: 15px;
+}
+
+.order-list-item-total {
+  color: var(--blue);
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.order-status.pending {
+  background: var(--blue-light);
+  color: var(--blue);
+}
+
+.order-status.confirmed {
+  background: var(--success-light);
+  color: #087443;
+}
+
+.order-status.shipped {
+  background: var(--warning-light);
+  color: #b54708;
+}
+
+.order-status.delivered {
+  background: var(--success-light);
+  color: #027a48;
+}
+
+
+/* =========================================================
+   ORDER DETAILS
+========================================================= */
+
+.order-details-panel {
+  min-width: 0;
+
+  overflow: hidden;
+}
+
+.order-detail-card {
+  padding: 27px;
+}
+
+.order-detail-header {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding-bottom: 22px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.order-detail-header h2 {
+  margin-top: 6px;
+
+  font-size: 25px;
+
+  line-height: 1.2;
+
+  word-break: break-word;
+}
+
+.order-detail-header p {
+  margin-top: 5px;
+
+  color: var(--muted);
+
+  font-size: 13px;
+}
+
+.order-detail-header-actions {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+
+/* =========================================================
+   ORDER SUMMARY
+========================================================= */
+
+.order-summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 12px;
+
+  margin: 22px 0;
+}
+
+.order-summary-box {
+  padding: 16px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 14px;
+
+  background: var(--blue-soft);
+}
+
+.order-summary-box span {
+  display: block;
+
+  color: var(--muted);
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+}
+
+.order-summary-box strong {
+  display: block;
+
+  margin-top: 6px;
+
+  color: var(--text);
+
+  font-size: 15px;
+
+  word-break: break-word;
+}
+
+
+/* =========================================================
+   TRACKING OVERVIEW
+========================================================= */
+
+.customer-tracking-card {
+  margin-top: 24px;
+
+  padding: 22px;
+
+  border: 1px solid var(--blue-border);
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f4f8ff
+    );
+}
+
+.customer-tracking-card-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 20px;
+}
+
+.customer-tracking-card-header h3 {
+  margin-top: 5px;
+
+  font-size: 20px;
+}
+
+.customer-tracking-card-header p {
+  color: var(--muted);
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   TRACKING PROGRESS BAR
+========================================================= */
+
+.orders-progress {
+  position: relative;
+
+  height: 7px;
+
+  margin: 25px 5px 40px;
+
+  border-radius: 999px;
+
+  background: #dbe8ff;
+}
+
+.orders-progress-bar {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #1463ff,
+      #4f8cff
+    );
+
+  transition: width .35s ease;
+}
+
+.orders-progress-steps {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  top: 50%;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  transform: translateY(-50%);
+}
+
+.orders-progress-step {
+  width: 20px;
+  height: 20px;
+
+  border: 3px solid white;
+
+  border-radius: 50%;
+
+  background: #c8d9f6;
+
+  box-shadow:
+    0 0 0 1px #b8c9e8;
+}
+
+.orders-progress-step.completed,
+.orders-progress-step.active {
+  background: var(--blue);
+
+  box-shadow:
+    0 0 0 1px var(--blue),
+    0 5px 13px rgba(20, 99, 255, .25);
+}
+
+
+/* =========================================================
+   TRACKING STEP LABELS
+========================================================= */
+
+.orders-progress-labels {
+  display: grid;
+
+  grid-template-columns:
+    repeat(6, 1fr);
+
+  gap: 4px;
+
+  margin-top: -27px;
+}
+
+.orders-progress-label {
+  color: var(--muted);
+
+  font-size: 9px;
+  font-weight: 750;
+
+  line-height: 1.25;
+
+  text-align: center;
+}
+
+.orders-progress-label.active {
+  color: var(--blue);
+}
+
+
+/* =========================================================
+   CURRENT DELIVERY STATUS
+========================================================= */
+
+.order-current-status {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-top: 25px;
+
+  padding: 20px;
+
+  overflow: hidden;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0d4ed8,
+      #1463ff
+    );
+
+  color: white;
+
+  box-shadow:
+    0 15px 35px rgba(20, 99, 255, .20);
+}
+
+.order-current-status::after {
+  content: "";
+
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  right: -70px;
+  top: -95px;
+
+  border: 1px solid rgba(255, 255, 255, .16);
+
+  border-radius: 50%;
+}
+
+.order-current-status > * {
+  position: relative;
+
+  z-index: 2;
+}
+
+.order-current-status-label {
+  color: rgba(255, 255, 255, .72);
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+}
+
+.order-current-status strong {
+  display: block;
+
+  margin-top: 5px;
+
+  font-size: 23px;
+}
+
+.order-current-status p {
+  margin-top: 4px;
+
+  color: rgba(255, 255, 255, .76);
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   CUSTOMER TIMELINE
+========================================================= */
+
+.orders-timeline {
+  position: relative;
+
+  display: grid;
+
+  gap: 0;
+
+  margin-top: 25px;
+
+  padding: 5px 0;
+}
+
+.orders-timeline::before {
+  content: "";
+
+  position: absolute;
+
+  left: 17px;
+
+  top: 20px;
+  bottom: 20px;
+
+  width: 2px;
+
+  background:
+    linear-gradient(
+      180deg,
+      var(--blue),
+      #cfe0ff
+    );
+}
+
+.orders-timeline-step {
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns: 36px 1fr;
+
+  gap: 15px;
+
+  min-height: 78px;
+}
+
+.orders-step-marker {
+  position: relative;
+
+  z-index: 2;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 3px solid white;
+
+  border-radius: 50%;
+
+  background: #dbe8ff;
+
+  color: #7895cb;
+
+  font-size: 12px;
+
+  box-shadow:
+    0 0 0 1px #c7d8f7;
+}
+
+.orders-timeline-step.completed .orders-step-marker,
+.orders-timeline-step.active .orders-step-marker {
+  background: var(--blue);
+
+  color: white;
+
+  box-shadow:
+    0 0 0 1px var(--blue),
+    0 6px 16px rgba(20, 99, 255, .24);
+}
+
+.orders-timeline-content {
+  padding-bottom: 22px;
+}
+
+.orders-timeline-content strong {
+  display: block;
+
+  padding-top: 4px;
+
+  font-size: 14px;
+}
+
+.orders-timeline-content p {
+  margin-top: 3px;
+
+  color: var(--muted);
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   DELIVERY INFORMATION
+========================================================= */
+
+.order-delivery-info {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 16px;
+
+  margin-top: 25px;
+}
+
+.order-delivery-card {
+  padding: 20px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+  background: white;
+
+  box-shadow: var(--shadow-sm);
+}
+
+.order-delivery-card h3 {
+  margin-bottom: 14px;
+
+  font-size: 15px;
+}
+
+.order-delivery-row {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 9px 0;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.order-delivery-row:last-child {
+  border-bottom: 0;
+
+  padding-bottom: 0;
+}
+
+.order-delivery-row span {
+  color: var(--muted);
+
+  font-size: 12px;
+}
+
+.order-delivery-row strong {
+  font-size: 13px;
+
+  text-align: right;
+
+  word-break: break-word;
+}
+
+
+/* =========================================================
+   TRACKED ITEMS
+========================================================= */
+
+.tracked-items {
+  margin-top: 25px;
+
+  padding: 20px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+  background: white;
+
+  box-shadow: var(--shadow-sm);
+}
+
+.tracked-items-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 13px;
+}
+
+.tracked-items-header h3 {
+  font-size: 16px;
+}
+
+.tracked-items-header span {
+  color: var(--muted);
+
+  font-size: 12px;
+}
+
+.tracked-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 13px 0;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.tracked-item:last-child {
+  border-bottom: 0;
+}
+
+.tracked-item-image {
+  width: 58px;
+  height: 58px;
+
+  flex: 0 0 58px;
+
+  overflow: hidden;
+
+  border-radius: 11px;
+
+  background: var(--blue-soft);
+}
+
+.tracked-item-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.tracked-item-info {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.tracked-item-info strong {
+  display: block;
+
+  font-size: 13px;
+
+  line-height: 1.35;
+}
+
+.tracked-item-info span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: var(--muted);
+
+  font-size: 12px;
+}
+
+.tracked-item-price {
+  color: var(--blue);
+
+  font-size: 13px;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   ORDER DETAIL ACTIONS
+========================================================= */
+
+.order-detail-actions {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  margin-top: 25px;
+
+  padding-top: 22px;
+
+  border-top: 1px solid var(--border);
+}
+
+
+/* =========================================================
+   CUSTOMER ORDER CTA
+========================================================= */
+
+.customer-orders-cta {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 25px;
+
+  margin-top: 28px;
+
+  padding: 24px;
+
+  border: 1px solid var(--blue-border);
+
+  border-radius: var(--radius-md);
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff,
+      #f3f7ff
+    );
+
+  box-shadow: var(--shadow-sm);
+}
+
+.customer-orders-cta h3 {
+  margin-top: 5px;
+
+  font-size: 21px;
+}
+
+.customer-orders-cta p:last-child {
+  max-width: 600px;
+
+  margin-top: 5px;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.orders-empty {
+  padding: 55px 25px;
+
+  text-align: center;
+}
+
+.orders-empty-icon {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 15px;
+
+  border-radius: 16px;
+
+  background: var(--blue-light);
+
+  color: var(--blue);
+
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.orders-empty strong {
+  display: block;
+
+  font-size: 18px;
+}
+
+.orders-empty p {
+  max-width: 430px;
+
+  margin: 7px auto 0;
+
+  color: var(--muted);
+
+  font-size: 13px;
+}
+
+.orders-empty .primary-button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 18px;
+}
+
+.orders-empty-small {
+  padding: 30px 20px;
+
+  color: var(--muted);
+
+  text-align: center;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   COPY / INVOICE FEEDBACK
+========================================================= */
+
+.order-copy-success {
+  color: var(--success) !important;
+}
+
+
+/* =========================================================
+   MY ORDERS RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .orders-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .orders-list-panel {
+    max-height: none;
+  }
+
+  .order-summary-grid {
+    grid-template-columns:
+      repeat(3, 1fr);
+  }
+
+}
+
+
+/* =========================================================
+   MY ORDERS RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .orders-hero {
+    padding: 55px 0 50px;
+  }
+
+  .orders-hero-inner,
+  .my-orders-container {
+    width: min(
+      var(--container),
+      calc(100% - 28px)
+    );
+  }
+
+  .orders-hero h1 {
+    font-size: clamp(38px, 13vw, 55px);
+
+    letter-spacing: -2.5px;
+  }
+
+  .orders-hero-description {
+    font-size: 14px;
+  }
+
+  .my-orders-section {
+    padding: 45px 0 65px;
+  }
+
+  .orders-search-card {
+    align-items: stretch;
+
+    flex-direction: column;
+
+    padding: 15px;
+  }
+
+  .order-count-badge {
+    align-self: flex-start;
+  }
+
+  .orders-layout {
+    gap: 16px;
+  }
+
+  .orders-list-panel,
+  .order-details-panel {
+    border-radius: 18px;
+  }
+
+  .order-detail-card {
+    padding: 20px;
+  }
+
+  .order-detail-header {
+    flex-direction: column;
+  }
+
+  .order-detail-header-actions {
+    width: 100%;
+  }
+
+  .order-detail-header-actions .secondary-button,
+  .order-detail-header-actions .primary-button {
+    flex: 1;
+  }
+
+  .order-summary-grid {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 9px;
+  }
+
+  .order-summary-box {
+    padding: 13px;
+  }
+
+  .customer-tracking-card {
+    padding: 17px;
+  }
+
+  .customer-tracking-card-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .orders-progress {
+    margin-top: 25px;
+  }
+
+  .orders-progress-labels {
+    display: none;
+  }
+
+  .order-current-status {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    padding: 18px;
+  }
+
+  .order-delivery-info {
+    grid-template-columns: 1fr;
+  }
+
+  .customer-orders-cta {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    padding: 20px;
+  }
+
+  .customer-orders-cta .primary-button {
+    width: 100%;
+
+    text-align: center;
+  }
+
+}
+
+
+/* =========================================================
+   MY ORDERS RESPONSIVE — SMALL PHONES
+========================================================= */
+
+@media (max-width: 430px) {
+
+  .orders-hero {
+    padding: 45px 0;
+  }
+
+  .orders-hero h1 {
+    font-size: 42px;
+  }
+
+  .order-list-item {
+    padding: 16px;
+  }
+
+  .order-list-item-top {
+    flex-direction: column;
+  }
+
+  .order-list-item-bottom {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 8px;
+  }
+
+  .order-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .orders-progress {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .orders-progress-step {
+    width: 16px;
+    height: 16px;
+  }
+
+  .orders-timeline-step {
+    grid-template-columns: 32px 1fr;
+
+    gap: 12px;
+  }
+
+  .orders-step-marker {
+    width: 32px;
+    height: 32px;
+  }
+
+  .orders-timeline::before {
+    left: 15px;
+  }
+
+  .tracked-item {
+    align-items: flex-start;
+
+    flex-wrap: wrap;
+  }
+
+  .tracked-item-price {
+    width: 100%;
+
+    padding-left: 71px;
+  }
+
+  .order-detail-actions {
+    flex-direction: column;
+  }
+
+  .order-detail-actions button,
+  .order-detail-actions a {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   MY ORDERS PRINT
+========================================================= */
+
+@media print {
+
+  .orders-hero {
+    padding: 25px 0;
+  }
+
+  .orders-search-card,
+  .orders-list-panel,
+  .order-detail-actions,
+  .customer-orders-cta {
+    display: none !important;
+  }
+
+  .orders-layout {
+    display: block;
+  }
+
+  .order-details-panel {
+    border: 0;
+
+    box-shadow: none;
+  }
+
+  .order-detail-card {
+    padding: 0;
+  }
+
+  .customer-tracking-card,
+  .order-delivery-card,
+  .tracked-items {
+    box-shadow: none;
+  }
+
+}
