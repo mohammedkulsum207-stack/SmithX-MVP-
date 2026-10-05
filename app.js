@@ -6,6 +6,7 @@
    CART + MARKETPLACE + SELLER STUDIO
    + AI ASSISTANT + ORDERS
    + ORDER TRACKING
+   + CUSTOMER MY ORDERS INTEGRATION
 ===================================================== */
 
 
@@ -895,6 +896,58 @@ function getOrder(orderId) {
         .trim()
         .toUpperCase()
   );
+}
+
+
+/* =====================================================
+   CUSTOMER ORDER NAVIGATION
+===================================================== */
+
+/*
+  Saves the selected order and opens the
+  dedicated customer My Orders page.
+
+  The actual order data continues to live in:
+
+  smithx_orders_v2
+
+  This means the customer page and seller
+  dashboard use the same order records.
+*/
+
+function openCustomerOrderTracking(orderId) {
+  if (!orderId) {
+    return;
+  }
+
+  const cleanOrderId =
+    String(orderId).trim();
+
+  if (!cleanOrderId) {
+    return;
+  }
+
+  const order =
+    getOrder(cleanOrderId);
+
+  if (!order) {
+    showToast(
+      "Order could not be found."
+    );
+
+    return;
+  }
+
+  localStorage.setItem(
+    "smithx_selected_order",
+    order.orderId
+  );
+
+  window.location.href =
+    "my-orders.html?order=" +
+    encodeURIComponent(
+      order.orderId
+    );
 }
 
 
@@ -2523,6 +2576,18 @@ function demoCheckout() {
     })
   );
 
+  /*
+    NEW:
+    Remember the most recently created order.
+    The dedicated My Orders page uses this
+    to automatically open the correct order.
+  */
+
+  localStorage.setItem(
+    "smithx_selected_order",
+    order.orderId
+  );
+
   clearCart();
 
   updateCartUI();
@@ -2570,6 +2635,17 @@ function showOrderConfirmation(
     existing.remove();
   }
 
+  /*
+    Make sure this order is the selected
+    customer order even if confirmation
+    is opened from another function.
+  */
+
+  localStorage.setItem(
+    "smithx_selected_order",
+    order.orderId
+  );
+
   const overlay =
     document.createElement(
       "div"
@@ -2614,6 +2690,11 @@ function showOrderConfirmation(
       )
       .join("");
 
+  const safeOrderId =
+    escapeHTML(
+      order.orderId
+    );
+
   overlay.innerHTML = `
     <div
       class="modal-content order-confirmation-content"
@@ -2654,9 +2735,7 @@ function showOrderConfirmation(
           </span>
 
           <strong>
-            ${escapeHTML(
-              order.orderId
-            )}
+            ${safeOrderId}
           </strong>
 
         </div>
@@ -2706,7 +2785,7 @@ function showOrderConfirmation(
             class="primary-button full-width"
             onclick="
               closeOrderConfirmation();
-              trackOrder('${escapeHTML(order.orderId)}');
+              openCustomerOrderTracking('${safeOrderId}');
             "
           >
             Track This Order
@@ -4244,6 +4323,14 @@ window.generateProductListing =
 
 window.applyAIProductListing =
   applyAIProductListing;
+
+
+/* =====================================================
+   CUSTOMER ORDER GLOBAL FUNCTIONS
+===================================================== */
+
+window.openCustomerOrderTracking =
+  openCustomerOrderTracking;
 
 
 /* =====================================================
