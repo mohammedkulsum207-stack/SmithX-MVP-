@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Log in or create your SM1THX account.">
+  <title>Login — SM1THX</title>
+  <link rel="stylesheet" href="auth.css?v=2">
+</head>
+<body>
+
+<main class="auth-page">
+
+  <!-- Brand side -->
+  <section class="auth-visual" aria-label="About SM1THX accounts">
+    <a class="back-link" href="index.html#home">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+      Back to marketplace
+    </a>
+
+    <div>
+      <span class="eyebrow on-dark">Your SM1THX account</span>
+      <h1 class="display">Shop smarter.<br><em>Sell</em> faster.</h1>
+      <p>One account to buy from Kenyan sellers, track your deliveries and run your own store.</p>
+
+      <ul class="auth-perks">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg>Track every order from checkout to delivery</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>See your store listings and sales in one place</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.9L19 9.7l-4.2 2.9L16.2 18 12 15l-4.2 3 1.4-5.4L5 9.7l5.2-1.8z"/></svg>Create listings in minutes with the AI assistant</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Form side -->
+  <section class="auth-panel">
+    <div class="auth-card">
+
+      <a class="brand" href="index.html#home" style="color: var(--ink);">
+        <img src="assets/smithx-logo.jpg" alt="">
+        <span class="brand-text"><strong>SM1THX</strong><small style="color: var(--gold-text);">SHOP • SELL • GROW</small></span>
+      </a>
+
+      <h2 class="display" id="authTitle">Welcome back</h2>
+      <p class="muted" id="authSubtitle">Sign in to see your orders and your store.</p>
+
+      <div class="tabs" role="tablist" aria-label="Sign in or create account">
+        <button class="tab" role="tab" id="tabLogin" aria-selected="true" aria-controls="loginForm" type="button">Sign in</button>
+        <button class="tab" role="tab" id="tabRegister" aria-selected="false" aria-controls="registerForm" type="button">Create account</button>
+      </div>
+
+      <div id="formMessage" class="form-message" role="alert"></div>
+
+      <!-- Sign in -->
+      <form id="loginForm" class="auth-form" role="tabpanel" aria-labelledby="tabLogin" novalidate>
+        <div class="field">
+          <label for="loginEmail">Email</label>
+          <input class="input" id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+
+        <div class="field">
+          <label for="loginPassword">Password</label>
+          <div class="password-wrap">
+            <input class="input" id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password" required>
+            <button class="toggle-pass" type="button" data-toggle="loginPassword">Show</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" type="submit" id="loginSubmit">Sign in</button>
+
+        <div class="divider">or</div>
+
+        <button class="btn btn-outline btn-block" type="button" id="demoLogin">Try the demo account</button>
+      </form>
+
+      <!-- Create account -->
+      <form id="registerForm" class="auth-form" role="tabpanel" aria-labelledby="tabRegister" novalidate hidden>
+        <div class="field">
+          <label for="regName">Full name</label>
+          <input class="input" id="regName" type="text" autocomplete="name" placeholder="e.g. Amina Wanjiku" required>
+        </div>
+
+        <div class="field">
+          <label for="regEmail">Email</label>
+          <input class="input" id="regEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+
+        <div class="field">
+          <label for="regPhone">Phone (M-Pesa) <span class="muted" style="font-weight:400;">— optional</span></label>
+          <input class="input" id="regPhone" type="tel" autocomplete="tel" placeholder="07XX XXX XXX">
+        </div>
+
+        <div class="field">
+          <label for="regLocation">Town or city</label>
+          <input class="input" id="regLocation" type="text" autocomplete="address-level2" placeholder="Nairobi">
+        </div>
+
+        <fieldset class="field" style="border:0;">
+          <legend style="font-size:.85rem;font-weight:600;margin-bottom:7px;">I want to</legend>
+          <div class="role-group">
+            <label class="role-option"><input type="radio" name="role" value="buyer" checked><span>Buy<small>Shop products</small></span></label>
+            <label class="role-option"><input type="radio" name="role" value="seller"><span>Sell<small>Open a store</small></span></label>
+            <label class="role-option"><input type="radio" name="role" value="both"><span>Both<small>Buy and sell</small></span></label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="regPassword">Password</label>
+          <div class="password-wrap">
+            <input class="input" id="regPassword" type="password" autocomplete="new-password" placeholder="At least 6 characters" minlength="6" required>
+            <button class="toggle-pass" type="button" data-toggle="regPassword">Show</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" type="submit" id="registerSubmit">Create account</button>
+      </form>
+
+      <p class="demo-note">
+        <strong>Demo login.</strong> Accounts are saved only in this browser for the MVP, not on a server.
+        Don't use a real password you use elsewhere.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<script src="auth.js"></script>
+<script>
+  (function () {
+    const params = new URLSearchParams(location.search);
+    const next = params.get("next");
+    const safeNext = next && /^[a-z0-9-]+\.html(#[a-z0-9-]*)?$/i.test(next) ? next : "profile.html";
+
+    if (smxCurrentUser()) {
+      location.replace(safeNext);
+      return;
+    }
+
+    const tabLogin = document.getElementById("tabLogin");
+    const tabRegister = document.getElementById("tabRegister");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const message = document.getElementById("formMessage");
+    const title = document.getElementById("authTitle");
+    const subtitle = document.getElementById("authSubtitle");
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = "form-message show " + (type || "error");
+    }
+
+    function clearMessage() {
+      message.textContent = "";
+      message.className = "form-message";
+    }
+
+    function switchTab(which) {
+      const isLogin = which === "login";
+      tabLogin.setAttribute("aria-selected", String(isLogin));
+      tabRegister.setAttribute("aria-selected", String(!isLogin));
+      loginForm.hidden = !isLogin;
+      registerForm.hidden = isLogin;
+      title.textContent = isLogin ? "Welcome back" : "Create your account";
+      subtitle.textContent = isLogin
+        ? "Sign in to see your orders and your store."
+        : "Join SM1THX to shop, sell and grow.";
+      clearMessage();
+      (isLogin ? document.getElementById("loginEmail") : document.getElementById("regName")).focus();
+    }
+
+    tabLogin.addEventListener("click", () => switchTab("login"));
+    tabRegister.addEventListener("click", () => switchTab("register"));
+    if (params.get("mode") === "register") switchTab("register");
+
+    document.querySelectorAll("[data-toggle]").forEach(button => {
+      button.addEventListener("click", () => {
+        const input = document.getElementById(button.dataset.toggle);
+        const show = input.type === "password";
+        input.type = show ? "text" : "password";
+        button.textContent = show ? "Hide" : "Show";
+      });
+    });
+
+    function setBusy(button, busy, label) {
+      button.disabled = busy;
+      button.textContent = busy ? "Please wait…" : label;
+    }
+
+    loginForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      clearMessage();
+      const button = document.getElementById("loginSubmit");
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      if (!email || !password) return showMessage("Please enter your email and password.");
+      setBusy(button, true, "Sign in");
+      try {
+        await smxLogin(email, password);
+        location.href = safeNext;
+      } catch (error) {
+        showMessage(error.message);
+        setBusy(button, false, "Sign in");
+      }
+    });
+
+    document.getElementById("demoLogin").addEventListener("click", async () => {
+      clearMessage();
+      try {
+        await smxEnsureDemoUser();
+        await smxLogin(SMX_DEMO_USER.email, SMX_DEMO_USER.password);
+        location.href = safeNext;
+      } catch (error) {
+        showMessage(error.message);
+      }
+    });
+
+    registerForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      clearMessage();
+      const button = document.getElementById("registerSubmit");
+      setBusy(button, true, "Create account");
+      try {
+        await smxRegister({
+          name: document.getElementById("regName").value,
+          email: document.getElementById("regEmail").value,
+          phone: document.getElementById("regPhone").value,
+          location: document.getElementById("regLocation").value,
+          password: document.getElementById("regPassword").value,
+          role: (registerForm.querySelector('input[name="role"]:checked') || {}).value
+        });
+        showMessage("Account created. Taking you to your profile…", "success");
+        setTimeout(() => { location.href = safeNext; }, 500);
+      } catch (error) {
+        showMessage(error.message);
+        setBusy(button, false, "Create account");
+      }
+    });
+  })();
+</script>
+</body>
+</html>
