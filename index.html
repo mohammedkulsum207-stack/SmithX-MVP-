@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <meta
     name="description"
@@ -11,15 +15,28 @@
 
   <title>SM1THX 🛒 — Shop • Buy • Grow</title>
 
-  <link rel="stylesheet" href="styles.css">
+  <link
+    rel="stylesheet"
+    href="styles.css"
+  >
 </head>
 
 <body>
 
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
 <header class="topbar">
+
   <div class="topbar-inner">
 
-    <a href="#home" class="smithx-brand" aria-label="SM1THX Home">
+    <a
+      href="#home"
+      class="smithx-brand"
+      aria-label="SM1THX Home"
+    >
+
       <img
         src="assets/smithx-logo.jpg"
         class="smithx-logo-image"
@@ -27,18 +44,53 @@
       >
 
       <span class="smithx-brand-text">
-        <strong>SM1THX 🛒</strong>
-        <small>SHOP • BUY • GROW</small>
+
+        <strong>
+          SM1THX 🛒
+        </strong>
+
+        <small>
+          SHOP • BUY • GROW
+        </small>
+
       </span>
+
     </a>
 
-    <nav class="nav-links" aria-label="Main navigation">
-      <a href="#home">Home</a>
-      <a href="#market">Marketplace</a>
-      <a href="#seller">Sell</a>
-      <a href="#dashboard">Dashboard</a>
-      <a href="#updates">Updates</a>
+
+    <nav
+      class="nav-links"
+      aria-label="Main navigation"
+    >
+
+      <a href="#home">
+        Home
+      </a>
+
+      <a href="#market">
+        Marketplace
+      </a>
+
+      <a href="#seller">
+        Sell
+      </a>
+
+      <a href="#dashboard">
+        Dashboard
+      </a>
+
+      <!-- NEW CUSTOMER ORDER PAGE -->
+
+      <a href="my-orders.html">
+        My Orders
+      </a>
+
+      <a href="#updates">
+        Updates
+      </a>
+
     </nav>
+
 
     <button
       type="button"
@@ -49,27 +101,41 @@
       Login
     </button>
 
+
     <button
       type="button"
       class="cart-button"
       onclick="openCart()"
       aria-label="Open shopping cart"
     >
+
       🛒
-      <span id="cartCount" class="cart-count">0</span>
+
+      <span
+        id="cartCount"
+        class="cart-count"
+      >
+        0
+      </span>
+
     </button>
 
   </div>
+
 </header>
 
 
 <main>
 
+
 <!-- =====================================================
      HERO
 ===================================================== -->
 
-<section id="home" class="hero">
+<section
+  id="home"
+  class="hero"
+>
 
   <div class="hero-inner">
 
@@ -89,6 +155,7 @@
         buyers a smarter way to discover products.
       </p>
 
+
       <div class="hero-actions">
 
         <button
@@ -98,6 +165,7 @@
         >
           Explore Marketplace
         </button>
+
 
         <button
           type="button"
@@ -111,11 +179,14 @@
 
     </div>
 
+
     <div class="hero-panel">
 
       <div class="hero-panel-card">
 
-        <span>SM1THX 🛒</span>
+        <span>
+          SM1THX 🛒
+        </span>
 
         <strong>
           AI-POWERED COMMERCE
@@ -139,7 +210,10 @@
      MARKETPLACE
 ===================================================== -->
 
-<section id="market" class="section marketplace-section">
+<section
+  id="market"
+  class="section marketplace-section"
+>
 
   <div class="section-inner">
 
@@ -160,6 +234,7 @@
 
     </div>
 
+
     <div class="marketplace-tools">
 
       <div class="search-box">
@@ -173,6 +248,7 @@
 
       </div>
 
+
       <button
         type="button"
         class="secondary-button"
@@ -183,11 +259,13 @@
 
     </div>
 
+
     <div
       id="categoryFilters"
       class="category-filters"
       aria-label="Product categories"
     ></div>
+
 
     <div
       id="productsGrid"
@@ -203,7 +281,10 @@
      SELLER STUDIO
 ===================================================== -->
 
-<section id="seller" class="section seller-section">
+<section
+  id="seller"
+  class="section seller-section"
+>
 
   <div class="section-inner">
 
@@ -224,9 +305,13 @@
 
     </div>
 
+
     <div class="seller-layout">
 
-      <!-- CREATE PRODUCT -->
+
+      <!-- =================================================
+           CREATE PRODUCT
+      ================================================= -->
 
       <div class="seller-card">
 
@@ -237,6 +322,7 @@
         <p class="muted">
           Add your product details below.
         </p>
+
 
         <div class="form-group">
 
@@ -253,7 +339,9 @@
         </div>
 
 
-        <!-- AI PRODUCT ASSISTANT -->
+        <!-- =================================================
+             AI PRODUCT ASSISTANT
+        ================================================= -->
 
         <div class="ai-assistant-card">
 
@@ -274,6 +362,7 @@
 
           </div>
 
+
           <button
             type="button"
             class="primary-button full-width"
@@ -283,6 +372,7 @@
             ✨ Generate Listing
           </button>
 
+
           <div
             id="aiProductResult"
             class="ai-product-result"
@@ -291,59 +381,94 @@
 
             <div class="ai-result-item">
 
-              <span>AI Title</span>
+              <span>
+                AI Title
+              </span>
 
-              <strong id="aiGeneratedTitle"></strong>
+              <strong
+                id="aiGeneratedTitle"
+              ></strong>
 
             </div>
+
 
             <div class="ai-result-item">
 
-              <span>Description</span>
+              <span>
+                Description
+              </span>
 
-              <p id="aiGeneratedDescription"></p>
+              <p
+                id="aiGeneratedDescription"
+              ></p>
 
             </div>
+
 
             <div class="ai-result-item">
 
-              <span>Category</span>
+              <span>
+                Category
+              </span>
 
-              <strong id="aiGeneratedCategory"></strong>
+              <strong
+                id="aiGeneratedCategory"
+              ></strong>
 
             </div>
+
 
             <div class="ai-result-item">
 
-              <span>Suggested Price</span>
+              <span>
+                Suggested Price
+              </span>
 
-              <strong id="aiGeneratedPrice"></strong>
+              <strong
+                id="aiGeneratedPrice"
+              ></strong>
 
             </div>
+
 
             <div class="ai-result-item">
 
-              <span>Key Features</span>
+              <span>
+                Key Features
+              </span>
 
-              <ul id="aiGeneratedFeatures"></ul>
+              <ul
+                id="aiGeneratedFeatures"
+              ></ul>
 
             </div>
+
 
             <div class="ai-result-item">
 
-              <span>SEO Keywords</span>
+              <span>
+                SEO Keywords
+              </span>
 
-              <p id="aiGeneratedSEO"></p>
+              <p
+                id="aiGeneratedSEO"
+              ></p>
 
             </div>
+
 
             <div class="ai-result-item">
 
-              <span>Ad Caption</span>
+              <span>
+                Ad Caption
+              </span>
 
-              <p id="aiGeneratedAd"></p>
+              <p
+                id="aiGeneratedAd"
+              ></p>
 
             </div>
+
 
             <button
               type="button"
@@ -380,7 +505,9 @@
             Category
           </label>
 
-          <select id="productCategory"></select>
+          <select
+            id="productCategory"
+          ></select>
 
         </div>
 
@@ -440,7 +567,9 @@
       </div>
 
 
-      <!-- SELLER INFO -->
+      <!-- =================================================
+           SELLER INFORMATION
+      ================================================= -->
 
       <div class="seller-info-card">
 
@@ -458,41 +587,71 @@
           and grow their businesses using intelligent technology.
         </p>
 
+
         <div class="feature-list">
 
           <div class="feature-item">
-            <strong>AI Product Assistant</strong>
+
+            <strong>
+              AI Product Assistant
+            </strong>
+
             <span>
               Generate professional product listings faster.
             </span>
+
           </div>
 
+
           <div class="feature-item">
-            <strong>Easy product creation</strong>
+
+            <strong>
+              Easy product creation
+            </strong>
+
             <span>
               Create and publish products quickly.
             </span>
+
           </div>
 
+
           <div class="feature-item">
-            <strong>Marketplace visibility</strong>
+
+            <strong>
+              Marketplace visibility
+            </strong>
+
             <span>
               Put your products in front of buyers.
             </span>
+
           </div>
 
+
           <div class="feature-item">
-            <strong>Seller analytics</strong>
+
+            <strong>
+              Seller analytics
+            </strong>
+
             <span>
               Track products, orders and revenue.
             </span>
+
           </div>
 
+
           <div class="feature-item">
-            <strong>AI-powered future</strong>
+
+            <strong>
+              AI-powered future
+            </strong>
+
             <span>
               More intelligent seller tools are coming.
             </span>
+
           </div>
 
         </div>
@@ -510,7 +669,10 @@
      DASHBOARD
 ===================================================== -->
 
-<section id="dashboard" class="section dashboard-section">
+<section
+  id="dashboard"
+  class="section dashboard-section"
+>
 
   <div class="section-inner">
 
@@ -531,29 +693,62 @@
 
     </div>
 
+
     <div class="dashboard-grid">
 
       <div class="dashboard-card">
-        <span>Products</span>
-        <strong id="dashboardProducts">6</strong>
+
+        <span>
+          Products
+        </span>
+
+        <strong id="dashboardProducts">
+          6
+        </strong>
+
       </div>
 
-      <div class="dashboard-card">
-        <span>Orders</span>
-        <strong id="dashboardOrders">0</strong>
-      </div>
 
       <div class="dashboard-card">
-        <span>Revenue</span>
-        <strong id="dashboardRevenue">KES 0</strong>
+
+        <span>
+          Orders
+        </span>
+
+        <strong id="dashboardOrders">
+          0
+        </strong>
+
       </div>
 
+
       <div class="dashboard-card">
-        <span>Today's Visitors</span>
-        <strong id="dashboardVisitors">0</strong>
+
+        <span>
+          Revenue
+        </span>
+
+        <strong id="dashboardRevenue">
+          KES 0
+        </strong>
+
+      </div>
+
+
+      <div class="dashboard-card">
+
+        <span>
+          Today's Visitors
+        </span>
+
+        <strong id="dashboardVisitors">
+          0
+        </strong>
+
       </div>
 
     </div>
+
 
     <div class="dashboard-actions">
 
@@ -569,7 +764,7 @@
 
 
     <!-- =================================================
-         ORDERS
+         SELLER ORDER MANAGEMENT
     ================================================= -->
 
     <div class="orders-section">
@@ -595,6 +790,7 @@
 
       </div>
 
+
       <div
         id="ordersList"
         class="orders-list"
@@ -617,6 +813,40 @@
 
     </div>
 
+
+    <!-- =================================================
+         CUSTOMER ORDER ACCESS
+    ================================================= -->
+
+    <div class="customer-orders-cta">
+
+      <div>
+
+        <p class="section-eyebrow">
+          CUSTOMER EXPERIENCE
+        </p>
+
+        <h3>
+          Track your purchases
+        </h3>
+
+        <p class="muted">
+          View your order history and follow
+          your delivery from checkout to delivery.
+        </p>
+
+      </div>
+
+
+      <a
+        href="my-orders.html"
+        class="primary-button"
+      >
+        My Orders →
+      </a>
+
+    </div>
+
   </div>
 
 </section>
@@ -626,7 +856,10 @@
      FEATURES
 ===================================================== -->
 
-<section id="features" class="section">
+<section
+  id="features"
+  class="section"
+>
 
   <div class="section-inner">
 
@@ -647,7 +880,9 @@
 
     </div>
 
+
     <div class="feature-grid">
+
 
       <div class="feature-card">
 
@@ -731,7 +966,10 @@
      ABOUT
 ===================================================== -->
 
-<section id="about" class="section about-section">
+<section
+  id="about"
+  class="section about-section"
+>
 
   <div class="section-inner">
 
@@ -748,6 +986,7 @@
         </h2>
 
       </div>
+
 
       <div>
 
@@ -777,7 +1016,10 @@
      UPDATES
 ===================================================== -->
 
-<section id="updates" class="section">
+<section
+  id="updates"
+  class="section"
+>
 
   <div class="section-inner">
 
@@ -797,6 +1039,7 @@
 
     </div>
 
+
     <button
       type="button"
       class="secondary-button"
@@ -806,46 +1049,90 @@
       View Updates
     </button>
 
+
     <div
       id="updateHistory"
       class="update-history card"
     >
 
       <div class="update-item">
-        <strong>Marketplace foundation</strong>
+
+        <strong>
+          Marketplace foundation
+        </strong>
+
         <p>
           Product discovery and marketplace browsing added.
         </p>
+
       </div>
 
+
       <div class="update-item">
-        <strong>Shopping cart</strong>
+
+        <strong>
+          Shopping cart
+        </strong>
+
         <p>
           Cart management and demo checkout added.
         </p>
+
       </div>
 
+
       <div class="update-item">
-        <strong>Seller Studio</strong>
+
+        <strong>
+          Seller Studio
+        </strong>
+
         <p>
           Sellers can create and publish products.
         </p>
+
       </div>
 
+
       <div class="update-item">
-        <strong>AI Product Assistant</strong>
+
+        <strong>
+          AI Product Assistant
+        </strong>
+
         <p>
           AI listing generation interface added.
         </p>
+
       </div>
 
+
       <div class="update-item">
-        <strong>Order Management</strong>
+
+        <strong>
+          Order Management
+        </strong>
+
         <p>
           Demo orders can now be created, viewed and
           managed through Pending, Confirmed, Shipped
           and Delivered statuses.
         </p>
+
+      </div>
+
+
+      <div class="update-item">
+
+        <strong>
+          Customer Order Tracking
+        </strong>
+
+        <p>
+          Dedicated customer order history and
+          delivery tracking experience added.
+        </p>
+
       </div>
 
     </div>
@@ -878,7 +1165,9 @@
       ×
     </button>
 
-    <div id="productModalContent"></div>
+    <div
+      id="productModalContent"
+    ></div>
 
   </div>
 
@@ -909,6 +1198,7 @@
 
     </div>
 
+
     <button
       type="button"
       class="cart-close"
@@ -920,10 +1210,12 @@
 
   </div>
 
+
   <div
     id="cartItems"
     class="cart-items"
   ></div>
+
 
   <div class="cart-total">
 
@@ -937,6 +1229,7 @@
 
   </div>
 
+
   <div class="cart-total">
 
     <span>
@@ -949,6 +1242,7 @@
 
   </div>
 
+
   <div class="cart-actions">
 
     <button
@@ -958,6 +1252,7 @@
     >
       Clear Cart
     </button>
+
 
     <button
       type="button"
@@ -984,6 +1279,10 @@
 ></div>
 
 
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
 <footer>
 
   <div class="footer-inner">
@@ -1000,6 +1299,7 @@
 
     </div>
 
+
     <p>
       © 2026 SM1THX. MVP demonstration.
     </p>
@@ -1008,6 +1308,10 @@
 
 </footer>
 
+
+<!-- =====================================================
+     APPLICATION JAVASCRIPT
+===================================================== -->
 
 <script src="app.js"></script>
 
