@@ -83,6 +83,10 @@
         Dashboard
       </a>
 
+      <a href="#profile">
+        Profile
+      </a>
+
       <a href="my-orders.html">
         My Orders
       </a>
@@ -862,6 +866,580 @@
 
 
 <!-- =====================================================
+     PROFILE / ACCOUNT
+===================================================== -->
+
+<section
+  id="profile"
+  class="section profile-section"
+>
+
+  <div class="section-inner">
+
+    <div class="section-heading">
+
+      <p class="section-eyebrow">
+        MY ACCOUNT
+      </p>
+
+      <h2>
+        Your SM1THX Profile
+      </h2>
+
+      <p>
+        Manage your buyer and seller activity from one place.
+      </p>
+
+    </div>
+
+
+    <!-- LOGGED OUT PROFILE -->
+
+    <div
+      id="profileLoggedOut"
+      class="profile-logged-out"
+    >
+
+      <div class="profile-logged-out-card">
+
+        <div class="profile-avatar large">
+          👤
+        </div>
+
+        <p class="section-eyebrow">
+          SM1THX ACCOUNT
+        </p>
+
+        <h3>
+          Welcome to your SM1THX account
+        </h3>
+
+        <p class="muted">
+          Login to view your profile, orders,
+          wishlist and seller activity.
+        </p>
+
+        <button
+          type="button"
+          class="primary-button"
+          onclick="openLogin()"
+        >
+          Login to SM1THX
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- LOGGED IN PROFILE -->
+
+    <div
+      id="profileLoggedIn"
+      class="profile-dashboard"
+      style="display:none;"
+    >
+
+      <!-- PROFILE SIDEBAR -->
+
+      <aside class="profile-sidebar">
+
+        <div class="profile-avatar-wrap">
+
+          <div
+            id="profileAvatar"
+            class="profile-avatar"
+          >
+            JM
+          </div>
+
+        </div>
+
+
+        <div class="profile-sidebar-info">
+
+          <h3 id="profileName">
+            John Muchina
+          </h3>
+
+          <p id="profileUsername">
+            @john
+          </p>
+
+          <span
+            id="profileRole"
+            class="profile-role"
+          >
+            Buyer & Seller
+          </span>
+
+        </div>
+
+
+        <nav class="profile-nav">
+
+          <button
+            type="button"
+            class="profile-nav-item active"
+            onclick="scrollToProfileCard('profileOverview')"
+          >
+            Overview
+          </button>
+
+          <button
+            type="button"
+            class="profile-nav-item"
+            onclick="scrollToProfileCard('profileDetailsCard')"
+          >
+            Personal Details
+          </button>
+
+          <a
+            href="my-orders.html"
+            class="profile-nav-item"
+          >
+            My Orders
+          </a>
+
+          <button
+            type="button"
+            class="profile-nav-item"
+            onclick="scrollToProfileCard('profileActivity')"
+          >
+            Activity
+          </button>
+
+        </nav>
+
+
+        <button
+          type="button"
+          class="secondary-button full-width profile-logout-button"
+          onclick="demoLogoutAndRefresh()"
+        >
+          Logout
+        </button>
+
+      </aside>
+
+
+      <!-- PROFILE MAIN -->
+
+      <div class="profile-main">
+
+
+        <!-- OVERVIEW -->
+
+        <div
+          id="profileOverview"
+          class="profile-card"
+        >
+
+          <div class="profile-card-header">
+
+            <div>
+
+              <p class="section-eyebrow">
+                ACCOUNT OVERVIEW
+              </p>
+
+              <h3>
+                Welcome back,
+                <span id="profileOverviewName">
+                  John
+                </span>
+              </h3>
+
+            </div>
+
+          </div>
+
+
+          <!-- PROFILE STATS -->
+
+          <div class="profile-stats">
+
+            <div class="profile-stat">
+
+              <div class="profile-stat-icon">
+                🛒
+              </div>
+
+              <div>
+
+                <strong
+                  id="profileCartCount"
+                  class="profile-stat-value"
+                >
+                  0
+                </strong>
+
+                <span class="profile-stat-label">
+                  Cart Items
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="profile-stat">
+
+              <div class="profile-stat-icon">
+                📦
+              </div>
+
+              <div>
+
+                <strong
+                  id="profileOrderCount"
+                  class="profile-stat-value"
+                >
+                  0
+                </strong>
+
+                <span class="profile-stat-label">
+                  Orders
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="profile-stat">
+
+              <div class="profile-stat-icon">
+                🏪
+              </div>
+
+              <div>
+
+                <strong
+                  id="profileProductCount"
+                  class="profile-stat-value"
+                >
+                  0
+                </strong>
+
+                <span class="profile-stat-label">
+                  Products
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="profile-stat">
+
+              <div class="profile-stat-icon">
+                ❤️
+              </div>
+
+              <div>
+
+                <strong
+                  id="profileWishlistCount"
+                  class="profile-stat-value"
+                >
+                  0
+                </strong>
+
+                <span class="profile-stat-label">
+                  Wishlist
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- PERSONAL DETAILS -->
+
+        <div
+          id="profileDetailsCard"
+          class="profile-card"
+        >
+
+          <div class="profile-card-header">
+
+            <div>
+
+              <p class="section-eyebrow">
+                PERSONAL DETAILS
+              </p>
+
+              <h3>
+                Account Information
+              </h3>
+
+            </div>
+
+          </div>
+
+
+          <div class="profile-details-grid">
+
+
+            <div class="profile-detail">
+
+              <span class="profile-detail-label">
+                Full Name
+              </span>
+
+              <strong
+                id="profileDetailName"
+                class="profile-detail-value"
+              >
+                John Muchina
+              </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+              <span class="profile-detail-label">
+                Username
+              </span>
+
+              <strong
+                id="profileDetailUsername"
+                class="profile-detail-value"
+              >
+                @john
+              </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+              <span class="profile-detail-label">
+                Email
+              </span>
+
+              <strong
+                id="profileDetailEmail"
+                class="profile-detail-value"
+              >
+                john@smithx.demo
+              </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+              <span class="profile-detail-label">
+                Phone
+              </span>
+
+              <strong
+                id="profileDetailPhone"
+                class="profile-detail-value"
+              >
+                Not added
+              </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+              <span class="profile-detail-label">
+                Location
+              </span>
+
+              <strong
+                id="profileDetailLocation"
+                class="profile-detail-value"
+              >
+                Nairobi, Kenya
+              </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+              <span class="profile-detail-label">
+                Account Type
+              </span>
+
+              <strong
+                id="profileDetailRole"
+                class="profile-detail-value"
+              >
+                Buyer & Seller
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="profile-actions">
+
+            <button
+              type="button"
+              class="secondary-button"
+              onclick="openLogin()"
+            >
+              Account Login
+            </button>
+
+            <a
+              href="my-orders.html"
+              class="primary-button"
+            >
+              View My Orders
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <!-- ACCOUNT ACTIVITY -->
+
+        <div
+          id="profileActivity"
+          class="profile-card"
+        >
+
+          <div class="profile-card-header">
+
+            <div>
+
+              <p class="section-eyebrow">
+                ACCOUNT ACTIVITY
+              </p>
+
+              <h3>
+                Your SM1THX Activity
+              </h3>
+
+            </div>
+
+          </div>
+
+
+          <div class="profile-activity-grid">
+
+            <div class="profile-activity-card">
+
+              <span class="profile-activity-icon">
+                🛍️
+              </span>
+
+              <div>
+
+                <strong>
+                  Shopping
+                </strong>
+
+                <p>
+                  Browse products and manage your cart.
+                </p>
+
+              </div>
+
+              <a
+                href="#market"
+                class="small-button"
+              >
+                Shop
+              </a>
+
+            </div>
+
+
+            <div class="profile-activity-card">
+
+              <span class="profile-activity-icon">
+                📦
+              </span>
+
+              <div>
+
+                <strong>
+                  Orders
+                </strong>
+
+                <p>
+                  Track your purchases and deliveries.
+                </p>
+
+              </div>
+
+              <a
+                href="my-orders.html"
+                class="small-button"
+              >
+                Orders
+              </a>
+
+            </div>
+
+
+            <div class="profile-activity-card">
+
+              <span class="profile-activity-icon">
+                🏪
+              </span>
+
+              <div>
+
+                <strong>
+                  Selling
+                </strong>
+
+                <p>
+                  Create products and manage your store.
+                </p>
+
+              </div>
+
+              <a
+                href="#seller"
+                class="small-button"
+              >
+                Sell
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- PROFILE MESSAGE -->
+
+        <div
+          id="profileMessage"
+          class="profile-message"
+          style="display:none;"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
      FEATURES
 ===================================================== -->
 
@@ -1153,6 +1731,139 @@
 
 
 <!-- =====================================================
+     LOGIN MODAL
+===================================================== -->
+
+<div
+  id="loginModal"
+  class="modal login-modal"
+  aria-hidden="true"
+>
+
+  <div class="modal-content login-modal-content">
+
+    <button
+      type="button"
+      class="modal-close"
+      onclick="closeLogin()"
+      aria-label="Close login"
+    >
+      ×
+    </button>
+
+
+    <div class="login-header">
+
+      <div class="login-logo">
+        SM1THX 🛒
+      </div>
+
+      <p class="section-eyebrow">
+        SM1THX ACCOUNT
+      </p>
+
+      <h2>
+        Welcome back
+      </h2>
+
+      <p class="muted">
+        Login to access your buyer and seller profile.
+      </p>
+
+    </div>
+
+
+    <form
+      id="demoLoginForm"
+      class="login-form"
+      onsubmit="handleDemoLogin(event)"
+    >
+
+      <div class="form-group">
+
+        <label for="demoEmail">
+          Email
+        </label>
+
+        <input
+          id="demoEmail"
+          type="email"
+          placeholder="john@smithx.demo"
+          autocomplete="email"
+          required
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="demoPassword">
+          Password
+        </label>
+
+        <input
+          id="demoPassword"
+          type="password"
+          placeholder="Enter password"
+          autocomplete="current-password"
+          required
+        >
+
+      </div>
+
+
+      <div
+        id="loginMessage"
+        class="login-message"
+        style="display:none;"
+        role="alert"
+        aria-live="polite"
+      ></div>
+
+
+      <button
+        type="submit"
+        class="primary-button full-width"
+      >
+        Login
+      </button>
+
+    </form>
+
+
+    <div class="login-demo-info">
+
+      <strong>
+        Demo Account
+      </strong>
+
+      <p>
+        Email: <b>john@smithx.demo</b>
+      </p>
+
+      <p>
+        Password: <b>smithx</b>
+      </p>
+
+    </div>
+
+
+    <div class="login-footer">
+
+      <p>
+        Demo account only. No real payment or
+        authentication service is connected.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
      PRODUCT MODAL
 ===================================================== -->
 
@@ -1322,6 +2033,12 @@
 ===================================================== -->
 
 <script src="app.js"></script>
+
+<!-- =====================================================
+     PROFILE / ACCOUNT JAVASCRIPT
+===================================================== -->
+
+<script src="profile.js"></script>
 
 </body>
 </html>
