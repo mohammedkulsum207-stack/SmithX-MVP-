@@ -7,6 +7,7 @@
    + AI ASSISTANT + ORDERS
    + ORDER TRACKING
    + CUSTOMER MY ORDERS INTEGRATION
+   + AUTOMATIC 2-MINUTE DEMO TRACKING
 ===================================================== */
 
 
@@ -106,7 +107,9 @@ const STORAGE = {
   cart: "smithx_cart_v2",
   analytics: "smithx_analytics_v2",
   visitor: "smithx_daily_visitor_v2",
-  orders: "smithx_orders_v2"
+  orders: "smithx_orders_v2",
+  selectedOrder: "smithx_selected_order",
+  lastDemoOrder: "smithx_last_demo_order"
 };
 
 
@@ -123,46 +126,123 @@ const ORDER_STATUSES = [
 
 
 /* =====================================================
-   TRACKING MILESTONES
+   CUSTOMER TRACKING
 ===================================================== */
 
 const TRACKING_STEPS = [
   {
     key: "placed",
     label: "Order placed",
-    description: "Your order has been received."
+    description:
+      "Your order has been received."
   },
 
   {
     key: "confirmed",
     label: "Order confirmed",
-    description: "The seller has confirmed your order."
+    description:
+      "The seller has confirmed your order."
   },
 
   {
     key: "packed",
     label: "Order packed",
-    description: "Your order has been prepared for shipment."
+    description:
+      "Your order has been prepared for shipment."
   },
 
   {
     key: "shipped",
     label: "Shipped",
-    description: "Your package is on its way."
+    description:
+      "Your package is on its way."
   },
 
   {
     key: "out_for_delivery",
     label: "Out for delivery",
-    description: "Your package is approaching its destination."
+    description:
+      "Your package is approaching its destination."
   },
 
   {
     key: "delivered",
     label: "Delivered",
-    description: "Your order has been delivered."
+    description:
+      "Your order has been delivered."
   }
 ];
+
+
+/* =====================================================
+   AUTOMATIC DEMO TRACKING
+===================================================== */
+
+/*
+  Demo tracking timeline:
+
+  0 seconds    = Placed
+  30 seconds   = Confirmed
+  60 seconds   = Shipped
+  90 seconds   = Out for delivery
+  120 seconds  = Delivered
+
+  This is intentionally a DEMO system.
+  It does not claim to represent real carrier GPS.
+*/
+
+const DEMO_TRACKING = {
+  storagePrefix:
+    "smithx_tracking_demo_",
+
+  duration:
+    120000,
+
+  interval:
+    1000,
+
+  stages: [
+    {
+      key: "placed",
+      status: "Pending",
+      step: 0,
+      after: 0,
+      label: "Order placed"
+    },
+
+    {
+      key: "confirmed",
+      status: "Confirmed",
+      step: 1,
+      after: 30000,
+      label: "Order confirmed"
+    },
+
+    {
+      key: "shipped",
+      status: "Shipped",
+      step: 3,
+      after: 60000,
+      label: "Shipped"
+    },
+
+    {
+      key: "out_for_delivery",
+      status: "Shipped",
+      step: 4,
+      after: 90000,
+      label: "Out for delivery"
+    },
+
+    {
+      key: "delivered",
+      status: "Delivered",
+      step: 5,
+      after: 120000,
+      label: "Delivered"
+    }
+  ]
+};
 
 
 /* =====================================================
@@ -173,6 +253,7 @@ let currentCategory = "All";
 let currentSearch = "";
 let latestAIProduct = null;
 let toastTimer = null;
+let demoTrackingTimers = {};
 
 
 /* =====================================================
@@ -235,13 +316,56 @@ function formatDate(value) {
 }
 
 
+function normalizeOrderStatus(status) {
+  return String(status || "Pending")
+    .trim()
+    .toLowerCase();
+}
+
+
+function getTrackingStorageKey(orderId) {
+  return (
+    DEMO_TRACKING.storagePrefix +
+    String(orderId || "").trim()
+  );
+}
+
+
+function safeStorageSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (error) {
+    console.error(
+      "SM1THX storage error:",
+      error
+    );
+  }
+}
+
+
+function safeStorageGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch (error) {
+    console.error(
+      "SM1THX storage read error:",
+      error
+    );
+
+    return null;
+  }
+}
+
+
 /* =====================================================
    PRODUCTS
 ===================================================== */
 
 function getCustomProducts() {
   const products = safeJSONParse(
-    localStorage.getItem(STORAGE.products),
+    localStorage.getItem(
+      STORAGE.products
+    ),
     []
   );
 
@@ -713,7 +837,9 @@ function renderCart() {
     itemElement.innerHTML = `
       <div class="cart-item-image">
         <img
-          src="${escapeHTML(product.image || "")}"
+          src="${escapeHTML(
+            product.image || ""
+          )}"
           alt="${escapeHTML(product.name)}"
         >
       </div>
@@ -903,18 +1029,6 @@ function getOrder(orderId) {
    CUSTOMER ORDER NAVIGATION
 ===================================================== */
 
-/*
-  Saves the selected order and opens the
-  dedicated customer My Orders page.
-
-  The actual order data continues to live in:
-
-  smithx_orders_v2
-
-  This means the customer page and seller
-  dashboard use the same order records.
-*/
-
 function openCustomerOrderTracking(orderId) {
   if (!orderId) {
     return;
@@ -939,7 +1053,7 @@ function openCustomerOrderTracking(orderId) {
   }
 
   localStorage.setItem(
-    "smithx_selected_order",
+    STORAGE.selectedOrder,
     order.orderId
   );
 
@@ -952,37 +1066,39 @@ function openCustomerOrderTracking(orderId) {
 
 
 /* =====================================================
-   TRACKING DATA
+   CUSTOMER MY ORDERS
 ===================================================== */
 
-/*
-  The seller status is deliberately kept simple:
+function openCustomerOrders() {
+  window.location.href =
+    "my-orders.html";
+}
 
-  Pending
-  Confirmed
-  Shipped
-  Delivered
 
-  The customer-facing tracker translates
-  those statuses into a richer delivery timeline.
-*/
+/* =====================================================
+   TRACKING DATA
+===================================================== */
 
 function getTrackingStepForOrder(order) {
   if (!order) {
     return 0;
   }
 
-  switch (String(order.status)) {
-    case "Pending":
+  switch (
+    normalizeOrderStatus(
+      order.status
+    )
+  ) {
+    case "pending":
       return 0;
 
-    case "Confirmed":
+    case "confirmed":
       return 1;
 
-    case "Shipped":
+    case "shipped":
       return 3;
 
-    case "Delivered":
+    case "delivered":
       return 5;
 
     default:
@@ -996,17 +1112,21 @@ function getTrackingLocation(order) {
     return "Awaiting order information";
   }
 
-  switch (String(order.status)) {
-    case "Pending":
+  switch (
+    normalizeOrderStatus(
+      order.status
+    )
+  ) {
+    case "pending":
       return "Order received";
 
-    case "Confirmed":
+    case "confirmed":
       return "Seller processing";
 
-    case "Shipped":
+    case "shipped":
       return "In transit";
 
-    case "Delivered":
+    case "delivered":
       return "Delivered";
 
     default:
@@ -1020,7 +1140,11 @@ function getEstimatedDelivery(order) {
     return "Not available";
   }
 
-  if (order.status === "Delivered") {
+  if (
+    normalizeOrderStatus(
+      order.status
+    ) === "delivered"
+  ) {
     return "Delivered";
   }
 
@@ -1033,11 +1157,6 @@ function getEstimatedDelivery(order) {
 
   const estimated =
     new Date(created);
-
-  /*
-    Demo estimate:
-    3 days after order creation.
-  */
 
   estimated.setDate(
     estimated.getDate() + 3
@@ -1144,7 +1263,24 @@ function createOrderFromCart() {
       now,
 
     updatedAt:
-      now
+      now,
+
+    tracking: {
+      mode:
+        "demo",
+
+      startedAt:
+        now,
+
+      currentStep:
+        0,
+
+      currentStage:
+        "placed",
+
+      completed:
+        false
+    }
   };
 
   const orders =
@@ -1153,6 +1289,10 @@ function createOrderFromCart() {
   orders.unshift(order);
 
   saveOrders(orders);
+
+  initializeDemoTracking(
+    order
+  );
 
   return order;
 }
@@ -1204,6 +1344,62 @@ function updateOrderStatus(
 
   order.updatedAt =
     new Date().toISOString();
+
+  /*
+    If seller manually marks the order
+    as Delivered, stop the automatic demo.
+  */
+
+  if (
+    newStatus ===
+    "Delivered"
+  ) {
+    stopDemoTracking(
+      order.orderId
+    );
+
+    order.tracking = {
+      ...(order.tracking || {}),
+
+      mode:
+        "seller",
+
+      currentStep:
+        5,
+
+      currentStage:
+        "delivered",
+
+      completed:
+        true
+    };
+
+    safeStorageSet(
+      getTrackingStorageKey(
+        order.orderId
+      ),
+      JSON.stringify({
+        orderId:
+          order.orderId,
+
+        startedAt:
+          order.tracking.startedAt ||
+          order.createdAt,
+
+        completed:
+          true,
+
+        currentStage:
+          "delivered",
+
+        currentStep:
+          5,
+
+        completedAt:
+          new Date().toISOString()
+      })
+    );
+  }
 
   saveOrders(orders);
 
@@ -1434,7 +1630,7 @@ function renderOrders() {
 
 
 /* =====================================================
-   ORDER TRACKER
+   CREATE DASHBOARD TRACKER
 ===================================================== */
 
 function createTrackerSection() {
@@ -1466,6 +1662,7 @@ function createTrackerSection() {
     <div class="tracker-header">
 
       <div>
+
         <p class="section-eyebrow">
           SM1THX LOGISTICS
         </p>
@@ -1478,6 +1675,7 @@ function createTrackerSection() {
           Enter your SMX order number to see
           the latest delivery status.
         </p>
+
       </div>
 
     </div>
@@ -1507,6 +1705,7 @@ function createTrackerSection() {
     >
 
       <div class="tracker-empty">
+
         <strong>
           Ready to track
         </strong>
@@ -1514,12 +1713,15 @@ function createTrackerSection() {
         <p>
           Enter an SMX order number above.
         </p>
+
       </div>
 
     </div>
   `;
 
-  dashboard.appendChild(section);
+  dashboard.appendChild(
+    section
+  );
 }
 
 
@@ -1585,6 +1787,15 @@ function trackOrder(orderId) {
 
     return;
   }
+
+  /*
+    Start automatic demo tracking
+    when an order is tracked.
+  */
+
+  initializeDemoTracking(
+    order
+  );
 
   renderOrderTracker(order);
 
@@ -1670,6 +1881,7 @@ function renderOrderTracker(
   if (!order) {
     result.innerHTML = `
       <div class="tracker-empty">
+
         <strong>
           Ready to track
         </strong>
@@ -1677,6 +1889,7 @@ function renderOrderTracker(
         <p>
           Enter an SMX order number above.
         </p>
+
       </div>
     `;
 
@@ -1725,19 +1938,24 @@ function renderOrderTracker(
             if (
               index === 0
             ) {
+
               dateText =
                 formatDate(
                   order.createdAt
                 );
+
             } else if (
               index === currentStep
             ) {
+
               dateText =
                 formatDate(
                   order.updatedAt ||
                   order.createdAt
                 );
+
             } else {
+
               dateText =
                 "Completed";
             }
@@ -1837,6 +2055,19 @@ function renderOrderTracker(
           .join("")
       : "";
 
+  const demoBadge =
+    order.tracking?.mode ===
+      "demo"
+      ? `
+        <span
+          class="tracker-demo-badge"
+          title="This is a SM1THX demonstration tracking timeline."
+        >
+          DEMO TRACKING
+        </span>
+      `
+      : "";
+
   result.innerHTML = `
     <div class="tracker-card">
 
@@ -1862,6 +2093,8 @@ function renderOrderTracker(
               )
             )}
           </p>
+
+          ${demoBadge}
 
         </div>
 
@@ -1965,6 +2198,632 @@ function renderOrderTracker(
 
 
 /* =====================================================
+   DEMO TRACKING — STORAGE
+===================================================== */
+
+function getDemoTrackingState(
+  orderId
+) {
+  if (!orderId) {
+    return null;
+  }
+
+  const stored =
+    safeJSONParse(
+      safeStorageGet(
+        getTrackingStorageKey(
+          orderId
+        )
+      ),
+      null
+    );
+
+  if (
+    !stored ||
+    typeof stored !== "object"
+  ) {
+    return null;
+  }
+
+  return stored;
+}
+
+
+function saveDemoTrackingState(
+  orderId,
+  state
+) {
+  if (!orderId || !state) {
+    return;
+  }
+
+  safeStorageSet(
+    getTrackingStorageKey(
+      orderId
+    ),
+    JSON.stringify(state)
+  );
+}
+
+
+/* =====================================================
+   DEMO TRACKING — STAGE CALCULATION
+===================================================== */
+
+function calculateDemoStage(
+  elapsed
+) {
+  let selected =
+    DEMO_TRACKING.stages[0];
+
+  DEMO_TRACKING.stages.forEach(
+    stage => {
+
+      if (
+        elapsed >=
+        stage.after
+      ) {
+        selected =
+          stage;
+      }
+    }
+  );
+
+  return selected;
+}
+
+
+/* =====================================================
+   DEMO TRACKING — UPDATE ORDER
+===================================================== */
+
+function updateDemoOrder(
+  orderId,
+  stage
+) {
+  const orders =
+    getOrders();
+
+  const order =
+    orders.find(
+      item =>
+        String(item.orderId) ===
+        String(orderId)
+    );
+
+  if (!order) {
+    return null;
+  }
+
+  const now =
+    new Date().toISOString();
+
+  const previousStatus =
+    order.status;
+
+  order.tracking = {
+    ...(order.tracking || {}),
+
+    mode:
+      "demo",
+
+    currentStep:
+      stage.step,
+
+    currentStage:
+      stage.key,
+
+    currentLabel:
+      stage.label,
+
+    completed:
+      stage.key ===
+      "delivered"
+  };
+
+  /*
+    The seller-facing order status remains
+    compatible with the existing system.
+
+    Out for delivery is represented as
+    "Shipped" because ORDER_STATUSES only
+    contains Pending / Confirmed / Shipped /
+    Delivered.
+  */
+
+  order.status =
+    stage.status;
+
+  order.updatedAt =
+    now;
+
+  if (
+    stage.key ===
+    "delivered"
+  ) {
+    order.status =
+      "Delivered";
+
+    order.tracking.completed =
+      true;
+
+    order.tracking.completedAt =
+      now;
+  }
+
+  saveOrders(orders);
+
+  saveDemoTrackingState(
+    order.orderId,
+    {
+      orderId:
+        order.orderId,
+
+      startedAt:
+        order.tracking.startedAt ||
+        order.createdAt,
+
+      currentStep:
+        stage.step,
+
+      currentStage:
+        stage.key,
+
+      currentLabel:
+        stage.label,
+
+      status:
+        order.status,
+
+      completed:
+        stage.key ===
+        "delivered",
+
+      updatedAt:
+        now,
+
+      completedAt:
+        stage.key ===
+        "delivered"
+          ? now
+          : null
+    }
+  );
+
+  if (
+    previousStatus !==
+    order.status
+  ) {
+
+    trackEvent(
+      "demo_order_status_updated",
+      {
+        orderId:
+          order.orderId,
+
+        previousStatus,
+
+        status:
+          order.status,
+
+        trackingStage:
+          stage.key
+      }
+    );
+  }
+
+  return order;
+}
+
+
+/* =====================================================
+   DEMO TRACKING — TICK
+===================================================== */
+
+function runDemoTrackingTick(
+  orderId
+) {
+  const order =
+    getOrder(orderId);
+
+  if (!order) {
+    stopDemoTracking(
+      orderId
+    );
+
+    return;
+  }
+
+  let state =
+    getDemoTrackingState(
+      orderId
+    );
+
+  if (!state) {
+
+    const startedAt =
+      Date.now();
+
+    state = {
+      orderId:
+        order.orderId,
+
+      startedAt,
+
+      currentStep:
+        0,
+
+      currentStage:
+        "placed",
+
+      currentLabel:
+        "Order placed",
+
+      status:
+        "Pending",
+
+      completed:
+        false
+    };
+
+    saveDemoTrackingState(
+      orderId,
+      state
+    );
+  }
+
+  const startedAt =
+    Number(
+      state.startedAt
+    );
+
+  if (!Number.isFinite(startedAt)) {
+    state.startedAt =
+      Date.now();
+
+    saveDemoTrackingState(
+      orderId,
+      state
+    );
+
+    return;
+  }
+
+  const elapsed =
+    Date.now() -
+    startedAt;
+
+  const stage =
+    calculateDemoStage(
+      elapsed
+    );
+
+  /*
+    Don't repeatedly rewrite the same
+    stage every second.
+  */
+
+  if (
+    Number(state.currentStep) !==
+      stage.step ||
+    state.currentStage !==
+      stage.key
+  ) {
+
+    const updatedOrder =
+      updateDemoOrder(
+        orderId,
+        stage
+      );
+
+    if (updatedOrder) {
+
+      renderOrders();
+
+      renderOrderTracker(
+        updatedOrder
+      );
+    }
+
+  } else if (
+    stage.key ===
+    "delivered"
+  ) {
+
+    /*
+      Make sure a completed order remains
+      delivered even after refresh.
+    */
+
+    if (
+      normalizeOrderStatus(
+        order.status
+      ) !==
+      "delivered"
+    ) {
+
+      const updatedOrder =
+        updateDemoOrder(
+          orderId,
+          stage
+        );
+
+      renderOrders();
+
+      renderOrderTracker(
+        updatedOrder
+      );
+
+    } else {
+
+      stopDemoTracking(
+        orderId
+      );
+    }
+  }
+}
+
+
+/* =====================================================
+   DEMO TRACKING — START
+===================================================== */
+
+function startDemoTracking(
+  order
+) {
+  if (!order || !order.orderId) {
+    return;
+  }
+
+  const orderId =
+    String(order.orderId);
+
+  /*
+    If seller already marked the order
+    delivered, don't restart the demo.
+  */
+
+  if (
+    normalizeOrderStatus(
+      order.status
+    ) ===
+    "delivered" &&
+    order.tracking?.completed
+  ) {
+    return;
+  }
+
+  let state =
+    getDemoTrackingState(
+      orderId
+    );
+
+  if (!state) {
+
+    state = {
+      orderId,
+
+      startedAt:
+        Date.now(),
+
+      currentStep:
+        0,
+
+      currentStage:
+        "placed",
+
+      currentLabel:
+        "Order placed",
+
+      status:
+        "Pending",
+
+      completed:
+        false,
+
+      updatedAt:
+        new Date().toISOString()
+    };
+
+    saveDemoTrackingState(
+      orderId,
+      state
+    );
+
+    const orders =
+      getOrders();
+
+    const savedOrder =
+      orders.find(
+        item =>
+          String(item.orderId) ===
+          orderId
+      );
+
+    if (savedOrder) {
+
+      savedOrder.tracking = {
+        ...(savedOrder.tracking || {}),
+
+        mode:
+          "demo",
+
+        startedAt:
+          new Date().toISOString(),
+
+        currentStep:
+          0,
+
+        currentStage:
+          "placed",
+
+        currentLabel:
+          "Order placed",
+
+        completed:
+          false
+      };
+
+      saveOrders(orders);
+    }
+  }
+
+  stopDemoTracking(
+    orderId
+  );
+
+  /*
+    Run immediately, then every second.
+  */
+
+  runDemoTrackingTick(
+    orderId
+  );
+
+  demoTrackingTimers[orderId] =
+    setInterval(
+      () => {
+
+        const current =
+          getOrder(
+            orderId
+          );
+
+        if (!current) {
+          stopDemoTracking(
+            orderId
+          );
+
+          return;
+        }
+
+        if (
+          current.tracking?.completed
+        ) {
+          stopDemoTracking(
+            orderId
+          );
+
+          return;
+        }
+
+        runDemoTrackingTick(
+          orderId
+        );
+
+      },
+      DEMO_TRACKING.interval
+    );
+}
+
+
+/* =====================================================
+   DEMO TRACKING — INITIALIZE
+===================================================== */
+
+function initializeDemoTracking(
+  order
+) {
+  if (!order) {
+    return;
+  }
+
+  /*
+    Do not automatically run a second
+    independent timer for the same order.
+  */
+
+  const state =
+    getDemoTrackingState(
+      order.orderId
+    );
+
+  if (
+    state?.completed ||
+    order.tracking?.completed
+  ) {
+    return;
+  }
+
+  startDemoTracking(
+    order
+  );
+}
+
+
+/* =====================================================
+   DEMO TRACKING — STOP
+===================================================== */
+
+function stopDemoTracking(
+  orderId
+) {
+  if (!orderId) {
+    return;
+  }
+
+  const timer =
+    demoTrackingTimers[
+      String(orderId)
+    ];
+
+  if (timer) {
+    clearInterval(timer);
+
+    delete demoTrackingTimers[
+      String(orderId)
+    ];
+  }
+}
+
+
+/* =====================================================
+   DEMO TRACKING — RESUME ALL
+===================================================== */
+
+function resumeDemoTracking() {
+  const orders =
+    getOrders();
+
+  orders.forEach(
+    order => {
+
+      if (!order?.orderId) {
+        return;
+      }
+
+      const state =
+        getDemoTrackingState(
+          order.orderId
+        );
+
+      if (
+        state?.completed ||
+        order.tracking?.completed
+      ) {
+        return;
+      }
+
+      /*
+        Resume only orders that have
+        demo tracking state.
+      */
+
+      if (
+        state ||
+        order.tracking?.mode ===
+          "demo"
+      ) {
+        startDemoTracking(
+          order
+        );
+      }
+    }
+  );
+}
+
+
+/* =====================================================
    REFRESH CURRENT TRACKER
 ===================================================== */
 
@@ -1978,7 +2837,13 @@ function refreshTrackerForOrder(
     return;
   }
 
-  renderOrderTracker(order);
+  initializeDemoTracking(
+    order
+  );
+
+  renderOrderTracker(
+    order
+  );
 }
 
 
@@ -2288,6 +3153,7 @@ function renderProducts() {
   if (!products.length) {
     grid.innerHTML = `
       <div class="empty-state">
+
         <strong>
           No products found.
         </strong>
@@ -2295,6 +3161,7 @@ function renderProducts() {
         <p>
           Try another search or category.
         </p>
+
       </div>
     `;
 
@@ -2560,7 +3427,7 @@ function demoCheckout() {
   );
 
   localStorage.setItem(
-    "smithx_last_demo_order",
+    STORAGE.lastDemoOrder,
     JSON.stringify({
       orderId:
         order.orderId,
@@ -2576,15 +3443,8 @@ function demoCheckout() {
     })
   );
 
-  /*
-    NEW:
-    Remember the most recently created order.
-    The dedicated My Orders page uses this
-    to automatically open the correct order.
-  */
-
   localStorage.setItem(
-    "smithx_selected_order",
+    STORAGE.selectedOrder,
     order.orderId
   );
 
@@ -2599,6 +3459,15 @@ function demoCheckout() {
   renderOrders();
 
   createTrackerSection();
+
+  /*
+    Make sure the automatic demo tracking
+    starts immediately.
+  */
+
+  initializeDemoTracking(
+    order
+  );
 
   showToast(
     `✓ Order ${order.orderId} created!`
@@ -2635,14 +3504,8 @@ function showOrderConfirmation(
     existing.remove();
   }
 
-  /*
-    Make sure this order is the selected
-    customer order even if confirmation
-    is opened from another function.
-  */
-
   localStorage.setItem(
-    "smithx_selected_order",
+    STORAGE.selectedOrder,
     order.orderId
   );
 
@@ -2796,10 +3659,10 @@ function showOrderConfirmation(
             class="secondary-button full-width"
             onclick="
               closeOrderConfirmation();
-              scrollToSection('dashboard');
+              openCustomerOrders();
             "
           >
-            View Orders
+            View My Orders
           </button>
 
         </div>
@@ -4192,6 +5055,38 @@ function setupTrackerControls() {
 
 
 /* =====================================================
+   AUTO TRACKING FROM URL
+===================================================== */
+
+/*
+  Allows:
+
+  my-orders.html?order=SMX-XXXX
+
+  to remain compatible with the customer
+  tracking page and future integrations.
+*/
+
+function getOrderIdFromCurrentURL() {
+  try {
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    return (
+      params.get("order") ||
+      ""
+    ).trim();
+
+  } catch {
+    return "";
+  }
+}
+
+
+/* =====================================================
    INITIALIZE
 ===================================================== */
 
@@ -4232,12 +5127,41 @@ function initializeSmithX() {
 
     renderOrders();
 
+    createTrackerSection();
+
     /*
-      Create the tracker immediately.
-      It is connected to real saved orders.
+      Resume any unfinished demo orders.
+      This is what makes tracking refresh-safe.
     */
 
-    createTrackerSection();
+    resumeDemoTracking();
+
+    /*
+      If the current page has an order
+      parameter, load that order.
+    */
+
+    const urlOrderId =
+      getOrderIdFromCurrentURL();
+
+    if (urlOrderId) {
+
+      const order =
+        getOrder(
+          urlOrderId
+        );
+
+      if (order) {
+
+        initializeDemoTracking(
+          order
+        );
+
+        renderOrderTracker(
+          order
+        );
+      }
+    }
 
     console.log(
       "SM1THX initialized successfully."
@@ -4332,6 +5256,9 @@ window.applyAIProductListing =
 window.openCustomerOrderTracking =
   openCustomerOrderTracking;
 
+window.openCustomerOrders =
+  openCustomerOrders;
+
 
 /* =====================================================
    ORDER GLOBAL FUNCTIONS
@@ -4362,6 +5289,15 @@ window.trackOrderFromInput =
 
 window.renderOrderTracker =
   renderOrderTracker;
+
+window.refreshTrackerForOrder =
+  refreshTrackerForOrder;
+
+window.startDemoTracking =
+  startDemoTracking;
+
+window.stopDemoTracking =
+  stopDemoTracking;
 
 
 /* =====================================================
