@@ -1,168 +1,384 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>My Orders | SM1THX</title>
-
-  <link rel="stylesheet" href="styles.css">
-
-  <style>
-    .orders-page {
-      min-height: 100vh;
-      background: #f6f9fc;
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>My Orders | SM1THX</title>  <link rel="stylesheet" href="styles.css">  <style>
+    :root {
+      --orders-primary: #1769d1;
+      --orders-primary-dark: #0d4f9e;
+      --orders-primary-light: #eaf4ff;
+      --orders-bg: #f5f8fc;
+      --orders-card: #ffffff;
+      --orders-text: #0f172a;
+      --orders-muted: #64748b;
+      --orders-border: #e2e8f0;
+      --orders-success: #087f5b;
+      --orders-success-bg: #eafaf4;
+      --orders-warning: #c2410c;
+      --orders-warning-bg: #fff7ed;
+      --orders-purple: #6d28d9;
+      --orders-purple-bg: #f5f3ff;
+      --orders-shadow: 0 16px 45px rgba(15, 23, 42, 0.065);
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--orders-bg);
+      color: var(--orders-text);
+    }
+
+    .orders-page {
+      min-height: 100vh;
+      background:
+        linear-gradient(
+          180deg,
+          #ffffff 0,
+          #f5f8fc 390px
+        );
+    }
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
     .orders-hero {
-      padding: 80px 20px 50px;
-      background: linear-gradient(135deg, #ffffff, #eef6ff);
+      position: relative;
+      overflow: hidden;
+      padding: 76px 20px 58px;
       border-bottom: 1px solid #e5edf5;
+      background:
+        radial-gradient(
+          circle at 88% 18%,
+          rgba(23, 105, 209, 0.12),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 15% 110%,
+          rgba(59, 156, 244, 0.08),
+          transparent 30%
+        ),
+        linear-gradient(
+          135deg,
+          #ffffff 0%,
+          #eef6ff 100%
+        );
+    }
+
+    .orders-hero::after {
+      position: absolute;
+      right: -100px;
+      bottom: -130px;
+      width: 340px;
+      height: 340px;
+      border: 1px solid rgba(23, 105, 209, 0.08);
+      border-radius: 50%;
+      content: "";
     }
 
     .orders-hero-inner {
-      max-width: 1200px;
+      position: relative;
+      z-index: 1;
+      width: min(1200px, calc(100% - 40px));
       margin: auto;
+    }
+
+    .orders-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 14px;
+      color: var(--orders-primary);
+      font-size: 0.76rem;
+      font-weight: 850;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .orders-eyebrow::before {
+      width: 26px;
+      height: 2px;
+      border-radius: 99px;
+      background: var(--orders-primary);
+      content: "";
     }
 
     .orders-hero h1 {
-      margin: 0 0 12px;
-      font-size: clamp(2rem, 5vw, 3.5rem);
+      max-width: 700px;
+      margin: 0;
+      font-size: clamp(2.35rem, 5vw, 4rem);
+      line-height: 1.04;
+      letter-spacing: -0.055em;
     }
 
     .orders-hero-description {
-      max-width: 700px;
-      color: #64748b;
-      font-size: 1.05rem;
-      line-height: 1.7;
+      max-width: 670px;
+      margin: 17px 0 0;
+      color: var(--orders-muted);
+      font-size: 1.04rem;
+      line-height: 1.75;
     }
 
+    /* =====================================================
+       MAIN
+    ===================================================== */
+
     .my-orders-section {
-      padding: 50px 20px 80px;
+      padding: 42px 20px 85px;
     }
 
     .my-orders-container {
-      max-width: 1200px;
+      width: min(1200px, 100%);
       margin: auto;
     }
 
+    /* =====================================================
+       SEARCH
+    ===================================================== */
+
     .orders-search-card {
-      background: #fff;
-      border: 1px solid #e5edf5;
-      border-radius: 18px;
-      padding: 20px;
+      position: relative;
       margin-bottom: 25px;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+      padding: 20px;
+      border: 1px solid #e3ebf4;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: var(--orders-shadow);
     }
 
     .orders-search-label {
       display: block;
-      margin-bottom: 8px;
-      font-weight: 700;
+      margin-bottom: 9px;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .orders-search-wrapper {
+      position: relative;
+    }
+
+    .orders-search-icon {
+      position: absolute;
+      top: 50%;
+      left: 16px;
+      color: #94a3b8;
+      font-size: 1.25rem;
+      pointer-events: none;
+      transform: translateY(-50%);
     }
 
     .orders-search {
       width: 100%;
-      padding: 14px 16px;
-      border: 1px solid #d8e2ec;
+      min-height: 52px;
+      padding: 13px 16px 13px 45px;
+      border: 1px solid #d6e0ea;
       border-radius: 12px;
-      font-size: 1rem;
-      box-sizing: border-box;
+      outline: none;
+      background: #fff;
+      color: var(--orders-text);
+      font: inherit;
+      transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
     }
+
+    .orders-search::placeholder {
+      color: #94a3b8;
+    }
+
+    .orders-search:focus {
+      border-color: var(--orders-primary);
+      box-shadow: 0 0 0 4px rgba(23, 105, 209, .11);
+    }
+
+    /* =====================================================
+       LAYOUT
+    ===================================================== */
 
     .orders-layout {
       display: grid;
-      grid-template-columns: 340px 1fr;
+      grid-template-columns: 345px minmax(0, 1fr);
       gap: 25px;
+      align-items: start;
     }
 
     .orders-list-panel,
     .order-details-panel {
-      background: #fff;
-      border: 1px solid #e5edf5;
+      border: 1px solid #e3ebf4;
       border-radius: 18px;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+      background: #fff;
+      box-shadow: var(--orders-shadow);
     }
 
+    /* =====================================================
+       ORDER LIST
+    ===================================================== */
+
     .orders-list-panel {
-      padding: 20px;
+      position: sticky;
+      top: 20px;
+      overflow: hidden;
     }
 
     .orders-list-header {
       display: flex;
+      align-items: center;
       justify-content: space-between;
+      gap: 12px;
+      padding: 20px 20px 17px;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .orders-list-header-left {
+      display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 15px;
+    }
+
+    .orders-list-header-icon {
+      display: grid;
+      width: 35px;
+      height: 35px;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--orders-primary-light);
+      color: var(--orders-primary);
+      font-size: 1rem;
     }
 
     .orders-list-header h2 {
       margin: 0;
-      font-size: 1.2rem;
+      font-size: 1.05rem;
+      letter-spacing: -0.015em;
     }
 
     .order-count-badge {
-      padding: 5px 10px;
+      display: inline-flex;
+      min-width: 31px;
+      height: 27px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 9px;
       border-radius: 999px;
-      background: #eaf3ff;
-      color: #1769d1;
-      font-weight: 700;
-      font-size: 0.85rem;
+      background: var(--orders-primary-light);
+      color: var(--orders-primary);
+      font-size: .76rem;
+      font-weight: 850;
     }
 
     .customer-order-list {
       display: flex;
+      max-height: 620px;
       flex-direction: column;
-      gap: 12px;
+      gap: 9px;
+      overflow-y: auto;
+      padding: 13px;
+    }
+
+    .customer-order-list::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .customer-order-list::-webkit-scrollbar-thumb {
+      border-radius: 99px;
+      background: #cbd5e1;
     }
 
     .order-list-item {
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
+      position: relative;
+      width: 100%;
       padding: 15px;
+      border: 1px solid #e2e8f0;
+      border-radius: 13px;
+      background: #fff;
+      color: inherit;
+      text-align: left;
       cursor: pointer;
-      transition: 0.2s ease;
+      transition:
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
     }
 
-    .order-list-item:hover,
+    .order-list-item:hover {
+      border-color: #b8d3ef;
+      background: #fbfdff;
+      transform: translateY(-1px);
+    }
+
     .order-list-item.selected {
-      border-color: #1976d2;
-      box-shadow: 0 5px 15px rgba(25, 118, 210, 0.08);
+      border-color: var(--orders-primary);
+      background: linear-gradient(
+        135deg,
+        #f8fbff,
+        #eef6ff
+      );
+      box-shadow:
+        0 7px 18px rgba(23, 105, 209, .09),
+        inset 3px 0 0 var(--orders-primary);
+    }
+
+    .order-list-item:focus-visible {
+      outline: 3px solid rgba(23, 105, 209, .2);
+      outline-offset: 2px;
     }
 
     .order-list-item-top,
     .order-list-item-bottom {
       display: flex;
+      align-items: center;
       justify-content: space-between;
       gap: 10px;
     }
 
+    .order-list-item-bottom {
+      margin-top: 12px;
+    }
+
     .order-list-item-id {
-      font-weight: 800;
-      font-size: 0.9rem;
+      overflow: hidden;
+      font-size: .88rem;
+      font-weight: 850;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .order-list-item-date {
-      color: #64748b;
-      font-size: 0.8rem;
+      flex-shrink: 0;
+      color: var(--orders-muted);
+      font-size: .74rem;
     }
 
     .order-list-item-total {
-      font-weight: 800;
+      font-size: .88rem;
+      font-weight: 850;
     }
 
+    /* =====================================================
+       STATUS BADGES
+    ===================================================== */
+
     .order-status {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 5px 9px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 25px;
+      padding: 4px 9px;
       border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
+      font-size: .7rem;
+      font-weight: 850;
+      line-height: 1;
     }
 
     .order-status-pending {
-      background: #fff7ed;
-      color: #c2410c;
+      background: var(--orders-warning-bg);
+      color: var(--orders-warning);
     }
 
     .order-status-confirmed {
@@ -170,233 +386,614 @@
       color: #1d4ed8;
     }
 
+    .order-status-packed {
+      background: #fefce8;
+      color: #a16207;
+    }
+
     .order-status-shipped {
-      background: #f5f3ff;
-      color: #6d28d9;
+      background: var(--orders-purple-bg);
+      color: var(--orders-purple);
+    }
+
+    .order-status-out_for_delivery {
+      background: #ecfeff;
+      color: #0e7490;
     }
 
     .order-status-delivered {
-      background: #ecfdf5;
-      color: #047857;
+      background: var(--orders-success-bg);
+      color: var(--orders-success);
     }
 
+    /* =====================================================
+       DETAILS
+    ===================================================== */
+
     .order-details-panel {
-      padding: 25px;
+      min-height: 620px;
+      padding: 29px;
     }
 
     .order-detail-header {
       display: flex;
-      justify-content: space-between;
       align-items: flex-start;
-      gap: 15px;
-      margin-bottom: 25px;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--orders-border);
+    }
+
+    .order-detail-kicker {
+      margin-bottom: 5px !important;
+      color: var(--orders-primary) !important;
+      font-size: .74rem;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
     }
 
     .order-detail-header h2 {
-      margin: 0 0 6px;
+      margin: 4px 0 7px;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      letter-spacing: -.035em;
     }
 
     .order-detail-header p {
       margin: 0;
-      color: #64748b;
+      color: var(--orders-muted);
+      font-size: .88rem;
     }
 
     .order-detail-header-actions {
       display: flex;
-      gap: 8px;
       flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* =====================================================
+       SUMMARY
+    ===================================================== */
+
+    .order-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 13px;
+      margin: 23px 0;
+    }
+
+    .order-summary-box {
+      position: relative;
+      overflow: hidden;
+      padding: 16px;
+      border: 1px solid var(--orders-border);
+      border-radius: 13px;
+      background: #fbfdff;
+    }
+
+    .order-summary-box::after {
+      position: absolute;
+      right: -22px;
+      bottom: -22px;
+      width: 70px;
+      height: 70px;
+      border: 1px solid rgba(23, 105, 209, .06);
+      border-radius: 50%;
+      content: "";
+    }
+
+    .order-summary-box small {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--orders-muted);
+      font-size: .76rem;
+    }
+
+    .order-summary-box strong {
+      font-size: 1rem;
+    }
+
+    /* =====================================================
+       TRACKING
+    ===================================================== */
+
+    .customer-tracking-card {
+      padding: 22px;
+      border: 1px solid #d7e8fb;
+      border-radius: 17px;
+      background:
+        radial-gradient(
+          circle at 100% 0,
+          rgba(23, 105, 209, .06),
+          transparent 30%
+        ),
+        #fbfdff;
+    }
+
+    .customer-tracking-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .customer-tracking-card-header h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: -.02em;
+    }
+
+    .tracking-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--orders-primary);
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .tracking-live::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--orders-primary);
+      box-shadow: 0 0 0 4px rgba(23, 105, 209, .1);
+      content: "";
     }
 
     .orders-progress {
-      margin: 25px 0;
+      margin: 26px 0 22px;
     }
 
     .orders-progress-bar {
+      position: relative;
       height: 8px;
-      background: #e2e8f0;
-      border-radius: 999px;
-      overflow: hidden;
+      overflow: visible;
+      border-radius: 99px;
+      background: #e4ebf2;
     }
 
     .orders-progress-fill {
+      position: relative;
       height: 100%;
-      background: #1976d2;
       border-radius: inherit;
-      transition: width 0.3s ease;
+      background: linear-gradient(
+        90deg,
+        var(--orders-primary),
+        #4aa3f5
+      );
+      transition: width .4s ease;
+    }
+
+    .orders-progress-fill::after {
+      position: absolute;
+      top: 50%;
+      right: -5px;
+      width: 14px;
+      height: 14px;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      background: var(--orders-primary);
+      box-shadow: 0 2px 7px rgba(23, 105, 209, .3);
+      content: "";
+      transform: translateY(-50%);
     }
 
     .orders-progress-labels {
-      display: flex;
-      justify-content: space-between;
-      gap: 5px;
-      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 3px;
+      margin-top: 13px;
     }
 
     .orders-progress-label {
-      font-size: 0.72rem;
-      color: #64748b;
+      color: #94a3b8;
+      font-size: .64rem;
+      line-height: 1.25;
       text-align: center;
     }
 
+    .orders-progress-label.active {
+      color: var(--orders-primary);
+      font-weight: 850;
+    }
+
     .order-current-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
       padding: 16px;
-      background: #f0f7ff;
-      border-radius: 14px;
-      margin: 20px 0;
+      border: 1px solid #dbeafe;
+      border-radius: 13px;
+      background: var(--orders-primary-light);
     }
 
     .order-current-status strong {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
+      font-size: .96rem;
     }
 
+    .order-current-status span {
+      color: #33516f;
+      font-size: .84rem;
+    }
+
+    .current-status-pill {
+      flex-shrink: 0;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--orders-primary);
+      font-size: .7rem;
+      font-weight: 850;
+    }
+
+    /* =====================================================
+       TIMELINE
+    ===================================================== */
+
     .orders-timeline {
-      margin: 25px 0;
+      margin: 27px 0 7px;
     }
 
     .orders-timeline-step {
+      position: relative;
       display: flex;
-      gap: 15px;
-      padding-bottom: 22px;
+      gap: 14px;
+      padding-bottom: 23px;
+    }
+
+    .orders-timeline-step:last-child {
+      padding-bottom: 0;
+    }
+
+    .orders-timeline-step:not(:last-child)::before {
+      position: absolute;
+      top: 18px;
+      left: 6px;
+      width: 2px;
+      height: calc(100% - 10px);
+      background: #e2e8f0;
+      content: "";
+    }
+
+    .orders-timeline-step.completed:not(:last-child)::before {
+      background: #9cc8f3;
     }
 
     .orders-step-marker {
+      position: relative;
+      z-index: 2;
       width: 14px;
       height: 14px;
-      min-width: 14px;
+      flex: 0 0 14px;
       margin-top: 4px;
+      border: 3px solid #fff;
       border-radius: 50%;
       background: #cbd5e1;
-      position: relative;
+      box-shadow: 0 0 0 1px #cbd5e1;
     }
 
-    .orders-timeline-step.completed .orders-step-marker,
+    .orders-timeline-step.completed .orders-step-marker {
+      background: var(--orders-primary);
+      box-shadow: 0 0 0 1px var(--orders-primary);
+    }
+
     .orders-timeline-step.current .orders-step-marker {
-      background: #1976d2;
+      background: #fff;
+      box-shadow:
+        0 0 0 2px var(--orders-primary),
+        0 0 0 5px rgba(23, 105, 209, .1);
     }
 
     .orders-timeline-content h4 {
       margin: 0 0 5px;
+      font-size: .94rem;
+    }
+
+    .orders-timeline-step.current h4 {
+      color: var(--orders-primary);
     }
 
     .orders-timeline-content p {
       margin: 0;
-      color: #64748b;
-      font-size: 0.9rem;
+      color: var(--orders-muted);
+      font-size: .83rem;
+      line-height: 1.55;
     }
+
+    /* =====================================================
+       DELIVERY INFO
+    ===================================================== */
 
     .order-delivery-info {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
+      gap: 13px;
       margin: 25px 0;
     }
 
     .order-delivery-card {
       padding: 16px;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
+      border: 1px solid var(--orders-border);
+      border-radius: 13px;
+      background: #fff;
     }
 
     .order-delivery-card small {
       display: block;
-      color: #64748b;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
+      color: var(--orders-muted);
+      font-size: .75rem;
     }
 
+    .order-delivery-card strong {
+      display: block;
+      font-size: .88rem;
+      line-height: 1.5;
+    }
+
+    /* =====================================================
+       ITEMS
+    ===================================================== */
+
     .tracked-items {
-      margin-top: 30px;
+      margin-top: 31px;
     }
 
     .tracked-items-header {
-      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .tracked-items-header h3 {
+      margin: 0;
+      font-size: 1.08rem;
+      letter-spacing: -.02em;
     }
 
     .tracked-item {
       display: flex;
       align-items: center;
       gap: 15px;
-      padding: 14px 0;
-      border-bottom: 1px solid #e2e8f0;
+      padding: 15px 0;
+      border-top: 1px solid var(--orders-border);
+    }
+
+    .tracked-item:last-child {
+      border-bottom: 1px solid var(--orders-border);
     }
 
     .tracked-item-image {
-      width: 65px;
-      height: 65px;
-      object-fit: cover;
-      border-radius: 10px;
+      width: 66px;
+      height: 66px;
+      flex: 0 0 66px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
       background: #f1f5f9;
+      object-fit: cover;
     }
 
     .tracked-item-info {
+      min-width: 0;
       flex: 1;
     }
 
     .tracked-item-info strong {
       display: block;
-      margin-bottom: 4px;
+      overflow: hidden;
+      margin-bottom: 5px;
+      font-size: .9rem;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .tracked-item-info span {
-      color: #64748b;
-      font-size: 0.9rem;
+      color: var(--orders-muted);
+      font-size: .8rem;
     }
 
     .tracked-item-price {
-      font-weight: 800;
+      flex: 0 0 auto;
+      font-size: .88rem;
+      font-weight: 850;
+      text-align: right;
     }
+
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
 
     .order-detail-actions {
       display: flex;
-      gap: 12px;
       flex-wrap: wrap;
-      margin-top: 30px;
+      gap: 10px;
+      margin-top: 29px;
     }
 
+    .orders-page .btn {
+      min-height: 43px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
+    .orders-page .btn-primary {
+      border-color: var(--orders-primary);
+      background: var(--orders-primary);
+    }
+
+    .orders-page .btn-primary:hover {
+      border-color: var(--orders-primary-dark);
+      background: var(--orders-primary-dark);
+    }
+
+    .orders-page .btn-secondary {
+      border-color: #ccd7e2;
+      background: #fff;
+      color: #1e293b;
+    }
+
+    .orders-page .btn-secondary:hover {
+      border-color: var(--orders-primary);
+      color: var(--orders-primary);
+    }
+
+    /* =====================================================
+       EMPTY STATE
+    ===================================================== */
+
     .orders-empty {
+      display: grid;
+      min-height: 300px;
+      place-content: center;
+      padding: 42px 22px;
+      color: var(--orders-muted);
       text-align: center;
-      padding: 60px 20px;
-      color: #64748b;
     }
 
     .orders-empty-icon {
-      font-size: 3rem;
-      margin-bottom: 15px;
+      display: grid;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 15px;
+      place-items: center;
+      border-radius: 18px;
+      background: var(--orders-primary-light);
+      font-size: 1.7rem;
     }
 
-    .customer-orders-cta {
-      margin-top: 25px;
-      padding: 20px;
-      border-radius: 16px;
-      background: #eef6ff;
-      border: 1px solid #dbeafe;
+    .orders-empty h2,
+    .orders-empty strong {
+      margin: 0 0 8px;
+      color: var(--orders-text);
     }
 
-    @media (max-width: 850px) {
+    .orders-empty p {
+      max-width: 390px;
+      margin: 0;
+      font-size: .9rem;
+      line-height: 1.65;
+    }
+
+    .orders-empty .order-detail-actions {
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 950px) {
       .orders-layout {
         grid-template-columns: 1fr;
       }
+
+      .orders-list-panel {
+        position: static;
+      }
+
+      .customer-order-list {
+        display: grid;
+        max-height: 330px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .order-details-panel {
+        min-height: auto;
+      }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 650px) {
       .orders-hero {
-        padding: 55px 18px 35px;
+        padding: 57px 15px 39px;
+      }
+
+      .orders-hero-inner,
+      .my-orders-container {
+        width: 100%;
+      }
+
+      .orders-hero h1 {
+        font-size: 2.45rem;
+      }
+
+      .orders-hero-description {
+        font-size: .94rem;
       }
 
       .my-orders-section {
-        padding: 35px 15px 60px;
+        padding: 25px 15px 60px;
+      }
+
+      .orders-search-card {
+        padding: 17px;
+        border-radius: 15px;
+      }
+
+      .orders-list-panel,
+      .order-details-panel {
+        border-radius: 15px;
+      }
+
+      .customer-order-list {
+        display: flex;
+        max-height: 360px;
+      }
+
+      .order-details-panel {
+        padding: 20px;
       }
 
       .order-detail-header {
         flex-direction: column;
       }
 
-      .order-delivery-info {
+      .order-detail-header-actions {
+        width: 100%;
+      }
+
+      .order-detail-header-actions .btn {
+        width: 100%;
+      }
+
+      .order-summary-grid {
         grid-template-columns: 1fr;
       }
 
+      .customer-tracking-card {
+        padding: 17px;
+      }
+
+      .customer-tracking-card-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .orders-progress-labels {
+        gap: 1px;
+      }
+
       .orders-progress-label {
-        font-size: 0.62rem;
+        font-size: .52rem;
+      }
+
+      .order-current-status {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .current-status-pill {
+        align-self: flex-start;
+      }
+
+      .order-delivery-info {
+        grid-template-columns: 1fr;
       }
 
       .tracked-item {
@@ -404,755 +1001,1511 @@
       }
 
       .tracked-item-price {
-        font-size: 0.85rem;
+        font-size: .78rem;
+      }
+
+      .order-detail-actions {
+        flex-direction: column;
+      }
+
+      .order-detail-actions .btn {
+        width: 100%;
       }
     }
-  </style>
-</head>
+  </style></head><body><div class="orders-page">  <!-- ===================================================
+       HEADER
+  ==================================================== -->  <header class="topbar"><div class="container">
 
-<body>
+  <div class="brand">
 
-  <div class="orders-page">
+    <a
+      href="index.html"
+      aria-label="Go to SM1THX homepage"
+    >
 
-    <header class="topbar">
-      <div class="container">
-        <div class="brand">
-          <a href="index.html">
-            <img src="assets/smithx-logo.jpg" alt="SM1THX">
-            <div>
-              <strong>SM1THX 🛒</strong>
-              <span>SHOP • BUY • GROW</span>
-            </div>
-          </a>
-        </div>
+      <img
+        src="assets/smithx-logo.jpg"
+        alt="SM1THX logo"
+      >
 
-        <nav>
-          <a href="index.html#home">Home</a>
-          <a href="index.html#market">Marketplace</a>
-          <a href="index.html#seller">Sell</a>
-          <a href="index.html#dashboard">Dashboard</a>
-          <a href="my-orders.html">My Orders</a>
-          <a href="index.html#updates">Updates</a>
-        </nav>
+      <div>
+        <strong>SM1THX 🛒</strong>
+        <span>SHOP • BUY • GROW</span>
       </div>
-    </header>
 
-    <main>
-
-      <section class="orders-hero">
-        <div class="orders-hero-inner">
-          <p class="eyebrow">SM1THX CUSTOMER CENTER</p>
-          <h1>My Orders</h1>
-          <p class="orders-hero-description">
-            View your purchases, check order status, and follow your delivery
-            from checkout to your doorstep.
-          </p>
-        </div>
-      </section>
-
-      <section class="my-orders-section">
-        <div class="my-orders-container">
-
-          <div class="orders-search-card">
-            <label class="orders-search-label" for="orderSearchInput">
-              Search your orders
-            </label>
-
-            <input
-              id="orderSearchInput"
-              class="orders-search"
-              type="search"
-              placeholder="Search by order ID or product name..."
-              autocomplete="off"
-            >
-          </div>
-
-          <div class="orders-layout">
-
-            <aside class="orders-list-panel">
-
-              <div class="orders-list-header">
-                <h2>Your Orders</h2>
-                <span id="orderCount" class="order-count-badge">0</span>
-              </div>
-
-              <div id="ordersList" class="customer-order-list"></div>
-
-            </aside>
-
-            <section
-              id="orderDetailsPanel"
-              class="order-details-panel"
-            ></section>
-
-          </div>
-
-        </div>
-      </section>
-
-    </main>
-
-    <footer class="footer">
-      <div class="container">
-        <p>© 2026 SM1THX. Building the future of commerce.</p>
-      </div>
-    </footer>
+    </a>
 
   </div>
 
-  <script>
-    "use strict";
+  <nav aria-label="Primary navigation">
 
-    const ORDERS_KEY = "smithx_orders_v2";
-    const SELECTED_ORDER_KEY = "smithx_selected_order";
+    <a href="index.html#home">Home</a>
 
-    const TRACKING_STEPS = [
-      "placed",
-      "confirmed",
-      "packed",
-      "shipped",
-      "out_for_delivery",
-      "delivered"
-    ];
+    <a href="index.html#market">
+      Marketplace
+    </a>
 
-    function escapeHTML(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    <a href="index.html#seller">
+      Sell
+    </a>
+
+    <a href="index.html#dashboard">
+      Dashboard
+    </a>
+
+    <a
+      href="my-orders.html"
+      aria-current="page"
+    >
+      My Orders
+    </a>
+
+    <a href="index.html#updates">
+      Updates
+    </a>
+
+  </nav>
+
+</div>
+
+  </header>  <!-- ===================================================
+       MAIN
+  ==================================================== -->  <main><section class="orders-hero">
+
+  <div class="orders-hero-inner">
+
+    <p class="orders-eyebrow">
+      SM1THX Customer Center
+    </p>
+
+    <h1>
+      Your orders,<br>
+      all in one place.
+    </h1>
+
+    <p class="orders-hero-description">
+      Review your purchases, monitor delivery progress,
+      and keep track of every order from checkout to
+      your doorstep.
+    </p>
+
+  </div>
+
+</section>
+
+<section class="my-orders-section">
+
+  <div class="my-orders-container">
+
+    <!-- SEARCH -->
+
+    <div class="orders-search-card">
+
+      <label
+        class="orders-search-label"
+        for="orderSearchInput"
+      >
+        Search your orders
+      </label>
+
+      <div class="orders-search-wrapper">
+
+        <span
+          class="orders-search-icon"
+          aria-hidden="true"
+        >
+          ⌕
+        </span>
+
+        <input
+          id="orderSearchInput"
+          class="orders-search"
+          type="search"
+          placeholder="Search by order ID or product name..."
+          autocomplete="off"
+        >
+
+      </div>
+
+    </div>
+
+    <!-- ORDER LAYOUT -->
+
+    <div class="orders-layout">
+
+      <!-- ORDER LIST -->
+
+      <aside
+        class="orders-list-panel"
+        aria-label="Your orders"
+      >
+
+        <div class="orders-list-header">
+
+          <div class="orders-list-header-left">
+
+            <span
+              class="orders-list-header-icon"
+              aria-hidden="true"
+            >
+              📦
+            </span>
+
+            <h2>
+              Your Orders
+            </h2>
+
+          </div>
+
+          <span
+            id="orderCount"
+            class="order-count-badge"
+            aria-label="Number of orders"
+          >
+            0
+          </span>
+
+        </div>
+
+        <div
+          id="ordersList"
+          class="customer-order-list"
+          aria-live="polite"
+        ></div>
+
+      </aside>
+
+      <!-- ORDER DETAILS -->
+
+      <section
+        id="orderDetailsPanel"
+        class="order-details-panel"
+        aria-live="polite"
+      ></section>
+
+    </div>
+
+  </div>
+
+</section>
+
+  </main>  <footer class="footer"><div class="container">
+
+  <p>
+    © 2026 SM1THX.
+    Building the future of commerce.
+  </p>
+
+</div>
+
+  </footer></div><script>
+"use strict";
+
+/* =====================================================
+   STORAGE
+===================================================== */
+
+const ORDERS_KEY = "smithx_orders_v2";
+const SELECTED_ORDER_KEY = "smithx_selected_order";
+
+/* =====================================================
+   TRACKING
+===================================================== */
+
+const TRACKING_STEPS = [
+  "placed",
+  "confirmed",
+  "packed",
+  "shipped",
+  "out_for_delivery",
+  "delivered"
+];
+
+const TRACKING_LABELS = [
+  "Placed",
+  "Confirmed",
+  "Packed",
+  "Shipped",
+  "Out for delivery",
+  "Delivered"
+];
+
+const TRACKING_DESCRIPTIONS = [
+  "Your order has been received and is waiting for confirmation.",
+  "The seller has confirmed your order.",
+  "Your items are being packed and prepared for dispatch.",
+  "Your package has left the processing center.",
+  "Your rider or courier is heading to your delivery address.",
+  "Your order has been delivered successfully."
+];
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function escapeHTML(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+function formatKES(value) {
+
+  const amount = Number(value || 0);
+
+  return `KES ${amount.toLocaleString("en-KE", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  })}`;
+
+}
+
+function formatDate(value) {
+
+  if (!value) {
+    return "Date unavailable";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Date unavailable";
+  }
+
+  return date.toLocaleDateString("en-KE", {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  });
+
+}
+
+/* =====================================================
+   ORDERS
+===================================================== */
+
+function getOrders() {
+
+  try {
+
+    const storedOrders =
+      localStorage.getItem(ORDERS_KEY);
+
+    if (!storedOrders) {
+      return [];
     }
 
-    function formatKES(value) {
-      return "KES " + Number(value || 0).toLocaleString("en-KE");
-    }
+    const parsedOrders =
+      JSON.parse(storedOrders);
 
-    function formatDate(value) {
-      if (!value) return "Date unavailable";
+    return Array.isArray(parsedOrders)
+      ? parsedOrders
+      : [];
 
-      const date = new Date(value);
+  } catch (error) {
 
-      if (Number.isNaN(date.getTime())) {
-        return "Date unavailable";
+    console.error(
+      "Unable to load orders:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+function getSelectedOrderId() {
+
+  const parameters =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  return (
+    parameters.get("order") ||
+    localStorage.getItem(
+      SELECTED_ORDER_KEY
+    ) ||
+    ""
+  );
+
+}
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+function normaliseStatus(status) {
+
+  return String(
+    status || "Pending"
+  )
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "_");
+
+}
+
+function getDisplayStatus(order) {
+
+  return order?.status
+    ? String(order.status)
+    : "Pending";
+
+}
+
+function statusClass(status) {
+
+  return (
+    "order-status order-status-" +
+    normaliseStatus(status)
+  );
+
+}
+
+/* =====================================================
+   TRACKING
+===================================================== */
+
+function getTrackingStep(order) {
+
+  if (!order) {
+    return 0;
+  }
+
+  const status =
+    normaliseStatus(order.status);
+
+  const statusMap = {
+
+    pending: 0,
+
+    placed: 0,
+
+    confirmed: 1,
+
+    packed: 2,
+
+    shipped: 3,
+
+    out_for_delivery: 4,
+
+    delivered: 5
+
+  };
+
+  if (
+    statusMap[status] !== undefined
+  ) {
+
+    return statusMap[status];
+
+  }
+
+  const trackingStep =
+    normaliseStatus(
+      order.trackingStep
+    );
+
+  const index =
+    TRACKING_STEPS.indexOf(
+      trackingStep
+    );
+
+  return index >= 0
+    ? index
+    : 0;
+
+}
+
+function getCurrentLocation(
+  order,
+  step
+) {
+
+  if (order?.currentLocation) {
+
+    return order.currentLocation;
+
+  }
+
+  const defaultLocations = [
+
+    "Order received",
+
+    "SM1THX processing center",
+
+    "Package preparation area",
+
+    "Regional distribution center",
+
+    "Out for delivery",
+
+    "Delivered"
+
+  ];
+
+  return (
+    defaultLocations[step] ||
+    defaultLocations[0]
+  );
+
+}
+
+function getEstimatedDelivery(order) {
+
+  if (order?.estimatedDelivery) {
+
+    return order.estimatedDelivery;
+
+  }
+
+  const baseDate =
+    order?.createdAt
+      ? new Date(order.createdAt)
+      : new Date();
+
+  if (
+    Number.isNaN(
+      baseDate.getTime()
+    )
+  ) {
+
+    return "To be confirmed";
+
+  }
+
+  baseDate.setDate(
+    baseDate.getDate() + 5
+  );
+
+  return formatDate(baseDate);
+
+}
+
+/* =====================================================
+   ITEMS
+===================================================== */
+
+function getItemImage(item) {
+
+  return (
+    item?.image ||
+    item?.imageUrl ||
+    item?.thumbnail ||
+    "assets/placeholder-product.jpg"
+  );
+
+}
+
+function getItemQuantity(item) {
+
+  const quantity =
+    Number(item?.quantity || 1);
+
+  return quantity > 0
+    ? quantity
+    : 1;
+
+}
+
+function getItemTotal(item) {
+
+  return (
+    Number(item?.price || 0) *
+    getItemQuantity(item)
+  );
+
+}
+
+/* =====================================================
+   RENDER ORDER LIST
+===================================================== */
+
+function renderOrders(searchTerm = "") {
+
+  const orders = getOrders();
+
+  const query =
+    String(searchTerm)
+      .trim()
+      .toLowerCase();
+
+  const filteredOrders =
+    orders.filter(order => {
+
+      if (!query) {
+        return true;
       }
 
-      return date.toLocaleDateString("en-KE", {
-        year: "numeric",
-        month: "short",
-        day: "numeric"
-      });
-    }
+      const orderId =
+        String(
+          order.orderId || ""
+        ).toLowerCase();
 
-    function getOrders() {
-      try {
-        const raw = localStorage.getItem(ORDERS_KEY);
-
-        if (!raw) return [];
-
-        const orders = JSON.parse(raw);
-
-        return Array.isArray(orders) ? orders : [];
-      } catch (error) {
-        console.error("Unable to load orders:", error);
-        return [];
-      }
-    }
-
-    function getSelectedOrderId() {
-      const params = new URLSearchParams(window.location.search);
-
-      return (
-        params.get("order") ||
-        localStorage.getItem(SELECTED_ORDER_KEY) ||
-        ""
-      );
-    }
-
-    function getTrackingStep(order) {
-      if (!order) return 0;
-
-      const status = String(order.status || "").toLowerCase();
-
-      const statusMap = {
-        pending: 0,
-        confirmed: 1,
-        shipped: 3,
-        delivered: 5
-      };
-
-      if (statusMap[status] !== undefined) {
-        return statusMap[status];
-      }
-
-      if (order.trackingStep !== undefined) {
-        const index = TRACKING_STEPS.indexOf(
-          String(order.trackingStep).toLowerCase()
-        );
-
-        if (index >= 0) return index;
-      }
-
-      return 0;
-    }
-
-    function getLocation(order, step) {
-      if (order?.currentLocation) {
-        return order.currentLocation;
-      }
-
-      const locations = [
-        "Order received",
-        "SmithX processing center",
-        "Package being prepared",
-        "Regional distribution center",
-        "Out for delivery",
-        "Delivered"
-      ];
-
-      return locations[step] || locations[0];
-    }
-
-    function getEstimatedDelivery(order) {
-      if (order?.estimatedDelivery) {
-        return order.estimatedDelivery;
-      }
-
-      const baseDate = order?.createdAt
-        ? new Date(order.createdAt)
-        : new Date();
-
-      baseDate.setDate(baseDate.getDate() + 5);
-
-      return baseDate.toLocaleDateString("en-KE", {
-        year: "numeric",
-        month: "short",
-        day: "numeric"
-      });
-    }
-
-    function statusClass(status) {
-      const value = String(status || "Pending").toLowerCase();
-
-      return "order-status order-status-" + value;
-    }
-
-    function renderOrders(searchTerm = "") {
-      const orders = getOrders();
-
-      const query = String(searchTerm || "")
-        .trim()
-        .toLowerCase();
-
-      const filtered = orders.filter(order => {
-        if (!query) return true;
-
-        const orderId = String(order.orderId || "").toLowerCase();
-
-        const productNames = Array.isArray(order.items)
+      const productNames =
+        Array.isArray(order.items)
           ? order.items
-              .map(item => String(item.name || ""))
+              .map(
+                item =>
+                  String(
+                    item.name || ""
+                  )
+              )
               .join(" ")
               .toLowerCase()
           : "";
 
-        return (
-          orderId.includes(query) ||
-          productNames.includes(query)
-        );
-      });
+      return (
+        orderId.includes(query) ||
+        productNames.includes(query)
+      );
 
-      const list = document.getElementById("ordersList");
-      const count = document.getElementById("orderCount");
+    });
 
-      if (!list || !count) return;
+  const list =
+    document.getElementById(
+      "ordersList"
+    );
 
-      count.textContent = filtered.length;
+  const count =
+    document.getElementById(
+      "orderCount"
+    );
 
-      if (!filtered.length) {
-        list.innerHTML = `
-          <div class="orders-empty">
-            <div class="orders-empty-icon">📦</div>
-            <strong>No orders found</strong>
-            <p>
-              ${
-                orders.length
-                  ? "Try another search."
-                  : "Your purchases will appear here after checkout."
-              }
-            </p>
-          </div>
-        `;
+  if (!list || !count) {
+    return;
+  }
 
-        return;
-      }
+  count.textContent =
+    filteredOrders.length;
 
-      const selectedId = getSelectedOrderId();
+  if (!filteredOrders.length) {
 
-      list.innerHTML = filtered.map(order => {
+    const message =
+      orders.length
+        ? "Try a different order ID or product name."
+        : "Your purchases will appear here after checkout.";
+
+    list.innerHTML = `
+
+      <div class="orders-empty">
+
+        <div
+          class="orders-empty-icon"
+          aria-hidden="true"
+        >
+          📦
+        </div>
+
+        <strong>
+          No orders found
+        </strong>
+
+        <p>
+          ${escapeHTML(message)}
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+  const selectedOrderId =
+    getSelectedOrderId();
+
+  list.innerHTML =
+    filteredOrders
+      .map(order => {
+
+        const orderId =
+          String(
+            order.orderId || ""
+          );
+
         const isSelected =
-          String(order.orderId) === String(selectedId);
+          orderId ===
+          String(selectedOrderId);
 
         return `
-          <article
-            class="order-list-item ${isSelected ? "selected" : ""}"
-            data-order-id="${escapeHTML(order.orderId)}"
-            tabindex="0"
-            role="button"
-          >
-            <div class="order-list-item-top">
-              <span class="order-list-item-id">
-                ${escapeHTML(order.orderId || "Order")}
-              </span>
-
-              <span class="order-list-item-date">
-                ${escapeHTML(formatDate(order.createdAt || order.date))}
-              </span>
-            </div>
-
-            <div class="order-list-item-bottom">
-              <span class="${statusClass(order.status)}">
-                ${escapeHTML(order.status || "Pending")}
-              </span>
-
-              <span class="order-list-item-total">
-                ${formatKES(order.total)}
-              </span>
-            </div>
-          </article>
-        `;
-      }).join("");
-
-      list.querySelectorAll("[data-order-id]").forEach(item => {
-        const orderId = item.dataset.orderId;
-
-        item.addEventListener("click", () => {
-          selectOrder(orderId);
-        });
-
-        item.addEventListener("keydown", event => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            selectOrder(orderId);
-          }
-        });
-      });
-    }
-
-    function selectOrder(orderId) {
-      if (!orderId) return;
-
-      localStorage.setItem(
-        SELECTED_ORDER_KEY,
-        orderId
-      );
-
-      const url =
-        "my-orders.html?order=" +
-        encodeURIComponent(orderId);
-
-      window.history.replaceState({}, "", url);
-
-      renderOrders(
-        document.getElementById("orderSearchInput")?.value || ""
-      );
-
-      renderOrderDetails(orderId);
-    }
-
-    function searchOrder(event) {
-      renderOrders(event.target.value);
-    }
-
-    function renderOrderDetails(orderId) {
-      const panel = document.getElementById("orderDetailsPanel");
-
-      if (!panel) return;
-
-      const orders = getOrders();
-
-      const order = orders.find(
-        item => String(item.orderId) === String(orderId)
-      );
-
-      if (!order) {
-        panel.innerHTML = `
-          <div class="orders-empty">
-            <div class="orders-empty-icon">📦</div>
-            <h2>No order selected</h2>
-            <p>Select an order from the list to view its tracking information.</p>
-            <div class="order-detail-actions">
-              <a class="btn btn-primary" href="index.html#market">
-                Continue Shopping
-              </a>
-            </div>
-          </div>
-        `;
-
-        return;
-      }
-
-      const step = getTrackingStep(order);
-      const progress =
-        (step / (TRACKING_STEPS.length - 1)) * 100;
-
-      const trackingLabels = [
-        "Placed",
-        "Confirmed",
-        "Packed",
-        "Shipped",
-        "Out for delivery",
-        "Delivered"
-      ];
-
-      const currentLocation = getLocation(order, step);
-
-      const items = Array.isArray(order.items)
-        ? order.items
-        : [];
-
-      panel.innerHTML = `
-        <div class="order-detail-header">
-          <div>
-            <p>Order</p>
-            <h2>${escapeHTML(order.orderId)}</h2>
-            <p>
-              Placed ${escapeHTML(
-                formatDate(order.createdAt || order.date)
-              )}
-            </p>
-          </div>
-
-          <div class="order-detail-header-actions">
-            <button
-              class="btn btn-secondary"
-              type="button"
-              id="copyOrderButton"
-            >
-              Copy Order ID
-            </button>
-          </div>
-        </div>
-
-        <div class="order-summary-grid">
-          <div class="order-summary-box">
-            <small>Status</small>
-            <strong>
-              ${escapeHTML(order.status || "Pending")}
-            </strong>
-          </div>
-
-          <div class="order-summary-box">
-            <small>Total</small>
-            <strong>
-              ${formatKES(order.total)}
-            </strong>
-          </div>
-
-          <div class="order-summary-box">
-            <small>Items</small>
-            <strong>
-              ${items.length}
-            </strong>
-          </div>
-        </div>
-
-        <div class="customer-tracking-card">
-          <div class="customer-tracking-card-header">
-            <h3>Order Tracking</h3>
-            <span>${escapeHTML(currentLocation)}</span>
-          </div>
-
-          <div class="orders-progress">
-            <div class="orders-progress-bar">
-              <div
-                class="orders-progress-fill"
-                style="width: ${progress}%"
-              ></div>
-            </div>
-
-            <div class="orders-progress-labels">
-              ${trackingLabels.map((label, index) => `
-                <span class="orders-progress-label">
-                  ${index <= step ? "✓ " : ""}
-                  ${escapeHTML(label)}
-                </span>
-              `).join("")}
-            </div>
-          </div>
-
-          <div class="order-current-status">
-            <strong>
-              ${
-                escapeHTML(
-                  trackingLabels[step] || "Order received"
-                )
-              }
-            </strong>
-
-            <span>
-              Current location:
-              ${escapeHTML(currentLocation)}
-            </span>
-          </div>
-
-          <div class="orders-timeline">
-            ${trackingLabels.map((label, index) => {
-              const completed = index < step;
-              const current = index === step;
-
-              return `
-                <div class="
-                  orders-timeline-step
-                  ${completed ? "completed" : ""}
-                  ${current ? "current" : ""}
-                ">
-                  <div class="orders-step-marker"></div>
-
-                  <div class="orders-timeline-content">
-                    <h4>${escapeHTML(label)}</h4>
-                    <p>
-                      ${
-                        index < step
-                          ? "Completed"
-                          : index === step
-                          ? "Current stage"
-                          : "Waiting"
-                      }
-                    </p>
-                  </div>
-                </div>
-              `;
-            }).join("")}
-          </div>
-
-          <div class="order-delivery-info">
-            <div class="order-delivery-card">
-              <small>Current location</small>
-              <strong>
-                ${escapeHTML(currentLocation)}
-              </strong>
-            </div>
-
-            <div class="order-delivery-card">
-              <small>Estimated delivery</small>
-              <strong>
-                ${escapeHTML(getEstimatedDelivery(order))}
-              </strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="tracked-items">
-          <div class="tracked-items-header">
-            <h3>Items in this order</h3>
-          </div>
-
-          ${
-            items.length
-              ? items.map(item => `
-                <div class="tracked-item">
-                  ${
-                    item.image
-                      ? `
-                        <img
-                          class="tracked-item-image"
-                          src="${escapeHTML(item.image)}"
-                          alt="${escapeHTML(item.name)}"
-                        >
-                      `
-                      : `
-                        <div class="tracked-item-image"></div>
-                      `
-                  }
-
-                  <div class="tracked-item-info">
-                    <strong>
-                      ${escapeHTML(item.name || "Product")}
-                    </strong>
-
-                    <span>
-                      Quantity:
-                      ${escapeHTML(item.quantity || 1)}
-                    </span>
-                  </div>
-
-                  <div class="tracked-item-price">
-                    ${formatKES(
-                      Number(item.price || 0) *
-                      Number(item.quantity || 1)
-                    )}
-                  </div>
-                </div>
-              `).join("")
-              : "<p>No item information available.</p>"
-          }
-        </div>
-
-        <div class="order-detail-actions">
-          <a
-            class="btn btn-primary"
-            href="index.html#market"
-          >
-            Continue Shopping
-          </a>
 
           <button
-            class="btn btn-secondary"
+            class="order-list-item ${
+              isSelected
+                ? "selected"
+                : ""
+            }"
             type="button"
-            id="invoiceButton"
+            data-order-id="${escapeHTML(
+              orderId
+            )}"
+            aria-pressed="${isSelected}"
           >
-            View Invoice
+
+            <span
+              class="order-list-item-top"
+            >
+
+              <span
+                class="order-list-item-id"
+              >
+                ${escapeHTML(
+                  order.orderId ||
+                  "Order"
+                )}
+              </span>
+
+              <span
+                class="order-list-item-date"
+              >
+                ${escapeHTML(
+                  formatDate(
+                    order.createdAt ||
+                    order.date
+                  )
+                )}
+              </span>
+
+            </span>
+
+            <span
+              class="order-list-item-bottom"
+            >
+
+              <span
+                class="${statusClass(
+                  order.status
+                )}"
+              >
+                ${escapeHTML(
+                  getDisplayStatus(order)
+                )}
+              </span>
+
+              <span
+                class="order-list-item-total"
+              >
+                ${formatKES(
+                  order.total
+                )}
+              </span>
+
+            </span>
+
           </button>
-        </div>
-      `;
 
-      document
-        .getElementById("copyOrderButton")
-        ?.addEventListener("click", () => {
-          copyOrderId(order.orderId);
-        });
+        `;
 
-      document
-        .getElementById("invoiceButton")
-        ?.addEventListener("click", () => {
-          downloadInvoice(order);
-        });
-    }
+      })
+      .join("");
 
-    async function copyOrderId(orderId) {
-      try {
-        await navigator.clipboard.writeText(orderId);
+  list
+    .querySelectorAll(
+      "[data-order-id]"
+    )
+    .forEach(button => {
 
-        showPageMessage("Order ID copied.");
-      } catch (error) {
-        showPageMessage(
-          "Order ID: " + orderId
-        );
-      }
-    }
+      button.addEventListener(
+        "click",
+        () => {
 
-    function showPageMessage(message) {
-      let toast = document.getElementById("ordersToast");
-
-      if (!toast) {
-        toast = document.createElement("div");
-
-        toast.id = "ordersToast";
-
-        toast.style.position = "fixed";
-        toast.style.bottom = "25px";
-        toast.style.left = "50%";
-        toast.style.transform = "translateX(-50%)";
-        toast.style.padding = "12px 18px";
-        toast.style.background = "#0f172a";
-        toast.style.color = "#fff";
-        toast.style.borderRadius = "10px";
-        toast.style.zIndex = "99999";
-
-        document.body.appendChild(toast);
-      }
-
-      toast.textContent = message;
-
-      clearTimeout(window.__smithxToastTimer);
-
-      window.__smithxToastTimer = setTimeout(() => {
-        toast.remove();
-      }, 2500);
-    }
-
-    function downloadInvoice(order) {
-      const items = Array.isArray(order.items)
-        ? order.items
-        : [];
-
-      const lines = [
-        "SM1THX ORDER INVOICE",
-        "====================",
-        "",
-        "Order ID: " + (order.orderId || ""),
-        "Date: " + formatDate(order.createdAt || order.date),
-        "Status: " + (order.status || "Pending"),
-        "",
-        "ITEMS",
-        "-----",
-        ...items.map(item => {
-          const quantity = Number(item.quantity || 1);
-          const price = Number(item.price || 0);
-
-          return (
-            `${item.name || "Product"} x${quantity} — ` +
-            formatKES(price * quantity)
+          selectOrder(
+            button.dataset.orderId
           );
-        }),
-        "",
-        "TOTAL: " + formatKES(order.total),
-        "",
-        "Thank you for shopping with SM1THX."
-      ];
 
-      const blob = new Blob(
-        [lines.join("\n")],
-        { type: "text/plain;charset=utf-8" }
+        }
       );
 
-      const url = URL.createObjectURL(blob);
+    });
 
-      const link = document.createElement("a");
+}
 
-      link.href = url;
-      link.download =
-        "SM1THX-" +
-        String(order.orderId || "invoice") +
-        ".txt";
+/* =====================================================
+   SELECT ORDER
+===================================================== */
 
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+function selectOrder(orderId) {
 
-      URL.revokeObjectURL(url);
-    }
+  if (!orderId) {
+    return;
+  }
 
-    function initializeOrdersPage() {
-      const orders = getOrders();
+  localStorage.setItem(
+    SELECTED_ORDER_KEY,
+    orderId
+  );
 
-      const selectedId = getSelectedOrderId();
+  const newUrl =
+    new URL(
+      window.location.href
+    );
 
-      const searchInput =
-        document.getElementById("orderSearchInput");
+  newUrl.searchParams.set(
+    "order",
+    orderId
+  );
 
-      searchInput?.addEventListener(
-        "input",
-        searchOrder
+  window.history.replaceState(
+    {},
+    "",
+    newUrl
+  );
+
+  const searchInput =
+    document.getElementById(
+      "orderSearchInput"
+    );
+
+  renderOrders(
+    searchInput?.value || ""
+  );
+
+  renderOrderDetails(
+    orderId
+  );
+
+}
+
+/* =====================================================
+   EMPTY DETAILS
+===================================================== */
+
+function renderEmptyDetails() {
+
+  const panel =
+    document.getElementById(
+      "orderDetailsPanel"
+    );
+
+  if (!panel) {
+    return;
+  }
+
+  panel.innerHTML = `
+
+    <div class="orders-empty">
+
+      <div
+        class="orders-empty-icon"
+        aria-hidden="true"
+      >
+        📦
+      </div>
+
+      <h2>
+        No order selected
+      </h2>
+
+      <p>
+        Select an order from the list
+        to view its items, delivery
+        details, and tracking progress.
+      </p>
+
+      <div class="order-detail-actions">
+
+        <a
+          class="btn btn-primary"
+          href="index.html#market"
+        >
+          Explore Marketplace
+        </a>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+/* =====================================================
+   ORDER DETAILS
+===================================================== */
+
+function renderOrderDetails(orderId) {
+
+  const panel =
+    document.getElementById(
+      "orderDetailsPanel"
+    );
+
+  if (!panel) {
+    return;
+  }
+
+  const order =
+    getOrders().find(item => {
+
+      return (
+        String(item.orderId) ===
+        String(orderId)
       );
 
-      renderOrders();
+    });
 
-      if (selectedId) {
-        const exists = orders.some(
-          order =>
-            String(order.orderId) ===
-            String(selectedId)
+  if (!order) {
+
+    renderEmptyDetails();
+
+    return;
+
+  }
+
+  const items =
+    Array.isArray(order.items)
+      ? order.items
+      : [];
+
+  const trackingStep =
+    getTrackingStep(order);
+
+  const progress =
+    (
+      trackingStep /
+      (TRACKING_STEPS.length - 1)
+    ) * 100;
+
+  const currentLocation =
+    getCurrentLocation(
+      order,
+      trackingStep
+    );
+
+  panel.innerHTML = `
+
+    <div class="order-detail-header">
+
+      <div>
+
+        <p class="order-detail-kicker">
+          Order details
+        </p>
+
+        <h2>
+          ${escapeHTML(
+            order.orderId ||
+            "Order"
+          )}
+        </h2>
+
+        <p>
+          Placed
+          ${escapeHTML(
+            formatDate(
+              order.createdAt ||
+              order.date
+            )
+          )}
+        </p>
+
+      </div>
+
+      <div
+        class="order-detail-header-actions"
+      >
+
+        <button
+          id="copyOrderButton"
+          class="btn btn-secondary"
+          type="button"
+        >
+          Copy Order ID
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- SUMMARY -->
+
+    <div class="order-summary-grid">
+
+      <div class="order-summary-box">
+
+        <small>
+          Current status
+        </small>
+
+        <strong>
+          ${escapeHTML(
+            getDisplayStatus(order)
+          )}
+        </strong>
+
+      </div>
+
+      <div class="order-summary-box">
+
+        <small>
+          Order total
+        </small>
+
+        <strong>
+          ${formatKES(
+            order.total
+          )}
+        </strong>
+
+      </div>
+
+      <div class="order-summary-box">
+
+        <small>
+          Items
+        </small>
+
+        <strong>
+          ${items.length}
+        </strong>
+
+      </div>
+
+    </div>
+
+    <!-- TRACKING -->
+
+    <section
+      class="customer-tracking-card"
+      aria-label="Order tracking"
+    >
+
+      <div
+        class="customer-tracking-card-header"
+      >
+
+        <h3>
+          Order Tracking
+        </h3>
+
+        <span class="tracking-live">
+          Live order status
+        </span>
+
+      </div>
+
+      <div class="orders-progress">
+
+        <div
+          class="orders-progress-bar"
+          role="progressbar"
+          aria-label="Order delivery progress"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="${Math.round(
+            progress
+          )}"
+        >
+
+          <div
+            class="orders-progress-fill"
+            style="width:${progress}%"
+          ></div>
+
+        </div>
+
+        <div
+          class="orders-progress-labels"
+        >
+
+          ${TRACKING_LABELS
+            .map(
+              (label, index) => `
+
+                <span
+                  class="orders-progress-label ${
+                    index <= trackingStep
+                      ? "active"
+                      : ""
+                  }"
+                >
+                  ${
+                    index <= trackingStep
+                      ? "✓ "
+                      : ""
+                  }
+                  ${escapeHTML(label)}
+                </span>
+
+              `
+            )
+            .join("")}
+
+        </div>
+
+      </div>
+
+      <div class="order-current-status">
+
+        <div>
+
+          <strong>
+            ${escapeHTML(
+              TRACKING_LABELS[
+                trackingStep
+              ] ||
+              "Order received"
+            )}
+          </strong>
+
+          <span>
+            Current location:
+            ${escapeHTML(
+              currentLocation
+            )}
+          </span>
+
+        </div>
+
+        <span class="current-status-pill">
+          In progress
+        </span>
+
+      </div>
+
+      <!-- TIMELINE -->
+
+      <div class="orders-timeline">
+
+        ${TRACKING_LABELS
+          .map(
+            (label, index) => {
+
+              const isCompleted =
+                index < trackingStep;
+
+              const isCurrent =
+                index === trackingStep;
+
+              return `
+
+                <div
+                  class="
+                    orders-timeline-step
+                    ${
+                      isCompleted
+                        ? "completed"
+                        : ""
+                    }
+                    ${
+                      isCurrent
+                        ? "current"
+                        : ""
+                    }
+                  "
+                >
+
+                  <span
+                    class="orders-step-marker"
+                    aria-hidden="true"
+                  ></span>
+
+                  <div
+                    class="orders-timeline-content"
+                  >
+
+                    <h4>
+                      ${escapeHTML(
+                        label
+                      )}
+
+                      ${
+                        isCurrent
+                          ? " — Current status"
+                          : ""
+                      }
+                    </h4>
+
+                    <p>
+                      ${escapeHTML(
+                        TRACKING_DESCRIPTIONS[
+                          index
+                        ]
+                      )}
+                    </p>
+
+                  </div>
+
+                </div>
+
+              `;
+
+            }
+          )
+          .join("")}
+
+      </div>
+
+    </section>
+
+    <!-- DELIVERY -->
+
+    <section
+      class="order-delivery-info"
+      aria-label="Delivery information"
+    >
+
+      <div class="order-delivery-card">
+
+        <small>
+          Estimated delivery
+        </small>
+
+        <strong>
+          ${escapeHTML(
+            getEstimatedDelivery(order)
+          )}
+        </strong>
+
+      </div>
+
+      <div class="order-delivery-card">
+
+        <small>
+          Current location
+        </small>
+
+        <strong>
+          ${escapeHTML(
+            currentLocation
+          )}
+        </strong>
+
+      </div>
+
+      <div class="order-delivery-card">
+
+        <small>
+          Payment method
+        </small>
+
+        <strong>
+          ${escapeHTML(
+            order.paymentMethod ||
+            "Not specified"
+          )}
+        </strong>
+
+      </div>
+
+      <div class="order-delivery-card">
+
+        <small>
+          Delivery address
+        </small>
+
+        <strong>
+          ${escapeHTML(
+            order.deliveryAddress ||
+            order.shippingAddress ||
+            "Address not available"
+          )}
+        </strong>
+
+      </div>
+
+    </section>
+
+    <!-- ITEMS -->
+
+    <section
+      class="tracked-items"
+      aria-label="Items in this order"
+    >
+
+      <div class="tracked-items-header">
+
+        <h3>
+          Items in This Order
+        </h3>
+
+      </div>
+
+      ${
+        items.length
+          ? items
+              .map(
+                item => `
+
+                  <article
+                    class="tracked-item"
+                  >
+
+                    <img
+                      class="tracked-item-image"
+                      src="${escapeHTML(
+                        getItemImage(item)
+                      )}"
+                      alt="${escapeHTML(
+                        item.name ||
+                        "Product"
+                      )}"
+                      onerror="
+                        this.onerror=null;
+                        this.src='assets/placeholder-product.jpg';
+                      "
+                    >
+
+                    <div
+                      class="tracked-item-info"
+                    >
+
+                      <strong>
+                        ${escapeHTML(
+                          item.name ||
+                          "Product"
+                        )}
+                      </strong>
+
+                      <span>
+                        Quantity:
+                        ${getItemQuantity(
+                          item
+                        )}
+                      </span>
+
+                    </div>
+
+                    <div
+                      class="tracked-item-price"
+                    >
+                      ${formatKES(
+                        getItemTotal(item)
+                      )}
+                    </div>
+
+                  </article>
+
+                `
+              )
+              .join("")
+          : `
+
+              <div class="orders-empty">
+
+                <p>
+                  No product details are
+                  available for this order.
+                </p>
+
+              </div>
+
+            `
+      }
+
+    </section>
+
+    <!-- ACTIONS -->
+
+    <div class="order-detail-actions">
+
+      <a
+        class="btn btn-primary"
+        href="index.html#market"
+      >
+        Continue Shopping
+      </a>
+
+      <button
+        id="contactSupportButton"
+        class="btn btn-secondary"
+        type="button"
+      >
+        Contact Support
+      </button>
+
+    </div>
+
+  `;
+
+  attachDetailEventListeners(order);
+
+}
+
+/* =====================================================
+   DETAIL EVENTS
+===================================================== */
+
+function attachDetailEventListeners(order) {
+
+  const copyButton =
+    document.getElementById(
+      "copyOrderButton"
+    );
+
+  const supportButton =
+    document.getElementById(
+      "contactSupportButton"
+    );
+
+  if (copyButton) {
+
+    copyButton.addEventListener(
+      "click",
+      async () => {
+
+        const originalLabel =
+          "Copy Order ID";
+
+        try {
+
+          await navigator.clipboard.writeText(
+            String(
+              order.orderId || ""
+            )
+          );
+
+          copyButton.textContent =
+            "Copied ✓";
+
+          setTimeout(() => {
+
+            copyButton.textContent =
+              originalLabel;
+
+          }, 1800);
+
+        } catch (error) {
+
+          copyButton.textContent =
+            "Copy failed";
+
+          setTimeout(() => {
+
+            copyButton.textContent =
+              originalLabel;
+
+          }, 1800);
+
+        }
+
+      }
+    );
+
+  }
+
+  if (supportButton) {
+
+    supportButton.addEventListener(
+      "click",
+      () => {
+
+        const subject =
+          encodeURIComponent(
+            `Support request for order ${
+              order.orderId || ""
+            }`
+          );
+
+        const body =
+          encodeURIComponent(
+            `Hello SM1THX Support,
+
+I need assistance with order ${
+              order.orderId || ""
+            }.
+
+Current status: ${
+              getDisplayStatus(order)
+            }.
+
+Please help me with the following:
+`
+          );
+
+        window.location.href =
+          `mailto:support@sm1thx.com?subject=${subject}&body=${body}`;
+
+      }
+    );
+
+  }
+
+}
+
+/* =====================================================
+   INITIALISE
+===================================================== */
+
+function initialiseOrdersPage() {
+
+  const searchInput =
+    document.getElementById(
+      "orderSearchInput"
+    );
+
+  const orders =
+    getOrders();
+
+  const selectedOrderId =
+    getSelectedOrderId();
+
+  if (searchInput) {
+
+    searchInput.addEventListener(
+      "input",
+      event => {
+
+        renderOrders(
+          event.target.value
         );
 
-        if (exists) {
-          renderOrderDetails(selectedId);
-        } else {
-          renderOrderDetails("");
-        }
-      } else if (orders.length) {
-        selectOrder(orders[0].orderId);
-      } else {
-        renderOrderDetails("");
       }
-    }
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      initializeOrdersPage
     );
-  </script>
 
-</body>
+  }
+
+  renderOrders();
+
+  const selectedOrderExists =
+    orders.some(order => {
+
+      return (
+        String(order.orderId) ===
+        String(selectedOrderId)
+      );
+
+    });
+
+  if (
+    selectedOrderId &&
+    selectedOrderExists
+  ) {
+
+    renderOrderDetails(
+      selectedOrderId
+    );
+
+    return;
+
+  }
+
+  if (orders.length) {
+
+    selectOrder(
+      orders[0].orderId
+    );
+
+    return;
+
+  }
+
+  renderEmptyDetails();
+
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  initialiseOrdersPage
+);
+</script></body>
 </html>
