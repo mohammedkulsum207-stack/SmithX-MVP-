@@ -1,0 +1,82 @@
+/* =====================================================
+   SM1THX — COMFORT (comfort.css)
+   Makes every page easy to use on any screen and for
+   every visitor: small phones, large screens, keyboard
+   users, screen readers, and people who prefer less
+   motion. Loaded last on every page.
+   To remove: delete this file and comfort.js and their
+   tags. Nothing depends on them.
+===================================================== */
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+img, video, canvas, iframe { max-width: 100%; }
+p, li, td, dd, dt, h1, h2, h3, h4, label, small, strong { overflow-wrap: break-word; }
+
+/* ---------- Clear keyboard focus ---------- */
+:focus-visible {
+  outline: 3px solid #e8a33d !important;
+  outline-offset: 2px !important;
+  border-radius: 6px;
+}
+
+/* ---------- Skip link (appears on Tab) ---------- */
+.smx-skip {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 5000;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #16130f;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform .15s ease;
+}
+.smx-skip:focus { transform: translateY(0); }
+
+/* ---------- Comfortable tap targets on touch screens ---------- */
+@media (pointer: coarse) {
+  select,
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]) { min-height: 44px; }
+  .tab, .smx-copy, .smx-region-btn, .smx-intl-wait button { min-height: 40px; }
+  input[type="checkbox"], input[type="radio"] { min-width: 20px; min-height: 20px; }
+}
+
+/* Inputs at 16px stop phones from zooming in on focus. */
+@media (max-width: 760px) {
+  input, select, textarea { font-size: max(16px, 1em); }
+}
+
+/* ---------- Less motion for those who ask for it ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Small phones (≤ 420px) ---------- */
+@media (max-width: 420px) {
+  /* Inner pages: tighter header */
+  body > header { gap: 8px; padding-left: 14px; padding-right: 14px; }
+  .back-btn { padding: 8px 12px !important; font-size: .82rem !important; }
+  /* Account pill shows just the initials */
+  .smx-account-link > span:not(.smx-avatar-dot) { display: none; }
+  .smx-account-link { padding-left: 4px !important; padding-right: 4px !important; }
+  /* Homepage top bar */
+  .smithx-brand-text small { display: none; }
+  .smx-intl-banner { padding: 12px 44px 12px 14px; }
+  .smx-intl-wait { flex: 1 1 100%; min-width: 0; }
+}
+
+/* ---------- Very small phones (≤ 340px) ---------- */
+@media (max-width: 340px) {
+  body > header .brand span,
+  .smithx-brand-text { display: none; }
+  body > header .logo { font-size: 1.05rem !important; letter-spacing: .04em !important; }
+  .back-btn { padding: 8px 10px !important; }
+}

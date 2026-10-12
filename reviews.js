@@ -434,7 +434,7 @@ function smxOpenReportForm(reviewId, onDone) {
     .smx-star.is-full { color: #d99a2b; }
     .smx-star.is-half { background: linear-gradient(90deg, #d99a2b 50%, #d9d1c3 50%); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .smx-card-rating { display: flex; align-items: center; gap: 6px; margin: 2px 0 6px; font-size: .8rem; color: #6f675a; }
-    .smx-card-rating.is-empty { color: #9a9182; }
+    .smx-card-rating.is-empty { color: #6b6458; }
     .smx-rv { grid-column: 1 / -1; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(22,19,15,.1); display: grid; gap: 16px; text-align: left; }
     .smx-rv-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
     .smx-rv h3 { font-family: var(--font-display, Georgia, serif); font-size: 1.6rem; font-weight: 600; margin-bottom: 4px; }

@@ -40,7 +40,7 @@ The MVP is a static GitHub Pages site. All data (accounts, stores, products, car
 | Orders | Order status and tracking | ✅ | Demo statuses Pending → Delivered |
 | Orders | Seller order management | ✅ | Dashboard → Orders |
 | Orders | Cancellation / refund request | ⬜ | Phase 2 |
-| UI | Responsive on phone / tablet / desktop | ✅ | Fixed: navigation was hidden on phones with no menu. Now there's a menu button up to 1000px wide. Tested at 360–1440px with no sideways scrolling |
+| UI | Responsive on phone / tablet / desktop | ✅ | Fixed: navigation was hidden on phones with no menu. Now there's a menu button up to 1320px wide (raised in phase 5 as the menu grew). Tested at 360–1440px with no sideways scrolling |
 | UI | Empty / loading / success messages | 🟡 | Most screens have empty states |
 
 ## Phase 2: complete the shopping journey
@@ -112,7 +112,53 @@ Auctions and reviews are saved in this browser only until a backend is added, so
 
 ## Phase 5: international growth
 
-⬜ Multi-currency, local payment methods, international shipping, customs, country compliance, analytics at scale.
+| Item | Status | Notes |
+|---|---|---|
+| Region picker | ✅ | Header button: shopping from, show prices in, language. Default comes from the account's country, then the device time zone, then Kenya. Never asks for location permission |
+| Local-currency prices | ✅ | 15 currencies shown as "≈ UGX 140,981" next to KES prices. Daily rates from [Exchange Rate API](https://www.exchangerate-api.com), cached 12 hours, with built-in fallback rates |
+| Charged currency shown before paying | ✅ | Checkout says orders are charged in KES and that banks/mobile money may use a different rate |
+| Rate recorded on orders | ✅ | Each order saves the display currency, the rate and its date (`order.display`), so conversions can be checked later |
+| Seller's original price and currency | ✅ | Listings stay in KES; conversion is display-only |
+| Markets and waitlist | ✅ | Kenya is live. 12 other markets can browse and join a waitlist, which measures demand before expanding. Edit in `intl-config.js` |
+| Kiswahili | 🟡 | Beta: menus and main buttons. Full translation needs a professional translator |
+| International shipping and duties | 🔒 | Not offered yet. Checkout explains that duties will be shown before payment once available |
+| Local payment methods per country | 🔒 | Waiting on the payment provider decision |
+| Insights dashboard | ✅ | `insights.html`: GMV and platform revenue tracked separately, refund and cancellation rates, repeat customers, SMX Credit held, auctions, reviews, demand by country, sales by store, CSV export |
+| Fraud and dispute rates | ⬜ | Needs payment provider data |
+| Scalability | ⬜ | Needs a backend; every `localStorage` key maps to one database table (see below) |
+
+### Comfort for everyone (all pages)
+
+- No sideways scrolling at any width from 320px to 1920px (tested on every page)
+- Homepage menu switches to the menu button below 1320px so links never wrap or overflow
+- Clear keyboard focus outline, "Skip to content" link, closed panels can't be reached with Tab
+- Fewer animations for people who turn on "reduce motion"
+- 44px touch targets on touch screens, and 16px inputs so phones don't zoom in
+- Passes an automated WCAG 2 A/AA check (axe-core) on every page
+
+### Compliance checklist before launching in a new country
+
+These are for a lawyer to confirm; they aren't legal advice.
+
+1. **Kenya data protection.** Businesses processing personal data must register with the [Office of the Data Protection Commissioner](https://www.odpc.go.ke/faqs/). Those under KES 5 million turnover with fewer than 10 employees are exempt unless they're in a listed sector. Financial services and direct marketing must register regardless of size ([ODPC guidance](https://www.odpc.go.ke/wp-content/uploads/2024/02/ODPC-Guidance-Note-on-Registration-of-Data-Controllers-and-Data-Processors.pdf)). Store data transfers abroad must be declared.
+2. **Cross-border goods in the EAC.** Under the [EAC Simplified Trade Regime](https://eayase.eac.int/news/trading-made-simple-your-guide-to-the-eac-simplified-trade-regime), consignments of EAC-made goods worth US$2,000 or less can be duty-free with a Simplified Certificate of Origin. VAT, excise and withholding tax can still apply. Goods made outside the EAC pay import duty.
+3. **Foreign sellers.** Kenya's Significant Economic Presence tax is an effective 3% of gross turnover for non-residents earning through digital platforms, with no minimum threshold since the Finance Act 2025 ([PwC](https://taxsummaries.pwc.com/kenya/corporate/taxes-on-corporate-income)). The draft regulations place liability on the seller, not the marketplace ([KPMG](https://kpmg.com/us/en/taxnewsflash/news/2025/09/kenya-public-consultation-application-sep-tax.html)).
+4. **SMX Credit abroad.** Stored credit is e-money in Kenya (see Phase 3); each new country needs its own check.
+5. **Each new market:** consumer protection, VAT registration, payment licensing, and import rules for restricted goods.
+
+### Moving to a backend (scalability)
+
+| Browser key today | Becomes table |
+|---|---|
+| `smithx_auth_users_v1` / `smithx_auth_session_v1` | `users`, `sessions` (hashed passwords, email/SMS verification) |
+| `smithx_stores_v1` | `stores` |
+| `smithx_custom_products_v2` | `products` (+ `product_images`, stock) |
+| `smithx_orders_v2` / `smithx_order_archive_v1` | `orders`, `order_items`, `payments`, `refunds` |
+| `smithx_wallet_v1` | `wallet_ledger` (append-only, server-side) |
+| `smithx_auctions_v1` | `auctions`, `bids` (server clock decides end time) |
+| `smithx_reviews_v1` | `reviews`, `review_reports` |
+| `smithx_waitlist_v1` | `waitlist` |
+| `smithx_region_v1` / `smithx_fx_v1` | stay in the browser (preferences) + `fx_rates` table |
 
 ## Decisions still open
 
@@ -138,6 +184,9 @@ Auctions and reviews are saved in this browser only until a backend is added, so
 | `auctions.js` / `auctions.html` | Phase 4: auctions, bidding rules, winner payment |
 | `phase4-ai.js` | Phase 4: Store Assistant + product-listing fallback |
 | `stores.js` / `profile-store.js` / `store.html` (edited) | Store layout option, store ratings |
+| `intl-config.js` / `intl.js` | Phase 5: markets, currencies, region picker, local prices, waitlist, Kiswahili |
+| `insights.html` | Phase 5: platform insights and CSV exports |
+| `comfort.css` / `comfort.js` | All pages: small-screen fixes, keyboard focus, skip link, reduced motion, touch targets |
 | `auth.js` (edited) | Adds `country` and demo `smxResetPassword` |
 | `login.html` (edited) | "Forgot password?" form and country field |
 | `index.html` / `profile.html` (edited) | Load the new files and add Build Log entries |
