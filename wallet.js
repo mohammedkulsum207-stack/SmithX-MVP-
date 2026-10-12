@@ -192,6 +192,13 @@ function smxWalletKES(value) {
     link.textContent = "SMX Wallet";
     const anchor = nav.querySelector('a[href="profile.html#store"]') || nav.querySelector('a[href="my-orders.html"]');
     nav.insertBefore(link, anchor ? anchor.nextSibling : null);
+    if (!nav.querySelector('a[href="auctions.html"]')) {
+      const auctions = document.createElement("a");
+      auctions.href = "auctions.html";
+      auctions.textContent = "Auctions";
+      const market = nav.querySelector('a[href="#market"], a[href="index.html#market"]');
+      nav.insertBefore(auctions, market ? market.nextSibling : link);
+    }
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => setTimeout(addLink, 0));

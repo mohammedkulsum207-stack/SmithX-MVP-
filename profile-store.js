@@ -79,6 +79,15 @@ const SMX_COUNTRIES = [
         </div>
       </fieldset>
 
+      <label class="field">
+        <span style="font-size:.85rem;font-weight:600;">Layout</span>
+        <select class="input" id="stLayout">
+          <option value="grid">Classic grid</option>
+          <option value="showcase">Showcase (large photos)</option>
+          <option value="compact">Compact (more per row)</option>
+        </select>
+      </label>
+
       <label class="smx-publish">
         <input type="checkbox" id="stPublished">
         <span><strong>Publish store</strong><small>Show your store page and "by your store" on product cards.</small></span>
@@ -107,6 +116,7 @@ const SMX_COUNTRIES = [
       const theme = store ? store.theme : "gold";
       const radio = card.querySelector(`input[name="stTheme"][value="${theme}"]`);
       if (radio) radio.checked = true;
+      $("stLayout").value = store && store.layout ? store.layout : "grid";
       updateStatus(store);
     }
 
@@ -167,7 +177,8 @@ const SMX_COUNTRIES = [
           tagline: $("stTagline").value,
           description: $("stAbout").value,
           theme: (card.querySelector('input[name="stTheme"]:checked') || {}).value,
-          published: $("stPublished").checked
+          published: $("stPublished").checked,
+          layout: $("stLayout").value
         });
 
         if (user.role === "buyer") smxUpdateUser(user.email, { role: "both" });

@@ -221,6 +221,15 @@
 
     .card:hover { transform: translateY(-4px); box-shadow: 0 22px 44px -18px rgba(22, 19, 15, .35); }
 
+    .grid.layout-showcase { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 26px; }
+    .grid.layout-showcase .card img { aspect-ratio: 1 / 1; }
+    .grid.layout-showcase .card-body strong { font-size: 1.7rem; }
+    .grid.layout-compact { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+    .grid.layout-compact .card img { aspect-ratio: 1 / 1; }
+    .grid.layout-compact .card-body { padding: 12px 14px 14px; }
+    .grid.layout-compact .card-body strong { font-size: 1.15rem; }
+    .store-rating { display: inline-flex; align-items: center; gap: 8px; }
+
     .card img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: #1c1a17; }
 
     .card-body { padding: 18px 18px 20px; display: grid; gap: 6px; }
@@ -292,6 +301,8 @@
 
 <script src="auth.js"></script>
 <script src="stores.js"></script>
+<script src="wallet.js"></script> <!-- Phase 3/4 add-ons: delete these two lines to remove -->
+<script src="reviews.js"></script>
 <script>
   (function () {
     const root = document.getElementById("storeRoot");
@@ -351,6 +362,7 @@
         </div>
         <div class="store-meta">
           <span class="chip">${products.length} ${products.length === 1 ? "product" : "products"}</span>
+          ${(() => { const r = typeof smxRatingSummary === "function" ? smxRatingSummary(products.map(p => p.id)) : { count: 0 }; return r.count ? `<span class="chip store-rating">${smxStarsHTML(r.average)} ${r.average.toFixed(1)} · ${r.count} ${r.count === 1 ? "review" : "reviews"}</span>` : `<span class="chip">No reviews yet</span>`; })()}
           <span class="chip">On SM1THX since ${smxEscape(since)}</span>
           <button class="btn btn-accent" type="button" id="shareStore">Share store</button>
           ${isOwner ? `<a class="btn btn-ghost" href="profile.html#store">Edit store</a>` : ""}
@@ -366,13 +378,14 @@
         </div>
 
         ${products.length ? `
-          <div class="grid">
+          <div class="grid layout-${smxEscape(store.layout || "grid")}">
             ${products.map(product => `
               <a class="card" href="index.html?product=${encodeURIComponent(product.id)}#market">
                 <img src="${smxEscape(product.image || "")}" alt="${smxEscape(product.name)}" loading="lazy">
                 <div class="card-body">
                   <small>${smxEscape(product.category || "Product")}</small>
                   <strong>${smxEscape(product.name)}</strong>
+                  ${(() => { const r = typeof smxRatingSummary === "function" ? smxRatingSummary(product.id) : { count: 0 }; return r.count ? `<em class="store-rating">${smxStarsHTML(r.average)} ${r.average.toFixed(1)} (${r.count})</em>` : ""; })()}
                   <span>${smxFormatKES(product.price)}</span>
                   <em>View &amp; buy →</em>
                 </div>
