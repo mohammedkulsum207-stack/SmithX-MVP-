@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your SMX Credit wallet on SM1THX.">
+  <title>SMX Wallet — SM1THX</title>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap");
+    @import url("https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap");
+
+    :root {
+      --ink: #16130f;
+      --ivory: #f6f1e8;
+      --paper: #fffdf9;
+      --line: #e8e0d2;
+      --muted: #6f675a;
+      --gold: #c8902e;
+      --gold-bright: #e8a33d;
+      --gold-soft: #f3e3c2;
+      --gold-text: #8a5f14;
+      --success: #2f7a4a;
+      --success-soft: #e6f2e9;
+      --danger: #a3343a;
+      --danger-soft: #fbeaea;
+      --font-display: "Cormorant Garamond", Georgia, serif;
+      --font-body: "Switzer", "Inter", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--ivory);
+      color: var(--ink);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+    button, input, select { font: inherit; }
+    :focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+
+    header {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 max(20px, calc((100% - 1180px) / 2));
+      background: rgba(14, 12, 9, .94);
+      border-bottom: 1px solid rgba(232, 163, 61, .14);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+    }
+
+    .brand img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, .25);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: .9rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .back-btn:hover { border-color: var(--gold-bright); color: var(--gold-bright); }
+
+    .hero {
+      background: #16130f;
+      color: #fff;
+      padding: 48px max(20px, calc((100% - 1180px) / 2)) 120px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(90% 140% at 100% 0%, rgba(232, 163, 61, .32), transparent 60%);
+    }
+
+    .hero > * { position: relative; }
+
+    .eyebrow {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 600;
+      line-height: 1.05;
+      margin-top: 6px;
+    }
+
+    .hero p { margin-top: 8px; color: rgba(255, 255, 255, .72); max-width: 560px; }
+
+    .demo-tag {
+      display: inline-block;
+      margin-left: 10px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(232, 163, 61, .16);
+      color: var(--gold-bright);
+      font-size: .7rem;
+      letter-spacing: .12em;
+      vertical-align: middle;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 40px));
+      margin: -84px auto 0;
+      padding-bottom: 72px;
+      position: relative;
+      display: grid;
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid rgba(22, 19, 15, .08);
+      border-radius: 22px;
+      padding: 26px;
+    }
+
+    .balance-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      box-shadow: 0 30px 60px -30px rgba(22, 19, 15, .45);
+    }
+
+    .balance-label { font-size: .8rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+    .balance-value {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 4.4rem);
+      font-weight: 700;
+      line-height: 1;
+      margin-top: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .balance-value small { font-size: .45em; color: var(--gold-text); letter-spacing: .08em; margin-right: 6px; }
+
+    .balance-sub { margin-top: 8px; color: var(--muted); font-size: .9rem; }
+
+    .balance-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 0 22px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform .2s ease, background .2s ease;
+    }
+
+    .btn-primary { background: var(--ink); color: #fff; }
+    .btn-primary:hover { background: #000; transform: translateY(-1px); }
+    .btn-gold { background: var(--gold-bright); color: var(--ink); }
+    .btn-gold:hover { filter: brightness(1.05); }
+    .btn-outline { background: transparent; border-color: rgba(22, 19, 15, .22); color: var(--ink); }
+    .btn-outline:hover { border-color: var(--ink); }
+    .btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+
+    .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 24px; align-items: start; }
+
+    h2 { font-family: var(--font-display); font-size: 1.9rem; font-weight: 600; line-height: 1.1; }
+
+    .tabs { display: flex; gap: 6px; padding: 4px; margin: 16px 0 20px; border-radius: 12px; background: var(--ivory); }
+
+    .tab {
+      flex: 1;
+      min-height: 40px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .tab[aria-selected="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 2px 8px rgba(22, 19, 15, .08); }
+
+    form { display: grid; gap: 14px; }
+
+    .field { display: grid; gap: 6px; font-size: .85rem; font-weight: 600; }
+    .field small { font-weight: 400; color: var(--muted); }
+
+    .field input, .field select {
+      width: 100%;
+      min-height: 46px;
+      padding: 0 14px;
+      border: 1px solid rgba(22, 19, 15, .16);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 400;
+      font-size: .95rem;
+    }
+
+    .presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+
+    .preset {
+      min-height: 42px;
+      border: 1px solid rgba(22, 19, 15, .14);
+      border-radius: 10px;
+      background: #fff;
+      font-weight: 600;
+      font-size: .88rem;
+      cursor: pointer;
+    }
+
+    .preset[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: #fff; }
+
+    .demo-box { padding: 12px 14px; border: 1px dashed rgba(138, 95, 20, .45); border-radius: 12px; background: rgba(243, 227, 194, .35); }
+
+    .message { display: none; padding: 12px 14px; border-radius: 12px; font-size: .9rem; }
+    .message.show { display: block; }
+    .message.success { background: var(--success-soft); color: var(--success); }
+    .message.error { background: var(--danger-soft); color: var(--danger); }
+    .message.info { background: var(--gold-soft); color: #5f420e; }
+
+    .hint { font-size: .8rem; color: var(--muted); }
+
+    .history-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+
+    .history-head select {
+      min-height: 40px;
+      padding: 0 12px;
+      border: 1px solid rgba(22, 19, 15, .16);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .history { list-style: none; display: grid; }
+
+    .history li {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .history li:last-child { border-bottom: 0; }
+
+    .tx-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      font-weight: 700;
+      background: var(--ivory);
+    }
+
+    .tx-in .tx-icon { background: var(--success-soft); color: var(--success); }
+    .tx-out .tx-icon { background: var(--gold-soft); color: var(--gold-text); }
+
+    .tx-main strong { display: block; font-size: .95rem; }
+    .tx-main small { display: block; color: var(--muted); font-size: .8rem; overflow-wrap: anywhere; }
+
+    .tx-amount { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .tx-amount strong { display: block; }
+    .tx-in .tx-amount strong { color: var(--success); }
+    .tx-amount small { color: var(--muted); font-size: .78rem; }
+
+    .empty { padding: 36px 12px; text-align: center; color: var(--muted); }
+    .empty strong { display: block; font-family: var(--font-display); font-size: 1.5rem; color: var(--ink); margin-bottom: 4px; }
+
+    .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+    .rule { padding: 16px; border-radius: 14px; background: var(--ivory); font-size: .9rem; }
+    .rule strong { display: block; margin-bottom: 4px; }
+    .rule p { color: var(--muted); }
+
+    .legal { margin-top: 18px; font-size: .8rem; color: var(--muted); }
+
+    .processing { display: grid; justify-items: center; gap: 10px; padding: 30px 10px; text-align: center; }
+    .processing h3 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; }
+    .processing p { color: var(--muted); font-size: .9rem; }
+
+    .spinner {
+      width: 38px;
+      height: 38px;
+      border: 3px solid rgba(232, 163, 61, .25);
+      border-top-color: var(--gold-bright);
+      border-radius: 50%;
+      animation: spin .9s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .gate { text-align: center; padding: 48px 24px; }
+    .gate strong { display: block; font-family: var(--font-display); font-size: 2rem; margin-bottom: 6px; }
+    .gate p { color: var(--muted); margin-bottom: 18px; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--ink);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: .9rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s ease;
+      z-index: 500;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .rules { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .brand span { display: none; }
+      .back-btn { padding: 9px 14px; font-size: .82rem; }
+      .hero { padding: 36px 16px 104px; }
+      .page { width: calc(100% - 28px); }
+      .card { padding: 20px; }
+      .balance-actions, .balance-actions .btn { width: 100%; }
+      .presets { grid-template-columns: repeat(2, 1fr); }
+      .history li { grid-template-columns: 36px minmax(0, 1fr); }
+      .tx-amount { grid-column: 2; text-align: left; }
+    }
+
+    @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="index.html#home" aria-label="SM1THX home">
+    <img src="assets/smithx-logo.jpg" alt="">
+    <span>SM1THX</span>
+  </a>
+  <a class="back-btn" href="index.html#market">← Marketplace</a>
+</header>
+
+<section class="hero">
+  <p class="eyebrow">SMX Credit</p>
+  <h1>Your wallet <span class="demo-tag">DEMO</span></h1>
+  <p>Top up with M-Pesa and pay for SM1THX orders in one tap. 1 SMX = KES 1.</p>
+</section>
+
+<main class="page" id="walletRoot"></main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="wallet.js"></script>
+<script>
+  (function () {
+    const root = document.getElementById("walletRoot");
+    const user = smxWalletUser();
+    const L = SMX_WALLET.limits;
+    const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+
+    if (!user) {
+      root.innerHTML = `
+        <div class="card gate">
+          <strong>Sign in to use SMX Credit</strong>
+          <p>Your wallet belongs to your SM1THX account.</p>
+          <a class="btn btn-primary" href="login.html?next=wallet.html">Sign in or create account</a>
+        </div>`;
+      return;
+    }
+
+    let mode = "topup";
+    let filter = "all";
+    let attemptKey = newKey();
+    let busy = false;
+
+    function newKey() {
+      return "w-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 7);
+    }
+
+    function toast(text) {
+      const el = document.getElementById("toast");
+      el.textContent = text;
+      el.classList.add("show");
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => el.classList.remove("show"), 2600);
+    }
+
+    function validPhone(value) {
+      return /^0[17]\d{8}$/.test(String(value || "").replace(/\D/g, "").replace(/^254/, "0"));
+    }
+
+    function maskPhone(value) {
+      const digits = String(value || "").replace(/\D/g, "").replace(/^254/, "0");
+      return digits.slice(0, 4) + " *** " + digits.slice(-3);
+    }
+
+    function when(iso) {
+      return new Date(iso).toLocaleString("en-KE", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    }
+
+    function render() {
+      const audit = smxWalletAudit(user.email);
+      const balance = audit.ok ? audit.balance : 0;
+      const loaded = smxWalletLoadedThisMonth(user.email);
+
+      root.innerHTML = `
+        ${audit.ok ? "" : `<div class="message error show" role="alert"><strong>Wallet paused.</strong> Your wallet records don't add up (${esc(audit.problems[0])}). Top-ups and payments are blocked until support checks it.</div>`}
+
+        <section class="card balance-card" aria-label="Balance">
+          <div>
+            <div class="balance-label">Available balance</div>
+            <div class="balance-value"><small>SMX</small>${balance.toLocaleString("en-KE")}</div>
+            <div class="balance-sub">Worth ${smxWalletKES(balance)} · ${esc(user.name || user.email)}</div>
+          </div>
+          <div class="balance-actions">
+            <button class="btn btn-gold" type="button" data-mode="topup">Top up</button>
+            <button class="btn btn-outline" type="button" data-mode="withdraw" ${balance > 0 ? "" : "disabled"}>Withdraw</button>
+            <a class="btn btn-outline" href="index.html#market">Shop now</a>
+          </div>
+        </section>
+
+        <div class="grid">
+          <section class="card" id="actionCard" aria-label="Top up or withdraw">
+            <h2>${mode === "topup" ? "Add SMX Credit" : "Withdraw to M-Pesa"}</h2>
+            <div class="tabs" role="tablist">
+              <button class="tab" role="tab" type="button" data-mode="topup" aria-selected="${mode === "topup"}">Top up</button>
+              <button class="tab" role="tab" type="button" data-mode="withdraw" aria-selected="${mode === "withdraw"}" ${balance > 0 ? "" : "disabled"}>Withdraw</button>
+            </div>
+            <div id="actionBody"></div>
+          </section>
+
+          <section class="card" aria-label="Transaction history">
+            <div class="history-head">
+              <h2>History</h2>
+              <select id="historyFilter" aria-label="Filter transactions">
+                <option value="all">All activity</option>
+                <option value="topup">Top-ups</option>
+                <option value="spend">Payments</option>
+                <option value="refund">Refunds</option>
+                <option value="withdraw">Withdrawals</option>
+              </select>
+            </div>
+            <div id="historyBody"></div>
+          </section>
+        </div>
+
+        <section class="card" aria-label="How SMX Credit works">
+          <h2>How SMX Credit works</h2>
+          <div class="rules">
+            <div class="rule"><strong>1 SMX = KES 1</strong><p>Always the same value. No exchange rates, no surprises at checkout.</p></div>
+            <div class="rule"><strong>Spend on SM1THX</strong><p>Pay for all or part of an order. Any remainder goes to M-Pesa or card.</p></div>
+            <div class="rule"><strong>Refunds come back here</strong><p>Cancel an order paid with SMX and the credit returns to your wallet straight away.</p></div>
+            <div class="rule"><strong>Never expires</strong><p>Your credit stays until you use it or withdraw it.</p></div>
+            <div class="rule"><strong>Withdraw any time</strong><p>Send unused credit back to M-Pesa at full value. No interest is paid on balances.</p></div>
+            <div class="rule"><strong>Limits</strong><p>${smxWalletFormat(L.minTopUp)}–${smxWalletFormat(L.maxTopUp)} per top-up, wallet up to ${smxWalletFormat(L.maxBalance)}. Topped up this month: ${smxWalletFormat(loaded)}. Credit can't be sent to other users.</p></div>
+          </div>
+          <p class="legal">Demo only: no real money moves, and the wallet is saved in this browser. Before SMX Credit goes live, SM1THX needs Central Bank of Kenya authorisation as an e-money issuer, or a licensed partner holding customer funds in trust, plus a secure server-side ledger.</p>
+        </section>`;
+
+      document.getElementById("historyFilter").value = filter;
+      document.getElementById("historyFilter").addEventListener("change", event => {
+        filter = event.target.value;
+        renderHistory();
+      });
+
+      root.querySelectorAll("[data-mode]").forEach(button => {
+        button.addEventListener("click", () => {
+          if (busy) return;
+          mode = button.dataset.mode;
+          attemptKey = newKey();
+          render();
+          document.getElementById("actionCard").scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+
+      renderAction(balance, audit.ok);
+      renderHistory();
+    }
+
+    function renderAction(balance, ok, message) {
+      const body = document.getElementById("actionBody");
+      const phone = user.phone || "";
+
+      if (mode === "topup") {
+        const presets = [500, 1000, 2000, 5000];
+        body.innerHTML = `
+          <form id="actionForm" novalidate>
+            ${message ? `<div class="message ${message.type} show" role="alert">${esc(message.text)}</div>` : ""}
+            <div class="field">Choose an amount
+              <div class="presets">
+                ${presets.map(value => `<button type="button" class="preset" data-amount="${value}" aria-pressed="false">${value.toLocaleString("en-KE")}</button>`).join("")}
+              </div>
+            </div>
+            <label class="field">Amount (KES)
+              <input id="amount" type="number" inputmode="numeric" min="${L.minTopUp}" max="${L.maxTopUp}" step="1" placeholder="e.g. 1500" required>
+              <small>You'll receive the same amount in SMX. No top-up fee in this demo.</small>
+            </label>
+            <label class="field">M-Pesa phone number
+              <input id="phone" type="tel" inputmode="tel" placeholder="07XX XXX XXX" value="${esc(phone)}" required>
+            </label>
+            <label class="field demo-box">Demo payment result
+              <select id="outcome">
+                <option value="success">Payment succeeds</option>
+                <option value="failed">Payment fails</option>
+              </select>
+              <small>For testing only. Removed when real payments go live.</small>
+            </label>
+            <button class="btn btn-primary" type="submit" ${ok ? "" : "disabled"}>Top up with M-Pesa (demo)</button>
+          </form>`;
+      } else {
+        body.innerHTML = `
+          <form id="actionForm" novalidate>
+            ${message ? `<div class="message ${message.type} show" role="alert">${esc(message.text)}</div>` : ""}
+            <p class="hint">Available to withdraw: <strong>${smxWalletFormat(balance)}</strong></p>
+            <label class="field">Amount (SMX)
+              <input id="amount" type="number" inputmode="numeric" min="${L.minWithdraw}" max="${balance}" step="1" placeholder="e.g. 500" required>
+              <small><button type="button" class="preset" style="min-height:30px;padding:0 10px;" id="maxBtn">Withdraw all</button></small>
+            </label>
+            <label class="field">Send to M-Pesa number
+              <input id="phone" type="tel" inputmode="tel" placeholder="07XX XXX XXX" value="${esc(phone)}" required>
+            </label>
+            <button class="btn btn-primary" type="submit" ${ok && balance > 0 ? "" : "disabled"}>Withdraw to M-Pesa (demo)</button>
+          </form>`;
+        document.getElementById("maxBtn").addEventListener("click", () => { document.getElementById("amount").value = balance; });
+      }
+
+      body.querySelectorAll(".preset[data-amount]").forEach(button => {
+        button.addEventListener("click", () => {
+          body.querySelectorAll(".preset[data-amount]").forEach(b => b.setAttribute("aria-pressed", "false"));
+          button.setAttribute("aria-pressed", "true");
+          document.getElementById("amount").value = button.dataset.amount;
+        });
+      });
+
+      document.getElementById("amount").addEventListener("input", () => {
+        body.querySelectorAll(".preset[data-amount]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.amount === document.getElementById("amount").value)));
+      });
+
+      document.getElementById("actionForm").addEventListener("submit", event => {
+        event.preventDefault();
+        submit(balance, ok);
+      });
+    }
+
+    function submit(balance, ok) {
+      if (busy) return;
+      const amount = Number(document.getElementById("amount").value);
+      const phone = document.getElementById("phone").value.trim();
+      const outcome = document.getElementById("outcome") ? document.getElementById("outcome").value : "success";
+
+      const error = text => renderAction(balance, ok, { type: "error", text });
+
+      if (!Number.isInteger(amount) || amount <= 0) return error("Enter a whole amount, e.g. 1500.");
+      if (!validPhone(phone)) return error("Enter a valid Kenyan M-Pesa number, e.g. 0712 345 678.");
+
+      // Check the limits before showing the M-Pesa step.
+      const L2 = SMX_WALLET.limits;
+      if (mode === "topup") {
+        if (amount < L2.minTopUp) return error("The smallest top-up is " + smxWalletFormat(L2.minTopUp) + ".");
+        if (amount > L2.maxTopUp) return error("The largest single top-up is " + smxWalletFormat(L2.maxTopUp) + ".");
+        if (balance + amount > L2.maxBalance) return error("A wallet can hold up to " + smxWalletFormat(L2.maxBalance) + ". You can add up to " + smxWalletFormat(Math.max(0, L2.maxBalance - balance)) + ".");
+      } else {
+        if (amount > balance) return error("You can withdraw up to " + smxWalletFormat(balance) + ".");
+        if (amount < L2.minWithdraw) return error("The smallest withdrawal is " + smxWalletFormat(L2.minWithdraw) + ".");
+      }
+
+      busy = true;
+      const body = document.getElementById("actionBody");
+      body.innerHTML = `
+        <div class="processing" role="status" aria-live="polite">
+          <div class="spinner" aria-hidden="true"></div>
+          <h3>${mode === "topup" ? "Check your phone" : "Sending to M-Pesa"}</h3>
+          <p>${mode === "topup"
+            ? "Demo: an M-Pesa prompt for " + smxWalletKES(amount) + " would be sent to " + esc(maskPhone(phone)) + "."
+            : "Demo: sending " + smxWalletKES(amount) + " to " + esc(maskPhone(phone)) + "."}</p>
+        </div>`;
+
+      setTimeout(() => {
+        busy = false;
+        if (mode === "topup" && outcome === "failed") {
+          renderAction(balance, ok, { type: "error", text: "The M-Pesa payment didn't go through. Nothing was added or charged. Try again." });
+          return;
+        }
+        try {
+          const reference = (mode === "topup" ? "MP" : "WD") + Date.now().toString(36).toUpperCase().slice(-8) + "DEMO";
+          const { duplicate } = smxWalletRecord(user.email, {
+            type: mode,
+            amount,
+            key: attemptKey,
+            ref: reference,
+            method: "M-Pesa " + maskPhone(phone),
+            note: mode === "topup" ? "Top-up via M-Pesa" : "Withdrawal to M-Pesa"
+          });
+          attemptKey = newKey();
+          const text = duplicate
+            ? "That request was already processed."
+            : mode === "topup"
+              ? smxWalletFormat(amount) + " added to your wallet."
+              : smxWalletFormat(amount) + " sent to M-Pesa.";
+          if (mode === "withdraw" && smxWalletBalance(user.email) === 0) mode = "topup";
+          render();
+          renderAction(smxWalletBalance(user.email), true, { type: "success", text });
+          toast(text);
+        } catch (err) {
+          renderAction(balance, ok, { type: "error", text: err.message });
+        }
+      }, 2000);
+    }
+
+    function renderHistory() {
+      const body = document.getElementById("historyBody");
+      const entries = smxWalletEntries(user.email).reverse().filter(entry => filter === "all" || entry.type === filter);
+
+      if (!entries.length) {
+        body.innerHTML = `<div class="empty"><strong>${filter === "all" ? "No activity yet" : "Nothing here yet"}</strong>${filter === "all" ? "Top up to start paying with SMX Credit." : "Try another filter."}</div>`;
+        return;
+      }
+
+      body.innerHTML = `<ul class="history">
+        ${entries.map(entry => {
+          const type = SMX_WALLET_TYPES[entry.type] || { label: entry.type, sign: 1 };
+          const incoming = type.sign > 0;
+          return `
+            <li class="${incoming ? "tx-in" : "tx-out"}">
+              <span class="tx-icon" aria-hidden="true">${incoming ? "+" : "−"}</span>
+              <span class="tx-main">
+                <strong>${esc(type.label)}${entry.note ? " · " + esc(entry.note) : ""}</strong>
+                <small>${esc(when(entry.at))} · Ref ${esc(entry.ref || entry.id)}${entry.method ? " · " + esc(entry.method) : ""}</small>
+              </span>
+              <span class="tx-amount">
+                <strong>${incoming ? "+" : "−"}${smxWalletFormat(entry.amount)}</strong>
+                <small>Balance ${smxWalletFormat(entry.balanceAfter)}</small>
+              </span>
+            </li>`;
+        }).join("")}
+      </ul>`;
+    }
+
+    render();
+  })();
+</script>
+<script src="auth-nav.js"></script> <!-- Login/Profile add-on: delete this line to remove -->
+</body>
+</html>
