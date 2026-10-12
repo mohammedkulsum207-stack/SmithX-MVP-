@@ -64,9 +64,33 @@ The MVP is a static GitHub Pages site. All data (accounts, stores, products, car
 | Real courier integration + tracking | 🔒 | Needs courier choice |
 | Payouts, reconciliation, seller refunds | ⬜ | Needs backend |
 
-## Phase 3: SMX Coins (decision first)
+## Phase 3: SMX Coins → "SMX Credit" (demo prepaid store credit)
 
-🔒 Do not build a wallet until the coin model is chosen: pricing unit, shopping credit, or transferable/redeemable token. Get specialist legal advice (payments, stored value, tax) for Kenya and every target market before launch.
+Decision (12 Oct 2026): SMX Coins are prepaid store credit.
+
+| Rule | Decision |
+|---|---|
+| Value | 1 SMX = KES 1, fixed. No exchange rate |
+| How you get it | Top up with M-Pesa (demo) |
+| Where you spend it | Only on SM1THX, for all or part of an order |
+| Transfers | Not allowed between users |
+| Expiry | Never expires |
+| Cash out | Withdraw unused credit to M-Pesa at full value |
+| Interest | None |
+| Refunds | Credit used on a cancelled order returns to the wallet immediately |
+| Limits | KES 50–75,000 per top-up, KES 100,000 max balance, KES 1,000,000 monthly top-ups |
+
+| Item | Status | Notes |
+|---|---|---|
+| Wallet page with balance and history | ✅ | `wallet.html`. Needs sign-in |
+| Top-up (demo M-Pesa) with success / fail | ✅ | |
+| Withdraw to M-Pesa (demo) | ✅ | |
+| Pay with SMX Credit at checkout | ✅ | Full or partial; remainder via M-Pesa / card |
+| Refund SMX to wallet on cancel | ✅ | Split refunds handled |
+| Duplicate protection | ✅ | Every wallet action has a unique key |
+| Tamper check | 🟡 | Balance is recalculated from the ledger; any mismatch pauses the wallet. A real ledger must live on a server |
+| Legal / licensing | 🔒 | Stored credit is e-money in Kenya. Go-live needs CBK authorisation (e-money issuer) or a licensed partner holding funds in trust. Get a Kenyan lawyer's advice |
+| Multi-currency display | ⬜ | Phase 5 |
 
 ## Phase 4: advanced commerce
 
@@ -95,6 +119,7 @@ The MVP is a static GitHub Pages site. All data (accounts, stores, products, car
 | `checkout-config.js` | Phase 2: delivery prices, fees, VAT, payment methods — one place to edit |
 | `phase2.js` / `phase2.css` | Phase 2: full checkout |
 | `phase2-orders.js` | Phase 2: order details, receipts, cancel, refund requests on My Orders |
+| `wallet.js` / `wallet.html` | Phase 3: SMX Credit ledger, wallet page, nav link |
 | `auth.js` (edited) | Adds `country` and demo `smxResetPassword` |
 | `login.html` (edited) | "Forgot password?" form and country field |
 | `index.html` / `profile.html` (edited) | Load the new files and add Build Log entries |

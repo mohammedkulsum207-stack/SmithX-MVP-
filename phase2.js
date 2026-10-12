@@ -51,7 +51,9 @@
   }
 
   function currentUser() {
-    return typeof smxCurrentUser === "function" ? smxCurrentUser() : null;
+    if (typeof smxCurrentUser === "function") return smxCurrentUser();
+    if (typeof smxWalletUser === "function") return smxWalletUser();
+    return null;
   }
 
   function addBusinessDays(date, days) {
@@ -126,7 +128,40 @@
     const taxRate = Number(CFG.tax.rate) || 0;
     const taxAdded = CFG.tax.included ? 0 : Math.round(subtotal * taxRate);
     const total = subtotal + delivery + transactionFee + taxAdded;
-    return { subtotal, delivery, transactionFee, taxAdded, taxRate, taxIncluded: Boolean(CFG.tax.included), total, currency: CFG.currency };
+    const wallet = walletInfo();
+    const walletUsed = wallet.available && draft.useWallet ? Math.min(wallet.balance, total) : 0;
+    const toPay = total - walletUsed;
+    return { subtotal, delivery, transactionFee, taxAdded, taxRate, taxIncluded: Boolean(CFG.tax.included), total, walletUsed, toPay, currency: CFG.currency };
+  }
+
+  /* ---------------- SMX Credit (Phase 3) ---------------- */
+
+  function walletInfo() {
+    if (typeof smxWalletBalance !== "function") return { enabled: false, available: false, balance: 0 };
+    const user = currentUser();
+    if (!user) return { enabled: true, signedIn: false, available: false, balance: 0 };
+    const audit = smxWalletAudit(user.email);
+    const balance = audit.ok ? audit.balance : 0;
+    return { enabled: true, signedIn: true, ok: audit.ok, available: audit.ok && balance > 0, balance, email: user.email };
+  }
+
+  function walletSectionHTML(t) {
+    const w = walletInfo();
+    if (!w.enabled) return "";
+    if (!w.signedIn) {
+      return `<div class="smx-co-wallet is-muted"><strong>SMX Credit</strong><small><a href="login.html?next=index.html">Sign in</a> to pay with your SMX wallet.</small></div>`;
+    }
+    if (!w.ok) {
+      return `<div class="smx-co-wallet is-muted"><strong>SMX Credit paused</strong><small>Your wallet records need checking. <a href="wallet.html">Open wallet</a></small></div>`;
+    }
+    if (!w.available) {
+      return `<div class="smx-co-wallet is-muted"><strong>SMX Credit · SMX 0</strong><small><a href="wallet.html">Top up your wallet</a> to pay with one tap next time.</small></div>`;
+    }
+    return `
+      <label class="smx-co-wallet ${draft.useWallet ? "is-selected" : ""}">
+        <input type="checkbox" id="coUseWallet" ${draft.useWallet ? "checked" : ""}>
+        <span><strong>Use SMX Credit</strong><small>Balance ${smxWalletFormat(w.balance)}${draft.useWallet ? " · using " + smxWalletFormat(t.walletUsed) + (t.toPay ? ", pay " + money(t.toPay) + " below" : " — covers the whole order") : ""}</small></span>
+      </label>`;
   }
 
   /* ---------------- Overlay ---------------- */
@@ -183,6 +218,7 @@
     draft.deliveryMethod = draft.deliveryMethod || "standard";
     draft.paymentMethod = draft.paymentMethod || "mpesa";
     draft.attemptId = draft.attemptId || "ATT-" + Date.now().toString(36).toUpperCase();
+    if (draft.useWallet === undefined) draft.useWallet = walletInfo().available;
     saveDraft();
 
     if (typeof closeCart === "function") closeCart();
@@ -284,6 +320,8 @@
 
           <fieldset class="smx-co-section">
             <legend><span>3</span> Payment</legend>
+            ${walletSectionHTML(t)}
+            ${t.walletUsed && !t.toPay ? `<p class="smx-co-hint">No M-Pesa or card payment needed — SMX Credit covers this order.</p>` : `
             <div class="smx-co-options smx-co-options-2">
               ${Object.entries(CFG.payment.methods).map(([key, method]) => `
                 <label class="smx-co-option ${key === draft.paymentMethod ? "is-selected" : ""}">
@@ -295,8 +333,8 @@
               <label class="smx-co-field">M-Pesa phone number
                 <input id="coMpesa" type="tel" inputmode="tel" placeholder="07XX XXX XXX" value="${esc(draft.mpesaPhone || draft.phone)}" required>
               </label>` : ""}
-            <p class="smx-co-hint">${esc((CFG.payment.methods[draft.paymentMethod] || {}).note || "")}</p>
-            ${CFG.demo ? `
+            <p class="smx-co-hint">${esc((CFG.payment.methods[draft.paymentMethod] || {}).note || "")}</p>`}
+            ${CFG.demo && t.toPay ? `
               <label class="smx-co-field smx-co-demo">Demo payment result
                 <select id="coOutcome">
                   <option value="success" ${draft.outcome === "success" ? "selected" : ""}>Payment succeeds</option>
@@ -323,11 +361,14 @@
             <div><dt>Delivery</dt><dd>${t.delivery ? money(t.delivery) : "Free"}</dd></div>
             <div><dt>${esc(CFG.fees.label)}</dt><dd>${money(t.transactionFee)}</dd></div>
             <div><dt>${esc(CFG.tax.label)} (${Math.round(t.taxRate * 100)}%)</dt><dd>${t.taxIncluded ? "Included in prices" : money(t.taxAdded)}</dd></div>
-            <div class="smx-co-grand"><dt>Total to pay</dt><dd>${money(t.total)}</dd></div>
+            <div class="smx-co-grand"><dt>${t.walletUsed ? "Order total" : "Total to pay"}</dt><dd>${money(t.total)}</dd></div>
+            ${t.walletUsed ? `
+            <div class="smx-co-credit"><dt>SMX Credit</dt><dd>− ${money(t.walletUsed)}</dd></div>
+            <div class="smx-co-grand"><dt>Left to pay${t.toPay ? " by " + esc((CFG.payment.methods[draft.paymentMethod] || {}).label || "") : ""}</dt><dd>${money(t.toPay)}</dd></div>` : ""}
           </dl>
           <p class="smx-co-currency">You'll be charged in <strong>${esc(t.currency)}</strong>. No other charges will be added.</p>
           <button type="submit" class="primary-button full-width" id="coPay" ${problems.length || !canDeliverHere || !lines.length ? "disabled" : ""}>
-            ${CFG.demo ? "Pay " + money(t.total) + " (demo)" : "Pay " + money(t.total)}
+            ${t.walletUsed && !t.toPay ? "Pay with SMX Credit" + (CFG.demo ? " (demo)" : "") : "Pay " + money(t.toPay) + (CFG.demo ? " (demo)" : "")}
           </button>
           <p class="smx-co-hint">By paying you agree to the SM1THX demo terms. No real money is taken in this MVP.</p>
         </aside>
@@ -348,6 +389,7 @@
     if ($("coPickup")) draft.pickupPoint = val("coPickup");
     if ($("coMpesa")) draft.mpesaPhone = val("coMpesa");
     if ($("coOutcome")) draft.outcome = val("coOutcome");
+    if ($("coUseWallet")) draft.useWallet = $("coUseWallet").checked;
     const delivery = document.querySelector('input[name="coDelivery"]:checked');
     if (delivery) draft.deliveryMethod = delivery.value;
     const payment = document.querySelector('input[name="coPayment"]:checked');
@@ -377,7 +419,7 @@
 
     form.addEventListener("change", event => {
       readFields();
-      if (event.target.matches("select#coCountry, select#coCounty, input[name=coDelivery], input[name=coPayment]")) {
+      if (event.target.matches("select#coCountry, select#coCounty, input[name=coDelivery], input[name=coPayment], #coUseWallet")) {
         rerenderKeepingFocus();
       }
     });
@@ -406,7 +448,12 @@
       if (!draft.town) { errors.push("Enter your town or area."); mark("coTown"); }
       if (!draft.address || draft.address.length < 4) { errors.push("Enter your street or building."); mark("coAddress"); }
     }
-    if (draft.paymentMethod === "mpesa" && !validPhone(draft.mpesaPhone || draft.phone)) {
+    const tv = totals();
+    if (tv.walletUsed) {
+      const w = walletInfo();
+      if (!w.ok || w.balance < tv.walletUsed) errors.push("Your SMX Credit balance has changed. Review the payment and try again.");
+    }
+    if (tv.toPay && draft.paymentMethod === "mpesa" && !validPhone(draft.mpesaPhone || draft.phone)) {
       errors.push("Enter the M-Pesa phone number to charge.");
       mark("coMpesa");
     }
@@ -454,9 +501,16 @@
     }
 
     busy = true;
-    const amount = totals().total;
+    const tStart = totals();
+    const amount = tStart.toPay;
     const method = CFG.payment.methods[draft.paymentMethod];
     recordAttempt("started");
+
+    if (!amount && tStart.walletUsed) {
+      showStatus("processing", { title: "Paying with SMX Credit", text: "Using " + smxWalletFormat(tStart.walletUsed) + " from your wallet…" });
+      setTimeout(completeOrder, 900);
+      return;
+    }
 
     showStatus("processing", {
       title: draft.paymentMethod === "mpesa" ? "Check your phone" : "Processing payment",
@@ -531,7 +585,20 @@
 
     const t = totals();
     const delivery = selectedDelivery();
-    const reference = (draft.paymentMethod === "mpesa" ? "MP" : "CD") + Date.now().toString(36).toUpperCase().slice(-8) + "DEMO";
+    const reference = (t.toPay ? (draft.paymentMethod === "mpesa" ? "MP" : "CD") : "SX") + Date.now().toString(36).toUpperCase().slice(-8) + "DEMO";
+
+    // Final SMX Credit check right before the order is created.
+    const walletEmail = t.walletUsed ? walletInfo().email : null;
+    if (t.walletUsed) {
+      const w = walletInfo();
+      if (!w.ok || w.balance < t.walletUsed) {
+        busy = false;
+        showStatus("failed", { title: "SMX Credit balance changed", text: "Your wallet no longer covers " + smxWalletFormat(t.walletUsed) + ". Nothing was charged. Review the payment and try again." });
+        return;
+      }
+    }
+    const extLabel = (CFG.payment.methods[draft.paymentMethod] || {}).label || draft.paymentMethod;
+    const payLabel = t.walletUsed ? (t.toPay ? "SMX Credit + " + extLabel : "SMX Credit") : extLabel;
 
     pendingExtras = {
       checkoutAttemptId: draft.attemptId,
@@ -545,7 +612,9 @@
         taxAdded: t.taxAdded,
         taxRate: t.taxRate,
         taxIncluded: t.taxIncluded,
-        total: t.total
+        total: t.total,
+        walletUsed: t.walletUsed,
+        paidExternally: t.toPay
       },
       delivery: {
         method: delivery.key,
@@ -564,11 +633,15 @@
         notes: delivery.key === "pickup" ? "" : (draft.notes || "")
       },
       payment: {
-        method: draft.paymentMethod,
-        label: (CFG.payment.methods[draft.paymentMethod] || {}).label || draft.paymentMethod,
+        method: t.toPay ? draft.paymentMethod : "smx",
+        label: payLabel,
+        externalLabel: t.toPay ? extLabel : "",
+        walletUsed: t.walletUsed,
+        walletEmail: walletEmail || "",
+        externalAmount: t.toPay,
         status: "Paid",
         reference,
-        phone: draft.paymentMethod === "mpesa" ? maskPhone(draft.mpesaPhone || draft.phone) : "",
+        phone: t.toPay && draft.paymentMethod === "mpesa" ? maskPhone(draft.mpesaPhone || draft.phone) : "",
         amount: t.total,
         currency: t.currency,
         paidAt: new Date().toISOString(),
@@ -587,10 +660,19 @@
     busy = false;
     closeCheckout();
     originalDemoCheckout();   // creates the order, clears cart, starts tracking, shows confirmation
+    const created = getOrders().find(order => order.checkoutAttemptId === pendingExtras.checkoutAttemptId);
     pendingExtras = null;
 
+    if (created && t.walletUsed && walletEmail) {
+      try {
+        smxWalletRecord(walletEmail, { type: "spend", amount: t.walletUsed, key: "order-" + created.orderId, ref: created.orderId, note: "Order " + created.orderId });
+      } catch (error) {
+        showToast("SMX Credit couldn't be applied: " + error.message);
+      }
+    }
+
     // Fresh attempt id for the next checkout; keep address for next time.
-    draft = { ...draft, attemptId: null, outcome: "success", resumed: false };
+    draft = { ...draft, attemptId: null, outcome: "success", resumed: false, useWallet: undefined };
     saveDraft();
   }
 
@@ -622,7 +704,8 @@
       <div><dt>Products</dt><dd>${money(c.products)}</dd></div>
       <div><dt>Delivery · ${esc(order.delivery.label)}</dt><dd>${c.delivery ? money(c.delivery) : "Free"}</dd></div>
       <div><dt>${esc(CFG.fees.label)}</dt><dd>${money(c.transactionFee)}</dd></div>
-      <div><dt>${esc(CFG.tax.label)} (${Math.round(c.taxRate * 100)}%)</dt><dd>${c.taxIncluded ? "Included" : money(c.taxAdded)}</dd></div>`;
+      <div><dt>${esc(CFG.tax.label)} (${Math.round(c.taxRate * 100)}%)</dt><dd>${c.taxIncluded ? "Included" : money(c.taxAdded)}</dd></div>
+      ${c.walletUsed ? `<div><dt>Paid with SMX Credit</dt><dd>${money(c.walletUsed)}</dd></div>${c.paidExternally ? `<div><dt>Paid with ${esc(order.payment.externalLabel)}</dt><dd>${money(c.paidExternally)}</dd></div>` : ""}` : ""}`;
     box.insertAdjacentElement("beforebegin", breakdown);
 
     const meta = document.createElement("p");

@@ -86,6 +86,7 @@
         <div><dt>${esc(CFG.fees.label)}</dt><dd>${money(c.transactionFee)}</dd></div>
         <div><dt>${esc(CFG.tax.label)} (${Math.round((c.taxRate || 0) * 100)}%)</dt><dd>${c.taxIncluded ? "Included in prices" : money(c.taxAdded)}</dd></div>
         <div class="p2-grand"><dt>Total paid</dt><dd>${money(c.total)}</dd></div>
+        ${c.walletUsed ? `<div><dt>· with SMX Credit</dt><dd>${money(c.walletUsed)}</dd></div>${c.paidExternally ? `<div><dt>· with ${esc(order.payment.externalLabel)}</dt><dd>${money(c.paidExternally)}</dd></div>` : ""}` : ""}
       </dl>`;
   }
 
@@ -226,6 +227,23 @@
 
     const now = new Date().toISOString();
     const amount = Number(order.total) || 0;
+    const walletPart = order.payment ? Number(order.payment.walletUsed) || 0 : 0;
+    const externalPart = amount - walletPart;
+
+    // Return SMX Credit first; stop if the wallet can't accept it.
+    if (walletPart && order.payment.walletEmail && typeof smxWalletRecord === "function") {
+      try {
+        smxWalletRecord(order.payment.walletEmail, { type: "refund", amount: walletPart, key: "refund-" + order.orderId, ref: order.orderId, note: "Cancelled order " + order.orderId });
+      } catch (error) {
+        showMessage("Couldn't return SMX Credit: " + error.message);
+        return;
+      }
+    }
+
+    const refundMethod = walletPart
+      ? "SMX Credit" + (externalPart ? " (" + money(walletPart) + ") + " + order.payment.externalLabel + " (" + money(externalPart) + ")" : "")
+      : (order.payment ? order.payment.label + (order.payment.phone ? " " + order.payment.phone : "") : "");
+
     const cancelled = {
       ...order,
       status: "Cancelled",
@@ -237,7 +255,7 @@
         ? {
             status: "Completed",
             amount,
-            method: order.payment.label + (order.payment.phone ? " " + order.payment.phone : ""),
+            method: refundMethod,
             reference: "RF" + Date.now().toString(36).toUpperCase().slice(-8) + (order.payment.demo ? "DEMO" : ""),
             at: now,
             demo: Boolean(order.payment.demo)
@@ -267,7 +285,9 @@
     selectedOrderId = cancelled.orderId;
     renderOrders();
     renderSelectedOrder();
-    showMessage(cancelled.refund ? "Order cancelled. " + money(amount) + " refunded (demo)." : "Order cancelled.");
+    showMessage(cancelled.refund
+      ? "Order cancelled. " + money(amount) + (walletPart && !externalPart ? " returned to your SMX wallet." : " refunded (demo).")
+      : "Order cancelled.");
   }
 
   function requestRefund(id, reason, note) {
@@ -331,7 +351,11 @@
   function cancelDialog(order) {
     openDialog(`
       <h3>Cancel order ${esc(order.orderId)}?</h3>
-      <p class="p2-muted">${order.payment ? "You'll get a full refund of " + money(order.total) + " to " + esc(order.payment.label) + "." : "This demo order has no payment to refund."}</p>
+      <p class="p2-muted">${order.payment
+        ? (order.payment.walletUsed
+            ? "You'll get " + money(order.payment.walletUsed) + " back in your SMX wallet straight away" + (order.payment.externalAmount ? " and " + money(order.payment.externalAmount) + " back to " + esc(order.payment.externalLabel) : "") + "."
+            : "You'll get a full refund of " + money(order.total) + " to " + esc(order.payment.label) + ".")
+        : "This demo order has no payment to refund."}</p>
       <label class="p2-field">Reason
         <select name="reason">
           <option>Changed my mind</option>
