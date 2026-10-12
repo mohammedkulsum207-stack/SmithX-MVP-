@@ -94,7 +94,21 @@ Decision (12 Oct 2026): SMX Coins are prepaid store credit.
 
 ## Phase 4: advanced commerce
 
-⬜ Auctions (no fee for losing bids), AI storefront designer, reviews and ratings, live shopping. The AI product-listing assistant already exists in Seller Studio.
+| Item | Status | Notes |
+|---|---|---|
+| Auctions | 🟡 | `auctions.html`. Create (5 min demo → 7 days), live bids, minimum bid step, countdown, masked bidder names, "My bids" / "My auctions" tabs |
+| Losing bids are free | ✅ | Losing bidders are never charged. The winning fee (currently 0%) is shown before every bid. Change it in `auctions.js` (`winningFeePercent`) |
+| Fair-bidding rules | ✅ | No bidding on your own items, bids are binding, a bid in the last 2 minutes adds 2 minutes, sellers can only cancel before the first bid |
+| Winner payment | ✅ | Winner pays within 48 hours by M-Pesa (demo) or SMX Credit. Creates a normal order in My Orders. If unpaid, it goes to the next-highest bidder |
+| Reviews and ratings | ✅ | 1–5 stars + written review. Only buyers with a delivered order can review; sellers can't review their own products |
+| Fake-review safeguards | 🟡 | Verified-purchase only, one review per product per person, no links or phone numbers, reports hide a review after 3 reports. Moderation dashboard needs a backend |
+| Ratings shown | ✅ | Stars on product cards, rating breakdown in the product view, store rating on storefronts |
+| Store Assistant | ✅ | Profile → My Store. Suggests 3 designs (theme, layout, tagline, About) and promo captions. Seller edits, then saves to approve. Optional |
+| Store layouts | ✅ | Classic grid, Showcase, Compact |
+| AI product-listing assistant | 🟡 | Fixed a bug where results never displayed. Falls back to a built-in draft while the AI service is offline (OpenAI account out of credits) |
+| Live shopping | ⬜ | Needs a video provider and a backend; deferred |
+
+Auctions and reviews are saved in this browser only until a backend is added, so other people can't see them yet.
 
 ## Phase 5: international growth
 
@@ -120,6 +134,10 @@ Decision (12 Oct 2026): SMX Coins are prepaid store credit.
 | `phase2.js` / `phase2.css` | Phase 2: full checkout |
 | `phase2-orders.js` | Phase 2: order details, receipts, cancel, refund requests on My Orders |
 | `wallet.js` / `wallet.html` | Phase 3: SMX Credit ledger, wallet page, nav link |
+| `reviews.js` | Phase 4: reviews, ratings, report button, "Review your items" on My Orders |
+| `auctions.js` / `auctions.html` | Phase 4: auctions, bidding rules, winner payment |
+| `phase4-ai.js` | Phase 4: Store Assistant + product-listing fallback |
+| `stores.js` / `profile-store.js` / `store.html` (edited) | Store layout option, store ratings |
 | `auth.js` (edited) | Adds `country` and demo `smxResetPassword` |
 | `login.html` (edited) | "Forgot password?" form and country field |
 | `index.html` / `profile.html` (edited) | Load the new files and add Build Log entries |

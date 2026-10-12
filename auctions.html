@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bid on items from SM1THX sellers.">
+  <title>Auctions — SM1THX</title>
+
+  <style>
+
+    @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap");
+    @import url("https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap");
+
+    :root {
+      --ink: #16130f;
+      --ivory: #f6f1e8;
+      --paper: #fffdf9;
+      --line: #e8e0d2;
+      --muted: #6f675a;
+      --gold: #c8902e;
+      --gold-bright: #e8a33d;
+      --gold-soft: #f3e3c2;
+      --gold-text: #8a5f14;
+      --success: #2f7a4a;
+      --success-soft: #e6f2e9;
+      --danger: #a3343a;
+      --danger-soft: #fbeaea;
+      --font-display: "Cormorant Garamond", Georgia, serif;
+      --font-body: "Switzer", "Inter", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--ivory);
+      color: var(--ink);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+    button, input, select { font: inherit; }
+    :focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+
+    header {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 max(20px, calc((100% - 1180px) / 2));
+      background: rgba(14, 12, 9, .94);
+      border-bottom: 1px solid rgba(232, 163, 61, .14);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+    }
+
+    .brand img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, .25);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: .9rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .back-btn:hover { border-color: var(--gold-bright); color: var(--gold-bright); }
+
+    .hero {
+      background: #16130f;
+      color: #fff;
+      padding: 48px max(20px, calc((100% - 1180px) / 2)) 120px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(90% 140% at 100% 0%, rgba(232, 163, 61, .32), transparent 60%);
+    }
+
+    .hero > * { position: relative; }
+
+    .eyebrow {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 600;
+      line-height: 1.05;
+      margin-top: 6px;
+    }
+
+    .hero p { margin-top: 8px; color: rgba(255, 255, 255, .72); max-width: 560px; }
+
+    .demo-tag {
+      display: inline-block;
+      margin-left: 10px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(232, 163, 61, .16);
+      color: var(--gold-bright);
+      font-size: .7rem;
+      letter-spacing: .12em;
+      vertical-align: middle;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 40px));
+      margin: -84px auto 0;
+      padding-bottom: 72px;
+      position: relative;
+      display: grid;
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid rgba(22, 19, 15, .08);
+      border-radius: 22px;
+      padding: 26px;
+    }
+
+    .balance-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      box-shadow: 0 30px 60px -30px rgba(22, 19, 15, .45);
+    }
+
+    .balance-label { font-size: .8rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+    .balance-value {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 4.4rem);
+      font-weight: 700;
+      line-height: 1;
+      margin-top: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .balance-value small { font-size: .45em; color: var(--gold-text); letter-spacing: .08em; margin-right: 6px; }
+
+    .balance-sub { margin-top: 8px; color: var(--muted); font-size: .9rem; }
+
+    .balance-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 0 22px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform .2s ease, background .2s ease;
+    }
+
+    .btn-primary { background: var(--ink); color: #fff; }
+    .btn-primary:hover { background: #000; transform: translateY(-1px); }
+    .btn-gold { background: var(--gold-bright); color: var(--ink); }
+    .btn-gold:hover { filter: brightness(1.05); }
+    .btn-outline { background: transparent; border-color: rgba(22, 19, 15, .22); color: var(--ink); }
+    .btn-outline:hover { border-color: var(--ink); }
+    .btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+
+    .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 24px; align-items: start; }
+
+    h2 { font-family: var(--font-display); font-size: 1.9rem; font-weight: 600; line-height: 1.1; }
+
+    .tabs { display: flex; gap: 6px; padding: 4px; margin: 16px 0 20px; border-radius: 12px; background: var(--ivory); }
+
+    .tab {
+      flex: 1;
+      min-height: 40px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .tab[aria-selected="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 2px 8px rgba(22, 19, 15, .08); }
+
+    form { display: grid; gap: 14px; }
+
+    .field { display: grid; gap: 6px; font-size: .85rem; font-weight: 600; }
+    .field small { font-weight: 400; color: var(--muted); }
+
+    .field input, .field select {
+      width: 100%;
+      min-height: 46px;
+      padding: 0 14px;
+      border: 1px solid rgba(22, 19, 15, .16);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 400;
+      font-size: .95rem;
+    }
+
+    .presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+
+    .preset {
+      min-height: 42px;
+      border: 1px solid rgba(22, 19, 15, .14);
+      border-radius: 10px;
+      background: #fff;
+      font-weight: 600;
+      font-size: .88rem;
+      cursor: pointer;
+    }
+
+    .preset[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: #fff; }
+
+    .demo-box { padding: 12px 14px; border: 1px dashed rgba(138, 95, 20, .45); border-radius: 12px; background: rgba(243, 227, 194, .35); }
+
+    .message { display: none; padding: 12px 14px; border-radius: 12px; font-size: .9rem; }
+    .message.show { display: block; }
+    .message.success { background: var(--success-soft); color: var(--success); }
+    .message.error { background: var(--danger-soft); color: var(--danger); }
+    .message.info { background: var(--gold-soft); color: #5f420e; }
+
+    .hint { font-size: .8rem; color: var(--muted); }
+
+    .history-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+
+    .history-head select {
+      min-height: 40px;
+      padding: 0 12px;
+      border: 1px solid rgba(22, 19, 15, .16);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .history { list-style: none; display: grid; }
+
+    .history li {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .history li:last-child { border-bottom: 0; }
+
+    .tx-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      font-weight: 700;
+      background: var(--ivory);
+    }
+
+    .tx-in .tx-icon { background: var(--success-soft); color: var(--success); }
+    .tx-out .tx-icon { background: var(--gold-soft); color: var(--gold-text); }
+
+    .tx-main strong { display: block; font-size: .95rem; }
+    .tx-main small { display: block; color: var(--muted); font-size: .8rem; overflow-wrap: anywhere; }
+
+    .tx-amount { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .tx-amount strong { display: block; }
+    .tx-in .tx-amount strong { color: var(--success); }
+    .tx-amount small { color: var(--muted); font-size: .78rem; }
+
+    .empty { padding: 36px 12px; text-align: center; color: var(--muted); }
+    .empty strong { display: block; font-family: var(--font-display); font-size: 1.5rem; color: var(--ink); margin-bottom: 4px; }
+
+    .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+    .rule { padding: 16px; border-radius: 14px; background: var(--ivory); font-size: .9rem; }
+    .rule strong { display: block; margin-bottom: 4px; }
+    .rule p { color: var(--muted); }
+
+    .legal { margin-top: 18px; font-size: .8rem; color: var(--muted); }
+
+    .processing { display: grid; justify-items: center; gap: 10px; padding: 30px 10px; text-align: center; }
+    .processing h3 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; }
+    .processing p { color: var(--muted); font-size: .9rem; }
+
+    .spinner {
+      width: 38px;
+      height: 38px;
+      border: 3px solid rgba(232, 163, 61, .25);
+      border-top-color: var(--gold-bright);
+      border-radius: 50%;
+      animation: spin .9s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .gate { text-align: center; padding: 48px 24px; }
+    .gate strong { display: block; font-family: var(--font-display); font-size: 2rem; margin-bottom: 6px; }
+    .gate p { color: var(--muted); margin-bottom: 18px; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--ink);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: .9rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s ease;
+      z-index: 500;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .rules { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .brand span { display: none; }
+      .back-btn { padding: 9px 14px; font-size: .82rem; }
+      .hero { padding: 36px 16px 104px; }
+      .page { width: calc(100% - 28px); }
+      .card { padding: 20px; }
+      .balance-actions, .balance-actions .btn { width: 100%; }
+      .presets { grid-template-columns: repeat(2, 1fr); }
+      .history li { grid-template-columns: 36px minmax(0, 1fr); }
+      .tx-amount { grid-column: 2; text-align: left; }
+    }
+
+    @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+  
+
+    /* ---------- Auctions ---------- */
+
+    .hero-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+
+    .tabs-bar { display: flex; gap: 6px; padding: 4px; border-radius: 14px; background: var(--paper); border: 1px solid rgba(22, 19, 15, .08); box-shadow: 0 20px 40px -24px rgba(22, 19, 15, .4); overflow-x: auto; }
+    .tabs-bar .tab { flex: 0 0 auto; padding: 0 18px; white-space: nowrap; }
+    .tabs-bar .tab b { margin-left: 6px; padding: 1px 7px; border-radius: 99px; background: var(--ivory); font-size: .72rem; }
+
+    .auction-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+
+    .a-card {
+      display: flex;
+      flex-direction: column;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid rgba(22, 19, 15, .08);
+      text-decoration: none;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+
+    .a-card:hover { transform: translateY(-4px); box-shadow: 0 22px 44px -18px rgba(22, 19, 15, .35); }
+    .a-card-img { position: relative; aspect-ratio: 4 / 3; background: #1c1a17; }
+    .a-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .a-badge { position: absolute; top: 12px; left: 12px; padding: 5px 10px; border-radius: 99px; font-size: .72rem; font-weight: 700; background: rgba(22, 19, 15, .82); color: #fff; }
+    .a-badge.is-live::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: #3ccf7a; vertical-align: 1px; }
+    .a-badge.is-me { left: auto; right: 12px; background: var(--gold-bright); color: var(--ink); }
+    .a-badge.is-out { left: auto; right: 12px; background: #a3343a; color: #fff; }
+    .a-card-body { padding: 16px 18px 18px; display: grid; gap: 6px; }
+    .a-card-body small { color: var(--gold-text); font-size: .68rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+    .a-card-body strong.t { font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; line-height: 1.15; }
+    .a-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: .88rem; color: var(--muted); }
+    .a-row b { color: var(--ink); font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+    .a-row .cd { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink); }
+    .a-row .cd.is-soon { color: #a3343a; }
+
+    .detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+    .detail-img { border-radius: 18px; overflow: hidden; background: #1c1a17; aspect-ratio: 4 / 3; }
+    .detail-img img { width: 100%; height: 100%; object-fit: cover; }
+    .detail h2 { font-size: 2.3rem; }
+    .detail .desc { color: #3d372e; white-space: pre-line; margin-top: 10px; }
+    .price-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+    .price-box div { padding: 14px 16px; border-radius: 14px; background: var(--ivory); }
+    .price-box span { display: block; font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .price-box strong { font-family: var(--font-display); font-size: 1.8rem; font-variant-numeric: tabular-nums; }
+    .bid-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+    .fee-note { font-size: .82rem; color: var(--muted); margin-top: 6px; }
+    .fee-note strong { color: var(--success); }
+    .bids { list-style: none; display: grid; gap: 0; margin-top: 8px; }
+    .bids li { display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: .9rem; }
+    .bids li:first-child strong { color: var(--success); }
+    .bids small { color: var(--muted); }
+    .rules-list { padding-left: 18px; display: grid; gap: 6px; font-size: .88rem; color: #3d372e; }
+    .seller-tools { display: grid; gap: 10px; }
+    .seller-tools .btns { display: flex; flex-wrap: wrap; gap: 8px; }
+    .seller-tools .btn { min-height: 40px; padding: 0 14px; font-size: .88rem; }
+    .back-link { display: inline-flex; margin-bottom: 4px; color: var(--muted); font-weight: 600; text-decoration: none; font-size: .9rem; }
+    .back-link:hover { color: var(--ink); }
+    .breakdown { display: grid; gap: 6px; padding: 14px 16px; border-radius: 14px; background: var(--ivory); font-size: .92rem; }
+    .breakdown div { display: flex; justify-content: space-between; gap: 10px; }
+    .breakdown .grand { padding-top: 8px; border-top: 1px solid var(--line); font-weight: 700; }
+
+    .dialog { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; padding: 20px; background: rgba(14, 12, 9, .62); }
+    .dialog-box { width: min(560px, 100%); max-height: calc(100vh - 40px); overflow-y: auto; display: grid; gap: 14px; padding: 26px; border-radius: 22px; background: var(--paper); box-shadow: 0 30px 70px rgba(0, 0, 0, .4); }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field textarea { width: 100%; padding: 11px 14px; border: 1px solid rgba(22, 19, 15, .16); border-radius: 12px; background: #fff; font: inherit; font-weight: 400; }
+    .preview-img { width: 100%; max-height: 180px; object-fit: cover; border-radius: 12px; display: none; }
+
+    @media (max-width: 860px) {
+      .detail { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .two, .price-box { grid-template-columns: 1fr; }
+      .bid-row { grid-template-columns: 1fr; }
+      .auction-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="index.html#home" aria-label="SM1THX home">
+    <img src="assets/smithx-logo.jpg" alt="">
+    <span>SM1THX</span>
+  </a>
+  <a class="back-btn" href="index.html#market">← Marketplace</a>
+</header>
+
+<section class="hero">
+  <div class="hero-row">
+    <div>
+      <p class="eyebrow">SM1THX Auctions</p>
+      <h1>Bid. Win. Own it. <span class="demo-tag">DEMO</span></h1>
+      <p>Losing bids are always free. You only pay if you win.</p>
+    </div>
+    <button class="btn btn-gold" type="button" id="createBtn">Create an auction</button>
+  </div>
+</section>
+
+<main class="page" id="root"></main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="wallet.js"></script>
+<script src="checkout-config.js"></script>
+<script src="auctions.js"></script>
+<script>
+  (function () {
+    const root = document.getElementById("root");
+    const params = new URLSearchParams(location.search);
+    let view = params.get("id") ? "detail" : "list";
+    let tab = params.get("tab") || "live";
+    let currentId = params.get("id");
+
+    const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+    const kes = value => "KES " + Math.round(Number(value) || 0).toLocaleString("en-KE");
+    const user = () => smxWalletUser();
+    const FALLBACK_IMG = "assets/hero-wolf.jpg";
+    const DEMO_RIVAL = { email: "demo.rival@smithx.test", name: "Demo Rival" };
+
+    function toast(text) {
+      const el = document.getElementById("toast");
+      el.textContent = text;
+      el.classList.add("show");
+      clearTimeout(toast.t);
+      toast.t = setTimeout(() => el.classList.remove("show"), 2800);
+    }
+
+    function myRole(a, me) {
+      if (!me) return "";
+      const top = smxHighestBid(a);
+      if (a.status === "live") {
+        if (top && top.bidderEmail === me.email) return "winning";
+        if ((a.bids || []).some(b => b.bidderEmail === me.email)) return "outbid";
+      }
+      if (a.status === "ended" && a.winner && a.winner.email === me.email) return a.winner.status === "paid" ? "paid" : "won";
+      return "";
+    }
+
+    function go(params) {
+      const url = new URL(location.href);
+      url.search = new URLSearchParams(params).toString();
+      history.pushState(null, "", url);
+      view = params.id ? "detail" : "list";
+      currentId = params.id || null;
+      tab = params.tab || tab;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    window.addEventListener("popstate", () => {
+      const p = new URLSearchParams(location.search);
+      view = p.get("id") ? "detail" : "list";
+      currentId = p.get("id");
+      tab = p.get("tab") || "live";
+      render();
+    });
+
+    /* ---------------- List ---------------- */
+
+    function renderList() {
+      const me = user();
+      const all = smxAuctionsSettled();
+      const groups = {
+        live: all.filter(a => a.status === "live"),
+        ended: all.filter(a => a.status !== "live" && a.status !== "cancelled"),
+        bids: me ? all.filter(a => (a.bids || []).some(b => b.bidderEmail === me.email)) : [],
+        mine: me ? all.filter(a => a.sellerEmail === me.email) : []
+      };
+      const labels = { live: "Live now", ended: "Ended", bids: "My bids", mine: "My auctions" };
+      const list = groups[tab] || groups.live;
+
+      root.innerHTML = `
+        <div class="tabs-bar" role="tablist">
+          ${Object.keys(labels).map(key => `<button class="tab" role="tab" type="button" data-tab="${key}" aria-selected="${key === tab}">${labels[key]}<b>${groups[key].length}</b></button>`).join("")}
+        </div>
+        ${list.length ? `<div class="auction-grid">${list.map(card).join("")}</div>` : `
+          <div class="card empty">
+            <strong>${tab === "live" ? "No live auctions right now" : tab === "bids" ? (me ? "You haven't bid yet" : "Sign in to see your bids") : tab === "mine" ? (me ? "You haven't listed an auction" : "Sign in to see your auctions") : "No ended auctions yet"}</strong>
+            ${tab === "live" || tab === "mine" ? "Sellers can list an item for auction in a few seconds." : ""}
+            ${tab === "live" || tab === "mine" ? `<div style="margin-top:16px;"><button class="btn btn-primary" type="button" data-create>Create an auction</button></div>` : ""}
+          </div>`}
+        ${rulesCard()}`;
+
+      root.querySelectorAll("[data-tab]").forEach(b => b.addEventListener("click", () => go({ tab: b.dataset.tab })));
+      root.querySelectorAll("[data-create]").forEach(b => b.addEventListener("click", openCreate));
+      root.querySelectorAll("[data-open]").forEach(a => a.addEventListener("click", e => { e.preventDefault(); go({ id: a.dataset.open }); }));
+    }
+
+    function card(a) {
+      const me = user();
+      const top = smxHighestBid(a);
+      const role = myRole(a, me);
+      const statusLabel = a.status === "live" ? "Live" : a.status === "unsold" ? "Not sold" : a.status === "cancelled" ? "Cancelled" : a.winner && a.winner.status === "paid" ? "Sold" : "Ended";
+      const roleBadge = { winning: ["is-me", "You're winning"], outbid: ["is-out", "Outbid"], won: ["is-me", "You won — pay now"], paid: ["is-me", "Won · paid"] }[role];
+      return `
+        <a class="a-card" href="?id=${esc(a.id)}" data-open="${esc(a.id)}">
+          <div class="a-card-img">
+            <img src="${esc(a.image || FALLBACK_IMG)}" alt="${esc(a.title)}" loading="lazy">
+            <span class="a-badge ${a.status === "live" ? "is-live" : ""}">${statusLabel}</span>
+            ${roleBadge ? `<span class="a-badge ${roleBadge[0]}">${roleBadge[1]}</span>` : ""}
+          </div>
+          <div class="a-card-body">
+            <small>${esc(a.category)}${a.storeName ? " · " + esc(a.storeName) : ""}</small>
+            <strong class="t">${esc(a.title)}</strong>
+            <div class="a-row"><span>${top ? "Current bid" : "Starting at"}</span><b>${kes(top ? top.amount : a.startPrice)}</b></div>
+            <div class="a-row"><span>${(a.bids || []).length} ${(a.bids || []).length === 1 ? "bid" : "bids"}</span>
+              ${a.status === "live" ? `<span class="cd" data-end="${esc(a.endAt)}">${smxFormatCountdown(new Date(a.endAt) - Date.now())}</span>` : `<span>${new Date(a.endAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}</span>`}
+            </div>
+          </div>
+        </a>`;
+    }
+
+    function rulesCard() {
+      return `
+        <section class="card">
+          <h2>How auctions work</h2>
+          <ul class="rules-list" style="margin-top:12px;">
+            <li><strong>Losing bids are free.</strong> You only pay if you win.</li>
+            <li>Each auction has a minimum bid step shown next to the bid box.</li>
+            <li>Bids are binding and can't be withdrawn.</li>
+            <li>A bid in the last 2 minutes adds 2 more minutes, so everyone gets a fair chance to respond.</li>
+            <li>The highest bid when the timer ends wins. The winner has 48 hours to pay.</li>
+            <li>If the winner doesn't pay in time, the item is offered to the next-highest bidder at their own bid.</li>
+            <li>Sellers can't bid on their own items and can only cancel before the first bid.</li>
+            <li>Any winning fee is shown before you bid. It's currently KES 0.</li>
+          </ul>
+          <p class="legal">Demo: auctions are saved in this browser only, so other people can't see or bid on them yet.</p>
+        </section>`;
+    }
+
+    /* ---------------- Detail ---------------- */
+
+    function renderDetail() {
+      const me = user();
+      const a = smxAuctionsSettled().find(item => item.id === currentId);
+      if (!a) {
+        root.innerHTML = `<div class="card empty"><strong>Auction not found</strong>It may have been removed.<div style="margin-top:16px;"><button class="btn btn-primary" type="button" data-back>See all auctions</button></div></div>`;
+        root.querySelector("[data-back]").addEventListener("click", () => go({ tab: "live" }));
+        return;
+      }
+
+      const top = smxHighestBid(a);
+      const min = smxMinNextBid(a);
+      const isSeller = me && a.sellerEmail === me.email;
+      const role = myRole(a, me);
+      const fee = smxAuctionWinningFee(a, min);
+      const bids = (a.bids || []).slice().reverse();
+
+      let action = "";
+      if (a.status === "live") {
+        if (!me) {
+          action = `<a class="btn btn-primary" href="login.html?next=auctions.html">Sign in to bid</a>`;
+        } else if (isSeller) {
+          action = `<p class="hint">This is your auction, so you can't bid on it.</p>`;
+        } else {
+          action = `
+            <form id="bidForm" novalidate>
+              ${role === "winning" ? `<div class="message success show">You're the highest bidder.</div>` : role === "outbid" ? `<div class="message error show">You've been outbid. Bid again to get back in front.</div>` : ""}
+              <div class="message" id="bidMsg" role="alert"></div>
+              <label class="field">Your bid (KES)
+                <div class="bid-row">
+                  <input id="bidAmount" type="number" inputmode="numeric" min="${min}" step="1" value="${min}" ${role === "winning" ? "disabled" : ""}>
+                  <button class="btn btn-primary" type="submit" ${role === "winning" ? "disabled" : ""}>Place bid</button>
+                </div>
+                <small>Minimum ${kes(min)} · bid step ${kes(a.increment)}</small>
+              </label>
+              <p class="fee-note"><strong>Free if you lose.</strong> If you win at ${kes(min)}, you pay ${kes(min)} + winning fee ${kes(fee)} + delivery (shown at payment).</p>
+            </form>`;
+        }
+      } else if (a.status === "ended" && a.winner) {
+        if (me && a.winner.email === me.email && a.winner.status === "awaiting") {
+          action = payForm(a);
+        } else if (me && a.winner.email === me.email && a.winner.status === "paid") {
+          action = `<div class="message success show">You won and paid. <a href="my-orders.html">Track order ${esc(a.orderId)}</a></div>`;
+        } else if (a.winner.status === "paid") {
+          action = `<div class="message info show">Sold for ${kes(a.winner.amount)}.</div>`;
+        } else {
+          action = `<div class="message info show">Ended. ${a.winner.round > 1 ? "Offered to the next-highest bidder" : "Waiting for the winner to pay"} · pay by ${new Date(a.winner.payBy).toLocaleString("en-KE", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}.</div>`;
+        }
+      } else if (a.status === "unsold") {
+        action = `<div class="message info show">Ended without a sale.</div>`;
+      } else if (a.status === "cancelled") {
+        action = `<div class="message info show">The seller cancelled this auction before any bids.</div>`;
+      }
+
+      const tools = isSeller ? `
+        <div class="seller-tools demo-box">
+          <strong>Seller tools</strong>
+          <div class="btns">
+            ${a.status === "live" && !bids.length ? `<button class="btn btn-outline" type="button" data-act="cancel">Cancel auction</button>` : ""}
+            ${a.status === "live" ? `<button class="btn btn-outline" type="button" data-act="rival">Simulate a rival bid (demo)</button>
+            <button class="btn btn-outline" type="button" data-act="end">End now (demo)</button>` : ""}
+            ${a.status === "ended" && a.winner && a.winner.status === "awaiting" ? `<button class="btn btn-outline" type="button" data-act="skip">Skip the 48-hour payment window (demo)</button>` : ""}
+          </div>
+          <small class="hint">Demo buttons let you test bidding wars and non-payment on your own.</small>
+        </div>` : "";
+
+      root.innerHTML = `
+        <section class="card">
+          <a class="back-link" href="?tab=live" data-back>← All auctions</a>
+          <div class="detail">
+            <div class="detail-img"><img src="${esc(a.image || FALLBACK_IMG)}" alt="${esc(a.title)}"></div>
+            <div>
+              <p class="eyebrow" style="color:var(--gold-text)">${esc(a.category)} · Sold by ${esc(a.storeName || a.sellerName)}</p>
+              <h2>${esc(a.title)}</h2>
+              ${a.description ? `<p class="desc">${esc(a.description)}</p>` : ""}
+              <div class="price-box">
+                <div><span>${top ? "Current bid" : "Starting price"}</span><strong>${kes(top ? top.amount : a.startPrice)}</strong></div>
+                <div><span>${a.status === "live" ? "Time left" : "Ended"}</span><strong ${a.status === "live" ? `data-end="${esc(a.endAt)}"` : ""}>${a.status === "live" ? smxFormatCountdown(new Date(a.endAt) - Date.now()) : new Date(a.endAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}</strong></div>
+              </div>
+              ${a.extensions ? `<p class="hint" style="margin:-8px 0 12px;">Extended ${a.extensions}× by late bids.</p>` : ""}
+              ${action}
+            </div>
+          </div>
+        </section>
+
+        <div class="grid" style="grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);">
+          <section class="card">
+            <h2>Bid history</h2>
+            ${bids.length ? `<ul class="bids">${bids.map(b => `
+              <li><span>${esc(me && b.bidderEmail === me.email ? "You" : smxMaskName(b.bidderName))}${b.simulated ? " <small>(demo)</small>" : ""}<br><small>${new Date(b.at).toLocaleString("en-KE", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", second: "2-digit" })}</small></span><strong>${kes(b.amount)}</strong></li>`).join("")}</ul>` : `<p class="hint" style="margin-top:8px;">No bids yet. Starting price ${kes(a.startPrice)}.</p>`}
+            ${a.lapsed && a.lapsed.length ? `<p class="hint" style="margin-top:12px;">${a.lapsed.length} winner${a.lapsed.length > 1 ? "s" : ""} didn't pay in time; the item moved to the next bidder.</p>` : ""}
+          </section>
+          <div style="display:grid;gap:24px;">
+            ${tools}
+            <section class="card"><h2>Rules</h2><ul class="rules-list" style="margin-top:10px;">
+              <li>Losing bids are free.</li>
+              <li>Bid step: ${kes(a.increment)}.</li>
+              <li>Late bids (last 2 min) add 2 minutes.</li>
+              <li>Winner pays within 48 hours, or it goes to the next bidder.</li>
+              <li>Winning fee: ${a.feePercent || 0}% (${kes(fee)} at the current minimum bid).</li>
+            </ul></section>
+          </div>
+        </div>`;
+
+      root.querySelector("[data-back]").addEventListener("click", e => { e.preventDefault(); go({ tab: "live" }); });
+
+      const bidForm = document.getElementById("bidForm");
+      if (bidForm) bidForm.addEventListener("submit", e => {
+        e.preventDefault();
+        const amount = document.getElementById("bidAmount").value;
+        const msg = document.getElementById("bidMsg");
+        try {
+          const result = smxPlaceBid(a.id, user(), amount);
+          render();
+          toast(result.extended ? "Bid placed. The auction was extended by 2 minutes." : "Bid placed — you're the highest bidder.");
+        } catch (err) {
+          msg.textContent = err.message;
+          msg.className = "message error show";
+        }
+      });
+
+      root.querySelectorAll("[data-act]").forEach(button => button.addEventListener("click", () => {
+        try {
+          const act = button.dataset.act;
+          if (act === "cancel") { smxCancelAuction(a.id, user()); toast("Auction cancelled."); }
+          if (act === "rival") {
+            const fresh = smxAuctionsAll().find(x => x.id === a.id);
+            smxPlaceBid(a.id, DEMO_RIVAL, smxMinNextBid(fresh), { simulated: true });
+            toast("A demo rival bid " + kes(smxMinNextBid(fresh)) + ".");
+          }
+          if (act === "end") { smxAuctionUpdate(a.id, x => ({ ...x, endAt: new Date(Date.now() - 1000).toISOString() })); toast("Auction ended."); }
+          if (act === "skip") { smxAuctionUpdate(a.id, x => ({ ...x, winner: { ...x.winner, payBy: new Date(Date.now() - 1000).toISOString() } })); toast("Payment window skipped."); }
+          render();
+        } catch (err) { toast(err.message); }
+      }));
+
+      bindPay(a);
+    }
+
+    /* ---------------- Winner payment ---------------- */
+
+    function payForm(a) {
+      const cfg = window.SMX_CHECKOUT;
+      const me = user();
+      const balance = typeof smxWalletBalance === "function" ? smxWalletBalance(me.email) : 0;
+      return `
+        <form id="payForm" novalidate>
+          <div class="message success show"><strong>You won at ${kes(a.winner.amount)}.</strong> Pay by ${new Date(a.winner.payBy).toLocaleString("en-KE", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}.</div>
+          <div class="message" id="payMsg" role="alert"></div>
+          <div class="two">
+            <label class="field">Delivery
+              <select id="payDelivery">
+                <option value="standard">Standard delivery</option>
+                <option value="pickup">Pick up (free)</option>
+              </select>
+            </label>
+            <label class="field">County
+              <select id="payCounty">${(window.SMX_KENYA_COUNTIES || ["Nairobi"]).map(c => `<option>${esc(c)}</option>`).join("")}</select>
+            </label>
+          </div>
+          <label class="field" id="addrField">Delivery address
+            <input id="payAddress" type="text" placeholder="Town, street, building">
+          </label>
+          <label class="field">Phone number
+            <input id="payPhone" type="tel" value="${esc(me.phone || "")}" placeholder="07XX XXX XXX">
+          </label>
+          <label class="field">Pay with
+            <select id="payMethod">
+              <option value="mpesa">M-Pesa (demo)</option>
+              <option value="smx" data-balance="${balance}">SMX Credit — balance SMX ${balance.toLocaleString("en-KE")}</option>
+            </select>
+          </label>
+          <div class="breakdown" id="payBreakdown"></div>
+          <button class="btn btn-primary" type="submit" id="payBtn">Pay</button>
+        </form>`;
+    }
+
+    function payTotals(a) {
+      const cfg = window.SMX_CHECKOUT;
+      const method = document.getElementById("payDelivery").value;
+      const county = document.getElementById("payCounty").value;
+      const zone = county === "Nairobi" ? "nairobi" : "other";
+      const delivery = method === "pickup" ? 0 : cfg.delivery[zone].options.standard.price;
+      const fee = smxAuctionWinningFee(a, a.winner.amount);
+      return { bid: a.winner.amount, delivery, fee, total: a.winner.amount + delivery + fee, method, county, zone };
+    }
+
+    function bindPay(a) {
+      const form = document.getElementById("payForm");
+      if (!form) return;
+      const update = () => {
+        const t = payTotals(a);
+        document.getElementById("addrField").style.display = t.method === "pickup" ? "none" : "";
+        document.getElementById("payBreakdown").innerHTML = `
+          <div><span>Winning bid</span><span>${kes(t.bid)}</span></div>
+          <div><span>Delivery</span><span>${t.delivery ? kes(t.delivery) : "Free"}</span></div>
+          <div><span>Winning fee</span><span>${kes(t.fee)}</span></div>
+          <div><span>VAT (16%)</span><span>Included</span></div>
+          <div class="grand"><span>Total to pay</span><span>${kes(t.total)}</span></div>`;
+        document.getElementById("payBtn").textContent = "Pay " + kes(t.total) + " (demo)";
+      };
+      form.addEventListener("change", update);
+      update();
+
+      form.addEventListener("submit", e => {
+        e.preventDefault();
+        const msg = document.getElementById("payMsg");
+        const fail = text => { msg.textContent = text; msg.className = "message error show"; };
+        const me = user();
+        const t = payTotals(a);
+        const phone = document.getElementById("payPhone").value.trim();
+        const address = document.getElementById("payAddress").value.trim();
+        const payMethod = document.getElementById("payMethod").value;
+        if (!/^0[17]\d{8}$/.test(phone.replace(/\D/g, "").replace(/^254/, "0"))) return fail("Enter a valid Kenyan phone number.");
+        if (t.method !== "pickup" && address.length < 4) return fail("Enter your delivery address.");
+
+        const fresh = smxAuctionsSettled().find(x => x.id === a.id);
+        if (!fresh.winner || fresh.winner.email !== me.email || fresh.winner.status !== "awaiting") return fail("This item is no longer waiting for your payment.");
+
+        const now = new Date().toISOString();
+        const orderId = "SMX-" + Date.now().toString(36).toUpperCase() + "-A" + Math.random().toString(36).slice(2, 6).toUpperCase();
+
+        if (payMethod === "smx") {
+          try {
+            smxWalletRecord(me.email, { type: "spend", amount: t.total, key: "auction-" + a.id, ref: orderId, note: "Auction " + a.title });
+          } catch (err) {
+            return fail(err.message);
+          }
+        }
+
+        const opt = window.SMX_CHECKOUT.delivery[t.zone].options.standard;
+        const order = {
+          orderId,
+          status: "Pending",
+          items: [{ productId: "auction-" + a.id, name: a.title + " (auction)", price: a.winner.amount, quantity: 1, image: a.image || FALLBACK_IMG, category: a.category }],
+          subtotal: a.winner.amount,
+          total: t.total,
+          currency: "KES",
+          source: "auction",
+          auctionId: a.id,
+          customer: { type: "Registered Customer", name: me.name, email: me.email, phone },
+          charges: { products: a.winner.amount, delivery: t.delivery, transactionFee: t.fee, taxAdded: 0, taxRate: 0.16, taxIncluded: true, total: t.total, walletUsed: payMethod === "smx" ? t.total : 0, paidExternally: payMethod === "smx" ? 0 : t.total },
+          delivery: {
+            method: t.method, label: t.method === "pickup" ? "Pick up" : "Standard delivery", zone: window.SMX_CHECKOUT.delivery[t.zone].label,
+            price: t.delivery, eta: t.method === "pickup" ? window.SMX_CHECKOUT.delivery.pickup.eta : opt.eta,
+            estimatedBy: new Date(Date.now() + (t.method === "pickup" ? 2 : opt.maxDays) * 86400000).toISOString(),
+            pickupPoint: t.method === "pickup" ? window.SMX_CHECKOUT.delivery.pickup.points[0] : "",
+            name: me.name, phone, country: "Kenya", county: t.county, town: t.method === "pickup" ? "" : address, address: t.method === "pickup" ? "" : address, notes: ""
+          },
+          payment: {
+            method: payMethod, label: payMethod === "smx" ? "SMX Credit" : "M-Pesa", externalLabel: payMethod === "smx" ? "" : "M-Pesa",
+            walletUsed: payMethod === "smx" ? t.total : 0, walletEmail: payMethod === "smx" ? me.email : "", externalAmount: payMethod === "smx" ? 0 : t.total,
+            status: "Paid", reference: (payMethod === "smx" ? "SX" : "MP") + Date.now().toString(36).toUpperCase().slice(-8) + "DEMO",
+            phone: payMethod === "smx" ? "" : phone.slice(0, 4) + " *** " + phone.slice(-3), amount: t.total, currency: "KES", paidAt: now, demo: true
+          },
+          createdAt: now,
+          updatedAt: now,
+          tracking: { mode: "demo", startedAt: now, currentStep: 0, currentStage: "placed", completed: false }
+        };
+
+        try {
+          const orders = JSON.parse(localStorage.getItem("smithx_orders_v2")) || [];
+          orders.unshift(order);
+          localStorage.setItem("smithx_orders_v2", JSON.stringify(orders));
+        } catch (err) {
+          return fail("Couldn't save the order. Free up browser storage and try again.");
+        }
+
+        smxAuctionUpdate(a.id, x => ({ ...x, winner: { ...x.winner, status: "paid", paidAt: now }, orderId }));
+        render();
+        toast("Paid. Order " + orderId + " is in My Orders.");
+      });
+    }
+
+    /* ---------------- Create ---------------- */
+
+    function openCreate() {
+      const me = user();
+      if (!me) { location.href = "login.html?next=auctions.html"; return; }
+      const wrap = document.createElement("div");
+      wrap.className = "dialog";
+      wrap.setAttribute("role", "dialog");
+      wrap.setAttribute("aria-modal", "true");
+      wrap.innerHTML = `
+        <form class="dialog-box" id="createForm" novalidate>
+          <h2>Create an auction</h2>
+          <div class="message" id="createMsg" role="alert"></div>
+          <label class="field">Item name<input id="cTitle" maxlength="80" placeholder="e.g. iPhone 15 Pro, 256GB, like new"></label>
+          <div class="two">
+            <label class="field">Category
+              <select id="cCategory">${["Electronics", "Fashion", "Home", "Beauty", "Accessories", "Collectibles", "Other"].map(c => `<option>${c}</option>`).join("")}</select>
+            </label>
+            <label class="field">Runs for
+              <select id="cDuration">${SMX_AUCTION_RULES.durations.map((d, i) => `<option value="${d.ms}" ${i === 2 ? "selected" : ""}>${d.label}</option>`).join("")}</select>
+            </label>
+          </div>
+          <div class="two">
+            <label class="field">Starting price (KES)<input id="cStart" type="number" inputmode="numeric" min="50" step="1" placeholder="e.g. 5000"></label>
+            <label class="field">Minimum bid step (KES)<input id="cStep" type="number" inputmode="numeric" min="10" step="1" placeholder="Auto"><small id="stepHint">Suggested automatically from the price.</small></label>
+          </div>
+          <label class="field">Description <small>optional</small><textarea id="cDesc" rows="3" maxlength="600" placeholder="Condition, what's included, delivery details"></textarea></label>
+          <label class="field">Photo <small>optional</small><input id="cImage" type="file" accept="image/*"><img class="preview-img" id="cPreview" alt="Preview"></label>
+          <p class="hint">Losing bidders pay nothing. Winning fee: ${SMX_AUCTION_RULES.winningFeePercent}%. You can cancel only before the first bid.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-primary" type="submit">Start auction</button>
+            <button class="btn btn-outline" type="button" data-close>Cancel</button>
+          </div>
+        </form>`;
+      document.body.appendChild(wrap);
+      document.getElementById("cTitle").focus();
+      let imageData = "";
+
+      wrap.addEventListener("click", e => { if (e.target === wrap || e.target.closest("[data-close]")) wrap.remove(); });
+      document.getElementById("cStart").addEventListener("input", e => {
+        const v = Number(e.target.value);
+        document.getElementById("stepHint").textContent = v ? "Suggested: KES " + smxDefaultIncrement(v).toLocaleString("en-KE") : "Suggested automatically from the price.";
+      });
+      document.getElementById("cImage").addEventListener("change", e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            const scale = Math.min(1, 900 / Math.max(img.width, img.height));
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+            imageData = canvas.toDataURL("image/jpeg", 0.8);
+            const preview = document.getElementById("cPreview");
+            preview.src = imageData;
+            preview.style.display = "block";
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      document.getElementById("createForm").addEventListener("submit", e => {
+        e.preventDefault();
+        try {
+          const auction = smxCreateAuction(me, {
+            title: document.getElementById("cTitle").value,
+            category: document.getElementById("cCategory").value,
+            durationMs: document.getElementById("cDuration").value,
+            startPrice: document.getElementById("cStart").value,
+            increment: document.getElementById("cStep").value,
+            description: document.getElementById("cDesc").value,
+            image: imageData
+          });
+          wrap.remove();
+          toast("Your auction is live.");
+          go({ id: auction.id });
+        } catch (err) {
+          const msg = document.getElementById("createMsg");
+          msg.textContent = err.message;
+          msg.className = "message error show";
+        }
+      });
+    }
+
+    document.getElementById("createBtn").addEventListener("click", openCreate);
+    document.addEventListener("keydown", e => { if (e.key === "Escape") { const d = document.querySelector(".dialog"); if (d) d.remove(); } });
+
+    /* ---------------- Live countdown ---------------- */
+
+    setInterval(() => {
+      let ended = false;
+      document.querySelectorAll("[data-end]").forEach(el => {
+        const left = new Date(el.dataset.end) - Date.now();
+        el.textContent = smxFormatCountdown(left);
+        el.classList.toggle("is-soon", left > 0 && left < 5 * 60 * 1000);
+        if (left <= 0) ended = true;
+      });
+      if (ended && !document.querySelector(".dialog") && !(document.activeElement && document.activeElement.closest("form"))) render();
+    }, 1000);
+
+    function render() {
+      if (view === "detail") renderDetail();
+      else renderList();
+    }
+
+    render();
+  })();
+</script>
+<script src="auth-nav.js"></script> <!-- Login/Profile add-on: delete this line to remove -->
+</body>
+</html>

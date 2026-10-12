@@ -116,6 +116,7 @@ function smxSaveMyStore(ownerEmail, data) {
     tagline: String(data.tagline || "").trim().slice(0, 80),
     description: String(data.description || "").trim().slice(0, 600),
     theme: SMX_STORE_THEMES[data.theme] ? data.theme : "gold",
+    layout: ["grid", "showcase", "compact"].includes(data.layout) ? data.layout : "grid",
     published: Boolean(data.published),
     createdAt: existing ? existing.createdAt : now,
     updatedAt: now
