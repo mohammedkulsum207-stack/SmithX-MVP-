@@ -94,7 +94,7 @@ function smxSignOut() {
   try { localStorage.removeItem(SMX_AUTH.session); } catch (error) { /* ignore */ }
 }
 
-async function smxRegister({ name, email, phone, location, password, role }) {
+async function smxRegister({ name, email, phone, location, password, role, country }) {
   const cleanEmail = smxNormalizeEmail(email);
   const cleanName = String(name || "").trim();
 
@@ -111,6 +111,7 @@ async function smxRegister({ name, email, phone, location, password, role }) {
     phone: String(phone || "").trim(),
     location: String(location || "").trim() || "Nairobi",
     role: ["buyer", "seller", "both"].includes(role) ? role : "buyer",
+    country: String(country || "").trim() || "Kenya",
     passwordHash: await smxHash(password),
     createdAt: now,
     lastLogin: now
@@ -153,6 +154,22 @@ async function smxChangePassword(email, currentPassword, newPassword) {
   if ((await smxHash(currentPassword)) !== user.passwordHash) throw new Error("Current password is incorrect.");
   if (String(newPassword || "").length < 6) throw new Error("New password must be at least 6 characters.");
   smxUpdateUser(email, { passwordHash: await smxHash(newPassword) });
+}
+
+/* Demo password reset. A live version must send a one-time code by
+   email or SMS instead of checking details saved in the browser. */
+async function smxResetPassword(email, check, newPassword) {
+  const user = smxFindUser(email);
+  const generic = "We couldn't verify those details. Check the email and phone number or name on the account.";
+  if (!user) throw new Error(generic);
+  const digits = value => String(value || "").replace(/\D/g, "").replace(/^(254|0)/, "");
+  const clean = String(check || "").trim();
+  const phoneOk = user.phone && digits(clean).length >= 7 && digits(clean) === digits(user.phone);
+  const nameOk = clean.toLowerCase() === String(user.name || "").trim().toLowerCase();
+  if (!phoneOk && !nameOk) throw new Error(generic);
+  if (String(newPassword || "").length < 6) throw new Error("New password must be at least 6 characters.");
+  smxUpdateUser(user.email, { passwordHash: await smxHash(newPassword), passwordResetAt: new Date().toISOString() });
+  return user;
 }
 
 function smxDeleteAccount(email) {

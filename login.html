@@ -65,11 +65,34 @@
           </div>
         </div>
 
+        <button class="link-btn" type="button" id="forgotLink" style="justify-self:end;background:none;border:0;padding:0;color:var(--gold-text);font-weight:600;font-size:.85rem;cursor:pointer;">Forgot password?</button>
         <button class="btn btn-primary btn-block" type="submit" id="loginSubmit">Sign in</button>
 
         <div class="divider">or</div>
 
         <button class="btn btn-outline btn-block" type="button" id="demoLogin">Try the demo account</button>
+      </form>
+
+      <!-- Reset password (demo) -->
+      <form id="resetForm" class="auth-form" novalidate hidden>
+        <div class="field">
+          <label for="resetEmail">Account email</label>
+          <input class="input" id="resetEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <label for="resetCheck">Phone number or full name on the account</label>
+          <input class="input" id="resetCheck" type="text" autocomplete="off" placeholder="07XX XXX XXX or Amina Wanjiku" required>
+        </div>
+        <div class="field">
+          <label for="resetPassword">New password</label>
+          <div class="password-wrap">
+            <input class="input" id="resetPassword" type="password" autocomplete="new-password" placeholder="At least 6 characters" minlength="6" required>
+            <button class="toggle-pass" type="button" data-toggle="resetPassword">Show</button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" id="resetSubmit">Reset password</button>
+        <button class="btn btn-outline btn-block" type="button" id="resetBack">Back to sign in</button>
+        <p class="muted" style="font-size:.8rem;">Demo reset. The live version will send a one-time code to your email or phone.</p>
       </form>
 
       <!-- Create account -->
@@ -92,6 +115,14 @@
         <div class="field">
           <label for="regLocation">Town or city</label>
           <input class="input" id="regLocation" type="text" autocomplete="address-level2" placeholder="Nairobi">
+        </div>
+        <div class="field">
+          <label for="regCountry">Country</label>
+          <select class="input" id="regCountry" autocomplete="country-name">
+            <option>Kenya</option><option>Uganda</option><option>Tanzania</option><option>Rwanda</option>
+            <option>Burundi</option><option>Ethiopia</option><option>South Sudan</option><option>Somalia</option>
+            <option>DR Congo</option><option>Nigeria</option><option>Ghana</option><option>South Africa</option><option>Other</option>
+          </select>
         </div>
 
         <fieldset class="field" style="border:0;">
@@ -213,6 +244,48 @@
       }
     });
 
+    const resetForm = document.getElementById("resetForm");
+    const tabsBar = document.querySelector(".tabs");
+
+    function showReset(show) {
+      resetForm.hidden = !show;
+      loginForm.hidden = show;
+      registerForm.hidden = true;
+      tabsBar.hidden = show;
+      title.textContent = show ? "Reset your password" : "Welcome back";
+      subtitle.textContent = show
+        ? "Confirm your account details and choose a new password."
+        : "Sign in to see your orders and your store.";
+      clearMessage();
+      if (show) {
+        document.getElementById("resetEmail").value = document.getElementById("loginEmail").value;
+        document.getElementById(document.getElementById("resetEmail").value ? "resetCheck" : "resetEmail").focus();
+      } else {
+        switchTab("login");
+      }
+    }
+
+    document.getElementById("forgotLink").addEventListener("click", () => showReset(true));
+    document.getElementById("resetBack").addEventListener("click", () => showReset(false));
+
+    resetForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      clearMessage();
+      const button = document.getElementById("resetSubmit");
+      const email = document.getElementById("resetEmail").value;
+      setBusy(button, true, "Reset password");
+      try {
+        await smxResetPassword(email, document.getElementById("resetCheck").value, document.getElementById("resetPassword").value);
+        showReset(false);
+        document.getElementById("loginEmail").value = email;
+        showMessage("Password updated. Sign in with your new password.", "success");
+        document.getElementById("loginPassword").focus();
+      } catch (error) {
+        showMessage(error.message);
+      }
+      setBusy(button, false, "Reset password");
+    });
+
     registerForm.addEventListener("submit", async event => {
       event.preventDefault();
       clearMessage();
@@ -225,7 +298,8 @@
           phone: document.getElementById("regPhone").value,
           location: document.getElementById("regLocation").value,
           password: document.getElementById("regPassword").value,
-          role: (registerForm.querySelector('input[name="role"]:checked') || {}).value
+          role: (registerForm.querySelector('input[name="role"]:checked') || {}).value,
+          country: document.getElementById("regCountry").value
         });
         showMessage("Account created. Taking you to your profile…", "success");
         setTimeout(() => { location.href = safeNext; }, 500);
