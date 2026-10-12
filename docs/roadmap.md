@@ -47,13 +47,22 @@ The MVP is a static GitHub Pages site. All data (accounts, stores, products, car
 
 | Item | Status | Notes |
 |---|---|---|
-| Cart (add, quantity, remove, subtotal) | ✅ | Existing |
-| Demo checkout + order confirmation | ✅ | No real payment |
-| Delivery address at checkout | ⬜ | |
-| Delivery charges, fees, taxes shown before paying | ⬜ | Total = products + delivery + fees + taxes |
-| Real payment provider | 🔒 | Decide provider (e.g. M-Pesa Daraja, Paystack, Flutterwave, Stripe) |
-| Payment success / pending / failed screens | ⬜ | |
-| Refunds, payouts, reconciliation | ⬜ | Needs backend |
+| Cart (add, quantity, remove, subtotal) | ✅ | Existing. Cart now says delivery and fees are shown at checkout |
+| Delivery address at checkout | ✅ | Name, phone, county, town, street, notes. Saved if checkout is interrupted |
+| Delivery options + estimated dates | 🟡 | Standard / express / pickup, Nairobi vs rest of Kenya. Demo prices in `checkout-config.js` until a courier is chosen |
+| Full breakdown before paying | ✅ | Products + delivery + transaction fee + VAT = total, with the charge currency |
+| Transaction fee | 🔒 | Set to KES 0 until the fee decision. Change in `checkout-config.js` |
+| VAT | ✅ | Kenya standard rate 16% (KRA), shown as included in prices |
+| Payment screens (processing, success, pending, failed) | ✅ | Demo M-Pesa / card. A test switch picks the outcome |
+| Prevent duplicate orders | ✅ | One order per checkout attempt |
+| Availability check | 🟡 | Blocks checkout if a product is gone or over stock (stock field comes with product editing) |
+| Order confirmation + receipt | ✅ | Breakdown, payment reference, printable / save-as-PDF receipt |
+| Cancel before shipping + refund | 🟡 | Demo refund to the original method. Cancelled orders kept in history |
+| Return / refund request after delivery | 🟡 | 7-day window, reason + details, "Under review" status. Seller review screen still to do |
+| Delivered orders stay in history | ✅ | Previously deleted when delivered |
+| Real payment provider | 🔒 | Needs a backend first. Options: M-Pesa Daraja (STK Push), Paystack, Flutterwave, Pesapal |
+| Real courier integration + tracking | 🔒 | Needs courier choice |
+| Payouts, reconciliation, seller refunds | ⬜ | Needs backend |
 
 ## Phase 3: SMX Coins (decision first)
 
@@ -83,8 +92,11 @@ The MVP is a static GitHub Pages site. All data (accounts, stores, products, car
 | `store.html` | Public storefront page |
 | `profile-store.js` | Store setup form + country setting on the profile page |
 | `phase1.js` / `phase1.css` | Mobile menu, sort/price filters, wishlist, store badges, product sharing |
+| `checkout-config.js` | Phase 2: delivery prices, fees, VAT, payment methods — one place to edit |
+| `phase2.js` / `phase2.css` | Phase 2: full checkout |
+| `phase2-orders.js` | Phase 2: order details, receipts, cancel, refund requests on My Orders |
 | `auth.js` (edited) | Adds `country` and demo `smxResetPassword` |
 | `login.html` (edited) | "Forgot password?" form and country field |
 | `index.html` / `profile.html` (edited) | Load the new files and add Build Log entries |
 
-`app.js`, `styles.css` and `my-orders.html` were not changed.
+`app.js` and `styles.css` were not changed. `my-orders.html` (phase 2) only stops deleting delivered orders and loads the new script.

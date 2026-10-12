@@ -1117,6 +1117,17 @@
     ===================================================== */
 
     function removeDeliveredOrder(orderId) {
+      /* Phase 2: delivered orders now stay in purchase history
+         instead of being deleted. Original code kept below. */
+      const delivered = orders.find(order => String(order.orderId) === String(orderId));
+      if (delivered && !delivered.deliveredAt) {
+        delivered.deliveredAt = new Date().toISOString();
+        saveOrders();
+      }
+      renderOrders();
+      renderSelectedOrder();
+      return;
+
 
       if (!orderId) {
         return;
@@ -1176,6 +1187,9 @@
     ===================================================== */
 
     function removeAlreadyDeliveredOrders() {
+      /* Phase 2: keep delivered orders in purchase history. */
+      return;
+
 
       const deliveredIds =
         orders
@@ -1443,8 +1457,7 @@
               <p style="
                 margin-top:8px;
               ">
-                Your delivered orders have been
-                removed from the active list.
+                Select an order to see its details.
               </p>
 
             </div>
@@ -1973,5 +1986,7 @@
   </script>
 
 <script src="auth-nav.js"></script> <!-- Login/Profile add-on: delete this line to remove -->
+<script src="checkout-config.js"></script> <!-- Phase 2 add-on: delete these two lines to remove -->
+<script src="phase2-orders.js"></script>
 </body>
 </html>
