@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report a Listing — SM1THX</title>
+  <meta name="description" content="Report a counterfeit, unsafe, misleading, or prohibited listing on SmithX.">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f6f8fa; color: #17212b; }
+    header { background: #16130f; color: #fff; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; }
+    header a { color: #fff; text-decoration: none; font-weight: 700; }
+    main { max-width: 680px; margin: 28px auto 60px; padding: 0 16px; }
+    .card { background: #fff; border: 1px solid #e3e8ee; border-radius: 14px; padding: 22px; }
+    label { display: block; font-weight: 700; margin: 14px 0 6px; }
+    input, select, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; }
+    button { margin-top: 18px; background: #1a73e8; color: #fff; border: 0; padding: 12px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+    .success { display: none; margin-top: 16px; background: #e6f7ed; color: #157347; padding: 12px; border-radius: 10px; }
+    .demo { background: #eee; color: #555; padding: 3px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    a { color: #0b66c3; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">SM1THX</a>
+    <a href="compliance.html">← Compliance</a>
+  </header>
+  <main>
+    <h1>Report a listing</h1>
+    <p><span class="demo">DEMO</span> Reports are saved in this browser only. A backend and moderation dashboard are required before reports can be reviewed by SmithX staff.</p>
+
+    <div class="card">
+      <form id="reportForm">
+        <label for="reason">Reason</label>
+        <select id="reason" required>
+          <option value="">Choose a reason</option>
+          <option>Counterfeit or unauthorised goods</option>
+          <option>Unsafe product</option>
+          <option>Misleading description or images</option>
+          <option>Prohibited item</option>
+          <option>Suspected fraud or scam</option>
+          <option>Other</option>
+        </select>
+
+        <label for="product">Product name or link</label>
+        <input id="product" type="text" placeholder="Paste the product name or listing link" required>
+
+        <label for="details">What happened?</label>
+        <textarea id="details" rows="5" placeholder="Explain the problem clearly." required></textarea>
+
+        <label for="email">Your email (optional)</label>
+        <input id="email" type="email" placeholder="you@example.com">
+
+        <button type="submit">Submit report</button>
+        <div id="success" class="success">Thank you. Your demo report was recorded in this browser. It has not been sent to a moderation team yet.</div>
+      </form>
+    </div>
+
+    <p><a href="compliance.html">Back to Compliance</a> · <a href="index.html">Back to SmithX</a></p>
+  </main>
+
+  <script>
+    document.getElementById("reportForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const report = {
+        reason: document.getElementById("reason").value,
+        product: document.getElementById("product").value,
+        details: document.getElementById("details").value,
+        email: document.getElementById("email").value,
+        submittedAt: new Date().toISOString()
+      };
+      const reports = JSON.parse(localStorage.getItem("smithx_demo_reports") || "[]");
+      reports.unshift(report);
+      localStorage.setItem("smithx_demo_reports", JSON.stringify(reports));
+      document.getElementById("success").style.display = "block";
+      document.getElementById("reportForm").reset();
+    });
+  </script>
+</body>
+</html>
