@@ -3,65 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Compliance &amp; Prohibited Items | SmithX</title>
   <meta name="description" content="SmithX marketplace compliance rules, seller eligibility, prohibited products, and restricted product requirements.">
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; color: #17212b; background: #f6f8fa; }
-    main { max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
-    h1 { font-size: 32px; }
-    h2 { margin-top: 32px; }
-    .card { background: #fff; border: 1px solid #e3e8ee; border-radius: 12px; padding: 24px; margin-top: 20px; }
-    ul { padding-left: 22px; }
-    .notice { background: #fff7e6; border: 1px solid #f0c36d; border-radius: 10px; padding: 16px; }
-    a { color: #0b66c3; }
-  </style>
+  <title>Compliance &amp; Prohibited Items | SmithX</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="demo-pages.css">
 </head>
 <body>
-  <main>
-    <h1>Compliance &amp; Prohibited Items</h1>
-    <p>SmithX is a marketplace. Sellers are responsible for the legality, accuracy, safety, and quality of the products they list.</p>
 
-    <div class="notice">
-      <strong>International transactions are not yet live.</strong> Country-specific payment support, international shipping, and cross-border compliance must be completed before SmithX enables them.
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="smithx-brand" aria-label="SM1THX Home">
+      <img src="assets/smithx-logo.jpg" class="smithx-logo-image" alt="SM1THX logo">
+      <span class="smithx-brand-text">
+        <strong>SM1THX 🛒</strong>
+        <small>SHOP • BUY • GROW</small>
+      </span>
+    </a>
+    <a href="index.html" class="nav-login-btn page-back">← Marketplace</a>
+  </div>
+</header>
+
+<main class="section demo-page">
+  <div class="section-inner">
+    <div class="demo-narrow">
+      <div class="section-heading">
+        <p class="section-eyebrow">MARKETPLACE RULES</p>
+        <h2>Compliance &amp; Prohibited Items</h2>
+        <p>SmithX is a marketplace. Sellers are responsible for the legality, accuracy, safety, and quality of the products they list.</p>
+      </div>
+
+      <div class="demo-notice">
+        <strong>International transactions are not yet live.</strong> Country-specific payment support, international shipping, and cross-border compliance must be completed before SmithX enables them.
+      </div>
+
+      <section class="card seller-card">
+        <h3>Supported market</h3>
+        <p>SmithX currently applies marketplace rules for <strong>Kenya</strong>. Sellers must be at least 18 years old and provide valid contact details. Identity or business verification is required before seller payouts.</p>
+      </section>
+
+      <section class="card seller-card">
+        <h3>Prohibited items</h3>
+        <p>The following may not be listed, sold, or promoted on SmithX:</p>
+        <ul class="rule-list">
+          <li>Illegal drugs and controlled substances</li>
+          <li>Weapons, ammunition, and explosive devices</li>
+          <li>Counterfeit or unauthorised branded goods</li>
+          <li>Stolen goods</li>
+          <li>Wildlife products and protected-species items</li>
+          <li>Human remains, body parts, or bodily fluids</li>
+          <li>Hate speech, terrorist, or extremist material</li>
+          <li>Sexual services or explicit sexual content</li>
+          <li>Unlicensed gambling or financial services</li>
+        </ul>
+      </section>
+
+      <section class="card seller-card">
+        <h3>Restricted items</h3>
+        <p>Some products may be listed only when the seller meets applicable requirements:</p>
+        <ul class="rule-list">
+          <li><strong>Alcohol:</strong> Applicable licences and age restrictions apply.</li>
+          <li><strong>Medicines and health products:</strong> Authorisation and required product information apply.</li>
+          <li><strong>Electronics with batteries:</strong> Safety and transport requirements apply.</li>
+          <li><strong>Food and consumables:</strong> Expiry, storage, and compliance information applies.</li>
+        </ul>
+      </section>
+
+      <section class="card seller-card">
+        <h3>Reporting a listing</h3>
+        <p>If you see a counterfeit, unsafe, misleading, prohibited, or restricted listing, <a href="report.html">report it here</a>. SmithX may remove listings and suspend accounts that violate these rules.</p>
+        <div class="page-links form-actions">
+          <a class="primary-button" href="report.html">Report a Listing</a>
+          <a class="secondary-button" href="index.html">Back to SmithX</a>
+        </div>
+      </section>
     </div>
+  </div>
+</main>
 
-    <section class="card">
-      <h2>Supported market</h2>
-      <p>SmithX currently applies marketplace rules for <strong>Kenya</strong>. Sellers must be at least 18 years old and provide valid contact details. Identity or business verification is required before seller payouts.</p>
-    </section>
+<footer>
+  <div class="footer-inner">
+    <div>
+      <strong>SM1THX 🛒</strong>
+      <p>Shop • Buy • Grow</p>
+    </div>
+    <p>
+      © 2026 SM1THX. MVP demonstration.
+      <a href="index.html">Home</a>
+      <a href="report.html">Report</a>
+      <a href="notifications.html">Notifications</a>
+    </p>
+  </div>
+</footer>
 
-    <section class="card">
-      <h2>Prohibited items</h2>
-      <p>The following may not be listed, sold, or promoted on SmithX:</p>
-      <ul>
-        <li>Illegal drugs and controlled substances</li>
-        <li>Weapons, ammunition, and explosive devices</li>
-        <li>Counterfeit or unauthorised branded goods</li>
-        <li>Stolen goods</li>
-        <li>Wildlife products and protected-species items</li>
-        <li>Human remains, body parts, or bodily fluids</li>
-        <li>Hate speech, terrorist, or extremist material</li>
-        <li>Sexual services or explicit sexual content</li>
-        <li>Unlicensed gambling or financial services</li>
-      </ul>
-    </section>
-
-    <section class="card">
-      <h2>Restricted items</h2>
-      <p>Some products may be listed only when the seller meets applicable requirements:</p>
-      <ul>
-        <li><strong>Alcohol:</strong> Applicable licences and age restrictions apply.</li>
-        <li><strong>Medicines and health products:</strong> Authorisation and required product information apply.</li>
-        <li><strong>Electronics with batteries:</strong> Safety and transport requirements apply.</li>
-        <li><strong>Food and consumables:</strong> Expiry, storage, and compliance information applies.</li>
-      </ul>
-    </section>
-
-    <section class="card">
-      <h2>Reporting a listing</h2>
-      <p>If you see a counterfeit, unsafe, misleading, prohibited, or restricted listing, <a href="report.html">report it here</a>. SmithX may remove listings and suspend accounts that violate these rules.</p>
-      <p><a href="index.html">Back to SmithX</a></p>
-    </section>
-  </main>
 </body>
 </html>

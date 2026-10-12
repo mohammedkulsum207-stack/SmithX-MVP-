@@ -6,52 +6,7 @@
   <meta name="description" content="Demo seller profitability dashboard for SM1THX: estimated revenue, platform fees, refunds, and net earnings.">
   <title>Profits — SM1THX 🛒</title>
   <link rel="stylesheet" href="styles.css">
-  <style>
-    /* Page-only additions. Colours, fonts and radii come from styles.css variables. */
-    .profits-page { padding-top: 60px; }
-    .profits-back { margin-left: auto; }
-    .demo-pill {
-      display: inline-block; margin-right: 8px; padding: 3px 10px; border-radius: 999px;
-      background: var(--gold-soft); color: var(--gold-text);
-      font-size: .7rem; font-weight: 700; letter-spacing: .14em; vertical-align: middle;
-    }
-    .profits-page .dashboard-grid { margin-bottom: 28px; }
-    .dashboard-card.is-negative strong { color: var(--danger); }
-    .dashboard-card.is-net strong { color: var(--gold-text); }
-    .profits-panels { display: grid; grid-template-columns: 1fr 2fr; gap: 18px; margin-bottom: 18px; }
-    .profits-page .seller-card { background: var(--paper); }
-    .profits-page .seller-card h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.7rem; }
-    .profits-page .seller-card > p.muted { margin-top: 6px; font-size: 13px; }
-    .order-form-grid { display: grid; grid-template-columns: 2fr 1fr 1.4fr 1.3fr; gap: 0 14px; }
-    .order-form-grid .form-actions { grid-column: 1 / -1; margin-top: 22px; }
-    .fee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
-    .orders-table-wrap { overflow-x: auto; margin-top: 18px; }
-    .orders-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    .orders-table th {
-      text-align: left; padding: 0 10px 12px; color: var(--muted);
-      font-size: .7rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
-      border-bottom: 1px solid var(--border);
-    }
-    .orders-table td { padding: 14px 10px; border-bottom: 1px solid rgba(22, 19, 15, .06); }
-    .orders-table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-    .orders-table td.product { font-weight: 600; }
-    .orders-table td:nth-child(1), .orders-table td:nth-child(2) { white-space: nowrap; }
-    .status-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
-    .status-badge.paid { background: var(--success-light); color: #027a48; }
-    .status-badge.pending { background: var(--warning-light); color: #b54708; }
-    .status-badge.refunded { background: var(--danger-light); color: #b42318; }
-    .table-actions { display: flex; gap: 10px; margin-top: 20px; }
-    footer a { color: rgba(255, 255, 255, .72); margin-left: 10px; }
-    footer a:hover { color: var(--gold-bright); }
-    @media (max-width: 1000px) {
-      .profits-panels { grid-template-columns: 1fr; }
-      .profits-page .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 640px) {
-      .order-form-grid, .fee-grid { grid-template-columns: 1fr; }
-      .profits-page .dashboard-card strong { font-size: 2rem; }
-    }
-  </style>
+  <link rel="stylesheet" href="demo-pages.css">
 </head>
 <body>
 
@@ -64,11 +19,11 @@
         <small>SHOP • BUY • GROW</small>
       </span>
     </a>
-    <a href="index.html#seller" class="nav-login-btn profits-back">← Seller Studio</a>
+    <a href="index.html#seller" class="nav-login-btn page-back">← Seller Studio</a>
   </div>
 </header>
 
-<main class="section profits-page">
+<main class="section demo-page">
   <div class="section-inner">
 
     <div class="section-heading">

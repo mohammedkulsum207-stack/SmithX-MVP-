@@ -1,0 +1,96 @@
+/* =====================================================
+   SM1THX — DEMO PAGE STYLES (demo-pages.css)
+   Shared add-on for the standalone demo pages
+   (Profits, My Products, Compliance, Report, Notifications).
+   Loads after styles.css and reuses its variables and components.
+===================================================== */
+
+/* ---------- Shared layout ---------- */
+.demo-page { padding-top: 60px; }
+.demo-page .section-heading { margin-bottom: 30px; }
+.demo-narrow { max-width: 820px; margin: 0 auto; }
+.page-back { margin-left: auto; }
+.demo-pill {
+  display: inline-block; margin-right: 8px; padding: 3px 10px; border-radius: 999px;
+  background: var(--gold-soft); color: var(--gold-text);
+  font-size: .7rem; font-weight: 700; letter-spacing: .14em; vertical-align: middle;
+}
+.demo-page .seller-card { background: var(--paper); margin-bottom: 18px; }
+.demo-page .seller-card h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.7rem; line-height: 1.1; }
+.demo-page .seller-card > p { margin-top: 10px; color: var(--text-soft); line-height: 1.6; }
+.demo-page .seller-card > p.muted { margin-top: 6px; font-size: 13px; color: var(--muted); }
+.demo-page .seller-card a:not(.primary-button):not(.secondary-button) { color: var(--gold-text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.demo-page .form-group textarea { width: 100%; border-radius: 11px; padding: 12px 14px; color: var(--text); }
+.form-actions { margin-top: 22px; }
+.page-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.status-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+.status-badge.paid, .status-badge.in, .status-badge.wallet { background: var(--success-light); color: #027a48; }
+.status-badge.pending, .status-badge.low, .status-badge.auction { background: var(--warning-light); color: #b54708; }
+.status-badge.refunded, .status-badge.out, .status-badge.stock { background: var(--danger-light); color: #b42318; }
+.status-badge.order { background: var(--blue-light); color: var(--ink); }
+.danger-button { color: #b42318; }
+.danger-button:hover { border-color: #b42318; color: #b42318; }
+footer a { color: rgba(255, 255, 255, .72); margin-left: 10px; }
+footer a:hover { color: var(--gold-bright); }
+
+/* ---------- Notice + lists (Compliance) ---------- */
+.demo-notice {
+  border: 1px solid rgba(200, 144, 46, .35); border-left: 3px solid var(--gold);
+  background: linear-gradient(160deg, rgba(232, 163, 61, .10), rgba(232, 163, 61, 0) 60%), var(--paper);
+  border-radius: var(--radius-md); padding: 18px 22px; margin-bottom: 18px; color: var(--text-soft); line-height: 1.6;
+}
+.demo-notice strong { color: var(--ink); }
+.rule-list { margin-top: 14px; padding-left: 0; list-style: none; display: grid; gap: 8px; }
+.rule-list li { position: relative; padding-left: 22px; color: var(--text-soft); line-height: 1.5; }
+.rule-list li::before { content: ""; position: absolute; left: 4px; top: .6em; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+.rule-list li strong { color: var(--ink); }
+
+/* ---------- Success message (Report) ---------- */
+.success-message { display: none; margin-top: 16px; background: var(--success-light); color: #027a48; border: 1px solid rgba(18, 183, 106, .25); padding: 12px 14px; border-radius: 11px; font-size: 14px; }
+
+/* ---------- Notifications ---------- */
+.notification-card { display: grid; gap: 6px; }
+.notification-card strong { font-size: 1rem; }
+.notification-card p { color: var(--text-soft); margin: 0; }
+.notification-card small { color: var(--muted); font-size: 12px; }
+.notification-card .status-badge { justify-self: start; }
+
+/* ---------- Product list (My Products) ---------- */
+.product-row { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; border-top: 1px solid rgba(22, 19, 15, .08); padding-top: 16px; margin-top: 16px; }
+.product-row strong { font-size: 1rem; }
+.product-row .meta { color: var(--muted); font-size: 14px; margin-top: 4px; line-height: 1.6; }
+.row-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.product-grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+.product-grid-form .form-actions { grid-column: 1 / -1; }
+
+/* ---------- Profits ---------- */
+.demo-page .dashboard-grid { margin-bottom: 28px; }
+.dashboard-card.is-negative strong { color: var(--danger); }
+.dashboard-card.is-net strong { color: var(--gold-text); }
+.profits-panels { display: grid; grid-template-columns: 1fr 2fr; gap: 18px; }
+.order-form-grid { display: grid; grid-template-columns: 2fr 1fr 1.4fr 1.3fr; gap: 0 14px; }
+.order-form-grid .form-actions { grid-column: 1 / -1; }
+.fee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+.orders-table-wrap { overflow-x: auto; margin-top: 18px; }
+.orders-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.orders-table th {
+  text-align: left; padding: 0 10px 12px; color: var(--muted);
+  font-size: .7rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.orders-table td { padding: 14px 10px; border-bottom: 1px solid rgba(22, 19, 15, .06); }
+.orders-table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.orders-table td.product { font-weight: 600; }
+.orders-table td:nth-child(1), .orders-table td:nth-child(2) { white-space: nowrap; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1000px) {
+  .profits-panels { grid-template-columns: 1fr; }
+  .demo-page .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .order-form-grid, .fee-grid, .product-grid-form { grid-template-columns: 1fr; }
+  .product-row { grid-template-columns: 1fr; }
+  .demo-page .dashboard-card strong { font-size: 2rem; }
+  .demo-page { padding-top: 40px; }
+}

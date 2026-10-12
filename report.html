@@ -3,60 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Report a Listing — SM1THX</title>
   <meta name="description" content="Report a counterfeit, unsafe, misleading, or prohibited listing on SmithX.">
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f6f8fa; color: #17212b; }
-    header { background: #16130f; color: #fff; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; }
-    header a { color: #fff; text-decoration: none; font-weight: 700; }
-    main { max-width: 680px; margin: 28px auto 60px; padding: 0 16px; }
-    .card { background: #fff; border: 1px solid #e3e8ee; border-radius: 14px; padding: 22px; }
-    label { display: block; font-weight: 700; margin: 14px 0 6px; }
-    input, select, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; }
-    button { margin-top: 18px; background: #1a73e8; color: #fff; border: 0; padding: 12px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; }
-    .success { display: none; margin-top: 16px; background: #e6f7ed; color: #157347; padding: 12px; border-radius: 10px; }
-    .demo { background: #eee; color: #555; padding: 3px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; }
-    a { color: #0b66c3; }
-  </style>
+  <title>Report a Listing — SM1THX</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="demo-pages.css">
 </head>
 <body>
-  <header>
-    <a href="index.html">SM1THX</a>
-    <a href="compliance.html">← Compliance</a>
-  </header>
-  <main>
-    <h1>Report a listing</h1>
-    <p><span class="demo">DEMO</span> Reports are saved in this browser only. A backend and moderation dashboard are required before reports can be reviewed by SmithX staff.</p>
 
-    <div class="card">
-      <form id="reportForm">
-        <label for="reason">Reason</label>
-        <select id="reason" required>
-          <option value="">Choose a reason</option>
-          <option>Counterfeit or unauthorised goods</option>
-          <option>Unsafe product</option>
-          <option>Misleading description or images</option>
-          <option>Prohibited item</option>
-          <option>Suspected fraud or scam</option>
-          <option>Other</option>
-        </select>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="smithx-brand" aria-label="SM1THX Home">
+      <img src="assets/smithx-logo.jpg" class="smithx-logo-image" alt="SM1THX logo">
+      <span class="smithx-brand-text">
+        <strong>SM1THX 🛒</strong>
+        <small>SHOP • BUY • GROW</small>
+      </span>
+    </a>
+    <a href="compliance.html" class="nav-login-btn page-back">← Compliance</a>
+  </div>
+</header>
 
-        <label for="product">Product name or link</label>
-        <input id="product" type="text" placeholder="Paste the product name or listing link" required>
+<main class="section demo-page">
+  <div class="section-inner">
+    <div class="demo-narrow">
+      <div class="section-heading">
+        <p class="section-eyebrow">TRUST &amp; SAFETY</p>
+        <h2>Report a Listing</h2>
+        <p><span class="demo-pill">DEMO</span>Reports are saved in this browser only. A backend and moderation dashboard are required before reports can be reviewed by SmithX staff.</p>
+      </div>
 
-        <label for="details">What happened?</label>
-        <textarea id="details" rows="5" placeholder="Explain the problem clearly." required></textarea>
+      <div class="card seller-card">
+        <form id="reportForm">
+          <div class="form-group">
+            <label for="reason">Reason</label>
+            <select id="reason" required>
+              <option value="">Choose a reason</option>
+              <option>Counterfeit or unauthorised goods</option>
+              <option>Unsafe product</option>
+              <option>Misleading description or images</option>
+              <option>Prohibited item</option>
+              <option>Suspected fraud or scam</option>
+              <option>Other</option>
+            </select>
+          </div>
 
-        <label for="email">Your email (optional)</label>
-        <input id="email" type="email" placeholder="you@example.com">
+          <div class="form-group">
+            <label for="product">Product name or link</label>
+            <input id="product" type="text" placeholder="Paste the product name or listing link" required>
+          </div>
 
-        <button type="submit">Submit report</button>
-        <div id="success" class="success">Thank you. Your demo report was recorded in this browser. It has not been sent to a moderation team yet.</div>
-      </form>
+          <div class="form-group">
+            <label for="details">What happened?</label>
+            <textarea id="details" rows="5" placeholder="Explain the problem clearly." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Your email (optional)</label>
+            <input id="email" type="email" placeholder="you@example.com">
+          </div>
+
+          <div class="form-actions">
+            <button class="primary-button" type="submit">Submit Report</button>
+          </div>
+          <div id="success" class="success-message">Thank you. Your demo report was recorded in this browser. It has not been sent to a moderation team yet.</div>
+        </form>
+      </div>
+
+      <div class="page-links">
+        <a class="secondary-button" href="compliance.html">Back to Compliance</a>
+        <a class="secondary-button" href="index.html">Back to SmithX</a>
+      </div>
     </div>
+  </div>
+</main>
 
-    <p><a href="compliance.html">Back to Compliance</a> · <a href="index.html">Back to SmithX</a></p>
-  </main>
+<footer>
+  <div class="footer-inner">
+    <div>
+      <strong>SM1THX 🛒</strong>
+      <p>Shop • Buy • Grow</p>
+    </div>
+    <p>
+      © 2026 SM1THX. MVP demonstration.
+      <a href="index.html">Home</a>
+      <a href="compliance.html">Compliance</a>
+      <a href="notifications.html">Notifications</a>
+    </p>
+  </div>
+</footer>
 
   <script>
     document.getElementById("reportForm").addEventListener("submit", function (event) {
@@ -75,5 +109,6 @@
       document.getElementById("reportForm").reset();
     });
   </script>
+
 </body>
 </html>
