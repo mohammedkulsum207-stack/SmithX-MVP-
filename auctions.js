@@ -3,10 +3,10 @@
 /* =====================================================
    SM1THX — AUCTIONS (auctions.js)
    Phase 4 · DEMO. Rules shown to every bidder:
+     • Auctions run for a maximum of 2 minutes.
+     • Bids never extend an auction.
      • Minimum bid step set per auction.
      • Bids are binding and can't be withdrawn.
-     • Bids in the last 2 minutes extend the auction by
-       2 minutes (stops last-second "sniping").
      • Sellers can't bid on their own auctions and can
        only cancel before the first bid.
      • Highest bid when the timer ends wins.
@@ -22,17 +22,14 @@
 const SMX_AUCTIONS_KEY = "smithx_auctions_v1";
 
 const SMX_AUCTION_RULES = {
-  snipeWindowMs: 2 * 60 * 1000,
-  extendByMs: 2 * 60 * 1000,
+  snipeWindowMs: 0,
+  extendByMs: 0,
   payWindowMs: 48 * 60 * 60 * 1000,
-  winningFeePercent: 0,           // decide later; shown before bidding
-  losingBidFee: 0,                // always free
+  winningFeePercent: 0,
+  losingBidFee: 0,
+  maxDurationMs: 2 * 60 * 1000,
   durations: [
-    { label: "5 minutes (demo)", ms: 5 * 60 * 1000 },
-    { label: "1 hour", ms: 60 * 60 * 1000 },
-    { label: "24 hours", ms: 24 * 60 * 60 * 1000 },
-    { label: "3 days", ms: 3 * 24 * 60 * 60 * 1000 },
-    { label: "7 days", ms: 7 * 24 * 60 * 60 * 1000 }
+    { label: "2 minutes", ms: 2 * 60 * 1000 }
   ]
 };
 
@@ -83,7 +80,6 @@ function smxMinNextBid(auction) {
   return top ? top.amount + auction.increment : auction.startPrice;
 }
 
-/* Move an auction to the right state for the current time. */
 function smxSettleAuction(auction, now) {
   const time = now || Date.now();
   let a = auction;
@@ -132,6 +128,7 @@ function smxCreateAuction(user, data) {
   if (!Number.isFinite(startPrice) || startPrice < 50) throw new Error("Starting price must be at least KES 50.");
   if (increment < 10) throw new Error("Minimum bid step must be at least KES 10.");
   if (!duration) throw new Error("Choose how long the auction runs.");
+  if (duration.ms > SMX_AUCTION_RULES.maxDurationMs) throw new Error("Auctions can run for a maximum of 2 minutes.");
 
   let storeName = "";
   try {
@@ -186,12 +183,7 @@ function smxPlaceBid(auctionId, user, amount, options) {
     const bid = { id: "BID-" + now.toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5), bidderEmail: user.email, bidderName: user.name || "Bidder", amount: value, at: new Date(now).toISOString(), simulated: Boolean(opts.simulated) };
     auction.bids.push(bid);
 
-    let extended = false;
-    if (new Date(auction.endAt).getTime() - now < SMX_AUCTION_RULES.snipeWindowMs) {
-      auction.endAt = new Date(now + SMX_AUCTION_RULES.extendByMs).toISOString();
-      auction.extensions = (auction.extensions || 0) + 1;
-      extended = true;
-    }
+    const extended = false;
     result = { bid, extended, auction };
     return auction;
   });
