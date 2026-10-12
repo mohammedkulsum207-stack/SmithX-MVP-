@@ -3,105 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profits — SM1THX</title>
-  <meta name="description" content="Demo seller profitability dashboard for SmithX: estimated revenue, platform fees, refunds, and net earnings.">
+  <meta name="description" content="Demo seller profitability dashboard for SM1THX: estimated revenue, platform fees, refunds, and net earnings.">
+  <title>Profits — SM1THX 🛒</title>
+  <link rel="stylesheet" href="styles.css">
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f6f8fa; color: #17212b; }
-    header { background: #16130f; color: #fff; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; }
-    header a { color: #fff; text-decoration: none; font-weight: 700; }
-    main { max-width: 960px; margin: 24px auto 60px; padding: 0 16px; }
-    .card { background: #fff; border: 1px solid #e3e8ee; border-radius: 14px; padding: 20px; margin-bottom: 16px; }
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
-    .stat { background: #fff; border: 1px solid #e3e8ee; border-radius: 14px; padding: 16px; }
-    .stat span { display: block; font-size: 13px; color: #5b6673; font-weight: 700; }
-    .stat strong { display: block; font-size: 22px; margin-top: 6px; }
-    .stat.net strong { color: #157347; }
-    .stat.neg strong { color: #a3343a; }
-    label { display: block; font-weight: 700; margin: 12px 0 6px; }
-    input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; box-sizing: border-box; }
-    .row { display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 10px; align-items: end; }
-    button { border: 0; border-radius: 10px; padding: 10px 14px; font-weight: 700; cursor: pointer; }
-    .primary { background: #1a73e8; color: #fff; }
-    .danger { background: #a3343a; color: #fff; }
-    .ghost { background: #eef2f6; color: #17212b; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    th, td { text-align: left; padding: 10px 8px; border-top: 1px solid #e3e8ee; }
-    th { color: #5b6673; font-size: 12px; text-transform: uppercase; border-top: 0; }
-    td.num, th.num { text-align: right; }
-    .badge { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
-    .paid { background: #e6f7ed; color: #157347; }
-    .refunded { background: #fdecea; color: #a3343a; }
-    .pending { background: #fff4d6; color: #8a5f14; }
-    .demo { background: #eee; color: #555; padding: 3px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; }
-    .table-wrap { overflow-x: auto; }
-    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-    .muted { color: #5b6673; font-size: 13px; }
-    a { color: #0b66c3; }
-    @media (max-width: 760px) { .stats { grid-template-columns: repeat(2, 1fr); } .row { grid-template-columns: 1fr 1fr; } }
+    /* Page-only additions. Colours, fonts and radii come from styles.css variables. */
+    .profits-page { padding-top: 60px; }
+    .profits-back { margin-left: auto; }
+    .demo-pill {
+      display: inline-block; margin-right: 8px; padding: 3px 10px; border-radius: 999px;
+      background: var(--gold-soft); color: var(--gold-text);
+      font-size: .7rem; font-weight: 700; letter-spacing: .14em; vertical-align: middle;
+    }
+    .profits-page .dashboard-grid { margin-bottom: 28px; }
+    .dashboard-card.is-negative strong { color: var(--danger); }
+    .dashboard-card.is-net strong { color: var(--gold-text); }
+    .profits-panels { display: grid; grid-template-columns: 1fr 2fr; gap: 18px; margin-bottom: 18px; }
+    .profits-page .seller-card { background: var(--paper); }
+    .profits-page .seller-card h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.7rem; }
+    .profits-page .seller-card > p.muted { margin-top: 6px; font-size: 13px; }
+    .order-form-grid { display: grid; grid-template-columns: 2fr 1fr 1.4fr 1.3fr; gap: 0 14px; }
+    .order-form-grid .form-actions { grid-column: 1 / -1; margin-top: 22px; }
+    .fee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+    .orders-table-wrap { overflow-x: auto; margin-top: 18px; }
+    .orders-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .orders-table th {
+      text-align: left; padding: 0 10px 12px; color: var(--muted);
+      font-size: .7rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+    .orders-table td { padding: 14px 10px; border-bottom: 1px solid rgba(22, 19, 15, .06); }
+    .orders-table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .orders-table td.product { font-weight: 600; }
+    .orders-table td:nth-child(1), .orders-table td:nth-child(2) { white-space: nowrap; }
+    .status-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .status-badge.paid { background: var(--success-light); color: #027a48; }
+    .status-badge.pending { background: var(--warning-light); color: #b54708; }
+    .status-badge.refunded { background: var(--danger-light); color: #b42318; }
+    .table-actions { display: flex; gap: 10px; margin-top: 20px; }
+    footer a { color: rgba(255, 255, 255, .72); margin-left: 10px; }
+    footer a:hover { color: var(--gold-bright); }
+    @media (max-width: 1000px) {
+      .profits-panels { grid-template-columns: 1fr; }
+      .profits-page .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .order-form-grid, .fee-grid { grid-template-columns: 1fr; }
+      .profits-page .dashboard-card strong { font-size: 2rem; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <a href="index.html">SM1THX</a>
-    <a href="index.html#seller">← Seller Studio</a>
-  </header>
-  <main>
-    <h1>Profits</h1>
-    <p><span class="demo">DEMO</span> Figures are estimates calculated in this browser from demo orders. They are not real payouts and are not connected to any payment provider.</p>
 
-    <div class="stats">
-      <div class="stat"><span>Gross revenue</span><strong id="sRevenue">KES 0</strong></div>
-      <div class="stat neg"><span>Platform fees</span><strong id="sFees">KES 0</strong></div>
-      <div class="stat neg"><span>Refunds</span><strong id="sRefunds">KES 0</strong></div>
-      <div class="stat net"><span>Net earnings</span><strong id="sNet">KES 0</strong></div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="smithx-brand" aria-label="SM1THX Home">
+      <img src="assets/smithx-logo.jpg" class="smithx-logo-image" alt="SM1THX logo">
+      <span class="smithx-brand-text">
+        <strong>SM1THX 🛒</strong>
+        <small>SHOP • BUY • GROW</small>
+      </span>
+    </a>
+    <a href="index.html#seller" class="nav-login-btn profits-back">← Seller Studio</a>
+  </div>
+</header>
+
+<main class="section profits-page">
+  <div class="section-inner">
+
+    <div class="section-heading">
+      <p class="section-eyebrow">SELLER PROFITS</p>
+      <h2>Your Earnings Overview</h2>
+      <p><span class="demo-pill">DEMO</span>Figures are estimates calculated in this browser from demo orders. They are not real payouts and are not connected to any payment provider.</p>
     </div>
 
-    <div class="card">
-      <h2>Fee settings</h2>
-      <div class="row" style="grid-template-columns: 1fr 1fr;">
-        <div>
-          <label for="feeRate">Platform fee (%)</label>
-          <input id="feeRate" type="number" min="0" max="50" step="0.5" value="5">
-        </div>
-        <div>
-          <label for="fixedFee">Fixed fee per order (KES)</label>
-          <input id="fixedFee" type="number" min="0" step="1" value="20">
+    <div class="dashboard-grid">
+      <div class="dashboard-card"><span>Gross Revenue</span><strong id="sRevenue">KES 0</strong></div>
+      <div class="dashboard-card is-negative"><span>Platform Fees</span><strong id="sFees">KES 0</strong></div>
+      <div class="dashboard-card is-negative"><span>Refunds</span><strong id="sRefunds">KES 0</strong></div>
+      <div class="dashboard-card is-net"><span>Net Earnings</span><strong id="sNet">KES 0</strong></div>
+    </div>
+
+    <div class="profits-panels">
+      <div class="card seller-card">
+        <h3>Fee Settings</h3>
+        <p class="muted">Fees apply to paid and refunded orders. Pending orders are excluded.</p>
+        <div class="fee-grid">
+          <div class="form-group">
+            <label for="feeRate">Platform fee (%)</label>
+            <input id="feeRate" type="number" min="0" max="50" step="0.5" value="5">
+          </div>
+          <div class="form-group">
+            <label for="fixedFee">Fixed fee / order (KES)</label>
+            <input id="fixedFee" type="number" min="0" step="1" value="20">
+          </div>
         </div>
       </div>
-      <p class="muted">Fees apply to paid and refunded orders. Pending orders are excluded from totals.</p>
+
+      <div class="card seller-card">
+        <h3>Add a Demo Order</h3>
+        <p class="muted">Orders are saved in this browser only.</p>
+        <form id="orderForm" class="order-form-grid">
+          <div class="form-group">
+            <label for="product">Product</label>
+            <input id="product" required placeholder="e.g. Wireless Headphones">
+          </div>
+          <div class="form-group">
+            <label for="qty">Qty</label>
+            <input id="qty" type="number" min="1" value="1" required>
+          </div>
+          <div class="form-group">
+            <label for="price">Unit price (KES)</label>
+            <input id="price" type="number" min="1" required placeholder="4500">
+          </div>
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status">
+              <option value="paid">Paid</option>
+              <option value="pending">Pending</option>
+              <option value="refunded">Refunded</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button class="primary-button" type="submit">Add Order</button>
+          </div>
+        </form>
+      </div>
     </div>
 
-    <div class="card">
-      <h2>Add a demo order</h2>
-      <form id="orderForm" class="row">
-        <div>
-          <label for="product">Product</label>
-          <input id="product" required placeholder="e.g. Wireless Headphones">
-        </div>
-        <div>
-          <label for="qty">Qty</label>
-          <input id="qty" type="number" min="1" value="1" required>
-        </div>
-        <div>
-          <label for="price">Unit price (KES)</label>
-          <input id="price" type="number" min="1" required placeholder="4500">
-        </div>
-        <div>
-          <label for="status">Status</label>
-          <select id="status">
-            <option value="paid">Paid</option>
-            <option value="pending">Pending</option>
-            <option value="refunded">Refunded</option>
-          </select>
-        </div>
-        <button class="primary" type="submit">Add</button>
-      </form>
-    </div>
-
-    <div class="card">
-      <h2>Demo orders</h2>
-      <div class="table-wrap">
-        <table>
+    <div class="card seller-card">
+      <h3>Demo Orders</h3>
+      <div class="orders-table-wrap">
+        <table class="orders-table">
           <thead>
             <tr>
               <th>Order</th><th>Date</th><th>Product</th><th class="num">Qty</th>
@@ -111,13 +144,29 @@
           <tbody id="orders"></tbody>
         </table>
       </div>
-      <div class="actions">
-        <button class="ghost" id="resetBtn" type="button">Reset demo data</button>
+      <div class="table-actions">
+        <a class="secondary-button small-button" href="seller-products.html">My Products</a>
+        <button class="secondary-button small-button" id="resetBtn" type="button">Reset Demo Data</button>
       </div>
     </div>
 
-    <p><a href="seller-products.html">My Products</a> · <a href="index.html">Back to SmithX</a></p>
-  </main>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <strong>SM1THX 🛒</strong>
+      <p>Shop • Buy • Grow</p>
+    </div>
+    <p>
+      © 2026 SM1THX. MVP demonstration.
+      <a href="index.html">Home</a>
+      <a href="seller-products.html">My Products</a>
+      <a href="compliance.html">Compliance</a>
+    </p>
+  </div>
+</footer>
 
   <script>
     const KEY = "smithx_demo_seller_orders";
@@ -188,13 +237,13 @@
           <tr>
             <td>${esc(o.id)}</td>
             <td>${esc(o.date)}</td>
-            <td>${esc(o.product)}</td>
+            <td class="product">${esc(o.product)}</td>
             <td class="num">${o.qty}</td>
             <td class="num">${kes(total)}</td>
             <td class="num">${o.status === "pending" ? "—" : kes(fee)}</td>
             <td class="num">${o.status === "pending" ? "—" : kes(net)}</td>
-            <td><span class="badge ${esc(o.status)}">${label}</span></td>
-            <td><button class="danger" onclick="removeOrder('${esc(o.id)}')">Remove</button></td>
+            <td><span class="status-badge ${esc(o.status)}">${label}</span></td>
+            <td><button class="secondary-button small-button" onclick="removeOrder('${esc(o.id)}')">Remove</button></td>
           </tr>`;
       }).join("") : '<tr><td colspan="9">No demo orders yet. Add one above.</td></tr>';
 
