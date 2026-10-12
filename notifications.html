@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications — SM1THX</title>
+  <meta name="description" content="Demo notifications for SmithX orders, auctions, wallet activity, and seller stock alerts.">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f6f8fa; color: #17212b; }
+    header { background: #16130f; color: #fff; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; }
+    header a { color: #fff; text-decoration: none; font-weight: 700; }
+    main { max-width: 760px; margin: 24px auto 60px; padding: 0 16px; }
+    .card { background: #fff; border: 1px solid #e3e8ee; border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+    .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; margin-bottom: 8px; }
+    .order { background: #e8f0fe; color: #1a56db; }
+    .auction { background: #fff4d6; color: #8a5f14; }
+    .wallet { background: #e6f7ed; color: #157347; }
+    .stock { background: #fdecea; color: #a3343a; }
+    .demo { background: #eee; color: #555; }
+    h1 { font-size: 28px; }
+    p { margin: 6px 0 0; }
+    small { color: #667085; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">SM1THX</a>
+    <a href="index.html">← Marketplace</a>
+  </header>
+  <main>
+    <h1>Notifications</h1>
+    <p><span class="tag demo">DEMO</span> These are sample notifications. Live email, SMS, and push alerts require a backend and notification provider.</p>
+
+    <div class="card">
+      <span class="tag order">ORDER</span>
+      <strong>Order SMX-DEMO-001 confirmed</strong>
+      <p>Your seller confirmed your demo order. Delivery tracking has started.</p>
+      <small>2 minutes ago</small>
+    </div>
+
+    <div class="card">
+      <span class="tag auction">AUCTION</span>
+      <strong>You have been outbid</strong>
+      <p>Another demo bidder placed a higher bid. Auctions close after a maximum of 2 minutes and do not extend.</p>
+      <small>8 minutes ago</small>
+    </div>
+
+    <div class="card">
+      <span class="tag wallet">WALLET</span>
+      <strong>Demo SMX Credit top-up completed</strong>
+      <p>KES 1,000 demo credit was added to your wallet. This is not a real payment.</p>
+      <small>1 hour ago</small>
+    </div>
+
+    <div class="card">
+      <span class="tag stock">STOCK</span>
+      <strong>Low stock warning</strong>
+      <p>Only 2 units remain for “Smart Wireless Headphones” in this demo store.</p>
+      <small>3 hours ago</small>
+    </div>
+
+    <div class="card">
+      <span class="tag order">DELIVERY</span>
+      <strong>Order marked as delivered</strong>
+      <p>Your demo order was marked delivered. You can now leave a review.</p>
+      <small>Yesterday</small>
+    </div>
+
+    <p><a href="index.html">Back to SmithX</a></p>
+  </main>
+</body>
+</html>
