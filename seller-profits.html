@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profits — SM1THX</title>
+  <meta name="description" content="Demo seller profitability dashboard for SmithX: estimated revenue, platform fees, refunds, and net earnings.">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f6f8fa; color: #17212b; }
+    header { background: #16130f; color: #fff; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; }
+    header a { color: #fff; text-decoration: none; font-weight: 700; }
+    main { max-width: 960px; margin: 24px auto 60px; padding: 0 16px; }
+    .card { background: #fff; border: 1px solid #e3e8ee; border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+    .stat { background: #fff; border: 1px solid #e3e8ee; border-radius: 14px; padding: 16px; }
+    .stat span { display: block; font-size: 13px; color: #5b6673; font-weight: 700; }
+    .stat strong { display: block; font-size: 22px; margin-top: 6px; }
+    .stat.net strong { color: #157347; }
+    .stat.neg strong { color: #a3343a; }
+    label { display: block; font-weight: 700; margin: 12px 0 6px; }
+    input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; box-sizing: border-box; }
+    .row { display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 10px; align-items: end; }
+    button { border: 0; border-radius: 10px; padding: 10px 14px; font-weight: 700; cursor: pointer; }
+    .primary { background: #1a73e8; color: #fff; }
+    .danger { background: #a3343a; color: #fff; }
+    .ghost { background: #eef2f6; color: #17212b; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 10px 8px; border-top: 1px solid #e3e8ee; }
+    th { color: #5b6673; font-size: 12px; text-transform: uppercase; border-top: 0; }
+    td.num, th.num { text-align: right; }
+    .badge { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+    .paid { background: #e6f7ed; color: #157347; }
+    .refunded { background: #fdecea; color: #a3343a; }
+    .pending { background: #fff4d6; color: #8a5f14; }
+    .demo { background: #eee; color: #555; padding: 3px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .table-wrap { overflow-x: auto; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .muted { color: #5b6673; font-size: 13px; }
+    a { color: #0b66c3; }
+    @media (max-width: 760px) { .stats { grid-template-columns: repeat(2, 1fr); } .row { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">SM1THX</a>
+    <a href="index.html#seller">← Seller Studio</a>
+  </header>
+  <main>
+    <h1>Profits</h1>
+    <p><span class="demo">DEMO</span> Figures are estimates calculated in this browser from demo orders. They are not real payouts and are not connected to any payment provider.</p>
+
+    <div class="stats">
+      <div class="stat"><span>Gross revenue</span><strong id="sRevenue">KES 0</strong></div>
+      <div class="stat neg"><span>Platform fees</span><strong id="sFees">KES 0</strong></div>
+      <div class="stat neg"><span>Refunds</span><strong id="sRefunds">KES 0</strong></div>
+      <div class="stat net"><span>Net earnings</span><strong id="sNet">KES 0</strong></div>
+    </div>
+
+    <div class="card">
+      <h2>Fee settings</h2>
+      <div class="row" style="grid-template-columns: 1fr 1fr;">
+        <div>
+          <label for="feeRate">Platform fee (%)</label>
+          <input id="feeRate" type="number" min="0" max="50" step="0.5" value="5">
+        </div>
+        <div>
+          <label for="fixedFee">Fixed fee per order (KES)</label>
+          <input id="fixedFee" type="number" min="0" step="1" value="20">
+        </div>
+      </div>
+      <p class="muted">Fees apply to paid and refunded orders. Pending orders are excluded from totals.</p>
+    </div>
+
+    <div class="card">
+      <h2>Add a demo order</h2>
+      <form id="orderForm" class="row">
+        <div>
+          <label for="product">Product</label>
+          <input id="product" required placeholder="e.g. Wireless Headphones">
+        </div>
+        <div>
+          <label for="qty">Qty</label>
+          <input id="qty" type="number" min="1" value="1" required>
+        </div>
+        <div>
+          <label for="price">Unit price (KES)</label>
+          <input id="price" type="number" min="1" required placeholder="4500">
+        </div>
+        <div>
+          <label for="status">Status</label>
+          <select id="status">
+            <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
+            <option value="refunded">Refunded</option>
+          </select>
+        </div>
+        <button class="primary" type="submit">Add</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Demo orders</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Order</th><th>Date</th><th>Product</th><th class="num">Qty</th>
+              <th class="num">Total</th><th class="num">Fee</th><th class="num">Net</th><th>Status</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="orders"></tbody>
+        </table>
+      </div>
+      <div class="actions">
+        <button class="ghost" id="resetBtn" type="button">Reset demo data</button>
+      </div>
+    </div>
+
+    <p><a href="seller-products.html">My Products</a> · <a href="index.html">Back to SmithX</a></p>
+  </main>
+
+  <script>
+    const KEY = "smithx_demo_seller_orders";
+    const FEE_KEY = "smithx_demo_seller_fees";
+    const tbody = document.getElementById("orders");
+    const feeRateEl = document.getElementById("feeRate");
+    const fixedFeeEl = document.getElementById("fixedFee");
+
+    const SAMPLE = [
+      { id: "SX-1001", date: "2026-10-01", product: "Wireless Headphones", qty: 2, price: 4500, status: "paid" },
+      { id: "SX-1002", date: "2026-10-03", product: "Leather Wallet", qty: 1, price: 1800, status: "paid" },
+      { id: "SX-1003", date: "2026-10-05", product: "Smart Watch", qty: 1, price: 7200, status: "refunded" },
+      { id: "SX-1004", date: "2026-10-08", product: "Phone Case", qty: 3, price: 650, status: "paid" },
+      { id: "SX-1005", date: "2026-10-10", product: "Bluetooth Speaker", qty: 1, price: 3900, status: "pending" }
+    ];
+
+    function esc(value) {
+      return String(value).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    function kes(n) {
+      const sign = n < 0 ? "-" : "";
+      return sign + "KES " + Math.abs(Math.round(n)).toLocaleString();
+    }
+
+    function loadOrders() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(KEY));
+        return Array.isArray(saved) ? saved : SAMPLE.slice();
+      } catch { return SAMPLE.slice(); }
+    }
+
+    function saveOrders(items) { localStorage.setItem(KEY, JSON.stringify(items)); }
+
+    function loadFees() {
+      try {
+        const f = JSON.parse(localStorage.getItem(FEE_KEY));
+        if (f) { feeRateEl.value = f.rate; fixedFeeEl.value = f.fixed; }
+      } catch {}
+    }
+
+    function saveFees() {
+      localStorage.setItem(FEE_KEY, JSON.stringify({ rate: Number(feeRateEl.value) || 0, fixed: Number(fixedFeeEl.value) || 0 }));
+    }
+
+    function feeFor(total) {
+      const rate = Math.max(0, Number(feeRateEl.value) || 0) / 100;
+      const fixed = Math.max(0, Number(fixedFeeEl.value) || 0);
+      return total * rate + fixed;
+    }
+
+    function render() {
+      const items = loadOrders();
+      let revenue = 0, fees = 0, refunds = 0;
+
+      tbody.innerHTML = items.length ? items.map(o => {
+        const total = o.qty * o.price;
+        let fee = 0, net = 0;
+        if (o.status === "paid") {
+          fee = feeFor(total); net = total - fee;
+          revenue += total; fees += fee;
+        } else if (o.status === "refunded") {
+          fee = feeFor(total); net = -fee;
+          revenue += total; fees += fee; refunds += total;
+        }
+        const label = o.status.charAt(0).toUpperCase() + o.status.slice(1);
+        return `
+          <tr>
+            <td>${esc(o.id)}</td>
+            <td>${esc(o.date)}</td>
+            <td>${esc(o.product)}</td>
+            <td class="num">${o.qty}</td>
+            <td class="num">${kes(total)}</td>
+            <td class="num">${o.status === "pending" ? "—" : kes(fee)}</td>
+            <td class="num">${o.status === "pending" ? "—" : kes(net)}</td>
+            <td><span class="badge ${esc(o.status)}">${label}</span></td>
+            <td><button class="danger" onclick="removeOrder('${esc(o.id)}')">Remove</button></td>
+          </tr>`;
+      }).join("") : '<tr><td colspan="9">No demo orders yet. Add one above.</td></tr>';
+
+      document.getElementById("sRevenue").textContent = kes(revenue);
+      document.getElementById("sFees").textContent = kes(fees);
+      document.getElementById("sRefunds").textContent = kes(refunds);
+      document.getElementById("sNet").textContent = kes(revenue - fees - refunds);
+    }
+
+    document.getElementById("orderForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const items = loadOrders();
+      items.unshift({
+        id: "SX-" + Date.now().toString(36).toUpperCase(),
+        date: new Date().toISOString().slice(0, 10),
+        product: document.getElementById("product").value.trim(),
+        qty: Math.max(1, Number(document.getElementById("qty").value) || 1),
+        price: Math.max(1, Number(document.getElementById("price").value) || 1),
+        status: document.getElementById("status").value
+      });
+      saveOrders(items);
+      this.reset();
+      render();
+    });
+
+    function removeOrder(id) {
+      if (!confirm("Remove this demo order?")) return;
+      saveOrders(loadOrders().filter(o => o.id !== id));
+      render();
+    }
+
+    document.getElementById("resetBtn").addEventListener("click", function () {
+      if (!confirm("Reset demo orders and fee settings?")) return;
+      localStorage.removeItem(KEY);
+      localStorage.removeItem(FEE_KEY);
+      feeRateEl.value = 5; fixedFeeEl.value = 20;
+      render();
+    });
+
+    [feeRateEl, fixedFeeEl].forEach(el => el.addEventListener("input", () => { saveFees(); render(); }));
+
+    loadFees();
+    render();
+  </script>
+</body>
+</html>
