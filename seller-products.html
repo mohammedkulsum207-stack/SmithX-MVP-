@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Products — SM1THX</title>
+  <meta name="description" content="Demo seller product manager for SmithX: add, edit, delete, and manage product stock.">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f6f8fa; color: #17212b; }
+    header { background: #16130f; color: #fff; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; }
+    header a { color: #fff; text-decoration: none; font-weight: 700; }
+    main { max-width: 900px; margin: 24px auto 60px; padding: 0 16px; }
+    .card { background: #fff; border: 1px solid #e3e8ee; border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+    label { display: block; font-weight: 700; margin: 12px 0 6px; }
+    input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; }
+    button { border: 0; border-radius: 10px; padding: 10px 14px; font-weight: 700; cursor: pointer; }
+    .primary { background: #1a73e8; color: #fff; }
+    .danger { background: #a3343a; color: #fff; }
+    .ghost { background: #eef2f6; color: #17212b; }
+    .product { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; border-top: 1px solid #e3e8ee; padding-top: 14px; margin-top: 14px; }
+    .badge { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+    .in { background: #e6f7ed; color: #157347; }
+    .low { background: #fff4d6; color: #8a5f14; }
+    .out { background: #fdecea; color: #a3343a; }
+    .demo { background: #eee; color: #555; padding: 3px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    a { color: #0b66c3; }
+    @media (max-width: 640px) { .product { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">SM1THX</a>
+    <a href="index.html#seller">← Seller Studio</a>
+  </header>
+  <main>
+    <h1>My Products</h1>
+    <p><span class="demo">DEMO</span> Products are saved in this browser only. A backend is required before other buyers and sellers can see them.</p>
+
+    <div class="card">
+      <h2>Add a product</h2>
+      <form id="productForm">
+        <label for="name">Product name</label>
+        <input id="name" required placeholder="e.g. Wireless Headphones">
+
+        <label for="price">Price (KES)</label>
+        <input id="price" type="number" min="1" required placeholder="4500">
+
+        <label for="category">Category</label>
+        <select id="category">
+          <option>Electronics</option>
+          <option>Fashion</option>
+          <option>Home</option>
+          <option>Beauty</option>
+          <option>Accessories</option>
+          <option>Other</option>
+        </select>
+
+        <label for="stock">Stock quantity</label>
+        <input id="stock" type="number" min="0" required placeholder="10">
+
+        <button class="primary" type="submit">Add product</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Your demo products</h2>
+      <div id="products"></div>
+    </div>
+
+    <p><a href="index.html">Back to SmithX</a></p>
+  </main>
+
+  <script>
+    const KEY = "smithx_demo_seller_products";
+    const form = document.getElementById("productForm");
+    const list = document.getElementById("products");
+
+    function load() {
+      try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+      catch { return []; }
+    }
+
+    function save(items) {
+      localStorage.setItem(KEY, JSON.stringify(items));
+    }
+
+    function status(stock) {
+      if (stock <= 0) return ['out', 'Out of stock'];
+      if (stock <= 2) return ['low', 'Low stock'];
+      return ['in', 'In stock'];
+    }
+
+    function render() {
+      const items = load();
+      if (!items.length) {
+        list.innerHTML = '<p>No demo products yet. Add your first product above.</p>';
+        return;
+      }
+      list.innerHTML = items.map(item => {
+        const [cls, label] = status(item.stock);
+        return `
+          <div class="product">
+            <div>
+              <strong>${item.name}</strong><br>
+              KES ${Number(item.price).toLocaleString()} · ${item.category}<br>
+              Stock: ${item.stock} <span class="badge ${cls}">${label}</span>
+            </div>
+            <div class="actions">
+              <button class="ghost" onclick="editProduct('${item.id}')">Edit</button>
+              <button class="danger" onclick="deleteProduct('${item.id}')">Delete</button>
+            </div>
+          </div>`;
+      }).join("");
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const items = load();
+      items.unshift({
+        id: "P" + Date.now().toString(36),
+        name: document.getElementById("name").value.trim(),
+        price: Number(document.getElementById("price").value),
+        category: document.getElementById("category").value,
+        stock: Number(document.getElementById("stock").value)
+      });
+      save(items);
+      form.reset();
+      render();
+    });
+
+    function editProduct(id) {
+      const items = load();
+      const item = items.find(product => product.id === id);
+      if (!item) return;
+      const name = prompt("Product name:", item.name);
+      if (name === null) return;
+      const price = prompt("Price in KES:", item.price);
+      if (price === null) return;
+      const stock = prompt("Stock quantity:", item.stock);
+      if (stock === null) return;
+      item.name = name.trim() || item.name;
+      item.price = Number(price) || item.price;
+      item.stock = Math.max(0, Number(stock) || 0);
+      save(items);
+      render();
+    }
+
+    function deleteProduct(id) {
+      if (!confirm("Delete this demo product?")) return;
+      save(load().filter(product => product.id !== id));
+      render();
+    }
+
+    render();
+  </script>
+</body>
+</html>
