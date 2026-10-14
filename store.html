@@ -280,6 +280,7 @@
       .card-body strong { font-size: 1.1rem; }
     }
   </style>
+  <link rel="stylesheet" href="monochrome.css">
 </head>
 <body>
 
@@ -396,7 +397,7 @@
           <div class="empty">
             <strong>No products yet.</strong>
             ${isOwner ? "Publish products in Seller Studio while signed in and they'll appear here." : "This seller is still stocking their shelves."}
-            ${isOwner ? `<br><a class="btn" href="index.html#seller">Add a product</a>` : ""}
+            ${isOwner ? `<br><a class="btn" href="seller-dashboard.html">Add a product</a>` : ""}
           </div>`}
 
         <p class="demo-note">MVP demo: stores and products are saved in this browser only. Sharing with other people will work once SM1THX has a backend.</p>
