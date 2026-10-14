@@ -49,11 +49,13 @@ const sales=myOrders.filter(o=>['Paid','Confirmed','Shipped','Delivered','Comple
 $('metricProducts').textContent=mine.length;$('metricOrders').textContent=myOrders.length;$('metricSales').textContent=money(sales);
 $('ordersSummary').textContent=myOrders.length?myOrders.length+' order(s) recorded in this browser. Sales are estimates until payments are verified.':'No orders recorded for this store yet.';
 }
-function save(publish){
+function save(mode){
 try{
-const store=smxSaveMyStore(current.email,{name:$('storeName').value,slug:$('storeSlug').value,tagline:$('storeTagline').value,description:$('storeDescription').value,published:publish});
-say(publish?'Store published. It is now visible through its public store link in this browser.':'Store details saved as a draft.');
-refresh();
+const existing=smxStoreForOwner(current.email);
+const published=mode==='publish'?true:mode==='unpublish'?false:Boolean(existing&&existing.published);
+const store=smxSaveMyStore(current.email,{name:$('storeName').value,slug:$('storeSlug').value,tagline:$('storeTagline').value,description:$('storeDescription').value,published});
+say(published?'Store published. It is now visible through its public store link in this browser.':(mode==='unpublish'?'Store unpublished.':'Store details saved.'));
+refresh();renderProducts();
 }catch(e){say(e.message,true)}
 }
 function init(){
@@ -62,9 +64,9 @@ if(!current){gate.hidden=false;workspace.hidden=true;signout.hidden=true;return}
 if(!['seller','both'].includes(current.role)){gate.innerHTML='<p class="section-eyebrow">SELLER ACCESS</p><h2>Enable seller access</h2><p>Your current account is set up as a buyer. Create a seller account or update your role in the account registration flow.</p><p style="margin-top:16px"><a class="primary-button" href="login.html?next=seller-dashboard.html">Create seller account</a></p>';workspace.hidden=true;return}
 gate.hidden=true;workspace.hidden=false;signout.hidden=false;$('welcome').textContent='Signed in as '+current.email;refresh();renderProducts();
 }
-$('storeForm').addEventListener('submit',e=>{e.preventDefault();save(false)});
-$('publishStore').addEventListener('click',()=>save(true));
-$('unpublishStore').addEventListener('click',()=>save(false));
+$('storeForm').addEventListener('submit',e=>{e.preventDefault();save('draft')});
+$('publishStore').addEventListener('click',()=>save('publish'));
+$('unpublishStore').addEventListener('click',()=>save('unpublish'));
 $('refreshMetrics').addEventListener('click',refresh);
 function renderProducts(){
  const store=smxStoreForOwner(current.email);
