@@ -276,3 +276,37 @@ body:has(#productForm) footer a{color:#fff}
  body:has(#productForm) .sp-item-actions button{flex:1}
  body:has(#productForm) .sp-actions>*{flex:1}
 }
+
+
+/* Custom image picker: visible, tactile, and mobile-friendly. */
+body:has(#productForm) .sp-file-picker{
+  display:flex;align-items:center;gap:13px;flex-wrap:wrap;min-width:0;
+  padding:10px 12px;border:1px dashed #cfd3d8;border-radius:13px;
+  background:linear-gradient(135deg,#fafbfc,#f3f4f5);min-height:64px;
+  transition:border-color .18s ease,background .18s ease,box-shadow .18s ease
+}
+body:has(#productForm) .sp-file-picker:focus-within{
+  border-color:#777d84;box-shadow:0 0 0 3px #1111110b;background:#fff
+}
+body:has(#productForm) .sp-file-button{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:42px;padding:10px 15px;border:1px solid #111214;border-radius:10px;
+  background:#111214;color:#fff;font-size:.83rem;font-weight:750;letter-spacing:.005em;
+  cursor:pointer;white-space:nowrap;box-shadow:0 3px 8px #11111112;
+  transition:transform .18s ease,background .18s ease,box-shadow .18s ease
+}
+body:has(#productForm) .sp-file-button span{font-size:1.15rem;line-height:1;font-weight:500}
+body:has(#productForm) .sp-file-button:hover{background:#303237;transform:translateY(-1px);box-shadow:0 6px 14px #11111118}
+body:has(#productForm) .sp-file-button:active{transform:translateY(0)}
+body:has(#productForm) .sp-file-input{
+  position:absolute!important;width:1px!important;height:1px!important;padding:0!important;
+  margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;clip-path:inset(50%)!important;border:0!important
+}
+body:has(#productForm) .sp-file-input:focus-visible + .sp-file-name{outline:2px solid #777d84;outline-offset:4px}
+body:has(#productForm) .sp-file-name{min-width:0;flex:1;color:#696e76;font-size:.82rem;overflow-wrap:anywhere;line-height:1.45}
+@media(max-width:480px){
+  body:has(#productForm) .sp-file-picker{align-items:flex-start;flex-direction:column;gap:9px}
+  body:has(#productForm) .sp-file-button{width:100%}
+  body:has(#productForm) .sp-file-name{width:100%}
+}
