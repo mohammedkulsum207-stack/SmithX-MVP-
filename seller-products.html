@@ -3,184 +3,339 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Demo seller product manager for SmithX: add, edit, delete, and manage product stock.">
-  <title>My Products — SM1THX</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="Manage SMITHX seller products, images, prices, stock and marketplace publication.">
+  <title>My Products — SMITHX</title>
+  <link rel="stylesheet" href="styles.css?v=20261014-4">
   <link rel="stylesheet" href="demo-pages.css">
+  <style>
+    .sp-wrap{max-width:1080px;margin:0 auto}
+    .sp-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap}
+    .sp-store-state{padding:14px 16px;border:1px solid var(--border,#e7e2d9);border-radius:14px;background:var(--card,#fff);font-size:.9rem}
+    .sp-store-state strong{display:block;margin-bottom:3px}
+    .sp-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .sp-field{display:flex;flex-direction:column;gap:7px;min-width:0}
+    .sp-field label{font-size:.88rem;font-weight:650}
+    .sp-field input,.sp-field select,.sp-field textarea{width:100%;min-width:0}
+    .sp-span{grid-column:1/-1}
+    .sp-hint{font-size:.8rem;opacity:.75;line-height:1.45}
+    .sp-publish{display:flex;align-items:flex-start;gap:10px;padding:14px;border-radius:12px;background:rgba(230,170,70,.1)}
+    .sp-publish input{margin-top:4px}
+    .sp-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .sp-list{display:grid;gap:12px}
+    .sp-item{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px;border:1px solid var(--border,#e7e2d9);border-radius:14px;background:var(--card,#fff)}
+    .sp-item img{width:96px;height:96px;object-fit:cover;border-radius:10px;background:#f1eee8}
+    .sp-item h3{font-size:1rem;margin:0 0 5px;overflow-wrap:anywhere}
+    .sp-meta{font-size:.86rem;opacity:.8;line-height:1.6}
+    .sp-badge{display:inline-flex;padding:3px 8px;border-radius:99px;background:#e8f4ea;color:#1f6a39;font-size:.75rem;font-weight:700}
+    .sp-badge.draft{background:#f5eddc;color:#7a5310}
+    .sp-badge.out{background:#f9e5e3;color:#a32f26}
+    .sp-item-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .sp-notice{padding:12px 14px;border-radius:10px;margin:12px 0;display:none}
+    .sp-notice.show{display:block}.sp-notice.error{background:#f9e5e3;color:#84251e}.sp-notice.success{background:#e8f4ea;color:#1f6a39}
+    .sp-empty{padding:24px;text-align:center;border:1px dashed var(--border,#d8d1c5);border-radius:14px}
+    @media(max-width:680px){.sp-form-grid{grid-template-columns:1fr}.sp-span{grid-column:auto}.sp-item{grid-template-columns:72px minmax(0,1fr)}.sp-item img{width:72px;height:72px}.sp-item-actions{grid-column:1/-1;justify-content:flex-start}.sp-item-actions button{flex:1}}
+  </style>
 </head>
 <body>
-
 <header class="topbar">
   <div class="topbar-inner">
-    <a href="index.html" class="smithx-brand" aria-label="SM1THX Home">
-      <img src="assets/smithx-logo.jpg" class="smithx-logo-image" alt="SM1THX logo">
-      <span class="smithx-brand-text">
-        <strong>SM1THX 🛒</strong>
-        <small>SHOP • BUY • GROW</small>
-      </span>
+    <a href="index.html" class="smithx-brand" aria-label="SMITHX Marketplace">
+      <img src="assets/smithx-logo.jpg" class="smithx-logo-image" alt="SMITHX logo">
+      <span class="smithx-brand-text"><strong>SMITHX 🛒</strong><small>SHOP • BUY • GROW</small></span>
     </a>
-    <a href="profile.html?editStore=1#store" class="nav-login-btn page-back">← Seller workspace</a>
+    <a href="profile.html#store" class="nav-login-btn page-back">← Seller profile</a>
   </div>
 </header>
 
 <main class="section demo-page">
-  <div class="section-inner">
-    <div class="demo-narrow">
-      <div class="section-heading">
+  <div class="section-inner sp-wrap">
+    <div class="sp-intro section-heading">
+      <div>
         <p class="section-eyebrow">SELLER STUDIO</p>
-        <h2>My Products</h2>
-        <p><span class="demo-pill">DEMO</span>Products are saved in this browser only. A backend is required before other buyers and sellers can see them.</p>
+        <h1>Products &amp; Stock</h1>
+        <p>Manage the products listed by your store. Published products appear on the marketplace; buyers can see the store selling each item.</p>
       </div>
+      <div class="sp-store-state" id="storeState"><strong>Checking your store…</strong><span>Please wait.</span></div>
+    </div>
 
-      <div class="card seller-card">
-        <h3>Add a Product</h3>
-        <form id="productForm" class="product-grid-form">
-          <div class="form-group">
-            <label for="name">Product name</label>
-            <input id="name" required placeholder="e.g. Wireless Headphones">
+    <div id="pageNotice" class="sp-notice" role="status" aria-live="polite"></div>
+
+    <section class="card seller-card" aria-labelledby="formTitle">
+      <h2 id="formTitle">Add a product</h2>
+      <p class="sp-hint">Use a clear product photo, accurate price, and stock quantity. Product data is currently saved in this browser only.</p>
+      <form id="productForm">
+        <input type="hidden" id="editingId" value="">
+        <div class="sp-form-grid">
+          <div class="sp-field">
+            <label for="productName">Product name</label>
+            <input id="productName" maxlength="100" required placeholder="e.g. Wireless headphones">
           </div>
-
-          <div class="form-group">
-            <label for="price">Price (KES)</label>
-            <input id="price" type="number" min="1" required placeholder="4500">
+          <div class="sp-field">
+            <label for="productPrice">Price (KES)</label>
+            <input id="productPrice" type="number" min="1" step="1" required placeholder="4500">
           </div>
-
-          <div class="form-group">
-            <label for="category">Category</label>
-            <select id="category">
-              <option>Electronics</option>
-              <option>Fashion</option>
-              <option>Home</option>
-              <option>Beauty</option>
-              <option>Accessories</option>
-              <option>Other</option>
+          <div class="sp-field">
+            <label for="productCategory">Category</label>
+            <select id="productCategory" required>
+              <option>Electronics</option><option>Phones &amp; Tablets</option><option>Computers</option>
+              <option>Clothing</option><option>Fashion</option><option>Shoes</option><option>Jewelry &amp; Watches</option>
+              <option>Beauty &amp; Personal Care</option><option>Home &amp; Kitchen</option><option>Furniture</option>
+              <option>Accessories</option><option>Sports &amp; Outdoors</option><option>Toys &amp; Games</option>
+              <option>Books &amp; Stationery</option><option>Automotive</option><option>Groceries</option>
+              <option>Baby &amp; Kids</option><option>Pet Supplies</option><option>Office Supplies</option><option>Other</option>
             </select>
           </div>
-
-          <div class="form-group">
-            <label for="stock">Stock quantity</label>
-            <input id="stock" type="number" min="0" required placeholder="10">
+          <div class="sp-field">
+            <label for="productStock">Stock quantity</label>
+            <input id="productStock" type="number" min="0" step="1" required value="1">
           </div>
-
-          <div class="form-actions">
-            <button class="primary-button" type="submit">Add Product</button>
+          <div class="sp-field sp-span">
+            <label for="productDescription">Description</label>
+            <textarea id="productDescription" rows="3" maxlength="1200" required placeholder="Describe the product, condition, size, material or key features."></textarea>
           </div>
-        </form>
-      </div>
+          <div class="sp-field">
+            <label for="productImageUrl">Product image URL (optional)</label>
+            <input id="productImageUrl" type="url" maxlength="1800" placeholder="https://example.com/product.jpg">
+            <span class="sp-hint">Or choose an image file on your device.</span>
+          </div>
+          <div class="sp-field">
+            <label for="productImageFile">Upload product image</label>
+            <input id="productImageFile" type="file" accept="image/*">
+            <span class="sp-hint">Images are stored in this browser. Keep files under 900 KB.</span>
+          </div>
+          <label class="sp-publish sp-span">
+            <input id="productPublished" type="checkbox" checked>
+            <span><strong>Publish this product</strong><br><span class="sp-hint">For customer visibility, your store must also be published.</span></span>
+          </label>
+        </div>
+        <div id="imagePreviewWrap" hidden style="margin-top:14px"><img id="imagePreview" alt="Product image preview" style="max-width:160px;max-height:160px;object-fit:cover;border-radius:12px"></div>
+        <div class="sp-actions">
+          <button class="primary-button" type="submit" id="saveProductButton">Publish product</button>
+          <button class="secondary-button" type="button" id="cancelEditButton" hidden>Cancel edit</button>
+          <a class="secondary-button" href="profile.html?editStore=1#store">Store settings</a>
+        </div>
+      </form>
+    </section>
 
-      <div class="card seller-card">
-        <h3>Your Demo Products</h3>
-        <div id="products"></div>
+    <section class="card seller-card" aria-labelledby="listingTitle">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <h2 id="listingTitle">Your products</h2>
+        <span id="productCount" class="sp-hint">0 products</span>
       </div>
-
-      <div class="page-links">
-        <a class="secondary-button" href="seller-profits.html">Profits</a>
-        <a class="secondary-button" href="profile.html?editStore=1#store">Back to seller workspace</a>
-      </div>
-    </div>
+      <div id="productList" class="sp-list" aria-live="polite"></div>
+    </section>
+    <div class="page-links"><a class="secondary-button" href="store.html">Open storefront</a><a class="secondary-button" href="profile.html">Back to seller profile</a><a class="secondary-button" href="index.html#market">View marketplace</a></div>
   </div>
 </main>
 
-<footer>
-  <div class="footer-inner">
-    <div>
-      <strong>SM1THX 🛒</strong>
-      <p>Shop • Buy • Grow</p>
-    </div>
-    <p>
-      © 2026 SM1THX. MVP demonstration.
-      <a href="index.html">Home</a>
-      <a href="seller-profits.html">Profits</a>
-      <a href="compliance.html">Compliance</a>
-    </p>
-  </div>
-</footer>
+<footer><div class="footer-inner"><div><strong>SMITHX 🛒</strong><p>Shop • Buy • Grow</p></div><p>© 2026 SMITHX. MVP demonstration. <a href="index.html">Marketplace</a></p></div></footer>
 
-  <script>
-    const KEY = "smithx_demo_seller_products";
-    const form = document.getElementById("productForm");
-    const list = document.getElementById("products");
+<script src="auth.js"></script>
+<script src="stores.js?v=20261014-3"></script>
+<script>
+"use strict";
+(function () {
+  const KEY = "smithx_custom_products_v2";
+  const $ = id => document.getElementById(id);
+  const form = $("productForm");
+  const list = $("productList");
+  const user = typeof smxCurrentUser === "function" ? smxCurrentUser() : null;
+  let store = user && typeof smxStoreForOwner === "function" ? smxStoreForOwner(user.email) : null;
+  let selectedImage = "";
 
-    function load() {
-      try { return JSON.parse(localStorage.getItem(KEY)) || []; }
-      catch { return []; }
+  function readProducts() {
+    try {
+      const items = JSON.parse(localStorage.getItem(KEY) || "[]");
+      return Array.isArray(items) ? items : [];
+    } catch (_) { return []; }
+  }
+  function writeProducts(items) {
+    try { localStorage.setItem(KEY, JSON.stringify(items)); return true; }
+    catch (_) { return false; }
+  }
+  function escapeHTML(value) {
+    return String(value == null ? "" : value).replace(/[&<>"']/g, ch => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[ch]));
+  }
+  function notice(message, type) {
+    const node = $("pageNotice");
+    node.textContent = message;
+    node.className = "sp-notice show " + (type || "success");
+    node.scrollIntoView({block:"nearest",behavior:"smooth"});
+  }
+  function ownedProducts() {
+    return readProducts().filter(product =>
+      String(product.sellerEmail || "").toLowerCase() === String(user && user.email || "").toLowerCase() ||
+      Boolean(store && product.storeId === store.id)
+    ).sort((a,b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
+  }
+  function updateStoreState() {
+    const node = $("storeState");
+    if (!user) {
+      node.innerHTML = '<strong>Sign in required</strong><span>Sign in to manage your own store products.</span>';
+      form.querySelectorAll("input,select,textarea,button").forEach(el => { if (el.id !== "cancelEditButton") el.disabled = true; });
+      notice("Please sign in first, then open your seller profile to set up a store.", "error");
+      return;
     }
-
-    function save(items) {
-      localStorage.setItem(KEY, JSON.stringify(items));
+    if (!store) {
+      node.innerHTML = '<strong>No store set up yet</strong><span>Create your store before listing products.</span>';
+      form.querySelectorAll("input,select,textarea,button").forEach(el => { if (el.id !== "cancelEditButton") el.disabled = true; });
+      notice("Create your store first. Your product listings will be connected to that store.", "error");
+      return;
     }
-
-    function status(stock) {
-      if (stock <= 0) return ['out', 'Out of stock'];
-      if (stock <= 2) return ['low', 'Low stock'];
-      return ['in', 'In stock'];
+    node.innerHTML = '<strong>' + escapeHTML(store.name) + '</strong><span>' +
+      (store.published ? "Store published · product listings can appear on the marketplace." : "Store is a draft · products stay hidden from marketplace customers until you publish the store.") +
+      '</span>';
+  }
+  function statusFor(product) {
+    if (Number(product.stock) <= 0) return ["out","Out of stock"];
+    if (product.published === false) return ["draft","Draft"];
+    if (store && !store.published) return ["draft","Store is draft"];
+    return ["live","Published"];
+  }
+  function render() {
+    const products = ownedProducts();
+    $("productCount").textContent = products.length + (products.length === 1 ? " product" : " products");
+    if (!products.length) {
+      list.innerHTML = '<div class="sp-empty"><strong>No products yet</strong><p>Add your first product above to start building your storefront.</p></div>';
+      return;
     }
-
-    function render() {
-      const items = load();
-      if (!items.length) {
-        list.innerHTML = '<p class="muted" style="margin-top:12px">No demo products yet. Add your first product above.</p>';
-        return;
-      }
-      list.innerHTML = items.map(item => {
-        const [cls, label] = status(item.stock);
-        return `
-          <div class="product-row">
-            <div>
-              <strong>${item.name}</strong>
-              <div class="meta">
-                KES ${Number(item.price).toLocaleString()} · ${item.category}<br>
-                Stock: ${item.stock} <span class="status-badge ${cls}">${label}</span>
-              </div>
-            </div>
-            <div class="row-actions">
-              <button class="secondary-button small-button" onclick="editProduct('${item.id}')">Edit</button>
-              <button class="secondary-button small-button danger-button" onclick="deleteProduct('${item.id}')">Delete</button>
-            </div>
-          </div>`;
-      }).join("");
-    }
-
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
-      const items = load();
-      items.unshift({
-        id: "P" + Date.now().toString(36),
-        name: document.getElementById("name").value.trim(),
-        price: Number(document.getElementById("price").value),
-        category: document.getElementById("category").value,
-        stock: Number(document.getElementById("stock").value)
-      });
-      save(items);
-      form.reset();
-      render();
+    list.innerHTML = products.map(product => {
+      const status = statusFor(product);
+      const img = product.image || "";
+      return '<article class="sp-item">' +
+        '<img src="' + escapeHTML(img) + '" alt="' + escapeHTML(product.name || "Product image") + '" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
+        '<div><h3>' + escapeHTML(product.name || "Untitled product") + '</h3>' +
+        '<div class="sp-meta">KES ' + (Number(product.price) || 0).toLocaleString("en-KE") + ' · ' + escapeHTML(product.category || "Other") +
+        '<br>Stock: ' + Math.max(0, Number(product.stock) || 0) + ' · <span class="sp-badge ' + (status[0] === "live" ? "" : status[0] === "out" ? "out" : "draft") + '">' + status[1] + '</span></div></div>' +
+        '<div class="sp-item-actions"><button class="secondary-button small-button" type="button" data-edit="' + escapeHTML(product.id) + '">Edit</button>' +
+        '<button class="secondary-button small-button danger-button" type="button" data-delete="' + escapeHTML(product.id) + '">Delete</button></div></article>';
+    }).join("");
+    list.querySelectorAll("[data-edit]").forEach(button => button.addEventListener("click", () => startEdit(button.dataset.edit)));
+    list.querySelectorAll("[data-delete]").forEach(button => button.addEventListener("click", () => deleteProduct(button.dataset.delete)));
+  }
+  function startEdit(id) {
+    const product = ownedProducts().find(item => String(item.id) === String(id));
+    if (!product) return;
+    $("editingId").value = product.id;
+    $("productName").value = product.name || "";
+    $("productPrice").value = product.price || "";
+    $("productCategory").value = product.category || "Other";
+    $("productStock").value = Math.max(0, Number(product.stock) || 0);
+    $("productDescription").value = product.description || "";
+    $("productImageUrl").value = product.image && !product.image.startsWith("data:") ? product.image : "";
+    selectedImage = product.image && product.image.startsWith("data:") ? product.image : "";
+    $("productPublished").checked = product.published !== false;
+    $("imagePreview").src = product.image || "";
+    $("imagePreviewWrap").hidden = !product.image;
+    $("formTitle").textContent = "Edit product";
+    $("saveProductButton").textContent = "Save changes";
+    $("cancelEditButton").hidden = false;
+    form.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  function resetForm() {
+    form.reset();
+    $("editingId").value = "";
+    $("productStock").value = "1";
+    $("productPublished").checked = true;
+    selectedImage = "";
+    $("imagePreview").removeAttribute("src");
+    $("imagePreviewWrap").hidden = true;
+    $("formTitle").textContent = "Add a product";
+    $("saveProductButton").textContent = "Publish product";
+    $("cancelEditButton").hidden = true;
+  }
+  async function imageFromFile(file) {
+    if (!file) return "";
+    if (!file.type.startsWith("image/")) throw new Error("Choose an image file.");
+    if (file.size > 900 * 1024) throw new Error("That image is over 900 KB. Choose a smaller image or use an image URL.");
+    return new Promise((resolve,reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(new Error("Could not read that image."));
+      reader.readAsDataURL(file);
     });
-
-    function editProduct(id) {
-      const items = load();
-      const item = items.find(product => product.id === id);
-      if (!item) return;
-      const name = prompt("Product name:", item.name);
-      if (name === null) return;
-      const price = prompt("Price in KES:", item.price);
-      if (price === null) return;
-      const stock = prompt("Stock quantity:", item.stock);
-      if (stock === null) return;
-      item.name = name.trim() || item.name;
-      item.price = Number(price) || item.price;
-      item.stock = Math.max(0, Number(stock) || 0);
-      save(items);
-      render();
+  }
+  $("productImageFile").addEventListener("change", async event => {
+    try {
+      selectedImage = await imageFromFile(event.target.files && event.target.files[0]);
+      if (selectedImage) {
+        $("imagePreview").src = selectedImage;
+        $("imagePreviewWrap").hidden = false;
+      }
+    } catch (error) {
+      event.target.value = "";
+      selectedImage = "";
+      notice(error.message, "error");
     }
-
-    function deleteProduct(id) {
-      if (!confirm("Delete this demo product?")) return;
-      save(load().filter(product => product.id !== id));
-      render();
+  });
+  $("productImageUrl").addEventListener("input", () => {
+    const url = $("productImageUrl").value.trim();
+    if (url) {
+      selectedImage = "";
+      $("imagePreview").src = url;
+      $("imagePreviewWrap").hidden = false;
     }
-
+  });
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    if (!user || !store) {
+      notice("Set up your store before saving products.", "error");
+      return;
+    }
+    const name = $("productName").value.trim();
+    const price = Number($("productPrice").value);
+    const stock = Number($("productStock").value);
+    const category = $("productCategory").value;
+    const description = $("productDescription").value.trim();
+    if (!name || !Number.isFinite(price) || price <= 0 || !Number.isInteger(stock) || stock < 0 || !description) {
+      notice("Enter a product name, valid price, whole-number stock quantity, and description.", "error");
+      return;
+    }
+    const editingId = $("editingId").value;
+    const products = readProducts();
+    const existing = editingId ? products.find(item => String(item.id) === String(editingId)) : null;
+    const image = $("productImageUrl").value.trim() || selectedImage || (existing && existing.image) || "";
+    const product = {
+      ...(existing || {}),
+      id: existing ? existing.id : "custom-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,8),
+      name, price, category, description, image, stock,
+      published: $("productPublished").checked,
+      sellerEmail: String(user.email).toLowerCase(),
+      storeId: store.id, storeSlug: store.slug, storeName: store.name,
+      createdAt: existing && existing.createdAt ? existing.createdAt : Date.now(),
+      updatedAt: Date.now()
+    };
+    const next = existing ? products.map(item => String(item.id) === String(existing.id) ? product : item) : [product, ...products];
+    if (!writeProducts(next)) {
+      notice("The product could not be saved. Browser storage may be full; use a smaller image or an image URL.", "error");
+      return;
+    }
+    resetForm();
     render();
-  </script>
-
+    notice(existing ? "Product updated." : "Product added to your store.");
+  });
+  function deleteProduct(id) {
+    const product = ownedProducts().find(item => String(item.id) === String(id));
+    if (!product) return;
+    if (!confirm('Delete "' + (product.name || "this product") + '"? This cannot be undone.')) return;
+    const next = readProducts().filter(item => String(item.id) !== String(id));
+    if (!writeProducts(next)) {
+      notice("The product could not be deleted. Please try again.", "error");
+      return;
+    }
+    try {
+      const cart = JSON.parse(localStorage.getItem("smithx_cart_v2") || "[]");
+      localStorage.setItem("smithx_cart_v2", JSON.stringify(Array.isArray(cart) ? cart.filter(item => String(item.productId || item.id) !== String(id)) : []));
+    } catch (_) {}
+    render();
+    notice("Product deleted.");
+  }
+  $("cancelEditButton").addEventListener("click", resetForm);
+  updateStoreState();
+  render();
+})();
+</script>
 </body>
 </html>
