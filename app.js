@@ -21,68 +21,178 @@ const DEFAULT_PRODUCTS = [
     name: "Samsung Galaxy S26 Ultra",
     price: 169999,
     category: "Electronics",
-    description:
-      "Premium flagship smartphone with advanced performance, camera technology and a modern design.",
-    image:
-      "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80"
+    description: "Premium flagship smartphone with advanced performance and camera technology.",
+    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: "default-2",
-    name: "Smart Wireless Headphones",
+    name: "Wireless Headphones",
     price: 4500,
     category: "Electronics",
-    description:
-      "Wireless headphones with a comfortable design and immersive sound.",
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
+    description: "Comfortable wireless headphones with immersive sound.",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: "default-3",
     name: "Minimal Desk Lamp",
     price: 2800,
-    category: "Home",
-    description:
-      "Clean modern desk lamp designed for workspaces, bedrooms and study areas.",
-    image:
-      "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80"
+    category: "Home & Kitchen",
+    description: "A modern desk lamp for workspaces, bedrooms and study areas.",
+    image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: "default-4",
-    name: "Everyday Travel Backpack",
+    name: "Travel Backpack",
     price: 3500,
     category: "Accessories",
-    description:
-      "Lightweight everyday backpack for school, work, travel and daily use.",
-    image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80"
+    description: "A lightweight everyday backpack for work, school and travel.",
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: "default-5",
     name: "Smart Watch",
     price: 6500,
     category: "Electronics",
-    description:
-      "Modern smartwatch for everyday activity tracking, notifications and convenience.",
-    image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
+    description: "A smartwatch for everyday activity tracking and notifications.",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80"
   },
-
   {
     id: "default-6",
-    name: "Premium Sneakers",
+    name: "Everyday Sneakers",
     price: 7200,
-    category: "Fashion",
-    description:
-      "Modern everyday sneakers combining comfort, style and versatility.",
-    image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
+    category: "Shoes",
+    description: "Versatile everyday sneakers combining comfort and style.",
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-7",
+    name: "Laptop Computer",
+    price: 68999,
+    category: "Computers",
+    description: "A portable computer for work, study and everyday productivity.",
+    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-8",
+    name: "Tablet",
+    price: 24999,
+    category: "Phones & Tablets",
+    description: "A versatile tablet for reading, streaming and getting work done.",
+    image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-9",
+    name: "Casual Cotton T-Shirt",
+    price: 1200,
+    category: "Clothing",
+    description: "A comfortable everyday cotton T-shirt with a clean, simple fit.",
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-10",
+    name: "Classic Wristwatch",
+    price: 3900,
+    category: "Jewelry & Watches",
+    description: "A classic watch with a refined everyday design.",
+    image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-11",
+    name: "Skincare Essentials",
+    price: 1850,
+    category: "Beauty & Personal Care",
+    description: "A simple skincare set for an everyday personal-care routine.",
+    image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-12",
+    name: "Perfume",
+    price: 3200,
+    category: "Beauty & Personal Care",
+    description: "A fragrance for everyday wear and special occasions.",
+    image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-13",
+    name: "Cookware Set",
+    price: 5400,
+    category: "Home & Kitchen",
+    description: "A practical cookware set for everyday home cooking.",
+    image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-14",
+    name: "Yoga Mat",
+    price: 1800,
+    category: "Sports & Outdoors",
+    description: "A cushioned exercise mat for stretching, yoga and home workouts.",
+    image: "https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-15",
+    name: "Building Blocks Toy",
+    price: 2100,
+    category: "Toys & Games",
+    description: "A creative building set for hands-on play and problem-solving.",
+    image: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-16",
+    name: "Notebook & Stationery Set",
+    price: 650,
+    category: "Books & Stationery",
+    description: "A useful stationery set for planning, school and office notes.",
+    image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-17",
+    name: "Car Care Kit",
+    price: 2200,
+    category: "Automotive",
+    description: "Everyday car-care essentials for cleaning and maintenance.",
+    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-18",
+    name: "Pet Accessories",
+    price: 950,
+    category: "Pet Supplies",
+    description: "Useful everyday accessories for your pet.",
+    image: "https://images.unsplash.com/photo-1548199973-03cce0ebd7e4?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-19",
+    name: "Baby Essentials",
+    price: 1450,
+    category: "Baby & Kids",
+    description: "Soft, practical essentials for babies and young children.",
+    image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-20",
+    name: "Fresh Grocery Basket",
+    price: 1250,
+    category: "Groceries",
+    description: "A selection of everyday fresh grocery staples.",
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-21",
+    name: "Office Chair",
+    price: 11999,
+    category: "Office Supplies",
+    description: "A supportive office chair for work and study setups.",
+    image: "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "default-22",
+    name: "Home Storage Basket",
+    price: 950,
+    category: "Home & Kitchen",
+    description: "A woven storage basket to keep everyday essentials organized.",
+    image: "https://images.unsplash.com/photo-1593085260707-5377ba37f868?auto=format&fit=crop&w=900&q=80"
   }
 ];
-
 
 /* =====================================================
    CATEGORIES
@@ -91,10 +201,23 @@ const DEFAULT_PRODUCTS = [
 const CATEGORIES = [
   "All",
   "Electronics",
+  "Phones & Tablets",
+  "Computers",
+  "Clothing",
+  "Shoes",
   "Fashion",
-  "Home",
-  "Beauty",
-  "Accessories"
+  "Jewelry & Watches",
+  "Beauty & Personal Care",
+  "Home & Kitchen",
+  "Accessories",
+  "Sports & Outdoors",
+  "Toys & Games",
+  "Books & Stationery",
+  "Automotive",
+  "Groceries",
+  "Baby & Kids",
+  "Pet Supplies",
+  "Office Supplies"
 ];
 
 
