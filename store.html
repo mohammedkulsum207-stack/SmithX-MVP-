@@ -352,6 +352,23 @@
     document.documentElement.style.setProperty("--accent-ink", theme.ink);
     document.title = store.name + " — SM1THX";
 
+    // Record one storefront visit per browser tab session. This is local-only
+    // until SMITHX is connected to a shared backend analytics service.
+    if (!isOwner && store.published) {
+      try {
+        const sessionVisitKey = "smithx_visit_session_" + String(store.id);
+        if (!sessionStorage.getItem(sessionVisitKey)) {
+          const visitKey = "smithx_store_visits_v1";
+          const counts = JSON.parse(localStorage.getItem(visitKey) || "{}");
+          counts[store.id] = Math.max(0, Number(counts[store.id]) || 0) + 1;
+          localStorage.setItem(visitKey, JSON.stringify(counts));
+          sessionStorage.setItem(sessionVisitKey, "1");
+        }
+      } catch (error) {
+        console.warn("Store visit could not be recorded in this browser.", error);
+      }
+    }
+
     const products = smxStoreProducts(store);
     const since = smxFormatDate(store.createdAt);
 
