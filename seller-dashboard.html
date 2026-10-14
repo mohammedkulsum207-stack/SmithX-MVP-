@@ -67,7 +67,9 @@ const requestedSlug=new URLSearchParams(location.search).get('s');
 const ownedStores=Array.isArray(stores)?stores.filter(s=>String(s.ownerEmail||'').toLowerCase()===email):[];
 const store=requestedSlug?ownedStores.find(s=>String(s.slug||'')===requestedSlug)||null:(ownedStores[0]||null);
 const allProducts=read('smithx_custom_products_v2',[]);
-const products=Array.isArray(allProducts)?allProducts.filter(p=>store&&(p.storeId===store.id||String(p.sellerEmail||'').toLowerCase()===email)):[];
+const products=store&&typeof smxStoreProducts==='function'
+  ? smxStoreProducts(store)
+  : (Array.isArray(allProducts)&&store ? allProducts.filter(p=>p.storeId===store.id) : []);
 const orders=read('smithx_orders_v1',[]);
 const orderList=Array.isArray(orders)?orders.filter(o=>!o.sellerEmail||String(o.sellerEmail).toLowerCase()===email):[];
 const visitors=read('smithx_store_visits_v1',{});
