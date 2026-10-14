@@ -1,4 +1,4 @@
-# SM1THX Roadmap and MVP Audit
+# SMITHX Roadmap and MVP Audit
 
 Last reviewed: 12 October 2026
 
@@ -72,7 +72,7 @@ Decision (12 Oct 2026): SMX Coins are prepaid store credit.
 |---|---|
 | Value | 1 SMX = KES 1, fixed. No exchange rate |
 | How you get it | Top up with M-Pesa (demo) |
-| Where you spend it | Only on SM1THX, for all or part of an order |
+| Where you spend it | Only on SMITHX, for all or part of an order |
 | Transfers | Not allowed between users |
 | Expiry | Never expires |
 | Cash out | Withdraw unused credit to M-Pesa at full value |
@@ -166,7 +166,7 @@ These are for a lawyer to confirm; they aren't legal advice.
 2. Payment provider(s) and countries
 3. SMX Coins model
 4. Platform transaction fees
-5. Delivery: SM1THX-arranged couriers vs. sellers' own couriers
+5. Delivery: SMITHX-arranged couriers vs. sellers' own couriers
 
 ## Files added in phase 1 (all removable)
 
