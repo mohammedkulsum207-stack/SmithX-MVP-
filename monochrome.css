@@ -183,6 +183,7 @@ hr, .divider { border-color: #e5e5e5 !important; }
 footer { color: #525252 !important; border-top: 1px solid #e5e5e5 !important; }
 footer p, footer small { color: #737373 !important; }
 footer a { color: #171717 !important; }
+.prototype-disclaimer { display: block; margin-top: 8px; color: #737373 !important; font-size: .76rem; line-height: 1.5; max-width: 620px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
