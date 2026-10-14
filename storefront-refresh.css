@@ -242,3 +242,147 @@ img { max-width: 100%; }
 @media (prefers-reduced-motion:reduce) {
   *,*::before,*::after { scroll-behavior:auto !important; animation-duration:.01ms !important; transition-duration:.01ms !important; }
 }
+
+/* RESEARCH-LED STOREFRONT ART DIRECTION — homepage only */
+body.marketplace-home {
+  --shop-ink: #171717; --shop-muted: #666666; --shop-line: #e5e5e5; --shop-surface: #f5f5f5;
+  background: #ffffff;
+}
+body.marketplace-home .marketplace-section { padding: clamp(36px, 5.2vw, 72px) 0 84px; background: #ffffff; }
+body.marketplace-home .marketplace-section .section-inner { width: min(1320px, calc(100% - 48px)); }
+body.marketplace-home .marketplace-intro-row {
+  display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
+  align-items: end; gap: clamp(24px, 5vw, 72px); margin-bottom: 34px;
+}
+body.marketplace-home .section-heading { max-width: 760px; margin: 0; }
+body.marketplace-home .section-heading .section-eyebrow {
+  margin: 0 0 16px; color: #666666; font-size: .7rem; font-weight: 800; letter-spacing: .17em;
+}
+body.marketplace-home .section-heading h1 {
+  margin: 0; color: #171717; font-size: clamp(2.75rem, 5.5vw, 5.1rem);
+  font-weight: 760; line-height: .98; letter-spacing: -.075em; text-wrap: balance;
+}
+body.marketplace-home .section-heading > p:last-child {
+  max-width: 590px; margin: 20px 0 0; color: #666666;
+  font-size: clamp(.98rem, 1.2vw, 1.08rem); line-height: 1.65;
+}
+body.marketplace-home .marketplace-feature {
+  position: relative; display: flex; min-height: 190px; flex-direction: column;
+  align-items: flex-start; justify-content: space-between; gap: 24px; overflow: hidden;
+  padding: clamp(22px, 3vw, 32px); border: 1px solid #171717; border-radius: 16px;
+  background: #171717; color: #ffffff; text-decoration: none;
+  transition: background .2s ease, transform .2s ease;
+}
+body.marketplace-home .marketplace-feature::after {
+  content: "↗"; position: absolute; right: 22px; top: 12px; color: rgba(255,255,255,.13);
+  font-size: clamp(5rem, 9vw, 8rem); font-weight: 300; line-height: 1; pointer-events: none;
+}
+body.marketplace-home .marketplace-feature:hover { background: #303030; transform: translateY(-2px); }
+body.marketplace-home .marketplace-feature-kicker {
+  position: relative; z-index: 1; color: #c9c9c9; font-size: .66rem; font-weight: 750; letter-spacing: .15em;
+}
+body.marketplace-home .marketplace-feature-title {
+  position: relative; z-index: 1; max-width: 300px; font-size: clamp(1.65rem, 2.8vw, 2.35rem);
+  font-weight: 700; line-height: 1.04; letter-spacing: -.055em;
+}
+body.marketplace-home .marketplace-feature-link {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 9px;
+  color: #ffffff; font-size: .88rem; font-weight: 700;
+}
+body.marketplace-home .marketplace-tools { align-items: stretch; gap: 12px; margin: 0 0 16px; }
+body.marketplace-home .search-box { min-width: 0; }
+body.marketplace-home #productSearch {
+  min-height: 54px; padding: 13px 18px; border: 1px solid #dedede; border-radius: 12px;
+  background: #f7f7f7; color: #171717; font-size: .95rem; box-shadow: none;
+}
+body.marketplace-home #productSearch::placeholder { color: #737373; opacity: 1; }
+body.marketplace-home #productSearch:focus-visible {
+  border-color: #171717; outline: 2px solid #171717; outline-offset: 2px; background: #ffffff;
+}
+body.marketplace-home .marketplace-tools > .secondary-button {
+  min-height: 54px; padding-inline: 20px; border-radius: 12px; background: #ffffff;
+  color: #171717; font-size: .9rem; font-weight: 700;
+}
+body.marketplace-home .category-filters { gap: 8px; margin: 0 0 30px; }
+body.marketplace-home .category-filter {
+  min-height: 40px; padding: 8px 15px; border: 1px solid #e0e0e0; border-radius: 999px;
+  background: #ffffff; color: #525252; font-size: .82rem; font-weight: 650;
+  transition: background .16s ease, color .16s ease, border-color .16s ease;
+}
+body.marketplace-home .category-filter:hover { border-color: #777777; background: #f5f5f5; color: #171717; }
+body.marketplace-home .category-filter.active,
+body.marketplace-home .category-filter[aria-pressed="true"] {
+  border-color: #171717; background: #171717; color: #ffffff;
+}
+body.marketplace-home .catalogue-bar {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 18px;
+  margin: 0 0 16px; padding: 0 0 13px; border-bottom: 1px solid #e5e5e5;
+}
+body.marketplace-home .catalogue-bar p {
+  margin: 0; color: #171717; font-size: .72rem; font-weight: 800; letter-spacing: .13em;
+}
+body.marketplace-home .catalogue-bar span { color: #737373; font-size: .8rem; text-align: right; }
+body.marketplace-home .products-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: stretch; gap: 18px;
+}
+body.marketplace-home .product-card {
+  min-width: 0; overflow: hidden; border: 1px solid #e6e6e6; border-radius: 15px;
+  background: #ffffff; box-shadow: none;
+  transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+body.marketplace-home .product-card:hover {
+  transform: translateY(-3px); border-color: #c9c9c9; box-shadow: 0 12px 28px rgba(0,0,0,.07);
+}
+body.marketplace-home .product-image-button { height: auto; aspect-ratio: 4 / 3; overflow: hidden; background: #f4f4f4; }
+body.marketplace-home .product-image-button img {
+  width: 100%; height: 100%; object-fit: cover; transition: transform .25s ease;
+}
+body.marketplace-home .product-card:hover .product-image-button img { transform: scale(1.025); }
+body.marketplace-home .product-card-body {
+  display: flex; min-height: 164px; flex-direction: column; align-items: flex-start; padding: 15px;
+}
+body.marketplace-home .product-category { color: #737373; font-size: .66rem; font-weight: 750; letter-spacing: .1em; }
+body.marketplace-home .product-card h3 {
+  margin: 7px 0 0; color: #171717; font-size: 1rem; font-weight: 650;
+  line-height: 1.35; letter-spacing: -.025em;
+}
+body.marketplace-home .product-card p { color: #666666; font-size: .82rem; line-height: 1.5; }
+body.marketplace-home .product-card-bottom { width: 100%; margin-top: auto; padding-top: 14px; gap: 10px; }
+body.marketplace-home .product-card-bottom strong,
+body.marketplace-home .product-price { color: #171717; font-size: 1rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+body.marketplace-home .product-card button:not(.product-image-button) { border-radius: 9px; }
+body.marketplace-home .product-image-placeholder {
+  min-height: 100%; aspect-ratio: 4 / 3; display: grid; place-items: center; padding: 16px;
+  background: #f1f1f1; color: #737373; font-size: .7rem; font-weight: 750; letter-spacing: .1em;
+}
+body.marketplace-home .empty-state { grid-column: 1 / -1; border: 1px dashed #d0d0d0; border-radius: 14px; background: #fafafa; }
+@media (max-width: 1050px) {
+  body.marketplace-home .products-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  body.marketplace-home .marketplace-intro-row { gap: 28px; }
+}
+@media (max-width: 760px) {
+  body.marketplace-home .marketplace-section { padding-top: 34px; }
+  body.marketplace-home .marketplace-section .section-inner { width: calc(100% - 32px); }
+  body.marketplace-home .marketplace-intro-row { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  body.marketplace-home .marketplace-feature { min-height: 150px; }
+  body.marketplace-home .marketplace-tools { flex-direction: row; }
+  body.marketplace-home .marketplace-tools > .secondary-button { flex: 0 0 auto; }
+  body.marketplace-home .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  body.marketplace-home .product-card-body { min-height: 154px; padding: 12px; }
+  body.marketplace-home .product-card h3 { font-size: .9rem; }
+  body.marketplace-home .product-card-bottom { align-items: flex-start; flex-direction: column; }
+  body.marketplace-home .product-card-bottom button { width: 100%; }
+  body.marketplace-home .catalogue-bar { align-items: flex-start; flex-direction: column; gap: 4px; }
+  body.marketplace-home .catalogue-bar span { text-align: left; }
+}
+@media (max-width: 390px) {
+  body.marketplace-home .marketplace-tools { flex-direction: column; }
+  body.marketplace-home .marketplace-tools > .secondary-button { width: 100%; }
+  body.marketplace-home .products-grid { gap: 9px; }
+  body.marketplace-home .product-card-body { padding: 10px; }
+  body.marketplace-home .product-card-bottom strong { font-size: .92rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.marketplace-home .marketplace-feature, body.marketplace-home .product-card,
+  body.marketplace-home .product-image-button img { transition: none; }
+}
