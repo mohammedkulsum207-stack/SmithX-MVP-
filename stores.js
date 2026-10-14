@@ -141,6 +141,36 @@ function smxSaveMyStore(ownerEmail, data) {
   return store;
 }
 
+/* Delete only the signed-in owner's store and products attached to that store. */
+function smxDeleteMyStore(ownerEmail) {
+  const owner = String(ownerEmail || "").toLowerCase();
+  if (!owner) throw new Error("Please sign in to delete your store.");
+
+  const stores = smxGetStores();
+  const store = stores.find(item => String(item.ownerEmail || "").toLowerCase() === owner);
+  if (!store) throw new Error("No store was found for this account.");
+
+  const products = smxStoreRead(SMX_STORE_KEYS.products, []);
+  const remainingStores = stores.filter(item => String(item.ownerEmail || "").toLowerCase() !== owner);
+  if (!smxSaveStores(remainingStores)) {
+    throw new Error("The store could not be deleted. Please try again.");
+  }
+
+  if (Array.isArray(products)) {
+    const remainingProducts = products.filter(product =>
+      product.storeId !== store.id &&
+      String(product.sellerEmail || "").toLowerCase() !== owner
+    );
+    if (!smxStoreWrite(SMX_STORE_KEYS.products, remainingProducts)) {
+      // Restore the store list if product cleanup fails, avoiding a half-deleted state.
+      smxSaveStores(stores);
+      throw new Error("The products could not be removed, so the store deletion was cancelled. Please try again.");
+    }
+  }
+
+  return store;
+}
+
 function smxStoreProducts(store) {
   if (!store) return [];
   const products = smxStoreRead(SMX_STORE_KEYS.products, []);
