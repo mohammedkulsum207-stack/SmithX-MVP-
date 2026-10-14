@@ -93,7 +93,7 @@ img { max-width: 100%; }
 .primary-button:hover { background:var(--sx-brand-dark); border-color:var(--sx-brand-dark); transform:translateY(-2px); }
 .secondary-button { background:#fff; color:var(--sx-ink); border-color:var(--sx-line); }
 .secondary-button:hover { border-color:#d0d0d0; background:#f7f7f7; transform:translateY(-1px); }
-.hero .primary-button { background:var(--sx-accent); color:#171717; border-color:var(--sx-accent); }
+.hero .primary-button { background:#171717; color:#ffffff; border-color:#171717; }
 .hero .primary-button:hover { background:#444444; border-color:#444444; }
 .hero .secondary-button { color:#171717; background:rgba(255,255,255,.8); border-color:#d5d5d5; }
 .hero .secondary-button:hover { background:#ffffff; border-color:#999999; }
