@@ -186,7 +186,7 @@ function smxReviewSectionHTML(productId, productName) {
         : `<p class="smx-rv-note">Only buyers who received this product can review it.</p>`;
 
   return `
-    <section class="smx-rv" aria-label="Reviews">
+    <section class="smx-rv" data-product-id="${smxReviewEsc(productId)}" aria-label="Reviews">
       <div class="smx-rv-head">
         <div>
           <h3>Reviews</h3>
@@ -336,11 +336,11 @@ function smxOpenReportForm(reviewId, onDone) {
   }
 
   function refreshModal(productId) {
-    const section = document.querySelector("#productModalContent .smx-rv");
-    if (section) {
-      const name = (document.querySelector("#productModalContent h2") || {}).textContent || "";
+    document.querySelectorAll(".smx-rv[data-product-id]").forEach(section => {
+      if (section.dataset.productId !== String(productId)) return;
+      const name = section.querySelector("h3")?.textContent || "";
       section.outerHTML = smxReviewSectionHTML(productId, name.trim());
-    }
+    });
     if (typeof renderProducts === "function") renderProducts();
     if (typeof renderSelectedOrder === "function" && document.getElementById("details")) renderSelectedOrder();
   }
