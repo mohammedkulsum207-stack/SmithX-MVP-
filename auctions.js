@@ -1,7 +1,7 @@
 "use strict";
 
 /* =====================================================
-   SM1THX — AUCTIONS (auctions.js)
+   SMITHX — AUCTIONS (auctions.js)
    Phase 4 · DEMO. Rules shown to every bidder:
      • Auctions run for a maximum of 2 minutes.
      • Bids never extend an auction.
@@ -15,7 +15,7 @@
        bidder's own price, also for 15 minutes.
      • Losing bids are always free. Any winning fee is
        shown before you bid (currently KES 0).
-   Saved in this browser only until SM1THX has a backend.
+   Saved in this browser only until SMITHX has a backend.
    Requires wallet.js (signed-in user).
 ===================================================== */
 
