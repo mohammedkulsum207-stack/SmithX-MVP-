@@ -122,7 +122,7 @@ const visitors=read('smithx_store_visits_v1',{});
 const visitCount=store&&visitors&&typeof visitors==='object'?Math.max(0,Number(visitors[store.id])||0):0;
 const currency=localStorage.getItem('smithx_currency')||'KES';
 $('todayLabel').textContent=new Date().toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'});
-if(store){$('storeName').textContent=store.name;$('storeAvatar').textContent=(store.name||'S').trim().charAt(0).toUpperCase();$('storefrontLink').href='store.html?s='+encodeURIComponent(store.slug||'');document.title=(store.name||'Store')+' Analytics — SM1THX';}
+if(store){$('storeName').textContent=store.name;$('storeAvatar').textContent=(store.name||'S').trim().charAt(0).toUpperCase();$('storefrontLink').href='store.html?s='+encodeURIComponent(store.slug||'');if($('reviewToolsLink'))$('reviewToolsLink').href='store.html?s='+encodeURIComponent(store.slug||'')+'#storeReviews';document.title=(store.name||'Store')+' Analytics — SM1THX';}
 else{$('storeName').textContent='No store found';$('storeAvatar').textContent='?';$('storefrontLink').href='profile.html';}
 $('productCount').textContent=String(products.length);
 $('visitorCount').textContent=visitCount.toLocaleString();
