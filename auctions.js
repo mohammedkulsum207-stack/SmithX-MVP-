@@ -12,7 +12,7 @@
      • Highest bid when the timer ends wins.
      • The winner should pay immediately after the auction ends; unpaid wins expire after 15 minutes. If they don't, the
        item is offered to the next-highest bidder at that
-       bidder's own price, also for 48 hours.
+       bidder's own price, also for 15 minutes.
      • Losing bids are always free. Any winning fee is
        shown before you bid (currently KES 0).
    Saved in this browser only until SM1THX has a backend.
