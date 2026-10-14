@@ -101,8 +101,12 @@
           </div>
           <div class="sp-field">
             <label for="productImageFile">Upload product image</label>
-            <input id="productImageFile" type="file" accept="image/*">
-            <span class="sp-hint">Images are stored in this browser. Keep files under 900 KB.</span>
+            <div class="sp-file-picker">
+              <label class="sp-file-button" for="productImageFile"><span aria-hidden="true">↑</span> Choose image</label>
+              <span class="sp-file-name" id="productImageFileName" aria-live="polite">No image selected</span>
+              <input id="productImageFile" class="sp-file-input" type="file" accept="image/*" aria-describedby="productImageFileHelp">
+            </div>
+            <span class="sp-hint" id="productImageFileHelp">JPG, PNG, WebP or another image format · up to 900 KB. Images are stored in this browser.</span>
           </div>
           <label class="sp-publish sp-span">
             <input id="productPublished" type="checkbox" checked>
@@ -241,6 +245,8 @@
     $("productStock").value = "1";
     $("productPublished").checked = true;
     selectedImage = "";
+    $("productImageFileName").textContent = "No image selected";
+    $("productImageFile").value = "";
     $("imagePreview").removeAttribute("src");
     $("imagePreviewWrap").hidden = true;
     $("formTitle").textContent = "Add a product";
@@ -260,13 +266,16 @@
   }
   $("productImageFile").addEventListener("change", async event => {
     try {
-      selectedImage = await imageFromFile(event.target.files && event.target.files[0]);
+      const file = event.target.files && event.target.files[0];
+      selectedImage = await imageFromFile(file);
+      $("productImageFileName").textContent = file ? file.name : "No image selected";
       if (selectedImage) {
         $("imagePreview").src = selectedImage;
         $("imagePreviewWrap").hidden = false;
       }
     } catch (error) {
       event.target.value = "";
+      $("productImageFileName").textContent = "No image selected";
       selectedImage = "";
       notice(error.message, "error");
     }
