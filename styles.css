@@ -4983,3 +4983,8 @@ h1, h2, h3, .dashboard-card strong, .smithx-brand-text strong, footer strong {
     flex-basis: 42px;
   }
 }
+
+/* Marketplace category chips are hidden; categories remain searchable in the product search. */
+#categoryFilters {
+  display: none !important;
+}
