@@ -3533,6 +3533,17 @@ function demoCheckout() {
     return;
   }
 
+  const unavailable = cart.find(item => {
+    const product = findProduct(item.productId ?? item.id);
+    if (!product || product.stock === undefined || product.stock === null) return false;
+    return Number(item.quantity) > Math.max(0, Number(product.stock) || 0);
+  });
+
+  if (unavailable) {
+    showToast("Your cart quantity exceeds the available stock. Update your cart and try again.");
+    return;
+  }
+
   const order =
     createOrderFromCart();
 
