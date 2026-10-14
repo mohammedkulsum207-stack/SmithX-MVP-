@@ -21,6 +21,8 @@
 <label class="form-group">Price (KES)<input id="sellerProductPrice" type="number" min="1" required placeholder="2500"></label>
 <label class="form-group">Category<select id="sellerProductCategory"><option>Electronics</option><option>Fashion</option><option>Home</option><option>Beauty</option><option>Accessories</option><option>Other</option></select></label>
 <label class="form-group">Stock quantity<input id="sellerProductStock" type="number" min="0" required value="1"></label>
+<label class="form-group" style="grid-column:1/-1">Product image URL (HTTPS)<input id="sellerProductImage" type="url" inputmode="url" placeholder="https://your-image-host.com/product.jpg" aria-describedby="sellerImageHelp"></label>
+<p id="sellerImageHelp" style="grid-column:1/-1;color:#737373;font-size:.85rem;margin:-6px 0 0">Use a public HTTPS image link. Direct file uploads need secure image storage on the future backend.</p>
 <label class="form-group" style="grid-column:1/-1">Description<textarea id="sellerProductDescription" rows="2" maxlength="500" placeholder="Describe the product"></textarea></label>
 <div style="grid-column:1/-1"><button type="submit" class="primary-button">Add product</button></div></form><p id="productMessage" role="status" style="margin-top:10px;color:#666"></p><div id="sellerProductList" style="margin-top:16px;display:grid;gap:10px"></div></section>
 <section class="dashboard-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin:0 0 20px"><div class="dashboard-card"><span>Products</span><strong id="metricProducts">0</strong></div><div class="dashboard-card"><span>Orders</span><strong id="metricOrders">0</strong></div><div class="dashboard-card"><span>Recorded sales</span><strong id="metricSales">KES 0</strong></div><div class="dashboard-card"><span>Store status</span><strong id="metricPublished" style="font-size:1.2rem">Draft</strong></div></section>
@@ -72,14 +74,20 @@ function renderProducts(){
  const store=smxStoreForOwner(current.email);
  const all=read('smithx_custom_products_v2')||[];
  const mine=Array.isArray(all)?all.filter(p=>p.sellerEmail===current.email||(store&&p.storeId===store.id)):[];
- $('sellerProductList').innerHTML=mine.length?mine.map(p=>'<div style="padding:12px;border:1px solid #e5e5e5;border-radius:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><strong>'+smxEscape(p.name)+'</strong><p style="color:#777;font-size:.9rem">'+smxEscape(p.category||'Other')+' · Stock '+Number(p.stock||0)+'</p></div><strong>'+money(p.price)+'</strong></div>').join(''):'<p style="color:#777">No products added yet.</p>';
+ $('sellerProductList').innerHTML=mine.length?mine.map(p=>'<div style="padding:12px;border:1px solid #e5e5e5;border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">'+(p.image?'<img src="'+smxEscape(p.image)+'" alt="" loading="lazy" style="width:64px;height:64px;object-fit:cover;border-radius:10px;background:#f2f2f2">':'<div aria-hidden="true" style="width:64px;height:64px;display:grid;place-items:center;border-radius:10px;background:#f2f2f2;color:#737373;font-size:.7rem">NO IMAGE</div>')+'<div style="flex:1;min-width:140px"><strong>'+smxEscape(p.name)+'</strong><p style="color:#777;font-size:.9rem">'+smxEscape(p.category||'Other')+' · Stock '+Number(p.stock||0)+'</p></div><strong>'+money(p.price)+'</strong></div>').join(''):'<p style="color:#777">No products added yet.</p>';
 }
 $('sellerProductForm').addEventListener('submit',e=>{
  e.preventDefault();
  const store=smxStoreForOwner(current.email);
  if(!store){$('productMessage').textContent='Save your store details first, then add products.';return}
  const all=read('smithx_custom_products_v2')||[];
- const item={id:'SMXP-'+Date.now().toString(36).toUpperCase(),name:$('sellerProductName').value.trim(),price:Number($('sellerProductPrice').value),category:$('sellerProductCategory').value,stock:Number($('sellerProductStock').value),description:$('sellerProductDescription').value.trim(),image:'',sellerEmail:current.email,storeId:store.id,storeSlug:store.slug,storeName:store.name,createdAt:new Date().toISOString(),published:!!store.published};
+ const imageInput=$('sellerProductImage').value.trim();
+ let image='';
+ if(imageInput){
+  try { const parsed=new URL(imageInput); if(parsed.protocol!=='https:') throw new Error(); image=parsed.href; }
+  catch(_){ $('productMessage').textContent='Use a valid public HTTPS image URL, or leave the field empty.'; return; }
+ }
+ const item={id:'SMXP-'+Date.now().toString(36).toUpperCase(),name:$('sellerProductName').value.trim(),price:Number($('sellerProductPrice').value),category:$('sellerProductCategory').value,stock:Number($('sellerProductStock').value),description:$('sellerProductDescription').value.trim(),image,sellerEmail:current.email,storeId:store.id,storeSlug:store.slug,storeName:store.name,createdAt:new Date().toISOString(),published:!!store.published};
  if(!Array.isArray(all)) { $('productMessage').textContent='Could not read product catalogue.';return; }
  all.push(item);localStorage.setItem('smithx_custom_products_v2',JSON.stringify(all));e.target.reset();$('productMessage').textContent=store.published?'Product added to your published store.':'Product saved as a draft; publish your store to make it visible.';
  renderProducts();refresh();
