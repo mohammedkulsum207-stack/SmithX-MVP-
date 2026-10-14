@@ -352,8 +352,6 @@
     });
   }
 
-  /* ---------------- Shared product link
-
   /* ---------------- Shared product link (?product=ID) ---------------- */
 
   function openSharedProduct() {
