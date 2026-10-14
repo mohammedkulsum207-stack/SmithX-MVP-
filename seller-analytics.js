@@ -173,7 +173,9 @@
           views.push({ productId: String(product.id), name: String(product.name || ""), at: new Date().toISOString() });
           write(VIEWS_KEY, views.slice(-1000));
         }
-        return originalOpen.apply(this, arguments);
+        var result = originalOpen.apply(this, arguments);
+        render();
+        return result;
       };
     }
     if (typeof window.createOrderFromCart === "function") {
@@ -190,6 +192,14 @@
           if (index >= 0) { saved[index] = order; if (typeof window.saveOrders === "function") window.saveOrders(saved); }
         }
         return order;
+      };
+    }
+    if (typeof window.updateDashboard === "function") {
+      var originalUpdateDashboard = window.updateDashboard;
+      window.updateDashboard = function () {
+        var result = originalUpdateDashboard.apply(this, arguments);
+        render();
+        return result;
       };
     }
     render();
