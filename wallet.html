@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Your SMX Credit wallet on SMITHX.">
-  <title>SMX Wallet — SMITHX</title>
+  <meta name="description" content="Your SMX Credit wallet on SM1THX.">
+  <title>SMX Wallet — SM1THX</title>
 
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap");
@@ -371,9 +371,9 @@
 <body>
 
 <header>
-  <a class="brand" href="index.html#market" aria-label="SMITHX home">
+  <a class="brand" href="index.html#home" aria-label="SM1THX home">
     <img src="assets/smithx-logo.jpg" alt="">
-    <span>SMITHX</span>
+    <span>SM1THX</span>
   </a>
   <a class="back-btn" href="index.html#market">← Marketplace</a>
 </header>
@@ -381,7 +381,7 @@
 <section class="hero">
   <p class="eyebrow">SMX Credit</p>
   <h1>Your wallet <span class="demo-tag">DEMO</span></h1>
-  <p>Top up with M-Pesa and pay for SMITHX orders in one tap. 1 SMX = KES 1.</p>
+  <p>Top up with M-Pesa and pay for SM1THX orders in one tap. 1 SMX = KES 1.</p>
 </section>
 
 <main class="page" id="walletRoot"></main>
@@ -400,7 +400,7 @@
       root.innerHTML = `
         <div class="card gate">
           <strong>Sign in to use SMX Credit</strong>
-          <p>Your wallet belongs to your SMITHX account.</p>
+          <p>Your wallet belongs to your SM1THX account.</p>
           <a class="btn btn-primary" href="login.html?next=wallet.html">Sign in or create account</a>
         </div>`;
       return;
@@ -486,13 +486,13 @@
           <h2>How SMX Credit works</h2>
           <div class="rules">
             <div class="rule"><strong>1 SMX = KES 1</strong><p>Always the same value. No exchange rates, no surprises at checkout.</p></div>
-            <div class="rule"><strong>Spend on SMITHX</strong><p>Pay for all or part of an order. Any remainder goes to M-Pesa or card.</p></div>
+            <div class="rule"><strong>Spend on SM1THX</strong><p>Pay for all or part of an order. Any remainder goes to M-Pesa or card.</p></div>
             <div class="rule"><strong>Refunds come back here</strong><p>Cancel an order paid with SMX and the credit returns to your wallet straight away.</p></div>
             <div class="rule"><strong>Never expires</strong><p>Your credit stays until you use it or withdraw it.</p></div>
             <div class="rule"><strong>Withdraw any time</strong><p>Send unused credit back to M-Pesa at full value. No interest is paid on balances.</p></div>
             <div class="rule"><strong>Limits</strong><p>${smxWalletFormat(L.minTopUp)}–${smxWalletFormat(L.maxTopUp)} per top-up, wallet up to ${smxWalletFormat(L.maxBalance)}. Topped up this month: ${smxWalletFormat(loaded)}. Credit can't be sent to other users.</p></div>
           </div>
-          <p class="legal">Demo only: no real money moves, and the wallet is saved in this browser. Before SMX Credit goes live, SMITHX needs Central Bank of Kenya authorisation as an e-money issuer, or a licensed partner holding customer funds in trust, plus a secure server-side ledger.</p>
+          <p class="legal">Demo only: no real money moves, and the wallet is saved in this browser. Before SMX Credit goes live, SM1THX needs Central Bank of Kenya authorisation as an e-money issuer, or a licensed partner holding customer funds in trust, plus a secure server-side ledger.</p>
         </section>`;
 
       document.getElementById("historyFilter").value = filter;

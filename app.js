@@ -1,7 +1,7 @@
 "use strict";
 
 /* =====================================================
-   SMITHX 🛒
+   SM1THX 🛒
    APP.JS — MVP
    CART + MARKETPLACE + SELLER STUDIO
    + AI ASSISTANT + ORDERS
@@ -336,7 +336,7 @@ function safeStorageSet(key, value) {
     localStorage.setItem(key, value);
   } catch (error) {
     console.error(
-      "SMITHX storage error:",
+      "SM1THX storage error:",
       error
     );
   }
@@ -348,7 +348,7 @@ function safeStorageGet(key) {
     return localStorage.getItem(key);
   } catch (error) {
     console.error(
-      "SMITHX storage read error:",
+      "SM1THX storage read error:",
       error
     );
 
@@ -369,20 +369,9 @@ function getCustomProducts() {
     []
   );
 
-  if (!Array.isArray(products)) return [];
-
-  // Seller-owned products appear publicly only when their store is published.
-  let stores = [];
-  try {
-    const parsed = JSON.parse(localStorage.getItem("smithx_stores_v1") || "[]");
-    stores = Array.isArray(parsed) ? parsed : [];
-  } catch (_) { stores = []; }
-
-  return products.filter(product => {
-    if (!product || !product.storeId) return true; // retain legacy demo listings
-    const store = stores.find(item => item && item.id === product.storeId);
-    return Boolean(store && store.published);
-  });
+  return Array.isArray(products)
+    ? products
+    : [];
 }
 
 
@@ -1675,7 +1664,7 @@ function createTrackerSection() {
       <div>
 
         <p class="section-eyebrow">
-          SMITHX LOGISTICS
+          SM1THX LOGISTICS
         </p>
 
         <h3>
@@ -1856,7 +1845,7 @@ function renderTrackerNotFound(
         <strong>
           ${escapeHTML(orderId)}
         </strong>
-        in this SMITHX demo.
+        in this SM1THX demo.
       </p>
 
       <small>
@@ -2072,7 +2061,7 @@ function renderOrderTracker(
       ? `
         <span
           class="tracker-demo-badge"
-          title="This is a SMITHX demonstration tracking timeline."
+          title="This is a SM1THX demonstration tracking timeline."
         >
           DEMO TRACKING
         </span>
@@ -3198,9 +3187,15 @@ function renderProducts() {
                 onclick="openProductModal('${safeId}')"
               >
 
-                ${product.image
-                  ? '<img src="' + escapeHTML(product.image) + '" alt="' + escapeHTML(product.name) + '" loading="lazy">'
-                  : '<span class="product-image-placeholder" role="img" aria-label="No product image">Image not added yet</span>'}
+                <img
+                  src="${escapeHTML(
+                    product.image || ""
+                  )}"
+                  alt="${escapeHTML(
+                    product.name
+                  )}"
+                  loading="lazy"
+                >
 
               </button>
 
@@ -3294,9 +3289,14 @@ function openProductModal(
 
       <div>
 
-        ${product.image
-          ? '<img src="' + escapeHTML(product.image) + '" alt="' + escapeHTML(product.name) + '">'
-          : '<div class="product-image-placeholder product-image-placeholder--large" role="img" aria-label="No product image">No product image</div>'}
+        <img
+          src="${escapeHTML(
+            product.image || ""
+          )}"
+          alt="${escapeHTML(
+            product.name
+          )}"
+        >
 
       </div>
 
@@ -3587,7 +3587,7 @@ function showOrderConfirmation(
         </h2>
 
         <p class="muted">
-          Your SMITHX demo order has been
+          Your SM1THX demo order has been
           successfully created.
         </p>
 
@@ -4187,7 +4187,7 @@ async function generateProductListing() {
         <div class="ai-result-item">
 
           <span>
-            SMITHX AI
+            SM1THX AI
           </span>
 
           <strong>
@@ -4222,7 +4222,7 @@ async function generateProductListing() {
       <div class="ai-result-item">
 
         <span>
-          SMITHX AI
+          SM1THX AI
         </span>
 
         <strong>
@@ -4230,7 +4230,7 @@ async function generateProductListing() {
         </strong>
 
         <p>
-          SMITHX is analyzing your product.
+          SM1THX is analyzing your product.
         </p>
 
       </div>
@@ -4409,7 +4409,7 @@ async function generateProductListing() {
   } catch (error) {
 
     console.error(
-      "SMITHX AI error:",
+      "SM1THX AI error:",
       error
     );
 
@@ -4422,7 +4422,7 @@ async function generateProductListing() {
         <div class="ai-result-item">
 
           <span>
-            SMITHX AI
+            SM1THX AI
           </span>
 
           <strong>
@@ -5164,18 +5164,18 @@ function initializeSmithX() {
     }
 
     console.log(
-      "SMITHX initialized successfully."
+      "SM1THX initialized successfully."
     );
 
   } catch (error) {
 
     console.error(
-      "SMITHX initialization error:",
+      "SM1THX initialization error:",
       error
     );
 
     showToast(
-      "SMITHX encountered an error. Please refresh."
+      "SM1THX encountered an error. Please refresh."
     );
   }
 }

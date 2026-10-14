@@ -1,7 +1,7 @@
 "use strict";
 
 /* =====================================================
-   SMITHX — INTERNATIONAL (intl.js)
+   SM1THX — INTERNATIONAL (intl.js)
    Phase 5. Needs intl-config.js (and wallet.js for the
    signed-in user, if present).
 
@@ -12,7 +12,7 @@
      zone, then Kenya.
    • Approximate local-currency prices next to KES prices.
      Customers are always charged in KES; checkout says so.
-   • Waitlist for countries SMITHX doesn't deliver to yet,
+   • Waitlist for countries SM1THX doesn't deliver to yet,
      to measure demand before expanding.
    • Each new order records the display currency and the
      rate shown, so the conversion can be audited later.
@@ -349,7 +349,7 @@ function smxTranslateTree(root) {
       const market = smxMarket(form.country.value);
       wrap.querySelector("[data-market]").textContent = market.status === "live"
         ? `Delivery available. Pay with ${market.payments.join(", ")}.`
-        : `SMITHX doesn't deliver to ${market.name === "Other" ? "your country" : market.name} yet. You can browse with ${market.currency} prices as a guide and join the waitlist.`;
+        : `SM1THX doesn't deliver to ${market.name === "Other" ? "your country" : market.name} yet. You can browse with ${market.currency} prices as a guide and join the waitlist.`;
     };
     form.country.addEventListener("change", () => {
       form.currency.value = smxMarket(form.country.value).currency;

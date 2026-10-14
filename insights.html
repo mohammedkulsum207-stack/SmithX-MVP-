@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SMITHX platform insights: sales, revenue, refunds and demand by country.">
-  <title>Insights — SMITHX</title>
+  <meta name="description" content="SM1THX platform insights: sales, revenue, refunds and demand by country.">
+  <title>Insights — SM1THX</title>
   <style>
 
     @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap");
@@ -400,15 +400,15 @@
 <body>
 
 <header>
-  <a class="brand" href="index.html#market" aria-label="SMITHX home">
+  <a class="brand" href="index.html#home" aria-label="SM1THX home">
     <img src="assets/smithx-logo.jpg" alt="">
-    <span>SMITHX</span>
+    <span>SM1THX</span>
   </a>
   <a class="back-btn" href="profile.html">← Profile</a>
 </header>
 
 <section class="hero">
-  <p class="eyebrow">SMITHX Insights</p>
+  <p class="eyebrow">SM1THX Insights</p>
   <h1>How the marketplace is doing <span class="demo-tag">DEMO</span></h1>
   <p>Sales, platform revenue, refunds and where demand is coming from.</p>
 </section>
@@ -430,7 +430,7 @@
     const me = smxWalletUser();
 
     if (!me) {
-      root.innerHTML = `<div class="card empty"><strong>Sign in to see insights</strong>Insights are for SMITHX sellers and the team.<div style="margin-top:16px;"><a class="btn btn-primary" href="login.html?next=insights.html">Sign in</a></div></div>`;
+      root.innerHTML = `<div class="card empty"><strong>Sign in to see insights</strong>Insights are for SM1THX sellers and the team.<div style="margin-top:16px;"><a class="btn btn-primary" href="login.html?next=insights.html">Sign in</a></div></div>`;
       return;
     }
 
@@ -486,7 +486,7 @@
         const s = p.storeSlug && typeof smxStoreBySlug === "function" ? smxStoreBySlug(p.storeSlug) : null;
         return s ? s.name : p.storeName || p.sellerName || "Independent seller";
       }
-      return "SMITHX catalogue";
+      return "SM1THX catalogue";
     };
     const sales = {};
     live.forEach(o => (o.items || []).forEach(i => {
@@ -524,7 +524,7 @@
     const kpi = (label, value, note, gold) => `<div class="kpi ${gold ? "is-gold" : ""}"><span>${label}</span><strong>${value}</strong>${note ? `<small>${note}</small>` : ""}</div>`;
 
     root.innerHTML = `
-      <p class="message info show" style="margin:0;">Figures come from data saved in this browser. Once SMITHX has a backend, this page will cover every customer and seller, and only admins will see it.</p>
+      <p class="message info show" style="margin:0;">Figures come from data saved in this browser. Once SM1THX has a backend, this page will cover every customer and seller, and only admins will see it.</p>
 
       <section>
         <div class="section-title"><h2>Sales</h2></div>

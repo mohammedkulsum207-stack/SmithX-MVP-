@@ -1,7 +1,7 @@
 "use strict";
 
 /* =====================================================
-   SMITHX — ACCOUNT LINK IN NAVIGATION (auth-nav.js)
+   SM1THX — ACCOUNT LINK IN NAVIGATION (auth-nav.js)
    Adds a "Login" / account button to the header.
    Safe to remove: delete this file and its <script> tag.
 ===================================================== */
@@ -64,8 +64,8 @@
     const style = document.createElement("style");
     style.textContent =
       ".smx-avatar-dot{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;" +
-      "background:#e9e9e9;color:#171717;font-size:.68rem;font-weight:700;letter-spacing:0}" +
-      ".smx-account-link:hover{border-color:#bdbdbd!important;color:#171717!important}";
+      "background:#e8a33d;color:#16130f;font-size:.68rem;font-weight:700;letter-spacing:0}" +
+      ".smx-account-link:hover{border-color:#e8a33d!important;color:#e8a33d!important}";
     document.head.appendChild(style);
   }
 

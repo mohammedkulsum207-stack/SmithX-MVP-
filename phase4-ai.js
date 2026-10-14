@@ -1,7 +1,7 @@
 "use strict";
 
 /* =====================================================
-   SMITHX — PHASE 4 ASSISTANTS (phase4-ai.js)
+   SM1THX — PHASE 4 ASSISTANTS (phase4-ai.js)
 
    1. Product listing assistant (index.html, Seller Studio)
       • Fixes the result box being wiped by the loading
@@ -72,10 +72,10 @@ function smxDraftListing({ name, category, price, description }) {
     title,
     category: cat,
     price: Number(price) || 0,
-    description: `${lead}${extra} ${smxPick(["Sold by a verified SMITHX seller", "Listed on SMITHX by a trusted seller", "Available now on SMITHX"], seed)} with ${w.promise}. Order today and track delivery from checkout to your door.`.replace(/\s+/g, " ").trim(),
+    description: `${lead}${extra} ${smxPick(["Sold by a verified SM1THX seller", "Listed on SM1THX by a trusted seller", "Available now on SM1THX"], seed)} with ${w.promise}. Order today and track delivery from checkout to your door.`.replace(/\s+/g, " ").trim(),
     features: w.features,
     seo_keywords: Array.from(new Set([...words, cat.toLowerCase(), "buy " + words.slice(0, 2).join(" "), "kenya", "nairobi", "sm1thx"])).slice(0, 8),
-    ad_caption: `${smxPick(["New on SMITHX", "Just listed", "Now available"], seed)}: ${title}${Number(price) ? " for KES " + Number(price).toLocaleString("en-KE") : ""}. ${smxPick(["Order now, delivered fast.", "Tap to shop before it sells out.", "Fast delivery across Kenya."], seed + 1)}`,
+    ad_caption: `${smxPick(["New on SM1THX", "Just listed", "Now available"], seed)}: ${title}${Number(price) ? " for KES " + Number(price).toLocaleString("en-KE") : ""}. ${smxPick(["Order now, delivered fast.", "Tap to shop before it sells out.", "Fast delivery across Kenya."], seed + 1)}`,
     source: "built-in"
   };
 }
@@ -99,7 +99,7 @@ function smxStoreConcepts({ name, sells, category, style, location }) {
   }[st.voice];
 
   const abouts = [
-    `Welcome to ${store}. We sell ${what} — ${w.promise}. Every order is checked before it leaves us, and you can track it on SMITHX from checkout to delivery. Based in ${where}, delivering across Kenya.`,
+    `Welcome to ${store}. We sell ${what} — ${w.promise}. Every order is checked before it leaves us, and you can track it on SM1THX from checkout to delivery. Based in ${where}, delivering across Kenya.`,
     `${store} started with one goal: make it easy to find ${w.adjectives[1]} ${what} without the guesswork. Clear photos, honest descriptions and fast delivery. Questions? Message us any time.`,
     `At ${store}, we handpick ${what} we'd use ourselves. Expect ${w.adjectives[0]} quality, fair prices and friendly service. Pay with M-Pesa, card or SMX Credit, and get updates at every step.`
   ];
@@ -114,9 +114,9 @@ function smxStoreConcepts({ name, sells, category, style, location }) {
       tagline: taglines[i].slice(0, 80),
       description: abouts[i].slice(0, 600),
       promos: [
-        `${smxPick(["New", "Fresh", "Just in"], i)} at ${store}: ${what} with ${w.promise}. Shop now on SMITHX.`,
+        `${smxPick(["New", "Fresh", "Just in"], i)} at ${store}: ${what} with ${w.promise}. Shop now on SM1THX.`,
         `Looking for ${what} in ${where}? ${store} has you covered. Pay with M-Pesa, delivered fast.`,
-        `${smxTitleCase(w.adjectives[2])} ${what}, fair prices, tracked delivery. Visit ${store} on SMITHX today.`
+        `${smxTitleCase(w.adjectives[2])} ${what}, fair prices, tracked delivery. Visit ${store} on SM1THX today.`
       ]
     };
   });
@@ -154,7 +154,7 @@ function smxStoreConcepts({ name, sells, category, style, location }) {
     if (builtIn) {
       const note = document.createElement("p");
       note.className = "smx-ai-note";
-      note.textContent = "Built-in draft — the SMITHX AI service is offline right now. Edit anything before you publish.";
+      note.textContent = "Built-in draft — the SM1THX AI service is offline right now. Edit anything before you publish.";
       box.prepend(note);
     }
   }
@@ -219,7 +219,7 @@ function smxStoreConcepts({ name, sells, category, style, location }) {
     </div>
     <button class="btn btn-primary" type="button" id="asGo">Suggest designs</button>
     <div id="asResults" class="smx-assist-results" aria-live="polite"></div>
-    <p class="muted" style="font-size:.78rem;margin-top:12px;">Built-in suggestions. Smarter AI suggestions can be added once the SMITHX AI service is topped up.</p>`;
+    <p class="muted" style="font-size:.78rem;margin-top:12px;">Built-in suggestions. Smarter AI suggestions can be added once the SM1THX AI service is topped up.</p>`;
   form.insertAdjacentElement("afterend", panel);
 
   function setField(id, value) {

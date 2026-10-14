@@ -1,11 +1,11 @@
 "use strict";
 
 /* =====================================================
-   SMITHX — SELLER STOREFRONTS (stores.js)
+   SM1THX — SELLER STOREFRONTS (stores.js)
    Shared helpers used by index.html (phase1.js),
    profile.html (profile-store.js) and store.html.
    Stores are saved only in this browser (localStorage)
-   until SMITHX has a backend.
+   until SM1THX has a backend.
    To remove: delete stores.js, store.html, phase1.js,
    phase1.css, profile-store.js and their <script>/<link>
    tags.
@@ -161,7 +161,7 @@ function smxProductURL(productId) {
 async function smxShareLink(url, title) {
   try {
     if (navigator.share) {
-      await navigator.share({ title: title || "SMITHX", url });
+      await navigator.share({ title: title || "SM1THX", url });
       return "shared";
     }
   } catch (error) {

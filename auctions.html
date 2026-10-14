@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Bid on items from SMITHX sellers.">
-  <title>Auctions — SMITHX</title>
+  <meta name="description" content="Bid on items from SM1THX sellers.">
+  <title>Auctions — SM1THX</title>
 
   <style>
 
@@ -450,9 +450,9 @@
 <body>
 
 <header>
-  <a class="brand" href="index.html#market" aria-label="SMITHX home">
+  <a class="brand" href="index.html#home" aria-label="SM1THX home">
     <img src="assets/smithx-logo.jpg" alt="">
-    <span>SMITHX</span>
+    <span>SM1THX</span>
   </a>
   <a class="back-btn" href="index.html#market">← Marketplace</a>
 </header>
@@ -460,7 +460,7 @@
 <section class="hero">
   <div class="hero-row">
     <div>
-      <p class="eyebrow">SMITHX Auctions</p>
+      <p class="eyebrow">SM1THX Auctions</p>
       <h1>Bid. Win. Own it. <span class="demo-tag">DEMO</span></h1>
       <p>Losing bids are always free. You only pay if you win.</p>
     </div>
@@ -593,7 +593,7 @@
             <li>Each auction has a minimum bid step shown next to the bid box.</li>
             <li>Bids are binding and can't be withdrawn.</li>
             <li>A bid in the last 2 minutes adds 2 more minutes, so everyone gets a fair chance to respond.</li>
-            <li>The highest bid when the timer ends wins. The winner should pay immediately when the auction ends. Unpaid wins expire after 15 minutes.</li>
+            <li>The highest bid when the timer ends wins. The winner has 48 hours to pay.</li>
             <li>If the winner doesn't pay in time, the item is offered to the next-highest bidder at their own bid.</li>
             <li>Sellers can't bid on their own items and can only cancel before the first bid.</li>
             <li>Any winning fee is shown before you bid. It's currently KES 0.</li>
@@ -664,7 +664,7 @@
             ${a.status === "live" && !bids.length ? `<button class="btn btn-outline" type="button" data-act="cancel">Cancel auction</button>` : ""}
             ${a.status === "live" ? `<button class="btn btn-outline" type="button" data-act="rival">Simulate a rival bid (demo)</button>
             <button class="btn btn-outline" type="button" data-act="end">End now (demo)</button>` : ""}
-            ${a.status === "ended" && a.winner && a.winner.status === "awaiting" ? `<button class="btn btn-outline" type="button" data-act="skip">Skip the 15-minute payment window (demo)</button>` : ""}
+            ${a.status === "ended" && a.winner && a.winner.status === "awaiting" ? `<button class="btn btn-outline" type="button" data-act="skip">Skip the 48-hour payment window (demo)</button>` : ""}
           </div>
           <small class="hint">Demo buttons let you test bidding wars and non-payment on your own.</small>
         </div>` : "";
@@ -701,7 +701,7 @@
               <li>Losing bids are free.</li>
               <li>Bid step: ${kes(a.increment)}.</li>
               <li>Late bids (last 2 min) add 2 minutes.</li>
-              <li>Pay immediately after the auction ends. Unpaid wins expire after 15 minutes, then the next bidder may be offered the item.</li>
+              <li>Winner pays within 48 hours, or it goes to the next bidder.</li>
               <li>Winning fee: ${a.feePercent || 0}% (${kes(fee)} at the current minimum bid).</li>
             </ul></section>
           </div>
