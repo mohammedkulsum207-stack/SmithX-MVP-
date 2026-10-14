@@ -1,7 +1,7 @@
 "use strict";
 
 /* =====================================================
-   SM1THX — ACCOUNT LINK IN NAVIGATION (auth-nav.js)
+   SMITHX — ACCOUNT LINK IN NAVIGATION (auth-nav.js)
    Adds a "Login" / account button to the header.
    Safe to remove: delete this file and its <script> tag.
 ===================================================== */
