@@ -4903,3 +4903,83 @@ h1, h2, h3, .dashboard-card strong, .smithx-brand-text strong, footer strong {
   }
   .hero-panel { justify-content: flex-start; }
 }
+
+
+/* ---------- Premium cart quantity stepper ---------- */
+.cart-item-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.cart-item-controls > button[aria-label="Decrease quantity"],
+.cart-item-controls > button[aria-label="Increase quantity"] {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  padding: 0;
+  border: 1px solid rgba(200, 144, 46, .42);
+  border-radius: 14px;
+  background: var(--ink, #17140f);
+  color: var(--gold-bright, #f0bd58);
+  font-family: inherit;
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(22, 19, 15, .10);
+  transition: transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cart-item-controls > button[aria-label="Increase quantity"] {
+  background: var(--gold-bright, #f0bd58);
+  color: var(--ink, #17140f);
+  border-color: var(--gold-bright, #f0bd58);
+}
+
+.cart-item-controls > button[aria-label="Decrease quantity"]:hover,
+.cart-item-controls > button[aria-label="Increase quantity"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(22, 19, 15, .16);
+}
+
+.cart-item-controls > button[aria-label="Decrease quantity"]:active,
+.cart-item-controls > button[aria-label="Increase quantity"]:active {
+  transform: scale(.94);
+}
+
+.cart-item-controls > span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0 8px;
+  border: 1px solid rgba(22, 19, 15, .10);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink, #17140f);
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.cart-item-controls > button[aria-label="Decrease quantity"]:focus-visible,
+.cart-item-controls > button[aria-label="Increase quantity"]:focus-visible {
+  outline: 3px solid rgba(232, 163, 61, .48);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .cart-item-controls { gap: 7px; }
+  .cart-item-controls > button[aria-label="Decrease quantity"],
+  .cart-item-controls > button[aria-label="Increase quantity"] {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+}
