@@ -37,6 +37,7 @@
 <section class="cards" aria-label="Store metrics">
 <article class="metric"><div class="metric-top"><span>Total products</span><span class="metric-icon">□</span></div><strong id="productCount">—</strong><small id="stockSub">Products listed in your store</small></article>
 <article class="metric"><div class="metric-top"><span>Store visitors</span><span class="metric-icon">◎</span></div><strong id="visitorCount">—</strong><small>Recorded storefront visits</small></article>
+<article class="metric"><div class="metric-top"><span>Orders</span><span class="metric-icon">▤</span></div><strong id="orderCount">—</strong><small>Orders in the selected period</small></article>
 <article class="metric"><div class="metric-top"><span>Sales revenue</span><span class="metric-icon">↗</span></div><strong id="revenueValue">—</strong><small>From recorded orders</small></article>
 <article class="metric"><div class="metric-top"><span>Estimated profit</span><span class="metric-icon">◈</span></div><strong id="profitValue">—</strong><small>Revenue less known product costs</small></article>
 </section>
@@ -47,6 +48,23 @@
 <section class="layout">
 <article class="panel"><div class="panel-head"><div><h2>Best sellers</h2><p>Ranked using available order data</p></div><a class="sub" href="seller-products.html">Manage products →</a></div><div id="bestSellers" class="empty"><strong>No sales recorded yet</strong>When order data is available, your top-selling products will appear here.</div></article>
 <article class="panel"><div class="panel-head"><div><h2>Store activity</h2><p>Recent activity based on saved data</p></div></div><div id="activity" class="activity"><div class="empty"><strong>Waiting for store activity</strong>Product and order events will appear here when available.</div></div></article>
+</section>
+<section class="layout" id="businessTools" aria-label="Stock and customer feedback">
+  <article class="panel">
+    <div class="panel-head"><div><h2>Stock health</h2><p>Inventory signals from your saved product listings</p></div><a class="sub" href="seller-products.html">Manage stock →</a></div>
+    <div id="inventoryInsights" class="empty"><strong>Checking inventory</strong>Reading stock quantities from your products.</div>
+  </article>
+  <article class="panel">
+    <div class="panel-head"><div><h2>Customer feedback</h2><p>Ratings and reviews for products in this store</p></div><a class="sub" href="reviews.js">Review tools →</a></div>
+    <div id="reviewInsights" class="empty"><strong>Checking reviews</strong>Reading available product reviews.</div>
+  </article>
+</section>
+<section class="layout" aria-label="Store settings and access">
+  <article class="panel" style="grid-column:1/-1">
+    <div class="panel-head"><div><h2>Store settings &amp; access</h2><p>Quick controls for your store profile and listings</p></div><a class="btn btn-dark" href="profile.html#store">Open store settings ↗</a></div>
+    <div id="storeControls" class="activity"><div class="empty"><strong>Checking store settings</strong>Reading the saved store status.</div></div>
+    <p class="sub" style="margin-top:12px">Access note: this dashboard selects stores owned by the signed-in account. Store, product, order, and review records currently live in this browser; they are not a shared multi-device database.</p>
+  </article>
 </section>
 <section class="layout" id="fulfillment" aria-labelledby="fulfillmentTitle">
   <article class="panel" style="grid-column:1/-1">
@@ -195,7 +213,51 @@ $("sellerOrders").addEventListener("click",function(e){
   if(statusButton)updateFulfillmentStatus(statusButton.getAttribute("data-fulfill-status"));
   if(saveButton)saveFulfillmentDetails(saveButton.getAttribute("data-fulfill-save"));
 });
-function render(){const list=activeOrders();$('chartPeriod').textContent=selectedPeriod()==='all'?'All time':selectedPeriod()+' days';$('revenueValue').textContent=money(list.reduce((s,o)=>s+orderTotal(o),0));const profit=list.length?profitFor(list):0;$('profitValue').textContent=profit===null?'Not recorded':money(profit);$('profitValue').nextElementSibling.textContent=profit===null?'Add cost data for every order item':'Revenue less recorded product costs';renderChart(list);
+function renderBusinessTools(){
+  const stockRows=products.map(function(p){
+    const raw=p.stock!==undefined&&p.stock!==null&&p.stock!==""?p.stock:(p.quantity!==undefined&&p.quantity!==null&&p.quantity!==""?p.quantity:null);
+    const qty=raw===null?null:Number(raw);
+    return {product:p,name:String(p.name||p.title||"Unnamed product"),qty:Number.isFinite(qty)?qty:null,published:p.published!==false&&p.published!=="false"};
+  });
+  const tracked=stockRows.filter(x=>x.qty!==null);
+  const out=tracked.filter(x=>x.qty<=0);
+  const low=tracked.filter(x=>x.qty>0&&x.qty<=5);
+  const unknown=stockRows.filter(x=>x.qty===null);
+  const draft=stockRows.filter(x=>!x.published);
+  const inventory=$("inventoryInsights");
+  if(!stockRows.length){
+    inventory.innerHTML='<div class="empty"><strong>No products to analyse</strong>Add products and enter stock quantities to see inventory alerts.</div>';
+  }else{
+    const alertRows=out.slice(0,4).map(x=>'<div class="activity-item"><div class="activity-mark">!</div><div><strong>'+esc(x.name)+'</strong><small>Out of stock · quantity '+x.qty+'</small></div></div>').concat(low.slice(0,4).map(x=>'<div class="activity-item"><div class="activity-mark">!</div><div><strong>'+esc(x.name)+'</strong><small>Low stock · '+x.qty+' remaining</small></div></div>'));
+    inventory.innerHTML='<div class="cards" style="grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px"><article class="metric"><span class="sub">Out of stock</span><strong>'+out.length+'</strong></article><article class="metric"><span class="sub">Low stock (1–5)</span><strong>'+low.length+'</strong></article><article class="metric"><span class="sub">Quantity unknown</span><strong>'+unknown.length+'</strong></article></div>'+
+      (alertRows.length?'<div class="activity">'+alertRows.join('')+'</div>':'<div class="empty"><strong>No low-stock alerts</strong>All products with recorded quantities have more than 5 units.</div>')+
+      (unknown.length?'<p class="sub" style="margin-top:10px">'+unknown.length+' product(s) have no recorded stock quantity, so they cannot be assessed.</p>':'');
+  }
+  const ids=new Set(products.map(p=>String(p.id||p.productId||"")));
+  const allReviews=read("smithx_reviews_v1",[]);
+  const reviews=Array.isArray(allReviews)?allReviews.filter(function(r){return ids.has(String(r.productId))&&Number(r.rating)>=1&&Number(r.rating)<=5&&(!Array.isArray(r.reports)||(r.reports.length<3));}).sort(function(a,b){return new Date(b.updatedAt||b.createdAt||0)-new Date(a.updatedAt||a.createdAt||0);}):[];
+  const reviewCount=reviews.length;
+  const avg=reviewCount?reviews.reduce((sum,r)=>sum+Number(r.rating),0)/reviewCount:0;
+  const reviewTarget=$("reviewInsights");
+  if(!reviewCount){
+    reviewTarget.innerHTML='<div class="empty"><strong>No customer reviews recorded yet</strong>Eligible customer reviews for this store’s products will appear here. Followers are not tracked in the current build.</div>';
+  }else{
+    reviewTarget.innerHTML='<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><strong style="font-size:30px;line-height:1">'+avg.toFixed(1)+'</strong><div><div aria-label="'+avg.toFixed(1)+' out of 5 stars" style="color:#c8902e;letter-spacing:2px">'+('★'.repeat(Math.round(avg)))+('☆'.repeat(5-Math.round(avg)))+'</div><div class="sub">'+reviewCount+' visible review'+(reviewCount===1?'':'s')+'</div></div></div>'+
+      '<div class="activity">'+reviews.slice(0,3).map(function(r){return '<div class="activity-item"><div class="activity-mark">'+Number(r.rating)+'★</div><div><strong>'+esc(r.title||r.productName||"Product review")+'</strong><small>'+esc(r.productName||"Store product")+' · '+esc(r.authorName||"Customer")+'</small><div class="sub" style="margin-top:4px">'+esc(String(r.text||"").slice(0,180))+(String(r.text||"").length>180?'…':'')+'</div></div></div>';}).join('')+'</div><p class="sub" style="margin-top:10px">Follower counts are not available because a follower-tracking feature is not yet implemented.</p>';
+  }
+  const controls=$("storeControls");
+  if(!store){
+    controls.innerHTML='<div class="empty"><strong>No store is linked to this session</strong>Sign in with the seller account that owns the store, then open store setup.</div>';
+  }else{
+    const published=store.published===true||store.published==="true";
+    const draftCount=draft.length;
+    controls.innerHTML='<div class="activity-item"><div class="activity-mark">'+(published?'✓':'!')+'</div><div><strong>Store status: '+(published?'Published':'Unpublished')+'</strong><small>'+(published?'Your storefront is marked as published.':'Publish your store in Store settings before customers can discover it.')+'</small></div></div>'+
+      '<div class="activity-item"><div class="activity-mark">□</div><div><strong>'+products.length+' product listings · '+draftCount+' draft/unpublished</strong><small>Manage product visibility and stock in Products &amp; Stock.</small></div></div>'+
+      '<div class="activity-item"><div class="activity-mark">⚙</div><div><strong>Seller access is scoped to the signed-in owner</strong><small>The dashboard only loads stores whose owner email matches the current session.</small></div></div>'+
+      '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><a class="btn" href="profile.html#store">Edit store profile</a><a class="btn" href="seller-products.html">Manage products</a><a class="btn" href="store.html?s='+encodeURIComponent(store.slug||'')+'">View storefront</a><a class="btn" href="reviews.js">Review system file</a></div>';
+  }
+}
+function render(){const list=activeOrders();if($('orderCount'))$('orderCount').textContent=String(list.length);renderBusinessTools();$('chartPeriod').textContent=selectedPeriod()==='all'?'All time':selectedPeriod()+' days';$('revenueValue').textContent=money(list.reduce((s,o)=>s+orderTotal(o),0));const profit=list.length?profitFor(list):0;$('profitValue').textContent=profit===null?'Not recorded':money(profit);$('profitValue').nextElementSibling.textContent=profit===null?'Add cost data for every order item':'Revenue less recorded product costs';renderChart(list);
 const salesByProduct={};list.forEach(o=>{const items=Array.isArray(o.items)?o.items:Array.isArray(o.products)?o.products:[];items.forEach(it=>{const id=String(it.productId||it.id||it.name||'unknown');salesByProduct[id]=(salesByProduct[id]||0)+Number(it.quantity||it.qty||1);});});
 const ranked=products.map(p=>({p,qty:salesByProduct[String(p.id||p.productId||p.name)]||salesByProduct[String(p.name)]||0})).sort((a,b)=>b.qty-a.qty);
 if(ranked.length){const best=ranked.filter(x=>x.qty>0).slice(0,5);$('bestSellers').innerHTML=best.length?'<table class="table"><thead><tr><th>Product</th><th>Units</th><th>Price</th></tr></thead><tbody>'+best.map(x=>'<tr><td><span class="product-name">'+esc(x.p.name||x.p.title||'Unnamed product')+'</span><span class="sub">'+esc(x.p.category||'Product')+'</span></td><td>'+x.qty+'</td><td>'+money(x.p.price||0)+'</td></tr>').join('')+'</tbody></table>':'<div class="empty"><strong>No best sellers yet</strong>No matching product purchases were found in the saved order data.</div>';
