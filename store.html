@@ -385,7 +385,7 @@
       }
     }
 
-    const products = smxStoreProducts(store);
+    const products = smxStoreProducts(store).filter(product => product.published !== false);
     const since = smxFormatDate(store.createdAt);
 
     root.innerHTML = `
