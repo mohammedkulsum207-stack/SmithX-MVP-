@@ -188,8 +188,11 @@ const SMX_COUNTRIES = [
         checkSlug();
         updateStatus(store);
         card.querySelector('button[type="submit"]').textContent = "Save store";
-        msg.textContent = store.published ? "Your store is live." : "Store saved as a draft.";
+        msg.textContent = store.published ? "Your store is live. Opening your storefront…" : "Store saved as a draft.";
         msg.className = "form-message show success";
+        if (store.published) {
+          window.location.href = "store.html?s=" + encodeURIComponent(store.slug);
+        }
       } catch (error) {
         msg.textContent = error.message;
         msg.className = "form-message show error";
