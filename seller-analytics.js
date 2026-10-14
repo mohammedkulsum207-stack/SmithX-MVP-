@@ -54,7 +54,7 @@
         var currency = order.currency || item.currency || "KES";
         currencyTotals[currency] = (currencyTotals[currency] || 0) + price * quantity;
         var id = String(item.productId || item.product_id || "");
-        var unitCost = item.unitCost != null ? Number(item.unitCost) : (costs[id] == null ? null : Number(costs[id]));
+        var unitCost = Object.prototype.hasOwnProperty.call(item, "unitCost") ? (item.unitCost == null ? null : Number(item.unitCost)) : (costs[id] == null ? null : Number(costs[id]));
         if (unitCost != null && Number.isFinite(unitCost) && unitCost >= 0) {
           cost += unitCost * quantity;
           coveredUnits += quantity;
