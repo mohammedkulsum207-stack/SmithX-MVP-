@@ -48,6 +48,13 @@
 <article class="panel"><div class="panel-head"><div><h2>Best sellers</h2><p>Ranked using available order data</p></div><a class="sub" href="seller-products.html">Manage products →</a></div><div id="bestSellers" class="empty"><strong>No sales recorded yet</strong>When order data is available, your top-selling products will appear here.</div></article>
 <article class="panel"><div class="panel-head"><div><h2>Store activity</h2><p>Recent activity based on saved data</p></div></div><div id="activity" class="activity"><div class="empty"><strong>Waiting for store activity</strong>Product and order events will appear here when available.</div></div></article>
 </section>
+<section class="layout" id="fulfillment" aria-labelledby="fulfillmentTitle">
+  <article class="panel" style="grid-column:1/-1">
+    <div class="panel-head"><div><h2 id="fulfillmentTitle">Orders &amp; fulfillment</h2><p>Confirm orders, mark dispatch, and record delivery tracking details.</p></div><span class="pill" id="fulfillmentCount">0 orders</span></div>
+    <p class="sub" style="margin:0 0 16px">Only orders matching products in this store are shown. Updates are saved in this browser and are not shared across devices in this demo.</p>
+    <div id="sellerOrders" aria-live="polite"><div class="empty"><strong>Loading orders</strong>Reading saved order records…</div></div>
+  </article>
+</section>
 <section class="insight"><div><div class="eyebrow">SM1THX assistant</div><h2>Ask about your store</h2><p>Ask questions about products, sales, stock, or performance. Answers use the information available in this browser and will say when data is missing.</p><div id="answer" class="answer" aria-live="polite"></div></div><form id="askForm"><input id="question" aria-label="Question about your store" placeholder="e.g. Which products need attention?"><button type="submit">Ask ↗</button></form></section>
 <div class="notice" id="dataNotice"><strong>Data transparency:</strong> this dashboard reads the store and product records saved in this browser. Visitor counts, order totals, and profit will only be meaningful when those events and costs are actually recorded. This version does not invent sales or visitor numbers.</div>
 </div>
@@ -126,6 +133,68 @@ function profitFor(list){
   return list.length?total:null;
 }
 function renderChart(list){const canvas=$('salesChart'),ctx=canvas.getContext('2d'),rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;canvas.width=Math.max(300,rect.width*dpr);canvas.height=Math.max(180,rect.height*dpr);ctx.scale(dpr,dpr);const w=canvas.width/dpr,h=canvas.height/dpr;ctx.clearRect(0,0,w,h);const p=selectedPeriod(),days=p==='all'?30:Number(p),n=7,values=Array(n).fill(0),counts=Array(n).fill(0);list.forEach(o=>{const d=orderDate(o);if(isNaN(d))return;const index=Math.min(n-1,Math.max(0,Math.floor((d.getTime()-(Date.now()-days*86400000))/(days*86400000)*n)));values[index]+=orderTotal(o);counts[index]++;});const max=Math.max(1,...values);ctx.font='11px DM Sans';ctx.fillStyle='#858a93';ctx.strokeStyle='#eceef1';ctx.lineWidth=1;for(let i=0;i<4;i++){const y=18+i*(h-48)/3;ctx.beginPath();ctx.moveTo(30,y);ctx.lineTo(w-8,y);ctx.stroke();ctx.fillText(i===0?money(max).replace(/\.\d+/, ''):i===3?'0':'',0,y+4);}const step=(w-48)/n;ctx.strokeStyle=accent;ctx.lineWidth=2.5;ctx.beginPath();values.forEach((v,i)=>{const x=36+i*step+step/2,y=h-25-(v/max)*(h-65);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();values.forEach((v,i)=>{const x=36+i*step+step/2,y=h-25-(v/max)*(h-65);ctx.fillStyle=accent;ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();ctx.fillStyle='#858a93';ctx.fillText(''+(i+1),x-3,h-7);});}
+function currentStoreOrders(){
+  const saved=read("smithx_orders_v2",read("smithx_orders_v1",[]));
+  return Array.isArray(saved)?saved.filter(orderBelongsToStore):[];
+}
+function fulfillmentStage(status){
+  const s=String(status||"Pending").toLowerCase();
+  if(s==="delivered")return {next:null,label:"Delivered",step:5,stage:"delivered",complete:true};
+  if(s==="shipped")return {next:"Delivered",label:"Shipped",step:3,stage:"shipped",complete:false};
+  if(s==="confirmed")return {next:"Shipped",label:"Confirmed",step:1,stage:"confirmed",complete:false};
+  if(s==="cancelled")return {next:null,label:"Cancelled",step:0,stage:"cancelled",complete:true};
+  return {next:"Confirmed",label:"Pending",step:0,stage:"placed",complete:false};
+}
+function renderFulfillmentOrders(){
+  const list=currentStoreOrders();
+  const target=$("sellerOrders");
+  $("fulfillmentCount").textContent=list.length+" order"+(list.length===1?"":"s");
+  if(!list.length){target.innerHTML='<div class="empty"><strong>No store orders yet</strong>Orders containing one of your listed products will appear here after checkout records them in this browser.</div>';return;}
+  target.innerHTML=list.map(function(o){
+    const stage=fulfillmentStage(o.status);
+    const items=Array.isArray(o.items)?o.items:(Array.isArray(o.products)?o.products:[]);
+    const summary=items.map(function(i){return esc(i.name||i.productName||"Product")+" × "+Math.max(1,Number(i.quantity||i.qty||1));}).join(", ");
+    const date=new Date(o.createdAt||o.date||o.timestamp||Date.now());
+    const dateLabel=isNaN(date.getTime())?"Date unavailable":date.toLocaleString();
+    const fulfillment=o.fulfillment&&typeof o.fulfillment==="object"?o.fulfillment:{};
+    const action=stage.next?'<label style="display:block;font-size:12px;font-weight:700;margin:12px 0 5px" for="next-'+esc(o.orderId)+'">Next status</label><div style="display:flex;gap:8px;flex-wrap:wrap"><select id="next-'+esc(o.orderId)+'" aria-label="Next status for order '+esc(o.orderId)+'" style="min-width:150px;padding:9px;border:1px solid var(--line);border-radius:9px"><option value="'+esc(stage.next)+'">'+esc(stage.next)+'</option></select><button type="button" class="btn btn-dark" data-fulfill-status="'+esc(o.orderId)+'">Update status</button></div>':'<p class="sub" style="margin:12px 0 0">No further status update available.</p>';
+    return '<article style="border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><strong>'+esc(o.orderId||"Order")+'</strong><div class="sub" style="margin-top:5px">'+esc(dateLabel)+'</div></div><span class="pill">'+esc(stage.label)+'</span></div><p style="margin:12px 0 4px"><strong>Items:</strong> '+(summary||"Order item details unavailable")+'</p><p style="margin:4px 0"><strong>Total:</strong> '+money(orderTotal(o))+'</p>'+action+'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:14px"><label style="font-size:12px;font-weight:700">Carrier / delivery partner<input data-fulfill-carrier="'+esc(o.orderId)+'" value="'+esc(fulfillment.carrier||"")+'" maxlength="100" placeholder="e.g. Delivery partner" style="display:block;width:100%;box-sizing:border-box;margin-top:5px;padding:10px;border:1px solid var(--line);border-radius:9px"></label><label style="font-size:12px;font-weight:700">Tracking / reference number<input data-fulfill-tracking="'+esc(o.orderId)+'" value="'+esc(fulfillment.trackingNumber||"")+'" maxlength="120" placeholder="Enter tracking reference" style="display:block;width:100%;box-sizing:border-box;margin-top:5px;padding:10px;border:1px solid var(--line);border-radius:9px"></label></div><label style="display:block;font-size:12px;font-weight:700;margin-top:10px">Fulfillment note<textarea data-fulfill-note="'+esc(o.orderId)+'" maxlength="500" rows="2" placeholder="Optional dispatch or delivery note" style="display:block;width:100%;box-sizing:border-box;margin-top:5px;padding:10px;border:1px solid var(--line);border-radius:9px;resize:vertical">'+esc(fulfillment.note||"")+'</textarea></label><button type="button" class="btn" data-fulfill-save="'+esc(o.orderId)+'" style="margin-top:10px">Save fulfillment details</button></article>';
+  }).join("");
+}
+function saveFulfillmentDetails(orderId){
+  const orders=read("smithx_orders_v2",read("smithx_orders_v1",[]));
+  if(!Array.isArray(orders))return;
+  const order=orders.find(function(o){return String(o.orderId)===String(orderId);});
+  if(!order||!orderBelongsToStore(order)){alert("Order not found for this store.");return;}
+  const carrier=document.querySelector("[data-fulfill-carrier=\""+CSS.escape(String(orderId))+"\"]");
+  const tracking=document.querySelector("[data-fulfill-tracking=\""+CSS.escape(String(orderId))+"\"]");
+  const note=document.querySelector("[data-fulfill-note=\""+CSS.escape(String(orderId))+"\"]");
+  order.fulfillment={...(order.fulfillment||{}),carrier:carrier?carrier.value.trim():"",trackingNumber:tracking?tracking.value.trim():"",note:note?note.value.trim():"",updatedAt:new Date().toISOString()};
+  order.updatedAt=new Date().toISOString();
+  try{localStorage.setItem("smithx_orders_v2",JSON.stringify(orders));renderFulfillmentOrders();}catch(e){alert("Could not save fulfillment details in this browser.");}
+}
+function updateFulfillmentStatus(orderId){
+  const orders=read("smithx_orders_v2",read("smithx_orders_v1",[]));
+  if(!Array.isArray(orders))return;
+  const order=orders.find(function(o){return String(o.orderId)===String(orderId);});
+  if(!order||!orderBelongsToStore(order)){alert("Order not found for this store.");return;}
+  const current=fulfillmentStage(order.status);
+  const select=$("next-"+orderId);
+  if(!current.next||!select||select.value!==current.next){alert("This order cannot move to that status.");return;}
+  const now=new Date().toISOString();
+  const map={Confirmed:{step:1,stage:"confirmed"},Shipped:{step:3,stage:"shipped"},Delivered:{step:5,stage:"delivered"}};
+  const next=map[select.value];
+  order.status=select.value;order.updatedAt=now;
+  order.tracking={...(order.tracking||{}),mode:"seller",currentStep:next.step,currentStage:next.stage,completed:select.value==="Delivered"};
+  if(select.value==="Delivered")order.tracking.completedAt=now;
+  try{localStorage.setItem("smithx_orders_v2",JSON.stringify(orders));renderFulfillmentOrders();render();}catch(e){alert("Could not update the order status in this browser.");}
+}
+$("sellerOrders").addEventListener("click",function(e){
+  const statusButton=e.target.closest("[data-fulfill-status]");
+  const saveButton=e.target.closest("[data-fulfill-save]");
+  if(statusButton)updateFulfillmentStatus(statusButton.getAttribute("data-fulfill-status"));
+  if(saveButton)saveFulfillmentDetails(saveButton.getAttribute("data-fulfill-save"));
+});
 function render(){const list=activeOrders();$('chartPeriod').textContent=selectedPeriod()==='all'?'All time':selectedPeriod()+' days';$('revenueValue').textContent=money(list.reduce((s,o)=>s+orderTotal(o),0));const profit=list.length?profitFor(list):0;$('profitValue').textContent=profit===null?'Not recorded':money(profit);$('profitValue').nextElementSibling.textContent=profit===null?'Add cost data for every order item':'Revenue less recorded product costs';renderChart(list);
 const salesByProduct={};list.forEach(o=>{const items=Array.isArray(o.items)?o.items:Array.isArray(o.products)?o.products:[];items.forEach(it=>{const id=String(it.productId||it.id||it.name||'unknown');salesByProduct[id]=(salesByProduct[id]||0)+Number(it.quantity||it.qty||1);});});
 const ranked=products.map(p=>({p,qty:salesByProduct[String(p.id||p.productId||p.name)]||salesByProduct[String(p.name)]||0})).sort((a,b)=>b.qty-a.qty);
@@ -139,6 +208,7 @@ $('period').addEventListener('change',render);window.addEventListener('resize',r
 $('askForm').addEventListener('submit',function(e){e.preventDefault();const q=$('question').value.trim().toLowerCase();let a='I do not have enough recorded data to answer that accurately yet. Add products and ensure orders and visits are saved to this store.';if(!q){a='Type a question about your store first.';}else if(/product|catalog|list/.test(q)){a='Your store has '+products.length+' saved product'+(products.length===1?'':'s')+'. '+(products.length?'Product records are loaded from this browser.':'Add your first product to begin.');}else if(/visitor|visit|traffic|people/.test(q)){a='Your store has '+visitCount+' recorded visit'+(visitCount===1?'':'s')+'. Visits are counted in this browser only.';}else if(/revenue|sales|sold|order/.test(q)){const list=activeOrders();a='I found '+list.length+' order records for this store in the selected period, totalling '+money(list.reduce((s,o)=>s+orderTotal(o),0))+'. Orders without a store ID or product belonging to this store are excluded.';}else if(/profit|cost|expense|margin/.test(q)){const list=activeOrders();const profit=list.length?profitFor(list):0;a=profit===null?'I cannot calculate reliable profit yet because one or more order records do not include cost data.':'Estimated profit for this store is '+money(profit)+'. This uses only this store’s recorded orders and costs.';}else if(/best|popular|most bought|selling/.test(q)){const map={};activeOrders().forEach(o=>(Array.isArray(o.items)?o.items:[]).forEach(i=>{const k=i.name||i.productName||i.productId||i.id||'Product';map[k]=(map[k]||0)+Number(i.quantity||i.qty||1)}));const top=Object.entries(map).sort((a,b)=>b[1]-a[1])[0];a=top?'The leading product in available order items is '+top[0]+' with '+top[1]+' unit(s) recorded.':'I cannot identify a best seller because product-level order items are not available in the saved order records.';}else if(/slow|not sell|poor|attention/.test(q)){const sold=new Set();activeOrders().forEach(o=>(Array.isArray(o.items)?o.items:[]).forEach(i=>sold.add(String(i.productId||i.id||i.name||''))));const slow=products.filter(p=>!sold.has(String(p.id||p.productId||p.name))&&!sold.has(String(p.name)));a=slow.length?'These products have no matching purchases in the available order records: '+slow.slice(0,5).map(p=>p.name||p.title||'Unnamed product').join(', ')+'. This does not prove they have never sold; order history may be incomplete.':'No products without matching purchases were identified in the available records.';}$('answer').textContent=a;$('answer').classList.add('show');});
 if(!store){$('dataNotice').innerHTML='<strong>No saved store found for this session.</strong> Sign in with the seller account used to create your store. Store setup and product records in this version are browser-local, so clearing browser storage or switching browsers can make them unavailable. <a href="profile.html" style="text-decoration:underline;font-weight:700">Open store setup →</a>';}
 render();
+renderFulfillmentOrders();
 })();
 </script>
 </body>
