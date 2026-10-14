@@ -61,7 +61,7 @@
 </section>
 <section class="layout" aria-label="Store settings and access">
   <article class="panel" style="grid-column:1/-1">
-    <div class="panel-head"><div><h2>Store settings &amp; access</h2><p>Quick controls for your store profile and listings</p></div><a class="btn btn-dark" href="profile.html#store">Open store settings ↗</a></div>
+    <div class="panel-head"><div><h2>Store settings &amp; access</h2><p>Quick controls for your store profile and listings</p></div><a class="btn btn-dark" href="profile.html?editStore=1#store">Open store settings ↗</a></div>
     <div id="storeControls" class="activity"><div class="empty"><strong>Checking store settings</strong>Reading the saved store status.</div></div>
     <p class="sub" style="margin-top:12px">Access note: this dashboard selects stores owned by the signed-in account. Store, product, order, and review records currently live in this browser; they are not a shared multi-device database.</p>
   </article>
@@ -254,7 +254,7 @@ function renderBusinessTools(){
     controls.innerHTML='<div class="activity-item"><div class="activity-mark">'+(published?'✓':'!')+'</div><div><strong>Store status: '+(published?'Published':'Unpublished')+'</strong><small>'+(published?'Your storefront is marked as published.':'Publish your store in Store settings before customers can discover it.')+'</small></div></div>'+
       '<div class="activity-item"><div class="activity-mark">□</div><div><strong>'+products.length+' product listings · '+draftCount+' draft/unpublished</strong><small>Manage product visibility and stock in Products &amp; Stock.</small></div></div>'+
       '<div class="activity-item"><div class="activity-mark">⚙</div><div><strong>Seller access is scoped to the signed-in owner</strong><small>The dashboard only loads stores whose owner email matches the current session.</small></div></div>'+
-      '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><a class="btn" href="profile.html#store">Edit store profile</a><a class="btn" href="seller-products.html">Manage products</a><a class="btn" href="store.html?s='+encodeURIComponent(store.slug||'')+'">View storefront</a></div>';
+      '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><a class="btn" href="profile.html?editStore=1#store">Edit store profile</a><a class="btn" href="seller-products.html">Manage products</a><a class="btn" href="store.html?s='+encodeURIComponent(store.slug||'')+'">View storefront</a></div>';
   }
 }
 function render(){const list=activeOrders();if($('orderCount'))$('orderCount').textContent=String(list.length);renderBusinessTools();$('chartPeriod').textContent=selectedPeriod()==='all'?'All time':selectedPeriod()+' days';$('revenueValue').textContent=money(list.reduce((s,o)=>s+orderTotal(o),0));const profit=list.length?profitFor(list):0;$('profitValue').textContent=profit===null?'Not recorded':money(profit);$('profitValue').nextElementSibling.textContent=profit===null?'Add cost data for every order item':'Revenue less recorded product costs';renderChart(list);
