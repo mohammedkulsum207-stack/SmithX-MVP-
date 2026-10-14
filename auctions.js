@@ -10,7 +10,7 @@
      • Sellers can't bid on their own auctions and can
        only cancel before the first bid.
      • Highest bid when the timer ends wins.
-     • The winner has 48 hours to pay. If they don't, the
+     • The winner should pay immediately after the auction ends; unpaid wins expire after 15 minutes. If they don't, the
        item is offered to the next-highest bidder at that
        bidder's own price, also for 48 hours.
      • Losing bids are always free. Any winning fee is
@@ -24,7 +24,7 @@ const SMX_AUCTIONS_KEY = "smithx_auctions_v1";
 const SMX_AUCTION_RULES = {
   snipeWindowMs: 0,
   extendByMs: 0,
-  payWindowMs: 48 * 60 * 60 * 1000,
+  payWindowMs: 15 * 60 * 1000,
   winningFeePercent: 0,
   losingBidFee: 0,
   maxDurationMs: 2 * 60 * 1000,
