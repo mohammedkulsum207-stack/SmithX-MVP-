@@ -67,6 +67,9 @@
       });
     });
     var currency = Object.keys(currencyTotals).sort(function (a, b) { return currencyTotals[b] - currencyTotals[a]; })[0] || "KES";
+    var mixedCurrencies = Object.keys(currencyTotals).length > 1;
+    revenue = currencyTotals[currency] || 0;
+    if (mixedCurrencies) { cost = 0; coveredUnits = 0; }
     allProducts.forEach(function (product) {
       var raw = product.stock != null ? product.stock : product.stockQuantity != null ? product.stockQuantity : product.stock_quantity != null ? product.stock_quantity : product.inventory != null ? product.inventory : product.quantity;
       if (raw == null || raw === "" || !Number.isFinite(Number(raw)) || Number(raw) < 0) { inventory.unknown++; return; }
@@ -81,7 +84,7 @@
       products: allProducts.length, orders: selected.length, units: units, revenue: revenue, cost: cost,
       profit: revenue - cost, margin: revenue ? (revenue - cost) / revenue * 100 : 0,
       coveredUnits: coveredUnits, missingUnits: Math.max(0, totalUnits - coveredUnits),
-      currency: currency, currencyTotals: currencyTotals, statusCounts: statusCounts, inventory: inventory,
+      currency: currency, currencyTotals: currencyTotals, mixedCurrencies: mixedCurrencies, statusCounts: statusCounts, inventory: inventory,
       averageOrderValue: selected.length ? revenue / selected.length : 0,
       visitors: visitors, views: views,
       conversion: visitors ? (selected.length / visitors) * 100 : null,
@@ -102,7 +105,8 @@
       ".smx-analytics-table{width:100%;border-collapse:collapse;font-size:.86rem}.smx-analytics-table th,.smx-analytics-table td{text-align:left;padding:10px 6px;border-bottom:1px solid var(--border,#e8e0d2)}.smx-analytics-table th{color:var(--muted,#6f675a);font-weight:600;font-size:.78rem}.smx-analytics-table td:last-child{text-align:right}",
       ".smx-cost-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,180px);gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border,#e8e0d2)}.smx-cost-row strong{display:block;font-size:.9rem}.smx-cost-row small{display:block;color:var(--muted,#6f675a);margin-top:3px}.smx-analytics-costs{margin-top:18px}.smx-analytics-costs summary{cursor:pointer;font-weight:700;padding:4px 0 12px}",
       ".smx-analytics-note{margin-top:14px;padding:12px 14px;background:#fff7e6;border-radius:12px;color:#6f4b12;font-size:.83rem;line-height:1.5}.smx-analytics-empty{color:var(--muted,#6f675a);font-size:.88rem}",
-      "@media(max-width:760px){.smx-analytics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.smx-analytics-detail{grid-template-columns:1fr}}@media(max-width:440px){.smx-analytics-grid{gap:8px}.smx-analytics-stat{padding:12px}.smx-cost-row{grid-template-columns:1fr}.smx-analytics-bar-row{grid-template-columns:75px 1fr auto}}"
+      ".smx-analytics-currency-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.smx-analytics-currency-chip{padding:8px 11px;border:1px solid var(--border,#e8e0d2);border-radius:10px;font-size:.84rem}.smx-analytics-chip-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.smx-analytics-chip{padding:12px;background:var(--background,#f6f1e8);border-radius:12px;min-width:0;overflow-wrap:anywhere}.smx-analytics-chip b{display:block;font-size:1.1rem}.smx-analytics-chip span{font-size:.78rem;color:var(--muted,#6f675a)}",
+      "@media(max-width:760px){.smx-analytics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.smx-analytics-detail{grid-template-columns:1fr}}@media(max-width:600px){.smx-analytics-chip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:440px){.smx-analytics-grid{gap:8px}.smx-analytics-stat{padding:12px}.smx-cost-row{grid-template-columns:1fr}.smx-analytics-bar-row{grid-template-columns:75px 1fr auto}}"
     ].join("");
     var style = document.createElement("style"); style.id = "smxAnalyticsStyles"; style.textContent = css; document.head.appendChild(style);
   }
@@ -155,7 +159,7 @@
     html += '<div class="smx-analytics-stat"><span>Store visits today*</span><strong>' + data.visitors.toLocaleString() + '</strong><small>Browser-local demo counter</small></div>';
     html += '<div class="smx-analytics-stat"><span>Units in orders</span><strong>' + data.units.toLocaleString() + '</strong><small>' + data.orders + ' orders in selected period</small></div>';
     html += '<div class="smx-analytics-stat"><span>Gross order value</span><strong>' + money(data.revenue, data.currency) + '</strong><small>Excludes cancelled/refunded orders</small></div>';
-    html += '<div class="smx-analytics-stat"><span>Estimated profit</span><strong>' + profit + '</strong><small>Revenue minus recorded product costs</small></div>';
+    html += '<div class="smx-analytics-stat"><span>Estimated profit</span><strong>' + profit + '</strong><small>' + (data.mixedCurrencies ? "Profit unavailable: multiple currencies" : "Revenue minus recorded product costs") + '</small></div>';
     html += '<div class="smx-analytics-stat"><span>Estimated margin</span><strong>' + (data.coveredUnits ? data.margin.toFixed(1) + "%" : "—") + '</strong><small>Fees and shipping not included</small></div></div>';
     html += '<section class="smx-analytics-panel" style="margin-top:18px"><h4>Sales overview by currency</h4><p class="smx-analytics-sub">Currencies are reported separately and are never added together.</p><div class="smx-analytics-currency-list">' + (Object.keys(data.currencyTotals).length ? Object.keys(data.currencyTotals).sort().map(function (code) { return '<span class="smx-analytics-currency-chip"><b>' + esc(code) + '</b> &nbsp;' + money(data.currencyTotals[code], code) + '</span>'; }).join("") : '<span class="smx-analytics-empty">No order sales in this period.</span>') + '</div><div class="smx-analytics-chip-grid" style="margin-top:12px"><div class="smx-analytics-chip"><b>' + money(data.averageOrderValue, data.currency) + '</b><span>Average order value · primary currency</span></div><div class="smx-analytics-chip"><b>' + (data.conversion == null ? "—" : data.conversion.toFixed(1) + "%") + '</b><span>Demo orders / visits today*</span></div><div class="smx-analytics-chip"><b>' + Object.keys(data.statusCounts).length + '</b><span>Order status types seen</span></div></div></section>';
     html += '<div class="smx-analytics-detail"><section class="smx-analytics-panel"><h4>Best-selling products (' + esc(data.currency) + ' only)</h4><div class="smx-analytics-bars">';
