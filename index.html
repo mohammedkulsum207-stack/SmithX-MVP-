@@ -22,6 +22,8 @@
 
   <link rel="stylesheet" href="phase1.css"> <!-- Phase 1 add-on: delete this line to remove -->
   <link rel="stylesheet" href="phase2.css"> <!-- Phase 2 add-on: delete this line to remove -->
+  <link rel="stylesheet" href="comfort.css">
+  <link rel="stylesheet" href="storefront-refresh.css">
 </head>
 
 <body>
@@ -74,12 +76,12 @@
         Marketplace
       </a>
 
-      <a href="#seller">
-        Sell
-      </a>
-
       <a href="#dashboard">
         My Store
+      </a>
+
+      <a href="#seller">
+        Sell
       </a>
 
       <!-- NEW CUSTOMER ORDER PAGE -->
@@ -145,17 +147,15 @@
     <div class="hero-copy">
 
       <p class="hero-eyebrow">
-        THE FUTURE OF COMMERCE
+        THE MARKETPLACE FOR EVERYDAY DISCOVERIES
       </p>
 
       <h1>
-        Build. <span>Sell.</span> Grow.
+        Find something <span>good.</span>
       </h1>
 
       <p class="hero-description">
-        SM1THX 🛒 gives sellers the tools to launch,
-        manage and grow online businesses while giving
-        buyers a smarter way to discover products.
+        Discover useful finds from independent sellers. Browse products, compare your options and find something worth bringing home.
       </p>
 
 
@@ -166,7 +166,7 @@
           class="primary-button"
           onclick="scrollToSection('market')"
         >
-          Explore Marketplace
+          Explore the marketplace
         </button>
 
 
@@ -175,7 +175,7 @@
           class="secondary-button"
           onclick="scrollToSection('seller')"
         >
-          Start Selling
+          Start selling
         </button>
 
       </div>
@@ -188,16 +188,15 @@
       <div class="hero-panel-card">
 
         <span>
-          SM1THX 🛒
+          YOUR NEXT GOOD FIND
         </span>
 
         <strong>
-          AI-POWERED COMMERCE
+          A marketplace made for discovery.
         </strong>
 
         <p>
-          One platform for discovering,
-          selling and growing.
+          Browse thoughtful picks from sellers in one simple place.
         </p>
 
       </div>
@@ -231,8 +230,7 @@
       </h2>
 
       <p>
-        Discover products from the growing
-        SM1THX 🛒 marketplace.
+        Explore products from sellers across the SM1THX marketplace.
       </p>
 
     </div>
@@ -285,6 +283,186 @@
 ===================================================== -->
 
 <section
+  id="dashboard"
+  class="section dashboard-section"
+>
+
+  <div class="section-inner">
+
+    <div class="section-heading">
+
+      <p class="section-eyebrow">
+        MY STORE
+      </p>
+
+      <h2>
+        Your store, all in one place.
+      </h2>
+
+      <p>
+        Manage listings, review demo orders and monitor activity. Analytics currently use browser demo data.
+      </p>
+
+    </div>
+
+
+    <div class="dashboard-grid">
+
+      <div class="dashboard-card">
+
+        <span>
+          Products
+        </span>
+
+        <strong id="dashboardProducts">
+          6
+        </strong>
+
+      </div>
+
+
+      <div class="dashboard-card">
+
+        <span>
+          Orders
+        </span>
+
+        <strong id="dashboardOrders">
+          0
+        </strong>
+
+      </div>
+
+
+      <div class="dashboard-card">
+
+        <span>
+          Revenue
+        </span>
+
+        <strong id="dashboardRevenue">
+          KES 0
+        </strong>
+
+      </div>
+
+
+      <div class="dashboard-card">
+
+        <span>
+          Today's Visitors
+        </span>
+
+        <strong id="dashboardVisitors">
+          0
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="dashboard-actions">
+
+      <button
+        type="button"
+        class="secondary-button"
+        onclick="resetAnalytics()"
+      >
+        Reset Demo Analytics
+      </button>
+
+    </div>
+
+
+    <!-- =================================================
+         SELLER ORDER MANAGEMENT
+    ================================================= -->
+
+    <div class="orders-section">
+
+      <div class="orders-section-header">
+
+        <div>
+
+          <p class="section-eyebrow">
+            ORDER MANAGEMENT
+          </p>
+
+          <h3>
+            Orders
+          </h3>
+
+          <p class="muted">
+            Orders created through Demo Checkout
+            appear here.
+          </p>
+
+        </div>
+      </div>
+
+
+      <div
+        id="ordersList"
+        class="orders-list"
+      >
+
+        <div class="empty-state">
+
+          <strong>
+            No orders yet.
+          </strong>
+
+          <p>
+            Orders created through Demo Checkout
+            will appear here.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CUSTOMER ORDER ACCESS
+    ================================================= -->
+
+    <div class="customer-orders-cta">
+
+      <div>
+
+        <p class="section-eyebrow">
+          CUSTOMER EXPERIENCE
+        </p>
+
+        <h3>
+          Track your purchases
+        </h3>
+
+        <p class="muted">
+          View your order history and follow
+          your delivery from checkout to delivery.
+        </p>
+
+      </div>
+
+
+      <a
+        href="my-orders.html"
+        class="primary-button"
+      >
+        My Orders →
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section
   id="seller"
   class="section seller-section"
 >
@@ -298,12 +476,11 @@
       </p>
 
       <h2>
-        Build Your Store
+        Bring your products to SM1THX
       </h2>
 
       <p>
-        Create a product and publish it directly
-        to the SM1THX 🛒 marketplace.
+        Add a product listing and make it available to marketplace shoppers.
       </p>
 
     </div>
@@ -660,192 +837,6 @@
         </div>
 
       </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-     DASHBOARD
-===================================================== -->
-
-<section
-  id="dashboard"
-  class="section dashboard-section"
->
-
-  <div class="section-inner">
-
-    <div class="section-heading">
-
-      <p class="section-eyebrow">
-        MY STORE
-      </p>
-
-      <h2>
-        Your store, at a glance.
-      </h2>
-
-      <p>
-        Manage products, review orders and understand store activity in one place.
-        Analytics are currently based on browser demo data.
-      </p>
-
-    </div>
-
-
-    <div class="dashboard-grid">
-
-      <div class="dashboard-card">
-
-        <span>
-          Products
-        </span>
-
-        <strong id="dashboardProducts">
-          6
-        </strong>
-
-      </div>
-
-
-      <div class="dashboard-card">
-
-        <span>
-          Orders
-        </span>
-
-        <strong id="dashboardOrders">
-          0
-        </strong>
-
-      </div>
-
-
-      <div class="dashboard-card">
-
-        <span>
-          Revenue
-        </span>
-
-        <strong id="dashboardRevenue">
-          KES 0
-        </strong>
-
-      </div>
-
-
-      <div class="dashboard-card">
-
-        <span>
-          Today's Visitors
-        </span>
-
-        <strong id="dashboardVisitors">
-          0
-        </strong>
-
-      </div>
-
-    </div>
-
-
-    <div class="dashboard-actions">
-
-      <button
-        type="button"
-        class="secondary-button"
-        onclick="resetAnalytics()"
-      >
-        Reset Demo Analytics
-      </button>
-
-    </div>
-
-
-    <!-- =================================================
-         SELLER ORDER MANAGEMENT
-    ================================================= -->
-
-    <div class="orders-section">
-
-      <div class="orders-section-header">
-
-        <div>
-
-          <p class="section-eyebrow">
-            ORDER MANAGEMENT
-          </p>
-
-          <h3>
-            Orders
-          </h3>
-
-          <p class="muted">
-            Orders created through Demo Checkout
-            appear here.
-          </p>
-
-        </div>
-      </div>
-
-
-      <div
-        id="ordersList"
-        class="orders-list"
-      >
-
-        <div class="empty-state">
-
-          <strong>
-            No orders yet.
-          </strong>
-
-          <p>
-            Orders created through Demo Checkout
-            will appear here.
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- =================================================
-         CUSTOMER ORDER ACCESS
-    ================================================= -->
-
-    <div class="customer-orders-cta">
-
-      <div>
-
-        <p class="section-eyebrow">
-          CUSTOMER EXPERIENCE
-        </p>
-
-        <h3>
-          Track your purchases
-        </h3>
-
-        <p class="muted">
-          View your order history and follow
-          your delivery from checkout to delivery.
-        </p>
-
-      </div>
-
-
-      <a
-        href="my-orders.html"
-        class="primary-button"
-      >
-        My Orders →
-      </a>
 
     </div>
 
@@ -1451,7 +1442,6 @@
 <script src="intl-config.js"></script> <!-- Phase 5 international: delete these two lines to remove -->
 <script src="intl.js"></script>
 
-<link rel="stylesheet" href="comfort.css"> <!-- Comfort add-on: delete these two lines to remove -->
 <script src="comfort.js"></script>
 </body>
 </html>
