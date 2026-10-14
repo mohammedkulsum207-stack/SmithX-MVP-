@@ -4903,3 +4903,46 @@ h1, h2, h3, .dashboard-card strong, .smithx-brand-text strong, footer strong {
   }
   .hero-panel { justify-content: flex-start; }
 }
+
+
+/* ---------- Marketplace demo status notice ---------- */
+.demo-mode-notice {
+  position: relative;
+  z-index: 1;
+  background: #fff7e6;
+  border-bottom: 1px solid #ead6aa;
+  color: #513b10;
+}
+.demo-mode-notice-inner {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 11px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.demo-mode-notice p {
+  margin: 0;
+  font-size: .9rem;
+  line-height: 1.5;
+}
+.demo-mode-pill {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #c79b3b;
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .demo-mode-notice-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 0;
+  }
+}
