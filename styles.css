@@ -4904,3 +4904,351 @@ h1, h2, h3, .dashboard-card strong, .smithx-brand-text strong, footer strong {
   .hero-panel { justify-content: flex-start; }
 }
 
+
+
+/* =========================================================
+   STORE EXPERIENCE POLISH — clearer hierarchy and spacing
+========================================================= */
+:root {
+  --container: 1200px;
+  --surface: #fffdf9;
+  --surface-muted: #f0e8da;
+  --line-soft: rgba(35, 29, 20, .09);
+}
+
+body {
+  background: #f8f4ec;
+  letter-spacing: -.01em;
+}
+
+.topbar {
+  background: rgba(250, 247, 240, .94);
+  border-bottom-color: rgba(35, 29, 20, .10);
+}
+
+.topbar-inner {
+  min-height: 72px;
+  gap: clamp(12px, 2vw, 26px);
+}
+
+.nav-links {
+  gap: 5px;
+}
+
+.nav-links a {
+  padding: 9px 13px;
+  border-radius: 999px;
+  font-size: .91rem;
+  font-weight: 600;
+  transition: background .2s ease, color .2s ease;
+}
+
+.nav-links a:hover,
+.nav-links a:focus-visible {
+  background: #e9dfcf;
+  color: #17130e;
+}
+
+.section {
+  padding: clamp(64px, 7vw, 96px) 0;
+}
+
+.section-heading {
+  max-width: 720px;
+  margin: 0 auto 34px;
+  text-align: center;
+}
+
+.section-heading h2 {
+  max-width: 680px;
+  margin: 8px auto 12px;
+  line-height: 1.08;
+  letter-spacing: -.045em;
+}
+
+.section-heading > p:last-child {
+  max-width: 590px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.marketplace-section {
+  background: #fffdf9;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.marketplace-tools {
+  max-width: 900px;
+  margin: 0 auto 22px;
+  padding: 12px;
+  gap: 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 18px;
+  background: #f8f4ec;
+}
+
+.search-box input,
+.marketplace-tools input {
+  min-height: 48px;
+  border-radius: 12px;
+  border-color: #e0d6c5;
+  background: #fffdf9;
+}
+
+.category-filters {
+  justify-content: center;
+  margin: 0 auto 28px;
+  gap: 9px;
+}
+
+.category-filters button {
+  border-radius: 999px;
+  padding: 9px 15px;
+  font-size: .88rem;
+}
+
+.products-grid {
+  gap: 22px;
+  align-items: stretch;
+}
+
+.product-card {
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(35, 29, 20, .035);
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(184, 130, 43, .35);
+  box-shadow: 0 18px 36px rgba(35, 29, 20, .09);
+}
+
+.product-image-button {
+  background: #f1eadf;
+}
+
+.product-card-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 190px;
+}
+
+.product-card-bottom {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.seller-section {
+  background: #f0e8da;
+}
+
+.seller-layout {
+  align-items: stretch;
+  gap: 24px;
+}
+
+.seller-card,
+.seller-info-card,
+.dashboard-card,
+.orders-section,
+.customer-orders-cta {
+  border: 1px solid var(--line-soft);
+  border-radius: 22px;
+  box-shadow: 0 8px 26px rgba(35, 29, 20, .045);
+}
+
+.seller-card,
+.seller-info-card {
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.dashboard-section {
+  background: #f8f4ec;
+}
+
+.dashboard-section .section-heading {
+  text-align: left;
+  max-width: none;
+  margin-bottom: 30px;
+}
+
+.dashboard-section .section-heading h2,
+.dashboard-section .section-heading > p:last-child {
+  margin-left: 0;
+}
+
+.dashboard-section .section-heading > p:last-child {
+  max-width: 700px;
+}
+
+.dashboard-grid {
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.dashboard-card {
+  position: relative;
+  overflow: hidden;
+  padding: 23px 24px;
+  min-height: 132px;
+  background: #fffdf9;
+}
+
+.dashboard-card::after {
+  width: 4px;
+  border-radius: 4px;
+  background: #bd8a3c;
+  opacity: .85;
+}
+
+.dashboard-card span {
+  display: block;
+  margin-bottom: 10px;
+  color: #746957;
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.dashboard-card strong {
+  font-size: clamp(1.65rem, 2.5vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -.045em;
+}
+
+.dashboard-actions {
+  margin: 0 0 28px;
+  justify-content: flex-end;
+}
+
+.orders-section {
+  margin-top: 28px;
+  padding: clamp(20px, 3vw, 30px);
+  background: #fffdf9;
+}
+
+.orders-section-header {
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.orders-section-header h3 {
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+}
+
+.orders-list {
+  display: grid;
+  gap: 12px;
+}
+
+.customer-orders-cta {
+  margin-top: 22px;
+  padding: clamp(22px, 3vw, 32px);
+  background: #211b12;
+  color: #fffdf9;
+}
+
+.customer-orders-cta .muted,
+.customer-orders-cta p {
+  color: rgba(255, 253, 249, .72);
+}
+
+.feature-card {
+  border: 1px solid var(--line-soft);
+  border-radius: 20px;
+  background: #fffdf9;
+  box-shadow: 0 6px 22px rgba(35, 29, 20, .035);
+}
+
+.about-card {
+  padding: clamp(28px, 5vw, 58px);
+}
+
+button,
+.primary-button,
+.secondary-button {
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(189, 138, 60, .5);
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .topbar-inner {
+    min-height: auto;
+    padding: 12px 0;
+    flex-wrap: wrap;
+  }
+
+  .nav-links {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    padding: 2px 0 4px;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+
+  .nav-links a {
+    flex: 0 0 auto;
+  }
+
+  .section {
+    padding: 56px 0;
+  }
+
+  .section-heading,
+  .dashboard-section .section-heading {
+    text-align: left;
+  }
+
+  .section-heading h2,
+  .section-heading > p:last-child,
+  .dashboard-section .section-heading h2,
+  .dashboard-section .section-heading > p:last-child {
+    margin-left: 0;
+  }
+
+  .marketplace-tools {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .marketplace-tools > * {
+    width: 100%;
+  }
+
+  .dashboard-card {
+    min-height: 112px;
+    padding: 18px;
+  }
+
+  .orders-section {
+    padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
