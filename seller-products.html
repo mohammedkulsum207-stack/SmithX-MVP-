@@ -189,7 +189,7 @@
       '</span>';
   }
   function statusFor(product) {
-    if (Number(product.stock) <= 0) return ["out","Out of stock"];
+    if (product.stock !== undefined && product.stock !== null && Number(product.stock) <= 0) return ["out","Out of stock"];
     if (product.published === false) return ["draft","Draft"];
     if (store && !store.published) return ["draft","Store is draft"];
     return ["live","Published"];
@@ -208,7 +208,7 @@
         '<img src="' + escapeHTML(img) + '" alt="' + escapeHTML(product.name || "Product image") + '" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
         '<div><h3>' + escapeHTML(product.name || "Untitled product") + '</h3>' +
         '<div class="sp-meta">KES ' + (Number(product.price) || 0).toLocaleString("en-KE") + ' · ' + escapeHTML(product.category || "Other") +
-        '<br>Stock: ' + Math.max(0, Number(product.stock) || 0) + ' · <span class="sp-badge ' + (status[0] === "live" ? "" : status[0] === "out" ? "out" : "draft") + '">' + status[1] + '</span></div></div>' +
+        '<br>Stock: ' + (product.stock === undefined || product.stock === null ? "Not tracked" : Math.max(0, Number(product.stock) || 0)) + ' · <span class="sp-badge ' + (status[0] === "live" ? "" : status[0] === "out" ? "out" : "draft") + '">' + status[1] + '</span></div></div>' +
         '<div class="sp-item-actions"><button class="secondary-button small-button" type="button" data-edit="' + escapeHTML(product.id) + '">Edit</button>' +
         '<button class="secondary-button small-button danger-button" type="button" data-delete="' + escapeHTML(product.id) + '">Delete</button></div></article>';
     }).join("");
