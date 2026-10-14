@@ -71,8 +71,32 @@ const SMX_COUNTRIES = [
       </div>
 
       <div class="field">
-        <label for="stAbout">About your store <span class="muted" style="font-weight:400;">— optional</span></label>
+        <label for="stAbout">Business description</label>
         <textarea class="input" id="stAbout" rows="4" maxlength="600" placeholder="Tell buyers who you are, what you sell and how you deliver."></textarea>
+      </div>
+
+      <div class="smx-store-grid">
+        <div class="field">
+          <label for="stLocation">Business location</label>
+          <input class="input" id="stLocation" type="text" maxlength="120" placeholder="e.g. Nairobi, Kenya">
+        </div>
+        <div class="field">
+          <label for="stPhone">Public contact phone</label>
+          <input class="input" id="stPhone" type="tel" maxlength="40" placeholder="Phone number buyers can use">
+        </div>
+      </div>
+      <div class="field">
+        <label for="stContactEmail">Public contact email</label>
+        <input class="input" id="stContactEmail" type="email" maxlength="160" placeholder="Business contact email">
+        <span class="hint">Leave blank to use the email on your seller account.</span>
+      </div>
+      <div class="field">
+        <label for="stLogo">Store logo image URL <span class="muted" style="font-weight:400;">— optional</span></label>
+        <input class="input" id="stLogo" type="url" maxlength="1800" placeholder="https://example.com/logo.png">
+      </div>
+      <div class="field">
+        <label for="stBanner">Cover banner image URL <span class="muted" style="font-weight:400;">— optional</span></label>
+        <input class="input" id="stBanner" type="url" maxlength="1800" placeholder="https://example.com/cover.jpg">
       </div>
 
       <fieldset class="field" style="border:0;">
@@ -121,6 +145,11 @@ const SMX_COUNTRIES = [
       slug.value = store ? store.slug : "";
       $("stTagline").value = store ? store.tagline : "";
       $("stAbout").value = store ? store.description : "";
+      $("stLocation").value = store ? (store.location || "") : "";
+      $("stPhone").value = store ? (store.contactPhone || "") : "";
+      $("stContactEmail").value = store ? (store.contactEmail || "") : user.email;
+      $("stLogo").value = store ? (store.logo || "") : "";
+      $("stBanner").value = store ? (store.banner || "") : "";
       $("stPublished").checked = store ? store.published : true;
       const theme = store ? store.theme : "gold";
       const radio = card.querySelector(`input[name="stTheme"][value="${theme}"]`);
@@ -185,6 +214,11 @@ const SMX_COUNTRIES = [
           slug: slug.value || name.value,
           tagline: $("stTagline").value,
           description: $("stAbout").value,
+          location: $("stLocation").value,
+          contactPhone: $("stPhone").value,
+          contactEmail: $("stContactEmail").value || user.email,
+          logo: $("stLogo").value,
+          banner: $("stBanner").value,
           theme: (card.querySelector('input[name="stTheme"]:checked') || {}).value,
           published: $("stPublished").checked,
           layout: $("stLayout").value
@@ -280,6 +314,7 @@ const SMX_COUNTRIES = [
     .smx-store-setup { margin-bottom: 24px; display: grid; gap: 14px; }
     .smx-store-setup .card-head { margin-bottom: 0; }
     .smx-store-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .smx-store-setup .hint { display:block; margin-top:5px; font-size:.78rem; color:var(--muted,#6f675a); }
     .smx-slug-wrap { display: flex; align-items: stretch; border: 1px solid var(--line, #e8e0d2); border-radius: 12px; overflow: hidden; background: #fff; }
     .smx-slug-wrap span { display: flex; align-items: center; padding: 0 10px; background: var(--ivory, #f6f1e8); color: var(--muted, #6f675a); font-size: .8rem; white-space: nowrap; }
     .smx-slug-wrap .input { border: 0; border-radius: 0; min-width: 0; flex: 1; }
