@@ -350,13 +350,6 @@
       if (!nav.contains(event.target) && !button.contains(event.target)) setOpen(false);
     });
 
-    if (!nav.querySelector('a[href="profile.html#store"]')) {
-      const storeLink = document.createElement("a");
-      storeLink.href = "profile.html#store";
-      storeLink.textContent = "My Store";
-      const ordersLink = nav.querySelector('a[href="my-orders.html"]');
-      nav.insertBefore(storeLink, ordersLink ? ordersLink.nextSibling : null);
-    }
   }
 
   /* ---------------- Shared product link (?product=ID) ---------------- */
