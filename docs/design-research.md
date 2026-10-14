@@ -51,6 +51,12 @@ The most important change is structural, not decorative: establish one shopping 
 - **MDN — Reduced motion:** https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/%40media/prefers-reduced-motion  
   Non-essential motion should respect the visitor's operating-system preference.
 
+## How sources were weighted
+
+The review combined usability research, accessibility standards, commerce-platform guidance, and public storefront redesign case studies. Official research and platform documentation were weighted more heavily than creator opinions or trend roundups because they provide clearer methods, context, or directly applicable marketplace guidance.
+
+YouTube, Instagram and TikTok were included in the discovery search. The most directly applicable, verifiable material returned was TikTok Shop's official guidance on marketplace discovery and listing quality. Public video/social results for the other platforms were too noisy or promotional to treat as reliable UX evidence on their own. Their visual trends should be used as inspiration only after the underlying shopping flow is sound.
+
 ## Repository findings
 
 1. The storefront loads the base stylesheet plus several phase/add-on stylesheets and later overrides. That means the visual result depends on cascade order, not one clearly owned design system.
