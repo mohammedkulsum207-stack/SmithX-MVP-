@@ -369,9 +369,20 @@ function getCustomProducts() {
     []
   );
 
-  return Array.isArray(products)
-    ? products
-    : [];
+  if (!Array.isArray(products)) return [];
+
+  // Seller-owned products appear publicly only when their store is published.
+  let stores = [];
+  try {
+    const parsed = JSON.parse(localStorage.getItem("smithx_stores_v1") || "[]");
+    stores = Array.isArray(parsed) ? parsed : [];
+  } catch (_) { stores = []; }
+
+  return products.filter(product => {
+    if (!product || !product.storeId) return true; // retain legacy demo listings
+    const store = stores.find(item => item && item.id === product.storeId);
+    return Boolean(store && store.published);
+  });
 }
 
 
