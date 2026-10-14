@@ -99,7 +99,7 @@ Decision (12 Oct 2026): SMX Coins are prepaid store credit.
 | Auctions | 🟡 | `auctions.html`. Create (5 min demo → 7 days), live bids, minimum bid step, countdown, masked bidder names, "My bids" / "My auctions" tabs |
 | Losing bids are free | ✅ | Losing bidders are never charged. The winning fee (currently 0%) is shown before every bid. Change it in `auctions.js` (`winningFeePercent`) |
 | Fair-bidding rules | ✅ | No bidding on your own items, bids are binding, a bid in the last 2 minutes adds 2 minutes, sellers can only cancel before the first bid |
-| Winner payment | ✅ | Winner pays within 48 hours by M-Pesa (demo) or SMX Credit. Creates a normal order in My Orders. If unpaid, it goes to the next-highest bidder |
+| Winner payment | ✅ | Winner is prompted to pay immediately; the 15-minute payment window and M-Pesa/SMX Credit flows remain demo-only. Creates a normal order in My Orders. If unpaid, it goes to the next-highest bidder |
 | Reviews and ratings | ✅ | 1–5 stars + written review. Only buyers with a delivered order can review; sellers can't review their own products |
 | Fake-review safeguards | 🟡 | Verified-purchase only, one review per product per person, no links or phone numbers, reports hide a review after 3 reports. Moderation dashboard needs a backend |
 | Ratings shown | ✅ | Stars on product cards, rating breakdown in the product view, store rating on storefronts |
