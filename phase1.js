@@ -360,6 +360,56 @@
     }
   }
 
+  /* ---------------- Public store directory ---------------- */
+
+  // Keep published storefronts discoverable when a shopper signs into a
+  // different account. Store ownership/edit controls remain owner-only.
+  function buildPublicStoreDirectory() {
+    const market = document.getElementById("market");
+    const tools = market && market.querySelector(".marketplace-tools");
+    if (!market || !tools || document.getElementById("smxPublicStores")) return;
+
+    const stores = (typeof smxGetStores === "function" ? smxGetStores() : [])
+      .filter(store => store && store.published && store.slug)
+      .sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
+    if (!stores.length) return;
+
+    const section = document.createElement("section");
+    section.id = "smxPublicStores";
+    section.setAttribute("aria-labelledby", "smxPublicStoresTitle");
+    section.style.cssText = "margin:0 0 24px;padding:18px;border:1px solid var(--border,#e5e7eb);border-radius:16px;background:var(--surface,#fff);";
+    section.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+        <div>
+          <h3 id="smxPublicStoresTitle" style="margin:0;font-size:1.1rem;">Published stores</h3>
+          <p class="muted" style="margin:4px 0 0;font-size:.88rem;">Visit seller storefronts from the marketplace.</p>
+        </div>
+      </div>
+      <div id="smxPublicStoresList" style="display:flex;gap:10px;overflow-x:auto;padding:2px 0 6px;"></div>
+    `;
+
+    const list = section.querySelector("#smxPublicStoresList");
+    stores.forEach(store => {
+      const theme = SMX_STORE_THEMES[store.theme] || SMX_STORE_THEMES.gold;
+      const link = document.createElement("a");
+      link.href = "store.html?s=" + encodeURIComponent(store.slug);
+      link.style.cssText = "display:block;flex:0 0 210px;max-width:75vw;padding:14px;border:1px solid var(--border,#e5e7eb);border-radius:12px;text-decoration:none;color:inherit;background:var(--card,#fff);border-top:3px solid " + theme.accent + ";";
+      const name = document.createElement("strong");
+      name.textContent = store.name || "SMITHX Store";
+      name.style.cssText = "display:block;overflow-wrap:anywhere;";
+      const tagline = document.createElement("span");
+      tagline.textContent = store.tagline || "Explore this seller's storefront";
+      tagline.style.cssText = "display:block;margin-top:5px;font-size:.84rem;opacity:.78;overflow-wrap:anywhere;";
+      const visit = document.createElement("span");
+      visit.textContent = "Visit store →";
+      visit.style.cssText = "display:block;margin-top:10px;font-size:.84rem;font-weight:600;color:" + theme.accent + ";";
+      link.append(name, tagline, visit);
+      list.appendChild(link);
+    });
+
+    tools.insertAdjacentElement("beforebegin", section);
+  }
+
   /* ---------------- Shared product link (?product=ID) ---------------- */
 
   function openSharedProduct() {
@@ -377,6 +427,7 @@
   function start() {
     buildMobileMenu();
     buildToolbar();
+    buildPublicStoreDirectory();
     window.renderProducts();
     openSharedProduct();
   }
