@@ -28,6 +28,16 @@ The most important change is structural, not decorative: establish one shopping 
 
 ### Visual design, components and accessibility
 
+- **TikTok Shop — Shop Tab 101 (2026):** https://seller-us.tiktok.com/university/essay?knowledge_id=603906625865518&lang=en  
+  Its marketplace guidance describes search, category browsing, product recommendations and shop pages as distinct discovery paths. For SMITHX, this supports keeping direct catalogue search and category browsing prominent even as social commerce and auctions become part of the wider product.
+- **TikTok Shop — High-quality product pages:** https://seller.tiktok.com/blog/title/10022408/  
+  Seller guidance recommends clear product titles, high-quality product imagery and complete descriptions. The transferable lesson is to make listings informative and scannable; social-commerce-specific ranking claims are not assumed to apply to SMITHX.
+- **Ecommerce redesign case study — Simply Natural:** https://blackfiremarketing.co.uk/case-studies/simply-natural  
+  Illustrates the balance between an editorial, image-led storefront and the less-visible catalogue structure and product data needed to make a large store usable.
+- **Ecommerce redesign case study — Shopify UX audit and redesign:** https://lauravardanyan.com/projects/shopify-ecom/  
+  Emphasizes mobile-first layouts, clear product actions and a reusable component system.
+
+
 - **Shopify — Ecommerce website design examples and 2026 trends:** https://www.shopify.com/blog/11863377-30-beautiful-and-creative-ecommerce-website-designs  
   Useful for comparative inspiration, but patterns should be selected for their shopping utility rather than copied wholesale.
 - **Shopify — Product page examples and practices (2026):** https://www.shopify.com/blog/product-page  
