@@ -49,17 +49,45 @@ function smxWrite(key, value) {
   }
 }
 
-async function smxHash(text) {
+async function smxLegacyHash(text) {
   const value = "smx::" + String(text);
   try {
     if (window.crypto && window.crypto.subtle && window.TextEncoder) {
       const buffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
       return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, "0")).join("");
     }
-  } catch (error) { /* fall through */ }
+  } catch (error) { /* legacy account migration only */ }
   let hash = 5381;
   for (let i = 0; i < value.length; i++) hash = ((hash << 5) + hash + value.charCodeAt(i)) >>> 0;
   return "djb2-" + hash.toString(16);
+}
+
+function smxNewPasswordSalt() {
+  if (!window.crypto || !crypto.getRandomValues || !crypto.subtle) {
+    throw new Error("Secure password hashing needs a modern browser over HTTPS.");
+  }
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function smxSecureHash(text, saltHex) {
+  if (!window.crypto || !crypto.subtle || !window.TextEncoder) {
+    throw new Error("Secure password hashing needs a modern browser over HTTPS.");
+  }
+  const salt = new Uint8Array((saltHex.match(/.{2}/g) || []).map(byte => parseInt(byte, 16)));
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(String(text)), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt, iterations: 310000, hash: "SHA-256" }, key, 256);
+  return Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function smxVerifyPassword(user, password) {
+  if (user.passwordSalt) return (await smxSecureHash(password, user.passwordSalt)) === user.passwordHash;
+  // Upgrade older demo accounts after a successful legacy verification.
+  if ((await smxLegacyHash(password)) !== user.passwordHash) return false;
+  const passwordSalt = smxNewPasswordSalt();
+  smxUpdateUser(user.email, { passwordSalt, passwordHash: await smxSecureHash(password, passwordSalt) });
+  return true;
 }
 
 function smxNormalizeEmail(email) {
@@ -112,11 +140,13 @@ async function smxRegister({ name, email, phone, location, password, role, count
     location: String(location || "").trim() || "Nairobi",
     role: ["buyer", "seller", "both"].includes(role) ? role : "buyer",
     country: String(country || "").trim() || "Kenya",
-    passwordHash: await smxHash(password),
+    passwordSalt: smxNewPasswordSalt(),
+    passwordHash: "",
     createdAt: now,
     lastLogin: now
   };
 
+  user.passwordHash = await smxSecureHash(password, user.passwordSalt);
   const users = smxGetUsers();
   users.push(user);
   smxSaveUsers(users);
@@ -127,8 +157,7 @@ async function smxRegister({ name, email, phone, location, password, role, count
 async function smxLogin(email, password) {
   const user = smxFindUser(email);
   if (!user) throw new Error("No account found with that email.");
-  const hash = await smxHash(password);
-  if (hash !== user.passwordHash) throw new Error("Incorrect password. Please try again.");
+  if (!(await smxVerifyPassword(user, password))) throw new Error("Incorrect password. Please try again.");
   smxUpdateUser(user.email, { lastLogin: new Date().toISOString() });
   smxStartSession(user.email);
   return user;
@@ -151,9 +180,10 @@ function smxUpdateUser(email, changes) {
 async function smxChangePassword(email, currentPassword, newPassword) {
   const user = smxFindUser(email);
   if (!user) throw new Error("Account not found.");
-  if ((await smxHash(currentPassword)) !== user.passwordHash) throw new Error("Current password is incorrect.");
+  if (!(await smxVerifyPassword(user, currentPassword))) throw new Error("Current password is incorrect.");
   if (String(newPassword || "").length < 6) throw new Error("New password must be at least 6 characters.");
-  smxUpdateUser(email, { passwordHash: await smxHash(newPassword) });
+  const passwordSalt = smxNewPasswordSalt();
+  smxUpdateUser(email, { passwordSalt, passwordHash: await smxSecureHash(newPassword, passwordSalt) });
 }
 
 /* Demo password reset. A live version must send a one-time code by
@@ -168,7 +198,8 @@ async function smxResetPassword(email, check, newPassword) {
   const nameOk = clean.toLowerCase() === String(user.name || "").trim().toLowerCase();
   if (!phoneOk && !nameOk) throw new Error(generic);
   if (String(newPassword || "").length < 6) throw new Error("New password must be at least 6 characters.");
-  smxUpdateUser(user.email, { passwordHash: await smxHash(newPassword), passwordResetAt: new Date().toISOString() });
+  const passwordSalt = smxNewPasswordSalt();
+  smxUpdateUser(user.email, { passwordSalt, passwordHash: await smxSecureHash(newPassword, passwordSalt), passwordResetAt: new Date().toISOString() });
   return user;
 }
 
