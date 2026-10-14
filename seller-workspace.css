@@ -203,3 +203,76 @@ body:has(.shell) .empty{border-radius:12px}
 @media(prefers-reduced-motion:reduce){
   body:has(.profile-hero) *,body:has(.shell) *{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
+
+/* Products & Stock page — same clean monochrome seller-studio system */
+body:has(#productForm){background:#f4f5f6!important;color:#111214;font-family:Inter,"Switzer",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body:has(#productForm) .topbar{background:#0a0b0c;border-bottom:1px solid #282a2d;box-shadow:none}
+body:has(#productForm) .topbar-inner{width:min(1320px,calc(100% - 48px));min-height:76px}
+body:has(#productForm) .smithx-brand-text strong{letter-spacing:.03em;font-size:1.1rem}
+body:has(#productForm) .smithx-brand-text small{color:#c4c7cb;letter-spacing:.15em}
+body:has(#productForm) .page-back{border:1px solid #ffffff38;border-radius:10px;padding:10px 14px;color:#f5f5f6;background:#ffffff08;text-decoration:none}
+body:has(#productForm) .page-back:hover{background:#ffffff13;border-color:#ffffff70}
+body:has(#productForm) .demo-page{padding:38px 0 64px}
+body:has(#productForm) .sp-wrap{max-width:1160px}
+body:has(#productForm) .sp-intro{align-items:center;gap:24px;margin-bottom:25px}
+body:has(#productForm) .section-eyebrow{color:#727780;letter-spacing:.17em;font-weight:750;font-size:.72rem}
+body:has(#productForm) .sp-intro h1{font-size:clamp(2rem,4vw,3rem);line-height:1.08;letter-spacing:-.055em;font-weight:780;color:#111214;margin:8px 0 12px}
+body:has(#productForm) .sp-intro p:not(.section-eyebrow){max-width:690px;color:#686d75;line-height:1.7;font-size:.95rem}
+body:has(#productForm) .sp-store-state{min-width:240px;max-width:320px;padding:17px 18px;background:#fff;border:1px solid #e0e3e6;border-radius:15px;box-shadow:0 8px 26px #11111105;color:#626770;line-height:1.5}
+body:has(#productForm) .sp-store-state strong{font-size:.9rem;color:#17181a}
+body:has(#productForm) .sp-store-state span{font-size:.81rem}
+body:has(#productForm) .seller-card,body:has(#productForm) .card{background:#fff;border:1px solid #e1e4e7;border-radius:18px;box-shadow:0 10px 30px #11111105;padding:clamp(18px,3vw,30px);margin-bottom:20px}
+body:has(#productForm) #formTitle,body:has(#productForm) .card h2{font-size:1.25rem;letter-spacing:-.035em;font-weight:760;color:#141517;margin-bottom:8px}
+body:has(#productForm) .sp-hint{color:#777c84;opacity:1;font-size:.81rem;line-height:1.55}
+body:has(#productForm) #productForm{margin-top:22px}
+body:has(#productForm) .sp-form-grid{gap:20px}
+body:has(#productForm) .sp-field{gap:8px}
+body:has(#productForm) .sp-field label{font-size:.84rem;font-weight:700;color:#34373c}
+body:has(#productForm) .sp-field input:not([type=file]),body:has(#productForm) .sp-field select,body:has(#productForm) .sp-field textarea{
+  min-height:48px;border:1px solid #dfe2e5;border-radius:11px;background:#fbfbfc;color:#17181a;
+  padding:12px 14px;outline:none;box-shadow:none;transition:border-color .18s ease,box-shadow .18s ease
+}
+body:has(#productForm) .sp-field textarea{min-height:104px;resize:vertical}
+body:has(#productForm) .sp-field input:focus,body:has(#productForm) .sp-field select:focus,body:has(#productForm) .sp-field textarea:focus{
+  border-color:#777d84;box-shadow:0 0 0 3px #1111110b;background:#fff
+}
+body:has(#productForm) .sp-field input[type=file]{width:100%;min-height:48px;border:1px dashed #d5d9de;border-radius:11px;background:#fafbfc;padding:10px;color:#686d75;font-size:.83rem}
+body:has(#productForm) .sp-publish{background:#f6f7f8;border:1px solid #e5e7e9;border-radius:13px;padding:17px;align-items:flex-start}
+body:has(#productForm) .sp-publish input{width:17px;height:17px;accent-color:#111214;flex:none}
+body:has(#productForm) .sp-publish strong{font-size:.9rem;color:#222428}
+body:has(#productForm) .sp-actions{margin-top:23px;padding-top:19px;border-top:1px solid #eceef0;gap:10px}
+body:has(#productForm) .sp-actions button,body:has(#productForm) .sp-actions a,body:has(#productForm) button,body:has(#productForm) .btn{
+  border-radius:11px;min-height:43px;font-weight:700;transition:transform .18s ease,background .18s ease,border-color .18s ease
+}
+body:has(#productForm) .sp-actions button:hover,body:has(#productForm) .sp-actions a:hover{transform:translateY(-1px)}
+body:has(#productForm) .sp-notice{border-radius:12px;padding:14px 16px;font-size:.88rem;font-weight:600}
+body:has(#productForm) .sp-notice.success{background:#eaf5ee;color:#22643c;border:1px solid #d4eadb}
+body:has(#productForm) .sp-notice.error{background:#fbebea;color:#962e28;border:1px solid #f0d4d1}
+body:has(#productForm) .sp-list{gap:12px;margin-top:17px}
+body:has(#productForm) .sp-item{grid-template-columns:100px minmax(0,1fr) auto;gap:17px;padding:15px;border:1px solid #e3e6e9;border-radius:15px;background:#fff;box-shadow:0 4px 15px #11111103}
+body:has(#productForm) .sp-item img{width:100px;height:100px;border-radius:11px;background:#f1f2f3;border:1px solid #eceef0}
+body:has(#productForm) .sp-item h3{font-size:1rem;font-weight:750;letter-spacing:-.02em;color:#17181a}
+body:has(#productForm) .sp-meta{font-size:.83rem;color:#6e737b;opacity:1;line-height:1.7}
+body:has(#productForm) .sp-badge{background:#eaf5ee;color:#24663f;padding:5px 9px;font-size:.7rem;letter-spacing:.01em}
+body:has(#productForm) .sp-badge.draft{background:#f0f1f2;color:#5e6269}
+body:has(#productForm) .sp-badge.out{background:#fbebea;color:#9d3029}
+body:has(#productForm) .sp-item-actions{gap:7px}
+body:has(#productForm) .sp-item-actions button{padding:9px 13px;min-height:38px}
+body:has(#productForm) .sp-empty{background:#fafbfc;border:1px dashed #d8dce0;border-radius:14px;padding:30px 20px;color:#727780}
+body:has(#productForm) .sp-empty strong{color:#191a1c}
+body:has(#productForm) #imagePreview{max-width:240px;max-height:220px;object-fit:contain;border-radius:13px;border:1px solid #e3e6e9;background:#f7f8f9;padding:5px}
+body:has(#productForm) footer{background:#111214;color:#c5c8cd;border-top:1px solid #292b2f}
+body:has(#productForm) footer a{color:#fff}
+@media(max-width:760px){
+ body:has(#productForm) .topbar-inner{width:calc(100% - 28px);min-height:68px}
+ body:has(#productForm) .demo-page{padding:25px 0 40px}
+ body:has(#productForm) .sp-intro{display:grid;grid-template-columns:1fr;margin-bottom:18px}
+ body:has(#productForm) .sp-store-state{max-width:none;width:100%;min-width:0}
+ body:has(#productForm) .sp-form-grid{grid-template-columns:1fr;gap:16px}
+ body:has(#productForm) .sp-span{grid-column:auto}
+ body:has(#productForm) .sp-item{grid-template-columns:76px minmax(0,1fr);gap:12px;padding:12px}
+ body:has(#productForm) .sp-item img{width:76px;height:76px}
+ body:has(#productForm) .sp-item-actions{grid-column:1/-1;justify-content:stretch}
+ body:has(#productForm) .sp-item-actions button{flex:1}
+ body:has(#productForm) .sp-actions>*{flex:1}
+}
