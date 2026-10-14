@@ -288,15 +288,17 @@ body:has(#productForm) .sp-file-picker{
 body:has(#productForm) .sp-file-picker:focus-within{
   border-color:#777d84;box-shadow:0 0 0 3px #1111110b;background:#fff
 }
-body:has(#productForm) .sp-file-button{
+body:has(#productForm) label.sp-file-button,
+body:has(#productForm) label.sp-file-button:visited{
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
   min-height:42px;padding:10px 15px;border:1px solid #111214;border-radius:10px;
-  background:#111214;color:#fff;font-size:.83rem;font-weight:750;letter-spacing:.005em;
+  background:#111214!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:.83rem;font-weight:750;letter-spacing:.005em;
   cursor:pointer;white-space:nowrap;box-shadow:0 3px 8px #11111112;
   transition:transform .18s ease,background .18s ease,box-shadow .18s ease
 }
-body:has(#productForm) .sp-file-button span{font-size:1.15rem;line-height:1;font-weight:500}
-body:has(#productForm) .sp-file-button:hover{background:#303237;transform:translateY(-1px);box-shadow:0 6px 14px #11111118}
+body:has(#productForm) label.sp-file-button span{color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:1.15rem;line-height:1;font-weight:500}
+body:has(#productForm) label.sp-file-button:hover{background:#303237!important;color:#fff!important;-webkit-text-fill-color:#fff!important;transform:translateY(-1px);box-shadow:0 6px 14px #11111118}
 body:has(#productForm) .sp-file-button:active{transform:translateY(0)}
 body:has(#productForm) .sp-file-input{
   position:absolute!important;width:1px!important;height:1px!important;padding:0!important;
