@@ -21,12 +21,20 @@ const SMX_COUNTRIES = [
   if (!user) return;
 
   const $ = id => document.getElementById(id);
+  const existingStore = smxStoreForOwner(user.email);
+
+  // "My Store" opens the saved storefront. The explicit edit link keeps setup accessible.
+  if (existingStore && location.hash === "#store" &&
+      !new URLSearchParams(location.search).has("editStore")) {
+    location.replace("store.html?s=" + encodeURIComponent(existingStore.slug));
+    return;
+  }
 
   /* ---------------- Store setup ---------------- */
 
   const panel = $("panel-store");
   if (panel && !$("storeSetupForm")) {
-    const existing = smxStoreForOwner(user.email);
+    const existing = existingStore;
 
     const card = document.createElement("form");
     card.className = "card settings-form smx-store-setup";
@@ -190,9 +198,8 @@ const SMX_COUNTRIES = [
         card.querySelector('button[type="submit"]').textContent = "Save store";
         msg.textContent = store.published ? "Your store is live. Opening your storefront…" : "Store saved as a draft.";
         msg.className = "form-message show success";
-        if (store.published) {
-          window.location.href = "store.html?s=" + encodeURIComponent(store.slug);
-        }
+        // A saved draft is still visible to its owner as a storefront preview.
+        window.location.href = "store.html?s=" + encodeURIComponent(store.slug);
       } catch (error) {
         msg.textContent = error.message;
         msg.className = "form-message show error";
