@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [main, "feat/seller-analytics-profit-dashboard"]
+    branches: [main, "feat/seller-analytics-profit-dashboard", "refactor/**"]
 
 jobs:
   javascript-syntax:
@@ -14,8 +14,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Check storefront JavaScript syntax
+      - name: Check JavaScript syntax
         run: |
-          node --check app.js
-          node --check seller-analytics.js
-          node --check seller-account.js
+          for file in *.js smoke-check.cjs; do
+            [ -f "$file" ] || continue
+            node --check "$file"
+          done
+      - name: Check local references, duplicate stylesheets, and inline scripts
+        run: node smoke-check.cjs
