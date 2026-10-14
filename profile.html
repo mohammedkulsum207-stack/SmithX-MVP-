@@ -22,7 +22,7 @@
     </a>
     <nav class="header-links" aria-label="Main navigation">
       <a href="index.html#market">Marketplace</a>
-      <a href="index.html#seller">Sell</a>
+      <a href="profile.html?editStore=1#store">Sell</a>
       <a href="my-orders.html">My Orders</a>
       <a href="seller-dashboard.html">Store Dashboard</a>
       <a href="insights.html">Insights</a>
@@ -46,7 +46,7 @@
       </div>
       <div class="profile-actions">
         <a class="btn btn-gold" href="index.html#market">Shop marketplace</a>
-        <a class="btn btn-ghost-dark" href="index.html#seller" id="heroSellBtn">Add a product</a>
+        <a class="btn btn-ghost-dark" href="profile.html?editStore=1#store" id="heroSellBtn">Add a product</a>
       </div>
     </div>
   </div>
@@ -109,6 +109,15 @@
 
     <!-- STORE -->
     <section class="panel" id="panel-store" role="tabpanel" hidden>
+      <div class="card" style="margin-bottom:20px;padding:22px;">
+        <div class="card-head"><h2 class="display">Seller workspace</h2><span class="role-badge">Manage your business</span></div>
+        <p class="muted" style="margin:0 0 16px;line-height:1.6;">Your seller tools live here, away from the customer marketplace. Set up your storefront, manage products and stock, and review store performance.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a class="btn btn-gold" href="seller-products.html">Manage products &amp; stock</a>
+          <a class="btn btn-outline" href="seller-dashboard.html">Store analytics</a>
+          <a class="btn btn-outline" href="profile.html?editStore=1#store">Store setup</a>
+        </div>
+      </div>
       <div class="stat-grid">
         <div class="stat"><span>Listings</span><strong id="storeListings">0</strong></div>
         <div class="stat"><span>Store orders</span><strong id="storeOrders">0</strong></div>
@@ -118,7 +127,7 @@
       <div class="card">
         <div class="card-head">
           <h2 class="display">My listings</h2>
-          <a href="index.html#seller">Add product</a>
+          <a href="seller-products.html">Add product</a>
         </div>
         <div id="storeProducts"></div>
       </div>
@@ -285,7 +294,7 @@
                 <span>${smxFormatKES(p.price)}</span>
               </div>
             </article>`).join("")}</div>`
-        : `<div class="empty-box">${BAG_ICON}<strong>No listings yet</strong>Products you publish in Seller Studio will appear here.<br><a class="btn btn-primary" href="index.html#seller">Create your first product</a></div>`;
+        : `<div class="empty-box">${BAG_ICON}<strong>No listings yet</strong>Products you add from your seller workspace will appear here.<br><a class="btn btn-primary" href="index.html#seller">Create your first product</a></div>`;
 
       $("sName").value = user.name;
       $("sPhone").value = user.phone || "";
