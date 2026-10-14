@@ -74,7 +74,7 @@
       <label class="smx-field">
         <span>Category</span>
         <select id="smxCategory" aria-label="Filter by category">
-          \${CATEGORIES.map(category => `<option value="${category.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}">\${category === "All" ? "All categories" : category}</option>`).join("")}
+          ${CATEGORIES.map(category => `<option value="${category.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}">${category === "All" ? "All categories" : category}</option>`).join("")}
         </select>
       </label>
       <label class="smx-field">
