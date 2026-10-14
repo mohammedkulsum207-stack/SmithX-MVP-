@@ -35,6 +35,9 @@ body { font-family:Inter,Switzer,ui-sans-serif,system-ui,-apple-system,"Segoe UI
 header,footer,.topbar,.site-header,.main-header,.page-header { background:#ffffff !important; color:#171717 !important; border-color:#e5e5e5 !important; box-shadow:0 3px 18px rgba(0,0,0,.035) !important; }
 header a,footer a,.topbar a,.brand,.smithx-brand,.smithx-brand-text strong { color:#171717 !important; }
 .hero,.banner,.auth-visual,.hero-section,.hero-banner { background:#ffffff !important; color:#171717 !important; }
+.auth-visual,.auth-visual *,.auth-visual .on-dark,.auth-visual .eyebrow { color:#171717 !important; }
+.auth-visual svg path,.auth-visual svg circle,.auth-visual svg line { stroke:#171717 !important; }
+.auth-visual .auth-perks svg { color:#171717 !important; }
 .hero::before,.banner::before { opacity:.04 !important; }
 .hero h1,.hero h2,.hero strong,.banner h1,.banner h2 { color:#171717 !important; }
 .hero p,.banner p,.hero-description { color:#666666 !important; }
