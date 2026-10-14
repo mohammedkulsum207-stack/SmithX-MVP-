@@ -37,6 +37,18 @@ References:
 - https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits
 - https://docs.github.com/en/enterprise-cloud%40latest/pages/getting-started-with-github-pages/what-is-github-pages
 
+
+## Cross-repository backend check
+
+The connected GitHub account also contains `mohammedkulsum207-stack/SmithX-AI-Backend`. It is the existing Flask service referenced by the frontend integration notes and includes `marketplace_store.py`, `seller_auth.py`, and backend tests. It currently provides a SQLite-backed catalogue, seller registration/login, and test-order endpoints. The frontend API URL remains blank, so this service is not connected to the storefront.
+
+Additional integration blockers confirmed during inspection:
+
+- `seller-account.js` and `seller-analytics.js` exist in the frontend repository but are not loaded by the current seller analytics page. The current page uses separate inline browser-local analytics logic. Do not claim the server analytics UI is connected.
+- The backend currently calls `CORS(app)`, which allows cross-origin requests broadly. Before any public frontend connection, replace this with an explicit environment-configured origin allowlist and test rejected origins.
+- The backend's order endpoint is explicitly a pending test-order endpoint. It does not charge money or prove payment. Keep it disconnected from production checkout until authentication, inventory concurrency/idempotency, payment verification, and reconciliation are implemented.
+- Do not deploy or connect the API as part of a visual-only change. Backend hardening and deployment should be a separate reviewed workstream with its own tests.
+
 ## Implementation order
 
 ### Pass 1 — visual consistency and navigation
