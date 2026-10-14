@@ -370,7 +370,7 @@
           ${(() => { const r = typeof smxRatingSummary === "function" ? smxRatingSummary(products.map(p => p.id)) : { count: 0 }; return r.count ? `<span class="chip store-rating">${smxStarsHTML(r.average)} ${r.average.toFixed(1)} · ${r.count} ${r.count === 1 ? "review" : "reviews"}</span>` : `<span class="chip">No reviews yet</span>`; })()}
           <span class="chip">On SM1THX since ${smxEscape(since)}</span>
           <button class="btn btn-accent" type="button" id="shareStore">Share store</button>
-          ${isOwner ? `<a class="btn btn-ghost" href="seller-dashboard.html">Store dashboard &amp; analytics</a><a class="btn btn-ghost" href="profile.html?editStore=1#store">Edit store</a>` : ""}
+          ${isOwner ? `<a class="btn btn-ghost" href="seller-dashboard.html?s=${encodeURIComponent(store.slug)}">Store dashboard &amp; analytics</a><a class="btn btn-ghost" href="profile.html?editStore=1#store">Edit store</a>` : ""}
         </div>
       </section>
 

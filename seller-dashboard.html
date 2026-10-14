@@ -63,7 +63,9 @@ const money=value=>new Intl.NumberFormat(undefined,{style:'currency',currency:(l
 const session=read('smithx_auth_session_v1',null);
 const email=session&&session.email?String(session.email).toLowerCase():'';
 const stores=read('smithx_stores_v1',[]);
-const store=Array.isArray(stores)?stores.find(s=>String(s.ownerEmail||'').toLowerCase()===email):null;
+const requestedSlug=new URLSearchParams(location.search).get('s');
+const ownedStores=Array.isArray(stores)?stores.filter(s=>String(s.ownerEmail||'').toLowerCase()===email):[];
+const store=requestedSlug?ownedStores.find(s=>String(s.slug||'')===requestedSlug)||null:(ownedStores[0]||null);
 const allProducts=read('smithx_custom_products_v2',[]);
 const products=Array.isArray(allProducts)?allProducts.filter(p=>store&&(p.storeId===store.id||String(p.sellerEmail||'').toLowerCase()===email)):[];
 const orders=read('smithx_orders_v1',[]);
@@ -72,7 +74,7 @@ const visitors=read('smithx_store_visits_v1',{});
 const visitCount=store&&visitors&&typeof visitors==='object'?Number(visitors[store.id]||0):0;
 const currency=localStorage.getItem('smithx_currency')||'KES';
 $('todayLabel').textContent=new Date().toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'});
-if(store){$('storeName').textContent=store.name;$('storeAvatar').textContent=(store.name||'S').trim().charAt(0).toUpperCase();$('storefrontLink').href='store.html?s='+encodeURIComponent(store.slug||'');}
+if(store){$('storeName').textContent=store.name;$('storeAvatar').textContent=(store.name||'S').trim().charAt(0).toUpperCase();$('storefrontLink').href='store.html?s='+encodeURIComponent(store.slug||'');document.title=(store.name||'Store')+' Analytics — SM1THX';}
 else{$('storeName').textContent='No store found';$('storeAvatar').textContent='?';$('storefrontLink').href='profile.html';}
 $('productCount').textContent=String(products.length);
 $('visitorCount').textContent=visitCount?visitCount.toLocaleString():'Not recorded';
