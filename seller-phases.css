@@ -1,0 +1,4 @@
+/* Phase 1 seller identity fields */
+.smx-store-setup .smx-store-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.smx-store-setup .hint { display:block; margin-top:5px; font-size:.78rem; color:var(--muted,#6f675a); }
+@media(max-width:650px){.smx-store-setup .smx-store-grid{grid-template-columns:minmax(0,1fr)}}
