@@ -507,9 +507,19 @@ function saveCustomProducts(products) {
 
 
 function getAllProducts() {
+  const customProducts = getCustomProducts().filter(product => {
+    if (product.published === false) return false;
+    if (!product.storeId) return true;
+
+    // Store-owned products are customer-visible only when their store is published.
+    if (typeof smxStoreBySlug !== "function") return true;
+    const store = product.storeSlug ? smxStoreBySlug(product.storeSlug) : null;
+    return Boolean(store && store.published);
+  });
+
   return [
     ...DEFAULT_PRODUCTS,
-    ...getCustomProducts()
+    ...customProducts
   ];
 }
 
@@ -706,6 +716,12 @@ function addToCart(productId) {
     return;
   }
 
+  const stock = Number(product.stock);
+  if (Number.isFinite(stock) && stock <= 0) {
+    showToast("This product is out of stock.");
+    return;
+  }
+
   const cart =
     getCart();
 
@@ -715,6 +731,11 @@ function addToCart(productId) {
         String(item.productId) ===
         String(product.id)
     );
+
+  if (Number.isFinite(stock) && existing && Number(existing.quantity) >= stock) {
+    showToast("You have reached the available stock for this product.");
+    return;
+  }
 
   if (existing) {
     existing.quantity =
