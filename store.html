@@ -208,6 +208,9 @@
       gap: 20px;
     }
 
+    .store-product { min-width: 0; }
+    .store-product .smx-rv { margin-top: 12px; padding: 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; }
+
     .card {
       display: flex;
       flex-direction: column;
@@ -367,7 +370,7 @@
           ${(() => { const r = typeof smxRatingSummary === "function" ? smxRatingSummary(products.map(p => p.id)) : { count: 0 }; return r.count ? `<span class="chip store-rating">${smxStarsHTML(r.average)} ${r.average.toFixed(1)} · ${r.count} ${r.count === 1 ? "review" : "reviews"}</span>` : `<span class="chip">No reviews yet</span>`; })()}
           <span class="chip">On SM1THX since ${smxEscape(since)}</span>
           <button class="btn btn-accent" type="button" id="shareStore">Share store</button>
-          ${isOwner ? `<a class="btn btn-ghost" href="profile.html#store">Edit store</a>` : ""}
+          ${isOwner ? `<a class="btn btn-ghost" href="profile.html?editStore=1#store">Edit store</a>` : ""}
         </div>
       </section>
 
@@ -382,16 +385,19 @@
         ${products.length ? `
           <div class="grid layout-${smxEscape(store.layout || "grid")}">
             ${products.map(product => `
-              <a class="card" href="index.html?product=${encodeURIComponent(product.id)}#market">
-                <img src="${smxEscape(product.image || "")}" alt="${smxEscape(product.name)}" loading="lazy">
-                <div class="card-body">
-                  <small>${smxEscape(product.category || "Product")}</small>
-                  <strong>${smxEscape(product.name)}</strong>
-                  ${(() => { const r = typeof smxRatingSummary === "function" ? smxRatingSummary(product.id) : { count: 0 }; return r.count ? `<em class="store-rating">${smxStarsHTML(r.average)} ${r.average.toFixed(1)} (${r.count})</em>` : ""; })()}
-                  <span>${smxFormatKES(product.price)}</span>
-                  <em>View &amp; buy →</em>
-                </div>
-              </a>`).join("")}
+              <div class="store-product">
+                <a class="card" href="index.html?product=${encodeURIComponent(product.id)}#market">
+                  <img src="${smxEscape(product.image || "")}" alt="${smxEscape(product.name)}" loading="lazy">
+                  <div class="card-body">
+                    <small>${smxEscape(product.category || "Product")}</small>
+                    <strong>${smxEscape(product.name)}</strong>
+                    ${(() => { const r = typeof smxRatingSummary === "function" ? smxRatingSummary(product.id) : { count: 0 }; return r.count ? `<em class="store-rating">${smxStarsHTML(r.average)} ${r.average.toFixed(1)} (${r.count})</em>` : ""; })()}
+                    <span>${smxFormatKES(product.price)}</span>
+                    <em>View &amp; buy →</em>
+                  </div>
+                </a>
+                ${typeof smxReviewSectionHTML === "function" ? smxReviewSectionHTML(product.id, product.name) : ""}
+              </div>`).join("")}
           </div>` : `
           <div class="empty">
             <strong>No products yet.</strong>
