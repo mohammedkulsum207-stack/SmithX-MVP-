@@ -1,0 +1,20 @@
+name: Seller analytics syntax checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, "feat/seller-analytics-profit-dashboard"]
+
+jobs:
+  javascript-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check storefront JavaScript syntax
+        run: |
+          node --check app.js
+          node --check seller-analytics.js
