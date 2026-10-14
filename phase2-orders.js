@@ -135,6 +135,16 @@
     return `<div class="p2-actions">${buttons.join("")}</div>${note}`;
   }
 
+  function fulfillmentHTML(order) {
+    const f = order.fulfillment && typeof order.fulfillment === "object" ? order.fulfillment : {};
+    const rows = [];
+    if (f.carrier) rows.push(`<p><strong>Delivery partner:</strong> ${esc(f.carrier)}</p>`);
+    if (f.trackingNumber) rows.push(`<p><strong>Tracking / reference:</strong> ${esc(f.trackingNumber)}</p>`);
+    if (f.note) rows.push(`<p><strong>Seller note:</strong> ${esc(f.note)}</p>`);
+    if (f.updatedAt) rows.push(`<p class="p2-muted">Last updated ${esc(day(f.updatedAt))}</p>`);
+    if (!rows.length) rows.push(`<p class="p2-muted">The seller has not added a delivery partner or tracking reference yet.</p>`);
+    return `<div class="p2-box"><h3>Shipping &amp; tracking</h3><p><span class="p2-pill">${esc(order.status || "Pending")}</span></p>${rows.join("")}</div>`;
+  }
   function extraPanel(order, archived) {
     return `
       <section class="p2-panel" aria-label="Payment and delivery">
@@ -149,6 +159,7 @@
             ${paymentHTML(order)}
           </div>
         </div>
+        ${fulfillmentHTML(order)}
         ${breakdownHTML(order)}
         ${actionsHTML(order, archived)}
       </section>`;
