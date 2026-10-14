@@ -105,6 +105,7 @@ const SMX_COUNTRIES = [
         <button class="btn btn-primary" type="submit">${existing ? "Save store" : "Create store"}</button>
         <a class="btn btn-outline" id="stPreview" href="#" target="_blank" rel="noopener">Preview</a>
         <button class="btn btn-outline" type="button" id="stShare">Share link</button>
+        ${existing ? '<button class="btn btn-outline smx-delete-store" type="button" id="stDelete">Delete store</button>' : ""}
       </div>
     `;
 
@@ -206,6 +207,28 @@ const SMX_COUNTRIES = [
       }
     });
 
+    const deleteButton = $("stDelete");
+    if (deleteButton) {
+      deleteButton.addEventListener("click", () => {
+        const store = smxStoreForOwner(user.email);
+        if (!store) {
+          message($("storeMsg"), "No store was found for this account.", "error");
+          return;
+        }
+        const confirmed = confirm(
+          'Delete "' + store.name + '" and all products attached to this seller account? This cannot be undone.'
+        );
+        if (!confirmed) return;
+        try {
+          smxDeleteMyStore(user.email);
+          message($("storeMsg"), "Store and its products deleted.", "success");
+          window.location.href = "profile.html?editStore=1#store";
+        } catch (error) {
+          message($("storeMsg"), error.message || "The store could not be deleted.", "error");
+        }
+      });
+    }
+
     $("stShare").addEventListener("click", async () => {
       const store = smxStoreForOwner(user.email);
       if (!store) return;
@@ -277,6 +300,8 @@ const SMX_COUNTRIES = [
     .smx-publish span { display: grid; gap: 2px; }
     .smx-publish small { color: var(--muted, #6f675a); font-size: .82rem; }
     .smx-store-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .smx-store-actions .smx-delete-store { border-color: #c23b3b; color: #a52b2b; }
+    .smx-store-actions .smx-delete-store:hover { background: #fff0f0; }
     .smx-store-actions [hidden] { display: none !important; }
     @media (max-width: 640px) { .smx-store-grid { grid-template-columns: 1fr; } }
   `;
