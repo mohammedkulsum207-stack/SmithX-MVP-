@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="monochrome.css">
 </head>
 
-<body>
+<body class="marketplace-home">
 
 <!-- =====================================================
      HEADER
@@ -120,19 +120,19 @@
 
   <div class="section-inner">
 
-    <div class="section-heading">
+    <div class="marketplace-intro-row">
 
-      <p class="section-eyebrow">
-        DISCOVER
-      </p>
+      <div class="section-heading">
+        <p class="section-eyebrow">THE SMITHX MARKETPLACE</p>
+        <h1>Good finds.<br>One marketplace.</h1>
+        <p>Shop everyday essentials and unexpected discoveries from sellers across SMITHX.</p>
+      </div>
 
-      <h2>
-        Find your next favourite.
-      </h2>
-
-      <p>
-        Explore products from sellers across the SMITHX marketplace.
-      </p>
+      <a class="marketplace-feature" href="auctions.html">
+        <span class="marketplace-feature-kicker">A DIFFERENT WAY TO DISCOVER</span>
+        <span class="marketplace-feature-title">Find something rare.</span>
+        <span class="marketplace-feature-link">Explore live auctions <span aria-hidden="true">↗</span></span>
+      </a>
 
     </div>
 
@@ -144,7 +144,7 @@
         <input
           id="productSearch"
           type="search"
-          placeholder="Search products..."
+          placeholder="Search products, brands and categories"
           aria-label="Search products"
         >
 
@@ -168,6 +168,11 @@
       aria-label="Product categories"
     ></div>
 
+
+    <div class="catalogue-bar">
+      <p>THE CATALOGUE</p>
+      <span>Search or choose a category to narrow your results.</span>
+    </div>
 
     <div
       id="productsGrid"
