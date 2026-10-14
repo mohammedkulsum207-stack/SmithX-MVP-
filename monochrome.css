@@ -178,6 +178,8 @@ input:focus, select:focus, textarea:focus {
 .product-image-placeholder--large { min-height: 260px; aspect-ratio: 4 / 3; border-radius: 14px; }
 .product-image-button { background: #f1f1f1 !important; }
 .cart-panel { background: #ffffff !important; color: #171717 !important; border-color: #e5e5e5 !important; }
+.cart-item-image { background: #f2f2f2; }
+.cart-item-image img[src=""] { display: none; }
 .toast { background: #171717 !important; color: #ffffff !important; }
 hr, .divider { border-color: #e5e5e5 !important; }
 footer { color: #525252 !important; border-top: 1px solid #e5e5e5 !important; }
