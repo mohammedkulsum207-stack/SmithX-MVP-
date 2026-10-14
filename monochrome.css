@@ -189,3 +189,33 @@ footer a { color: #171717 !important; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* Shared component finish: one neutral system across shopping, seller and auction pages. */
+:root {
+  --sx-radius-control: 12px; --sx-radius-card: 16px;
+  --sx-space-1: 4px; --sx-space-2: 8px; --sx-space-3: 12px; --sx-space-4: 16px;
+  --sx-space-5: 24px; --sx-space-6: 32px; --sx-space-7: 48px;
+}
+input, select, textarea { color: #171717; border-color: #dcdcdc; }
+input::placeholder, textarea::placeholder { color: #737373; opacity: 1; }
+input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid #171717 !important; outline-offset: 2px !important;
+}
+.card, .seller-card, .seller-info-card, .dashboard-card, .feature-card, .about-card,
+.order-card, .store-card, .analytics-card {
+  border-color: #e5e5e5; box-shadow: 0 3px 12px rgba(0,0,0,.025);
+}
+.primary-button, .btn-primary, .button-primary, .btn-gold, .hero .primary-button {
+  background: #171717 !important; border-color: #171717 !important; color: #ffffff !important;
+}
+.primary-button:hover, .btn-primary:hover, .button-primary:hover, .btn-gold:hover {
+  background: #303030 !important; border-color: #303030 !important;
+}
+.a-badge.is-live::before { background: #171717 !important; }
+.a-badge.is-me, .a-badge.is-out {
+  background: #e9e9e9 !important; border-color: #dcdcdc !important; color: #171717 !important;
+}
+.a-badge.is-live { background: #171717 !important; color: #ffffff !important; }
+.demo-tag, .demo-pill, .status-badge, .badge, .pill {
+  background: #f1f1f1 !important; border-color: #e1e1e1 !important; color: #525252 !important;
+}
