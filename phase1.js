@@ -72,6 +72,12 @@
         </select>
       </label>
       <label class="smx-field">
+        <span>Category</span>
+        <select id="smxCategory" aria-label="Filter by category">
+          \${CATEGORIES.map(category => `<option value="${category.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}">\${category === "All" ? "All categories" : category}</option>`).join("")}
+        </select>
+      </label>
+      <label class="smx-field">
         <span>Price</span>
         <select id="smxPrice" aria-label="Filter by price">
           ${Object.entries(PRICE_RANGES).map(([key, range]) => `<option value="${key}">${range.label}</option>`).join("")}
@@ -86,6 +92,10 @@
 
     document.getElementById("smxSort").addEventListener("change", event => {
       state.sort = event.target.value;
+      renderProducts();
+    });
+    document.getElementById("smxCategory").addEventListener("change", event => {
+      currentCategory = event.target.value;
       renderProducts();
     });
     document.getElementById("smxPrice").addEventListener("change", event => {
