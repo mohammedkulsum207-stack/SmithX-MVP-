@@ -3198,15 +3198,9 @@ function renderProducts() {
                 onclick="openProductModal('${safeId}')"
               >
 
-                <img
-                  src="${escapeHTML(
-                    product.image || ""
-                  )}"
-                  alt="${escapeHTML(
-                    product.name
-                  )}"
-                  loading="lazy"
-                >
+                ${product.image
+                  ? '<img src="' + escapeHTML(product.image) + '" alt="' + escapeHTML(product.name) + '" loading="lazy">'
+                  : '<span class="product-image-placeholder" role="img" aria-label="No product image">Image not added yet</span>'}
 
               </button>
 
@@ -3300,14 +3294,9 @@ function openProductModal(
 
       <div>
 
-        <img
-          src="${escapeHTML(
-            product.image || ""
-          )}"
-          alt="${escapeHTML(
-            product.name
-          )}"
-        >
+        ${product.image
+          ? '<img src="' + escapeHTML(product.image) + '" alt="' + escapeHTML(product.name) + '">'
+          : '<div class="product-image-placeholder product-image-placeholder--large" role="img" aria-label="No product image">No product image</div>'}
 
       </div>
 
