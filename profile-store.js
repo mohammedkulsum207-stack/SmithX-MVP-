@@ -120,7 +120,7 @@ const SMX_COUNTRIES = [
       name.value = store ? store.name : "";
       slug.value = store ? store.slug : "";
       $("stTagline").value = store ? store.tagline : "";
-      $("stAbout").value = store ? store.description : "";
+      $("stAbout").value = store ? store.description : "";\n      $("stLogo").value = store ? (store.logoUrl || "") : "";\n      $("stCover").value = store ? (store.coverUrl || "") : "";\n      $("stLocation").value = store ? (store.location || "") : "";
       $("stPublished").checked = store ? store.published : true;
       const theme = store ? store.theme : "gold";
       const radio = card.querySelector(`input[name="stTheme"][value="${theme}"]`);
@@ -184,7 +184,7 @@ const SMX_COUNTRIES = [
           name: name.value,
           slug: slug.value || name.value,
           tagline: $("stTagline").value,
-          description: $("stAbout").value,
+          description: $("stAbout").value,\n          logoUrl: $("stLogo").value,\n          coverUrl: $("stCover").value,\n          location: $("stLocation").value,
           theme: (card.querySelector('input[name="stTheme"]:checked') || {}).value,
           published: $("stPublished").checked,
           layout: $("stLayout").value
