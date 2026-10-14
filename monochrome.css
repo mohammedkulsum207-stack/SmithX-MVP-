@@ -1,0 +1,61 @@
+/* SMITHX global monochrome design system — loaded last on every page */
+:root {
+  --sx-ink:#171717 !important;
+  --sx-ink-soft:#555555 !important;
+  --sx-brand:#171717 !important;
+  --sx-brand-dark:#333333 !important;
+  --sx-accent:#e8e8e8 !important;
+  --sx-accent-soft:#f4f4f4 !important;
+  --sx-canvas:#ffffff !important;
+  --sx-paper:#ffffff !important;
+  --sx-line:#e5e5e5 !important;
+  --sx-muted:#737373 !important;
+  --blue:#171717 !important;
+  --blue-dark:#333333 !important;
+  --blue-deep:#171717 !important;
+  --blue-light:#f2f2f2 !important;
+  --blue-soft:#f8f8f8 !important;
+  --blue-border:#e5e5e5 !important;
+  --text:#171717 !important;
+  --text-soft:#555555 !important;
+  --muted:#737373 !important;
+  --border:#e5e5e5 !important;
+  --background:#ffffff !important;
+  --ink:#171717 !important;
+  --ivory:#ffffff !important;
+  --paper:#ffffff !important;
+  --line:#e5e5e5 !important;
+  --gold-bright:#777777 !important;
+  --gold-text:#555555 !important;
+  --accent:#171717 !important;
+  --accent-ink:#171717 !important;
+}
+html,body { background:#ffffff !important; color:#171717 !important; }
+body { font-family:Inter,Switzer,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif !important; }
+header,footer,.topbar,.site-header,.main-header,.page-header { background:#ffffff !important; color:#171717 !important; border-color:#e5e5e5 !important; box-shadow:0 3px 18px rgba(0,0,0,.035) !important; }
+header a,footer a,.topbar a,.brand,.smithx-brand,.smithx-brand-text strong { color:#171717 !important; }
+.hero,.banner,.auth-visual,.hero-section,.hero-banner { background:#ffffff !important; color:#171717 !important; }
+.hero::before,.banner::before { opacity:.04 !important; }
+.hero h1,.hero h2,.hero strong,.banner h1,.banner h2 { color:#171717 !important; }
+.hero p,.banner p,.hero-description { color:#666666 !important; }
+.hero .hero-eyebrow,.section-eyebrow,.eyebrow { color:#555555 !important; }
+.hero .primary-button,.primary-button,.btn-primary,.button-primary,[type=submit] {
+  background:#171717 !important; color:#ffffff !important; border-color:#171717 !important;
+}
+.hero .primary-button:hover,.primary-button:hover,.btn-primary:hover { background:#3a3a3a !important; border-color:#3a3a3a !important; }
+.secondary-button,.nav-login-btn,.cart-button,.back-btn,.btn-outline {
+  background:#ffffff !important; color:#171717 !important; border-color:#d8d8d8 !important;
+}
+button,a { -webkit-tap-highlight-color:transparent; }
+.card,.seller-card,.dashboard-card,.orders-section,.customer-orders-cta,.product-card,.product,.product-item,.market-product,.auth-card,.auth-panel,.modal-content,.panel,.stat-card,.auction-card,.store-card,.feature-card {
+  background:#ffffff !important; color:#171717 !important; border-color:#e5e5e5 !important;
+}
+input,select,textarea { background:#ffffff !important; color:#171717 !important; border-color:#d9d9d9 !important; }
+input::placeholder,textarea::placeholder { color:#8a8a8a !important; }
+.category-filters button,.category-filter { background:#ffffff !important; color:#555555 !important; border-color:#e2e2e2 !important; }
+.category-filters .active,.category-filters button[aria-pressed="true"] { background:#171717 !important; color:#ffffff !important; border-color:#171717 !important; }
+.dashboard-section,.seller-section,.marketplace-section,.section,.demo-page,.auth-page,.page-shell { background:#ffffff !important; }
+.product-price,.price,.price-tag { color:#171717 !important; }
+hr,.divider { border-color:#e5e5e5 !important; }
+:focus-visible { outline:3px solid #777777 !important; outline-offset:3px !important; }
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; animation-duration:.01ms !important; transition-duration:.01ms !important; } }
