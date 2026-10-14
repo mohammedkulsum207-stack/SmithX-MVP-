@@ -183,10 +183,8 @@
   };
 
   function decorateCard(card, id, product) {
-    if (card.querySelector(".smx-heart")) return;
-
     const imageButton = card.querySelector(".product-image-button");
-    if (imageButton) {
+    if (imageButton && !card.querySelector(".smx-heart")) {
       const wrap = document.createElement("div");
       wrap.className = "smx-image-wrap";
       imageButton.parentNode.insertBefore(wrap, imageButton);
@@ -206,16 +204,21 @@
       wrap.appendChild(heart);
     }
 
-    if (product.storeSlug && product.storeName) {
-      const store = smxStoreBySlug(product.storeSlug);
+    const existingBadge = card.querySelector(".smx-store-badge");
+    if (existingBadge) existingBadge.remove();
+
+    const storeName = product.storeName || "";
+    if (storeName) {
+      const store = product.storeSlug ? smxStoreBySlug(product.storeSlug) : null;
+      const category = card.querySelector(".product-category");
+      const badge = document.createElement(store && store.published ? "a" : "span");
+      badge.className = "smx-store-badge";
+      badge.textContent = "Sold by " + storeName;
       if (store && store.published) {
-        const category = card.querySelector(".product-category");
-        const link = document.createElement("a");
-        link.className = "smx-store-badge";
-        link.href = "store.html?s=" + encodeURIComponent(store.slug);
-        link.textContent = "by " + store.name;
-        if (category) category.insertAdjacentElement("afterend", link);
+        badge.href = "store.html?s=" + encodeURIComponent(store.slug);
+        badge.setAttribute("aria-label", "Visit " + storeName + " store");
       }
+      if (category) category.insertAdjacentElement("afterend", badge);
     }
   }
 
@@ -260,18 +263,19 @@
     actions.appendChild(saveBtn);
     actions.appendChild(shareBtn);
 
-    if (product.storeSlug) {
-      const store = smxStoreBySlug(product.storeSlug);
+    const storeName = product.storeName || "";
+    if (storeName) {
+      const store = product.storeSlug ? smxStoreBySlug(product.storeSlug) : null;
+      const storeLink = document.createElement(store && store.published ? "a" : "p");
+      storeLink.className = "smx-modal-store";
       if (store && store.published) {
-        const storeLink = document.createElement("a");
-        storeLink.className = "smx-modal-store";
         storeLink.href = "store.html?s=" + encodeURIComponent(store.slug);
-        storeLink.innerHTML = "Sold by <strong></strong> — visit store →";
-        storeLink.querySelector("strong").textContent = store.name;
-        actions.insertAdjacentElement("afterend", storeLink);
+        storeLink.textContent = "Sold by " + storeName + " — visit store →";
+      } else {
+        storeLink.textContent = "Sold by " + storeName;
       }
+      actions.insertAdjacentElement("afterend", storeLink);
     }
-
     const url = new URL(location.href);
     url.searchParams.set("product", product.id);
     history.replaceState(null, "", url.pathname + url.search + "#market");
