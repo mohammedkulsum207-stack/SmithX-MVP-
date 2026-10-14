@@ -296,7 +296,8 @@
     const store = email ? smxStoreForOwner(email) : null;
 
     const tagged = (Array.isArray(products) ? products : []).map(product => {
-      if (product.sellerEmail || product.storeId) return product;
+      if (product.storeId) return product;
+      if (product.sellerEmail && String(product.sellerEmail).toLowerCase() !== email) return product;
       const isNew = createdTime(product) > Date.now() - 60 * 1000;
       if (!isNew || !email) return product;
       return {
