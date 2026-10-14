@@ -40,9 +40,10 @@
     var allProducts = getProducts(), allOrders = getOrders(), costs = getCosts();
     var selected = allOrders.filter(function (order) { return isInPeriod(orderDate(order), period); });
     var revenue = 0, units = 0, cost = 0, coveredUnits = 0, totalUnits = 0;
-    var currencyTotals = {}, top = {};
+    var currencyTotals = {}, top = {}, statusCounts = {}, inventory = { tracked: 0, low: 0, out: 0, unknown: 0 };
     selected.forEach(function (order) {
       var status = String(order.status || "pending").toLowerCase();
+      statusCounts[status] = (statusCounts[status] || 0) + 1;
       if (["cancelled", "canceled", "refunded"].includes(status)) return;
       (Array.isArray(order.items) ? order.items : []).forEach(function (item) {
         var quantity = Math.max(0, Number(item.quantity) || 0);
@@ -59,13 +60,20 @@
           cost += unitCost * quantity;
           coveredUnits += quantity;
         }
-        var key = id || item.name || item.title || "product";
-        if (!top[key]) top[key] = { name: item.name || item.title || "Product", units: 0, sales: 0 };
+        var key = currency + "::" + (id || item.name || item.title || "product");
+        if (!top[key]) top[key] = { name: item.name || item.title || "Product", units: 0, sales: 0, currency: currency };
         top[key].units += quantity;
         top[key].sales += price * quantity;
       });
     });
     var currency = Object.keys(currencyTotals).sort(function (a, b) { return currencyTotals[b] - currencyTotals[a]; })[0] || "KES";
+    allProducts.forEach(function (product) {
+      var raw = product.stock != null ? product.stock : product.stockQuantity != null ? product.stockQuantity : product.stock_quantity != null ? product.stock_quantity : product.inventory != null ? product.inventory : product.quantity;
+      if (raw == null || raw === "" || !Number.isFinite(Number(raw)) || Number(raw) < 0) { inventory.unknown++; return; }
+      inventory.tracked++;
+      if (Number(raw) <= 0) inventory.out++;
+      else if (Number(raw) <= 5) inventory.low++;
+    });
     var visitors = read("smithx_daily_visitor_v2", null);
     visitors = visitors && visitors.date === new Date().toISOString().slice(0, 10) ? Number(visitors.count) || 0 : 0;
     var views = read(VIEWS_KEY, []).filter(function (event) { return isInPeriod(new Date(event.at), period); }).length;
@@ -73,8 +81,11 @@
       products: allProducts.length, orders: selected.length, units: units, revenue: revenue, cost: cost,
       profit: revenue - cost, margin: revenue ? (revenue - cost) / revenue * 100 : 0,
       coveredUnits: coveredUnits, missingUnits: Math.max(0, totalUnits - coveredUnits),
-      currency: currency, visitors: visitors, views: views,
-      top: Object.keys(top).map(function (key) { return top[key]; }).sort(function (a, b) { return b.sales - a.sales; }).slice(0, 5)
+      currency: currency, currencyTotals: currencyTotals, statusCounts: statusCounts, inventory: inventory,
+      averageOrderValue: selected.length ? revenue / selected.length : 0,
+      visitors: visitors, views: views,
+      conversion: visitors ? (selected.length / visitors) * 100 : null,
+      top: Object.keys(top).map(function (key) { return top[key]; }).filter(function (item) { return item.currency === currency; }).sort(function (a, b) { return b.sales - a.sales; }).slice(0, 5)
     };
   }
   function styles() {
@@ -138,7 +149,7 @@
     var period = el("smxAnalyticsPeriod") ? el("smxAnalyticsPeriod").value : "30d";
     var data = getData(period), maxSales = Math.max(1, data.top.length ? data.top[0].sales : 0);
     var profit = data.coveredUnits ? money(data.profit, data.currency) : "Add costs";
-    var html = '<div class="smx-analytics-head"><div><p class="section-eyebrow">SELLER INTELLIGENCE</p><h3>Analytics &amp; estimated profit</h3><p class="smx-analytics-sub">Products, orders, customer activity and costs you record.</p></div><div class="smx-analytics-controls"><select id="smxAnalyticsPeriod" aria-label="Analytics date range"><option value="today">Today</option><option value="7d">Last 7 days</option><option value="30d">Last 30 days</option><option value="all">All time</option></select><button type="button" id="smxAnalyticsExport" class="smx-analytics-export">Export CSV</button></div></div>';
+    var html = '<div class="smx-analytics-head"><div><p class="section-eyebrow">SELLER INTELLIGENCE</p><h3>Analytics &amp; estimated profit</h3><p class="smx-analytics-sub">Browser-local demo data only. Real paid sales are not connected.</p></div><div class="smx-analytics-controls"><select id="smxAnalyticsPeriod" aria-label="Analytics date range"><option value="today">Today</option><option value="7d">Last 7 days</option><option value="30d">Last 30 days</option><option value="all">All time</option></select><button type="button" id="smxAnalyticsExport" class="smx-analytics-export">Export CSV</button></div></div>';
     html += '<div class="smx-analytics-grid">';
     html += '<div class="smx-analytics-stat"><span>Products listed</span><strong>' + data.products + '</strong><small>Current catalogue</small></div>';
     html += '<div class="smx-analytics-stat"><span>Store visits today*</span><strong>' + data.visitors.toLocaleString() + '</strong><small>Browser-local demo counter</small></div>';
@@ -146,12 +157,13 @@
     html += '<div class="smx-analytics-stat"><span>Gross order value</span><strong>' + money(data.revenue, data.currency) + '</strong><small>Excludes cancelled/refunded orders</small></div>';
     html += '<div class="smx-analytics-stat"><span>Estimated profit</span><strong>' + profit + '</strong><small>Revenue minus recorded product costs</small></div>';
     html += '<div class="smx-analytics-stat"><span>Estimated margin</span><strong>' + (data.coveredUnits ? data.margin.toFixed(1) + "%" : "—") + '</strong><small>Fees and shipping not included</small></div></div>';
-    html += '<div class="smx-analytics-detail"><section class="smx-analytics-panel"><h4>Best-selling products by sales</h4><div class="smx-analytics-bars">';
+    html += '<section class="smx-analytics-panel" style="margin-top:18px"><h4>Sales overview by currency</h4><p class="smx-analytics-sub">Currencies are reported separately and are never added together.</p><div class="smx-analytics-currency-list">' + (Object.keys(data.currencyTotals).length ? Object.keys(data.currencyTotals).sort().map(function (code) { return '<span class="smx-analytics-currency-chip"><b>' + esc(code) + '</b> &nbsp;' + money(data.currencyTotals[code], code) + '</span>'; }).join("") : '<span class="smx-analytics-empty">No order sales in this period.</span>') + '</div><div class="smx-analytics-chip-grid" style="margin-top:12px"><div class="smx-analytics-chip"><b>' + money(data.averageOrderValue, data.currency) + '</b><span>Average order value · primary currency</span></div><div class="smx-analytics-chip"><b>' + (data.conversion == null ? "—" : data.conversion.toFixed(1) + "%") + '</b><span>Demo orders / visits today*</span></div><div class="smx-analytics-chip"><b>' + Object.keys(data.statusCounts).length + '</b><span>Order status types seen</span></div></div></section>';
+    html += '<div class="smx-analytics-detail"><section class="smx-analytics-panel"><h4>Best-selling products (' + esc(data.currency) + ' only)</h4><div class="smx-analytics-bars">';
     if (!data.top.length) html += '<p class="smx-analytics-empty">Product sales appear after demo orders are created.</p>';
     else data.top.forEach(function (item) { html += '<div class="smx-analytics-bar-row"><span title="' + esc(item.name) + '">' + esc(item.name.length > 15 ? item.name.slice(0, 14) + "…" : item.name) + '</span><div class="smx-analytics-bar-track"><div class="smx-analytics-bar-fill" style="width:' + Math.max(2, item.sales / maxSales * 100) + '%"></div></div><b>' + money(item.sales, data.currency) + '</b></div>'; });
-    html += '</div></section><section class="smx-analytics-panel"><h4>Store activity</h4><table class="smx-analytics-table"><tbody><tr><th>Product views*</th><td>' + data.views + '</td></tr><tr><th>Orders in period</th><td>' + data.orders + '</td></tr><tr><th>Units in orders</th><td>' + data.units + '</td></tr><tr><th>Recorded product costs</th><td>' + money(data.cost, data.currency) + '</td></tr><tr><th>Profit margin*</th><td>' + (data.coveredUnits ? data.margin.toFixed(1) + "%" : "Add cost data") + '</td></tr></tbody></table></section></div>';
+    html += '</div></section><section class="smx-analytics-panel"><h4>Inventory health</h4><div class="smx-analytics-chip-grid"><div class="smx-analytics-chip"><b>' + data.inventory.tracked + '</b><span>Products with stock data</span></div><div class="smx-analytics-chip"><b>' + data.inventory.low + '</b><span>Low stock (1–5 units)</span></div><div class="smx-analytics-chip"><b>' + data.inventory.out + '</b><span>Out of stock</span></div></div><p class="smx-analytics-sub" style="margin-top:12px">' + data.inventory.unknown + ' product(s) have no recognized stock quantity. Inventory counts are only shown where product data provides a stock field.</p><h4 style="margin-top:18px">Seller business activity</h4><table class="smx-analytics-table"><tbody><tr><th>Product views*</th><td>' + data.views + '</td></tr><tr><th>Orders in period</th><td>' + data.orders + '</td></tr><tr><th>Order statuses seen</th><td>' + Object.keys(data.statusCounts).map(function (key) { return esc(key) + ': ' + data.statusCounts[key]; }).join(", ") + '</td></tr><tr><th>Units in orders</th><td>' + data.units + '</td></tr><tr><th>Recorded product costs</th><td>' + money(data.cost, data.currency) + '</td></tr><tr><th>Profit margin*</th><td>' + (data.coveredUnits ? data.margin.toFixed(1) + "%" : "Add cost data") + '</td></tr></tbody></table></section></div>';
     html += '<details class="smx-analytics-costs"><summary>Set product costs for profit estimates</summary><p class="smx-analytics-sub">Enter purchase or production cost per unit. Historical demo orders without a cost snapshot use the current cost where available.</p><div id="smxCostRows"></div></details>';
-    html += '<div class="smx-analytics-note">Demo limitations: visitors and product views are stored only in this browser, not across all customers. ' + (data.missingUnits ? data.missingUnits + ' ordered unit(s) have no recorded cost; profit is incomplete.' : 'Recorded product costs are available for the units shown.') + ' Platform/payment fees, shipping, taxes, refunds, and real paid-order verification are not included.</div>';
+    html += '<div class="smx-analytics-note">Demo limitations: visits and product views are stored only in this browser, not across all customers. Conversion is a rough demo estimate, not a reliable funnel and may include unpaid orders. ' + (data.missingUnits ? data.missingUnits + ' ordered unit(s) have no recorded cost; profit is incomplete.' : 'Recorded product costs are available for the units shown.') + ' Platform/payment fees, shipping, taxes, refunds, and real paid-order verification are not included.</div>';
     host.innerHTML = html;
     el("smxAnalyticsPeriod").value = period;
     el("smxAnalyticsPeriod").addEventListener("change", render);
