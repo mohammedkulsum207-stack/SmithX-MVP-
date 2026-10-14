@@ -1,7 +1,7 @@
 "use strict";
 
 /* =====================================================
-   SM1THX — PHASE 1 MARKETPLACE ADD-ON (phase1.js)
+   SMITHX — PHASE 1 MARKETPLACE ADD-ON (phase1.js)
    Loaded after app.js on index.html. Adds, without
    rewriting app.js:
      • Mobile navigation menu (fixes hidden nav on phones)
@@ -251,7 +251,7 @@
     shareBtn.className = "secondary-button";
     shareBtn.textContent = "Share";
     shareBtn.addEventListener("click", async () => {
-      const result = await smxShareLink(smxProductURL(product.id), product.name + " on SM1THX");
+      const result = await smxShareLink(smxProductURL(product.id), product.name + " on SMITHX");
       if (result === "copied" && typeof showToast === "function") showToast("Product link copied.");
     });
 
@@ -350,13 +350,6 @@
       if (!nav.contains(event.target) && !button.contains(event.target)) setOpen(false);
     });
 
-    if (!nav.querySelector('a[href="profile.html#store"]')) {
-      const storeLink = document.createElement("a");
-      storeLink.href = "profile.html#store";
-      storeLink.textContent = "My Store";
-      const ordersLink = nav.querySelector('a[href="my-orders.html"]');
-      nav.insertBefore(storeLink, ordersLink ? ordersLink.nextSibling : null);
-    }
   }
 
   /* ---------------- Shared product link (?product=ID) ---------------- */

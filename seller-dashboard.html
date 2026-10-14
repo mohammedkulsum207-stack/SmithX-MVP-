@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Private seller workspace for your SMITHX store, products, orders and analytics."><title>Seller workspace — SMITHX</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="storefront-refresh.css"><link rel="stylesheet" href="demo-pages.css"><link rel="stylesheet" href="monochrome.css"></head>
 <body>
-<header class="topbar"><div class="topbar-inner"><a href="index.html#home" class="smithx-brand"><img src="assets/smithx-logo.jpg" class="smithx-logo-image" alt=""><span class="smithx-brand-text"><strong>SMITHX</strong><small>SELLER WORKSPACE</small></span></a><nav class="nav-links"><a href="index.html#market">Marketplace</a><a href="about.html">About</a><a href="auctions.html">Auctions</a></nav><button class="nav-login-btn" id="signout" type="button" hidden>Sign out</button></div></header>
+<header class="topbar"><div class="topbar-inner"><a href="index.html#market" class="smithx-brand"><img src="assets/smithx-logo.jpg" class="smithx-logo-image" alt=""><span class="smithx-brand-text"><strong>SMITHX</strong><small>SELLER WORKSPACE</small></span></a><nav class="nav-links"><a href="index.html#market">Marketplace</a><a href="about.html">About</a><a href="auctions.html">Auctions</a></nav><button class="nav-login-btn" id="signout" type="button" hidden>Sign out</button></div></header>
 <main class="section"><div class="section-inner" style="max-width:1000px">
 <div id="gate" class="card" style="padding:28px"><p class="section-eyebrow">SELLER ACCESS</p><h1 style="font-size:clamp(2.2rem,5vw,3.8rem);letter-spacing:-.06em;line-height:1.05;margin:12px 0">Your business, in one place.</h1><p style="color:#666;margin-bottom:20px">Sign in or create an account to set up your store. Your workspace is separate from the public marketplace.</p><a class="primary-button" href="login.html?next=seller-dashboard.html">Sign in or create an account</a><p style="font-size:.85rem;color:#777;margin-top:16px">Prototype note: this static GitHub Pages version stores demo account and store data in this browser only. It is not secure production authentication, and it does not sync between devices.</p></div>
 <div id="workspace" hidden>
@@ -21,9 +21,11 @@
 <label class="form-group">Price (KES)<input id="sellerProductPrice" type="number" min="1" required placeholder="2500"></label>
 <label class="form-group">Category<select id="sellerProductCategory"><option>Electronics</option><option>Fashion</option><option>Home</option><option>Beauty</option><option>Accessories</option><option>Other</option></select></label>
 <label class="form-group">Stock quantity<input id="sellerProductStock" type="number" min="0" required value="1"></label>
+<label class="form-group" style="grid-column:1/-1">Product image URL (HTTPS)<input id="sellerProductImage" type="url" inputmode="url" placeholder="https://your-image-host.com/product.jpg" aria-describedby="sellerImageHelp"></label>
+<p id="sellerImageHelp" style="grid-column:1/-1;color:#737373;font-size:.85rem;margin:-6px 0 0">Use a public HTTPS image link. Direct file uploads need secure image storage on the future backend.</p>
 <label class="form-group" style="grid-column:1/-1">Description<textarea id="sellerProductDescription" rows="2" maxlength="500" placeholder="Describe the product"></textarea></label>
 <div style="grid-column:1/-1"><button type="submit" class="primary-button">Add product</button></div></form><p id="productMessage" role="status" style="margin-top:10px;color:#666"></p><div id="sellerProductList" style="margin-top:16px;display:grid;gap:10px"></div></section>
-<section class="dashboard-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin:0 0 20px"><div class="dashboard-card"><span>Products</span><strong id="metricProducts">0</strong></div><div class="dashboard-card"><span>Orders</span><strong id="metricOrders">0</strong></div><div class="dashboard-card"><span>Recorded sales</span><strong id="metricSales">KES 0</strong></div><div class="dashboard-card"><span>Store status</span><strong id="metricPublished" style="font-size:1.2rem">Draft</strong></div></section>
+<section class="dashboard-grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin:0 0 20px"><div class="dashboard-card"><span>Products</span><strong id="metricProducts">0</strong></div><div class="dashboard-card"><span>Orders</span><strong id="metricOrders">0</strong></div><div class="dashboard-card"><span>Demo order value</span><strong id="metricSales">KES 0</strong></div><div class="dashboard-card"><span>Store status</span><strong id="metricPublished" style="font-size:1.2rem">Draft</strong></div></section>
 <section class="card" style="padding:24px"><div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap"><div><p class="section-eyebrow">BUSINESS ACTIVITY</p><h2 style="font-size:1.7rem;margin-top:5px">Recent orders</h2></div><button id="refreshMetrics" type="button" class="secondary-button">Refresh analytics</button></div><div id="ordersSummary" style="margin-top:16px;color:#666"></div><p style="font-size:.85rem;color:#777;margin-top:16px">Metrics are calculated from demo data saved in this browser. A deployed backend and verified payment provider are required for production sales analytics.</p></section>
 </div></div></main>
 <footer><div class="footer-inner"><div><strong>SMITHX</strong><p>Private seller workspace</p></div><p>© 2026 SMITHX · <a href="about.html">About</a></p></div></footer>
@@ -45,9 +47,9 @@ const products=read('smithx_custom_products_v2')||[];
 const mine=Array.isArray(products)?products.filter(p=>p.sellerEmail===current.email||(store&&p.storeId===store.id)):[];
 const orders=read('smithx_orders_v2')||[];
 const myOrders=Array.isArray(orders)?orders.filter(o=>(o.items||[]).some(i=>mine.some(p=>String(p.id)===String(i.productId))|| (store&&i.storeId===store.id))):[];
-const sales=myOrders.filter(o=>['Paid','Confirmed','Shipped','Delivered','Complete','Completed'].includes(o.status)).reduce((sum,o)=>sum+(Number(o.total)||0),0);
+const sales=myOrders.reduce((sum,o)=>{const status=String(o.status||'').toLowerCase();if(['cancelled','canceled','refunded'].includes(status))return sum;const lineValue=(Array.isArray(o.items)?o.items:[]).reduce((subtotal,i)=>{const product=mine.find(p=>String(p.id)===String(i.productId||i.product_id));if(!product)return subtotal;const price=Number(i.price!=null?i.price:i.unit_price!=null?i.unit_price:product.price)||0;return subtotal+price*Math.max(0,Number(i.quantity)||0);},0);return sum+lineValue;},0);
 $('metricProducts').textContent=mine.length;$('metricOrders').textContent=myOrders.length;$('metricSales').textContent=money(sales);
-$('ordersSummary').textContent=myOrders.length?myOrders.length+' order(s) recorded in this browser. Sales are estimates until payments are verified.':'No orders recorded for this store yet.';
+$('ordersSummary').textContent=myOrders.length?myOrders.length+' order(s) recorded in this browser. Estimated value of your items: '+money(sales)+'. Demo data only; payment is not verified.':'No orders recorded for this store yet.';
 }
 function save(mode){
 try{
@@ -72,14 +74,20 @@ function renderProducts(){
  const store=smxStoreForOwner(current.email);
  const all=read('smithx_custom_products_v2')||[];
  const mine=Array.isArray(all)?all.filter(p=>p.sellerEmail===current.email||(store&&p.storeId===store.id)):[];
- $('sellerProductList').innerHTML=mine.length?mine.map(p=>'<div style="padding:12px;border:1px solid #e5e5e5;border-radius:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><strong>'+smxEscape(p.name)+'</strong><p style="color:#777;font-size:.9rem">'+smxEscape(p.category||'Other')+' · Stock '+Number(p.stock||0)+'</p></div><strong>'+money(p.price)+'</strong></div>').join(''):'<p style="color:#777">No products added yet.</p>';
+ $('sellerProductList').innerHTML=mine.length?mine.map(p=>'<div style="padding:12px;border:1px solid #e5e5e5;border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">'+(p.image?'<img src="'+smxEscape(p.image)+'" alt="" loading="lazy" style="width:64px;height:64px;object-fit:cover;border-radius:10px;background:#f2f2f2">':'<div aria-hidden="true" style="width:64px;height:64px;display:grid;place-items:center;border-radius:10px;background:#f2f2f2;color:#737373;font-size:.7rem">NO IMAGE</div>')+'<div style="flex:1;min-width:140px"><strong>'+smxEscape(p.name)+'</strong><p style="color:#777;font-size:.9rem">'+smxEscape(p.category||'Other')+' · Stock '+Number(p.stock||0)+'</p></div><strong>'+money(p.price)+'</strong></div>').join(''):'<p style="color:#777">No products added yet.</p>';
 }
 $('sellerProductForm').addEventListener('submit',e=>{
  e.preventDefault();
  const store=smxStoreForOwner(current.email);
  if(!store){$('productMessage').textContent='Save your store details first, then add products.';return}
  const all=read('smithx_custom_products_v2')||[];
- const item={id:'SMXP-'+Date.now().toString(36).toUpperCase(),name:$('sellerProductName').value.trim(),price:Number($('sellerProductPrice').value),category:$('sellerProductCategory').value,stock:Number($('sellerProductStock').value),description:$('sellerProductDescription').value.trim(),image:'',sellerEmail:current.email,storeId:store.id,storeSlug:store.slug,storeName:store.name,createdAt:new Date().toISOString(),published:!!store.published};
+ const imageInput=$('sellerProductImage').value.trim();
+ let image='';
+ if(imageInput){
+  try { const parsed=new URL(imageInput); if(parsed.protocol!=='https:') throw new Error(); image=parsed.href; }
+  catch(_){ $('productMessage').textContent='Use a valid public HTTPS image URL, or leave the field empty.'; return; }
+ }
+ const item={id:'SMXP-'+Date.now().toString(36).toUpperCase(),name:$('sellerProductName').value.trim(),price:Number($('sellerProductPrice').value),category:$('sellerProductCategory').value,stock:Number($('sellerProductStock').value),description:$('sellerProductDescription').value.trim(),image,sellerEmail:current.email,storeId:store.id,storeSlug:store.slug,storeName:store.name,createdAt:new Date().toISOString(),published:!!store.published};
  if(!Array.isArray(all)) { $('productMessage').textContent='Could not read product catalogue.';return; }
  all.push(item);localStorage.setItem('smithx_custom_products_v2',JSON.stringify(all));e.target.reset();$('productMessage').textContent=store.published?'Product added to your published store.':'Product saved as a draft; publish your store to make it visible.';
  renderProducts();refresh();

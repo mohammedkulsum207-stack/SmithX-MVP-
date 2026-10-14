@@ -1,7 +1,7 @@
 "use strict";
 
 /* =====================================================
-   SM1THX — DEMO ACCOUNTS (auth.js)
+   SMITHX — DEMO ACCOUNTS (auth.js)
    Used by login.html, profile.html and auth-nav.js.
    Accounts live only in this browser (localStorage).
    This is a demo login, not real security.

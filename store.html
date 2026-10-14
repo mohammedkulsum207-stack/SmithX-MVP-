@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A seller storefront on SM1THX.">
-  <title>Store — SM1THX</title>
+  <meta name="description" content="A seller storefront on SMITHX.">
+  <title>Store — SMITHX</title>
 
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap");
@@ -285,9 +285,9 @@
 <body>
 
 <header>
-  <a class="brand" href="index.html#home" aria-label="SM1THX home">
+  <a class="brand" href="index.html#market" aria-label="SMITHX home">
     <img src="assets/smithx-logo.jpg" alt="">
-    <span>SM1THX</span>
+    <span>SMITHX</span>
   </a>
   <a class="back-btn" href="index.html#market">← Marketplace</a>
 </header>
@@ -323,7 +323,7 @@
     }
 
     function notFound(title, body) {
-      document.title = "Store not found — SM1THX";
+      document.title = "Store not found — SMITHX";
       root.innerHTML = `
         <div class="page">
           <div class="empty">
@@ -348,7 +348,7 @@
     const theme = SMX_STORE_THEMES[store.theme] || SMX_STORE_THEMES.gold;
     document.documentElement.style.setProperty("--accent", theme.accent);
     document.documentElement.style.setProperty("--accent-ink", theme.ink);
-    document.title = store.name + " — SM1THX";
+    document.title = store.name + " — SMITHX";
 
     const products = smxStoreProducts(store);
     const since = smxFormatDate(store.createdAt);
@@ -358,7 +358,7 @@
         <div class="store-head">
           <div class="store-logo" aria-hidden="true">${smxEscape(smxInitials(store.name))}</div>
           <div>
-            <p class="eyebrow">SM1THX store${store.published ? "" : " · Preview — not published"}</p>
+            <p class="eyebrow">SMITHX store${store.published ? "" : " · Preview — not published"}</p>
             <h1>${smxEscape(store.name)}</h1>
             ${store.tagline ? `<p class="tagline">${smxEscape(store.tagline)}</p>` : ""}
           </div>
@@ -366,7 +366,7 @@
         <div class="store-meta">
           <span class="chip">${products.length} ${products.length === 1 ? "product" : "products"}</span>
           ${(() => { const r = typeof smxRatingSummary === "function" ? smxRatingSummary(products.map(p => p.id)) : { count: 0 }; return r.count ? `<span class="chip store-rating">${smxStarsHTML(r.average)} ${r.average.toFixed(1)} · ${r.count} ${r.count === 1 ? "review" : "reviews"}</span>` : `<span class="chip">No reviews yet</span>`; })()}
-          <span class="chip">On SM1THX since ${smxEscape(since)}</span>
+          <span class="chip">On SMITHX since ${smxEscape(since)}</span>
           <button class="btn btn-accent" type="button" id="shareStore">Share store</button>
           ${isOwner ? `<a class="btn btn-ghost" href="profile.html#store">Edit store</a>` : ""}
         </div>
@@ -400,11 +400,11 @@
             ${isOwner ? `<br><a class="btn" href="seller-dashboard.html">Add a product</a>` : ""}
           </div>`}
 
-        <p class="demo-note">MVP demo: stores and products are saved in this browser only. Sharing with other people will work once SM1THX has a backend.</p>
+        <p class="demo-note">MVP demo: stores and products are saved in this browser only. Sharing with other people will work once SMITHX has a backend.</p>
       </div>`;
 
     document.getElementById("shareStore").addEventListener("click", async () => {
-      const result = await smxShareLink(smxStoreURL(store.slug), store.name + " on SM1THX");
+      const result = await smxShareLink(smxStoreURL(store.slug), store.name + " on SMITHX");
       if (result === "copied") toast("Store link copied.");
     });
   })();

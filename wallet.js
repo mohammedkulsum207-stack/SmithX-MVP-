@@ -1,19 +1,19 @@
 "use strict";
 
 /* =====================================================
-   SM1THX — SMX CREDIT WALLET (wallet.js)
+   SMITHX — SMX CREDIT WALLET (wallet.js)
    Phase 3 · DEMO prepaid store credit.
 
    Model (decided Oct 2026):
      • 1 SMX = KES 1, always. No exchange rate.
-     • Topped up with M-Pesa (demo), spent only on SM1THX.
+     • Topped up with M-Pesa (demo), spent only on SMITHX.
      • Not transferable between users. No interest.
      • Never expires. Unused balance can be withdrawn
        back to M-Pesa at full value.
      • Refunds for orders paid with SMX go back to SMX.
 
    ⚠ No real money moves. Before going live, stored
-   credit counts as e-money in Kenya: SM1THX would need
+   credit counts as e-money in Kenya: SMITHX would need
    Central Bank of Kenya authorisation or a licensed
    partner holding customer funds in trust, and the
    ledger must move to a secure server.
@@ -33,7 +33,7 @@ const SMX_WALLET = {
   limits: {
     minTopUp: 50,
     maxTopUp: 75000,          // per top-up (mirrors CBK e-money per-transaction cap)
-    maxBalance: 100000,       // SM1THX demo cap on any one wallet
+    maxBalance: 100000,       // SMITHX demo cap on any one wallet
     monthlyLoad: 1000000,     // mirrors CBK aggregate monthly load limit
     minWithdraw: 50
   },
@@ -133,7 +133,7 @@ function smxWalletRecord(email, { type, amount, key, ref, note, method }) {
   if (!Number.isInteger(value) || value <= 0) throw new Error("Enter a whole amount above zero.");
 
   const audit = smxWalletAudit(owner);
-  if (!audit.ok) throw new Error("Your wallet records don't add up, so the wallet is paused. Contact SM1THX support.");
+  if (!audit.ok) throw new Error("Your wallet records don't add up, so the wallet is paused. Contact SMITHX support.");
 
   const L = SMX_WALLET.limits;
   const balance = audit.balance;

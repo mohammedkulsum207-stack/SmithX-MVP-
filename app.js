@@ -1,7 +1,7 @@
 "use strict";
 
 /* =====================================================
-   SM1THX 🛒
+   SMITHX 🛒
    APP.JS — MVP
    CART + MARKETPLACE + SELLER STUDIO
    + AI ASSISTANT + ORDERS
@@ -336,7 +336,7 @@ function safeStorageSet(key, value) {
     localStorage.setItem(key, value);
   } catch (error) {
     console.error(
-      "SM1THX storage error:",
+      "SMITHX storage error:",
       error
     );
   }
@@ -348,7 +348,7 @@ function safeStorageGet(key) {
     return localStorage.getItem(key);
   } catch (error) {
     console.error(
-      "SM1THX storage read error:",
+      "SMITHX storage read error:",
       error
     );
 
@@ -1675,7 +1675,7 @@ function createTrackerSection() {
       <div>
 
         <p class="section-eyebrow">
-          SM1THX LOGISTICS
+          SMITHX LOGISTICS
         </p>
 
         <h3>
@@ -1856,7 +1856,7 @@ function renderTrackerNotFound(
         <strong>
           ${escapeHTML(orderId)}
         </strong>
-        in this SM1THX demo.
+        in this SMITHX demo.
       </p>
 
       <small>
@@ -2072,7 +2072,7 @@ function renderOrderTracker(
       ? `
         <span
           class="tracker-demo-badge"
-          title="This is a SM1THX demonstration tracking timeline."
+          title="This is a SMITHX demonstration tracking timeline."
         >
           DEMO TRACKING
         </span>
@@ -3198,15 +3198,9 @@ function renderProducts() {
                 onclick="openProductModal('${safeId}')"
               >
 
-                <img
-                  src="${escapeHTML(
-                    product.image || ""
-                  )}"
-                  alt="${escapeHTML(
-                    product.name
-                  )}"
-                  loading="lazy"
-                >
+                ${product.image
+                  ? '<img src="' + escapeHTML(product.image) + '" alt="' + escapeHTML(product.name) + '" loading="lazy">'
+                  : '<span class="product-image-placeholder" role="img" aria-label="No product image">Image not added yet</span>'}
 
               </button>
 
@@ -3300,14 +3294,9 @@ function openProductModal(
 
       <div>
 
-        <img
-          src="${escapeHTML(
-            product.image || ""
-          )}"
-          alt="${escapeHTML(
-            product.name
-          )}"
-        >
+        ${product.image
+          ? '<img src="' + escapeHTML(product.image) + '" alt="' + escapeHTML(product.name) + '">'
+          : '<div class="product-image-placeholder product-image-placeholder--large" role="img" aria-label="No product image">No product image</div>'}
 
       </div>
 
@@ -3598,7 +3587,7 @@ function showOrderConfirmation(
         </h2>
 
         <p class="muted">
-          Your SM1THX demo order has been
+          Your SMITHX demo order has been
           successfully created.
         </p>
 
@@ -4198,7 +4187,7 @@ async function generateProductListing() {
         <div class="ai-result-item">
 
           <span>
-            SM1THX AI
+            SMITHX AI
           </span>
 
           <strong>
@@ -4233,7 +4222,7 @@ async function generateProductListing() {
       <div class="ai-result-item">
 
         <span>
-          SM1THX AI
+          SMITHX AI
         </span>
 
         <strong>
@@ -4241,7 +4230,7 @@ async function generateProductListing() {
         </strong>
 
         <p>
-          SM1THX is analyzing your product.
+          SMITHX is analyzing your product.
         </p>
 
       </div>
@@ -4420,7 +4409,7 @@ async function generateProductListing() {
   } catch (error) {
 
     console.error(
-      "SM1THX AI error:",
+      "SMITHX AI error:",
       error
     );
 
@@ -4433,7 +4422,7 @@ async function generateProductListing() {
         <div class="ai-result-item">
 
           <span>
-            SM1THX AI
+            SMITHX AI
           </span>
 
           <strong>
@@ -5175,18 +5164,18 @@ function initializeSmithX() {
     }
 
     console.log(
-      "SM1THX initialized successfully."
+      "SMITHX initialized successfully."
     );
 
   } catch (error) {
 
     console.error(
-      "SM1THX initialization error:",
+      "SMITHX initialization error:",
       error
     );
 
     showToast(
-      "SM1THX encountered an error. Please refresh."
+      "SMITHX encountered an error. Please refresh."
     );
   }
 }
