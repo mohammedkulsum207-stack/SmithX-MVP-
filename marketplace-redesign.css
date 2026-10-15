@@ -6,3 +6,24 @@ body{background:#fff;color:#090a0c}.topbar{background:#090a0c;color:#fff;border-
 @media(max-width:900px){.products-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.sx-hero-inner{min-height:320px}}
 @media(max-width:650px){.topbar-inner{min-height:66px;gap:10px}.smithx-logo-image{width:37px;height:37px}.smithx-brand-text strong{font-size:15px}.smithx-brand-text small{font-size:8px;letter-spacing:.8px}.nav-links{gap:10px}.nav-links a{font-size:12px}.nav-links a:first-child{display:none}.nav-login-btn{padding:8px 10px;font-size:12px}.cart-button{width:39px;height:39px}.sx-hero-inner{width:calc(100% - 32px);grid-template-columns:1fr;gap:0;padding:36px 0 22px}.sx-hero h1{font-size:clamp(2.55rem,11vw,3.6rem)}.sx-hero p{font-size:.92rem}.sx-hero-art{min-height:185px;margin-top:5px}.sx-hero-art:before{width:200px}.sx-hero-art img{height:190px}.marketplace-section{padding:27px 0 52px}.marketplace-section .section-inner{width:calc(100% - 28px)}.marketplace-tools{gap:9px}.marketplace-tools .secondary-button{padding:0 12px;font-size:.82rem}.search-box input{padding-left:40px;font-size:.85rem}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.product-card{border-radius:12px}.product-card-body{padding:12px}.product-card h3{font-size:.88rem}.product-card-bottom{flex-wrap:wrap}.product-card-bottom strong{font-size:.94rem}}
 @media(max-width:390px){.nav-links a:nth-child(2){display:none}.sx-hero-art{min-height:155px}.sx-hero-art img{height:165px}}
+
+/* Cart: clear, accessible red Remove action; visual-only change. */
+.cart-item-controls button:last-child {
+  background: #dc2626;
+  border: 1px solid #dc2626;
+  color: #fff;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.2;
+  transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.cart-item-controls button:last-child:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+.cart-item-controls button:last-child:focus-visible {
+  outline: 3px solid #fca5a5;
+  outline-offset: 2px;
+}
