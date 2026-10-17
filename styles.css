@@ -4990,36 +4990,23 @@ h1, h2, h3, .dashboard-card strong, .smithx-brand-text strong, footer strong {
 }
 
 
-/* SMITHX premium neutral + green palette refresh */
+
+/* SMITHX premium neutral + blue button palette */
 :root {
-  --green: #2f7d52;
-  --green-dark: #236341;
-  --green-soft: #e8f3ec;
-  --green-pale: #f4f8f5;
-  --ink: #202522;
-  --text: #303733;
-  --muted: #6b746e;
-  --line: #e3e8e4;
-  --surface: #ffffff;
-  --surface-soft: #f6f8f6;
-  --accent: #2f7d52;
-  --accent-hover: #236341;
+  --blue: #2563eb;
+  --blue-dark: #1d4ed8;
+  --blue-soft: #eaf1ff;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
 }
-html, body { background-color: #fff; color: #303733; }
 button:not(.secondary):not(.outline), .btn-primary, .button-primary,
 [type="submit"], a.button-primary {
-  background-color: #2f7d52;
-  border-color: #2f7d52;
-  color: #fff;
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
 }
 button:not(.secondary):not(.outline):hover, .btn-primary:hover,
 .button-primary:hover, [type="submit"]:hover, a.button-primary:hover {
-  background-color: #236341;
-  border-color: #236341;
-}
-input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible {
-  outline-color: #72a889;
-}
-.card, .panel, .modal, .dropdown-menu, .product-card, .stat-card {
-  border-color: #e3e8e4;
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
 }
