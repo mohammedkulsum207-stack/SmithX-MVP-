@@ -340,3 +340,27 @@ body.smx-co-open { overflow: hidden; }
 .smx-co-wallet small { color: var(--muted, #6f675a); font-size: .82rem; }
 .smx-co-wallet a { color: var(--gold-text, #8a5f14); font-weight: 600; }
 .smx-co-credit dd { color: #2f7a4a; font-weight: 600; }
+
+/* SMITHX primary buttons: softer, muted light blue */
+button.primary-button, button.btn-primary, button.button-primary, button.btn-gold,
+a.primary-button, a.btn-primary, a.button-primary, a.btn-gold,
+.btn.primary, .btn.btn-primary, .btn.btn-gold,
+.primary-button, .btn-primary, .button-primary,
+[class*="btn-primary"], [class*="button-primary"] {
+  background: #bfdbfe !important;
+  background-color: #bfdbfe !important;
+  border-color: #bfdbfe !important;
+  color: #1e293b !important;
+  -webkit-text-fill-color: #1e293b !important;
+}
+button.primary-button:hover, button.btn-primary:hover, button.button-primary:hover, button.btn-gold:hover,
+a.primary-button:hover, a.btn-primary:hover, a.button-primary:hover, a.btn-gold:hover,
+.btn.primary:hover, .btn.btn-primary:hover, .btn.btn-gold:hover,
+.primary-button:hover, .btn-primary:hover, .button-primary:hover,
+[class*="btn-primary"]:hover, [class*="button-primary"]:hover {
+  background: #93c5fd !important;
+  background-color: #93c5fd !important;
+  border-color: #93c5fd !important;
+  color: #1e293b !important;
+  -webkit-text-fill-color: #1e293b !important;
+}
