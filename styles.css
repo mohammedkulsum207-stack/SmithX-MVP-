@@ -5059,3 +5059,26 @@ a.btn:hover {
   border-color: #3b82f6 !important;
   color: #ffffff !important;
 }
+
+
+/* SMITHX primary buttons: softer, muted light blue */
+button:not(.secondary):not(.outline):not(.btn-danger):not(.delete-button),
+input[type="button"], input[type="submit"],
+.btn-primary, .button-primary, .primary-button,
+a[role="button"], a.button, a.btn,
+[class*="btn-primary"], [class*="button-primary"], .btn-gold {
+  background: #bfdbfe !important;
+  background-color: #bfdbfe !important;
+  border-color: #bfdbfe !important;
+  color: #1e293b !important;
+}
+button:not(.secondary):not(.outline):not(.btn-danger):not(.delete-button):hover,
+input[type="button"]:hover, input[type="submit"]:hover,
+.btn-primary:hover, .button-primary:hover, .primary-button:hover,
+a[role="button"]:hover, a.button:hover, a.btn:hover,
+[class*="btn-primary"]:hover, [class*="button-primary"]:hover, .btn-gold:hover {
+  background: #93c5fd !important;
+  background-color: #93c5fd !important;
+  border-color: #93c5fd !important;
+  color: #1e293b !important;
+}
