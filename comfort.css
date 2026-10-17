@@ -80,3 +80,62 @@ p, li, td, dd, dt, h1, h2, h3, h4, label, small, strong { overflow-wrap: break-w
   body > header .logo { font-size: 1.05rem !important; letter-spacing: .04em !important; }
   .back-btn { padding: 8px 10px !important; }
 }
+
+/* SMITHX primary-button colour consistency: light blue across pages */
+:where(button, input[type="button"], input[type="submit"], a[role="button"], a.btn, .btn, .button, .primary-button, .btn-primary, .button-primary, [class*="btn-primary"], [class*="button-primary"], .btn-gold) {
+  --smx-primary-blue: #60a5fa;
+}
+button.primary-button,
+button.btn-primary,
+button.button-primary,
+button.btn-gold,
+a.primary-button,
+a.btn-primary,
+a.button-primary,
+a.btn-gold,
+.btn.primary,
+.btn.btn-primary,
+.btn.btn-gold,
+.primary-button,
+.btn-primary,
+.button-primary,
+[class*="btn-primary"],
+[class*="button-primary"] {
+  background: #60a5fa !important;
+  background-color: #60a5fa !important;
+  border-color: #60a5fa !important;
+  color: #102033 !important;
+  -webkit-text-fill-color: #102033 !important;
+}
+button.primary-button:hover,
+button.btn-primary:hover,
+button.button-primary:hover,
+button.btn-gold:hover,
+a.primary-button:hover,
+a.btn-primary:hover,
+a.button-primary:hover,
+a.btn-gold:hover,
+.btn.primary:hover,
+.btn.btn-primary:hover,
+.btn.btn-gold:hover,
+.primary-button:hover,
+.btn-primary:hover,
+.button-primary:hover,
+[class*="btn-primary"]:hover,
+[class*="button-primary"]:hover {
+  background: #3b82f6 !important;
+  background-color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+/* Keep destructive actions clearly red. */
+button.btn-danger, a.btn-danger, .btn-danger,
+button.delete-button, .delete-button,
+.cart-item-controls button:last-child {
+  background: #dc2626 !important;
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
