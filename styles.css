@@ -5012,7 +5012,8 @@ button:not(.secondary):not(.outline):hover, .btn-primary:hover,
 }
 
 
-/* Site-wide light-blue primary action treatment */
+
+/* SITE-WIDE BUTTON COLOR FIX — override legacy green button styles */
 :root {
   --blue: #60a5fa;
   --blue-dark: #3b82f6;
@@ -5020,63 +5021,41 @@ button:not(.secondary):not(.outline):hover, .btn-primary:hover,
   --accent: #60a5fa;
   --accent-hover: #3b82f6;
 }
-button,
+button:not(.secondary):not(.outline),
 input[type="button"],
 input[type="submit"],
 input[type="reset"],
 .btn,
 .button,
+.primary-button,
+.btn-primary,
+.button-primary,
 [class*="btn-primary"],
 [class*="button-primary"],
 a[role="button"],
 a.button,
 a.btn {
-  background-color: #60a5fa;
-  border-color: #60a5fa;
-  color: #102033;
+  background: #60a5fa !important;
+  background-color: #60a5fa !important;
+  border-color: #60a5fa !important;
+  color: #102033 !important;
 }
-button:hover,
+button:not(.secondary):not(.outline):hover,
 input[type="button"]:hover,
 input[type="submit"]:hover,
 input[type="reset"]:hover,
 .btn:hover,
 .button:hover,
+.primary-button:hover,
+.btn-primary:hover,
+.button-primary:hover,
 [class*="btn-primary"]:hover,
 [class*="button-primary"]:hover,
 a[role="button"]:hover,
 a.button:hover,
 a.btn:hover {
-  background-color: #3b82f6;
-  border-color: #3b82f6;
-  color: #ffffff;
-}
-button:focus-visible,
-input[type="button"]:focus-visible,
-input[type="submit"]:focus-visible,
-.btn:focus-visible,
-.button:focus-visible,
-a[role="button"]:focus-visible {
-  outline: 3px solid #bfdbfe;
-  outline-offset: 2px;
-}
-/* Keep secondary/outline controls neutral rather than recoloring every control. */
-button.secondary,
-button.outline,
-.btn-secondary,
-.button-secondary,
-.btn-outline,
-.button-outline {
-  background-color: #ffffff;
-  border-color: #d1d5db;
-  color: #303733;
-}
-button.secondary:hover,
-button.outline:hover,
-.btn-secondary:hover,
-.button-secondary:hover,
-.btn-outline:hover,
-.button-outline:hover {
-  background-color: #eff6ff;
-  border-color: #93c5fd;
-  color: #1e3a5f;
+  background: #3b82f6 !important;
+  background-color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
 }
