@@ -151,3 +151,28 @@ button.primary-button.add-to-cart-button:hover {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }
+
+
+/* FINAL GREEN PRIMARY-ACTION OVERRIDE — loaded after legacy blue rules. */
+:root { --blue: #15803d; --blue-dark: #166534; --blue-deep: #14532d; --blue-light: #dcfce7; --blue-soft: #f0fdf4; --blue-border: #bbf7d0; }
+button.primary-button, button.btn-primary, button.button-primary, button.btn-gold,
+a.primary-button, a.btn-primary, a.button-primary, a.btn-gold,
+.btn.primary, .btn.btn-primary, .btn.btn-gold,
+.primary-button, .btn-primary, .button-primary,
+[class*="btn-primary"], [class*="button-primary"], input[type="submit"], input[type="button"].primary-button {
+  background: #15803d !important; background-color: #15803d !important;
+  border-color: #15803d !important; color: #fff !important; -webkit-text-fill-color: #fff !important;
+}
+button.primary-button:hover, button.btn-primary:hover, button.button-primary:hover, button.btn-gold:hover,
+a.primary-button:hover, a.btn-primary:hover, a.button-primary:hover, a.btn-gold:hover,
+.btn.primary:hover, .btn.btn-primary:hover, .btn.btn-gold:hover,
+.primary-button:hover, .btn-primary:hover, .button-primary:hover,
+[class*="btn-primary"]:hover, [class*="button-primary"]:hover, input[type="submit"]:hover {
+  background: #166534 !important; background-color: #166534 !important;
+  border-color: #166534 !important; color: #fff !important; -webkit-text-fill-color: #fff !important;
+}
+/* Keep remove/delete actions red and Add to Cart a consistent green. */
+button.btn-danger, a.btn-danger, .btn-danger, button.delete-button, .delete-button,
+.cart-item-controls button:last-child { background:#dc2626 !important; background-color:#dc2626 !important; border-color:#dc2626 !important; color:#fff !important; -webkit-text-fill-color:#fff !important; }
+button.primary-button.add-to-cart-button, .primary-button.add-to-cart-button, .primary-button.add-to-cart-button:hover,
+button.primary-button.add-to-cart-button:hover, #productsGrid .add-to-cart-button { background:#15803d !important; background-color:#15803d !important; border-color:#15803d !important; color:#fff !important; -webkit-text-fill-color:#fff !important; }
