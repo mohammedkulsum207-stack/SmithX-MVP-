@@ -3379,7 +3379,7 @@ function renderProducts() {
 
                   <button
                     type="button"
-                    class="primary-button small-button"
+                    class="primary-button small-button add-to-cart-button"
                     onclick="addToCart('${safeId}')"
                   >
                     Add to cart
@@ -3476,7 +3476,7 @@ function openProductModal(
 
         <button
           type="button"
-          class="primary-button"
+          class="primary-button add-to-cart-button"
           onclick="addToCart('${safeId}'); closeProductModal();"
         >
           Add to cart
