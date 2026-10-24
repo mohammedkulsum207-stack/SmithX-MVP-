@@ -139,3 +139,15 @@ button.delete-button, .delete-button,
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
 }
+
+/* Marketplace Add to Cart must stay green: this file loads after the marketplace theme. */
+button.primary-button.add-to-cart-button,
+.primary-button.add-to-cart-button,
+.primary-button.add-to-cart-button:hover,
+button.primary-button.add-to-cart-button:hover {
+  background: #16a34a !important;
+  background-color: #16a34a !important;
+  border-color: #16a34a !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
