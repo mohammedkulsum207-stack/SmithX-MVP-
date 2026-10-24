@@ -51,3 +51,25 @@ a.primary-button:hover, a.btn-primary:hover, a.button-primary:hover, a.btn-gold:
   color: #1e293b !important;
   -webkit-text-fill-color: #1e293b !important;
 }
+
+/* Green styling only for Add to Cart buttons */
+.add-to-cart-button {
+  background: #16a34a !important;
+  background-color: #16a34a !important;
+  border-color: #16a34a !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.add-to-cart-button:hover {
+  background: #15803d !important;
+  background-color: #15803d !important;
+  border-color: #15803d !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.add-to-cart-button:focus-visible {
+  outline: 3px solid #86efac;
+  outline-offset: 2px;
+}
