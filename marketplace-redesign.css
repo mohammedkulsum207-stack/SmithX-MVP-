@@ -73,3 +73,15 @@ a.primary-button:hover, a.btn-primary:hover, a.button-primary:hover, a.btn-gold:
   outline: 3px solid #86efac;
   outline-offset: 2px;
 }
+
+
+/* SmithX polish pass: sharper product cards and clearer purchase actions */
+.product-image-button img { display:block; width:100%; }
+.product-card h3 { font-weight:750; }
+.product-card-bottom strong { font-variant-numeric:tabular-nums; }
+.product-card .add-to-cart-button { width:100%; min-height:42px; border-radius:9px; font-weight:800; letter-spacing:.01em; }
+.add-to-cart-button:active { transform:translateY(1px); }
+.product-card:focus-within { outline:2px solid #16a34a; outline-offset:2px; }
+@media (prefers-reduced-motion: reduce) {
+  .product-card, .product-image-button img, .add-to-cart-button { transition:none !important; }
+}
