@@ -85,3 +85,27 @@ a.primary-button:hover, a.btn-primary:hover, a.button-primary:hover, a.btn-gold:
 @media (prefers-reduced-motion: reduce) {
   .product-card, .product-image-button img, .add-to-cart-button { transition:none !important; }
 }
+
+
+/* SMITHX LIVE FIX — force marketplace Add to Cart buttons green */
+#productsGrid .add-to-cart-button,
+#productsGrid button.add-to-cart-button,
+.product-card .add-to-cart-button,
+.product-card button.add-to-cart-button,
+button.primary-button.add-to-cart-button,
+button.add-to-cart-button:hover,
+.product-card .add-to-cart-button:hover {
+  background: #16a34a !important;
+  background-color: #16a34a !important;
+  border: 1px solid #16a34a !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: none !important;
+}
+#productsGrid .add-to-cart-button:hover,
+.product-card .add-to-cart-button:hover,
+button.add-to-cart-button:hover {
+  background: #15803d !important;
+  background-color: #15803d !important;
+  border-color: #15803d !important;
+}
