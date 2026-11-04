@@ -86,6 +86,19 @@
         '<div class="smx-pref-row"><div><strong>Account notices</strong><small>Profile and security-related messages</small></div><input type="checkbox" id="smxNotifyAccount"></div>',
         '<p class="smx-extra-note">These preferences are saved on this device. No email or SMS is sent by the MVP.</p>',
       '</section>',
+      '<section class="card smx-extra-card smx-notification-center">',
+        '<div class="smx-extra-heading"><div><span class="smx-extra-kicker">YOUR ACTIVITY</span><h2>Notification centre</h2></div><span class="smx-extra-icon">♧</span></div>',
+        '<div class="smx-notification-toolbar"><span id="smxUnreadCount">0 unread</span><button type="button" class="smx-text-button" id="smxMarkAllRead">Mark all as read</button></div>',
+        '<div id="smxNotificationList" class="smx-notification-list"></div>',
+        '<p class="smx-extra-note">Updates are generated from activity saved in this browser. Push notifications, email and SMS are not connected in this MVP.</p>',
+      '</section>',
+      '<section class="card smx-extra-card smx-completion-card">',
+        '<div class="smx-extra-heading"><div><span class="smx-extra-kicker">GET MORE FROM SMITHX</span><h2>Complete your profile</h2></div><span class="smx-extra-icon">✦</span></div>',
+        '<div class="smx-completion-summary"><strong id="smxCompletionPercent">0%</strong><span id="smxCompletionLabel">Profile setup</span></div>',
+        '<div class="smx-progress-track"><span id="smxCompletionBar"></span></div>',
+        '<div id="smxCompletionTasks" class="smx-completion-tasks"></div>',
+        '<p class="smx-extra-note">A more complete profile helps make shopping and checkout smoother.</p>',
+      '</section>',
       '<section class="card smx-extra-card smx-verification-card">',
         '<div class="smx-extra-heading"><div><span class="smx-extra-kicker">ACCOUNT STATUS</span><h2>Verification & security</h2></div><span class="smx-extra-icon">✓</span></div>',
         '<div class="smx-status-line"><span>Email address</span><strong class="smx-status-pending">Not verified</strong></div>',
@@ -305,11 +318,109 @@
     history.replaceState(null, '', '#settings');
   });
 
+  function notificationItems() {
+    var orders = smxRead(SMX_AUTH.orders, []);
+    orders = Array.isArray(orders) ? orders : [];
+    var items = orders.slice().sort(function (a, b) {
+      return new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0);
+    }).map(function (order) {
+      var status = String(order.status || 'Pending');
+      var orderId = String(order.orderId || 'Order');
+      return {
+        id: 'order-' + orderId + '-' + status.toLowerCase(),
+        title: 'Order ' + status,
+        detail: orderId + ' · ' + ((order.items && order.items[0] && order.items[0].name) || 'Your purchase'),
+        date: order.updatedAt || order.createdAt || '',
+        type: 'order'
+      };
+    });
+    items.push({
+      id: 'account-welcome-' + String(user.id || user.email),
+      title: 'Welcome to SM1THX',
+      detail: 'Your account is ready. Add your delivery details to make checkout easier.',
+      date: user.createdAt || '',
+      type: 'account'
+    });
+    return items;
+  }
+
+  function renderNotificationCentre() {
+    var data = readUser();
+    var readIds = Array.isArray(data.readNotifications) ? data.readNotifications : [];
+    var items = notificationItems();
+    var unread = items.filter(function (item) { return readIds.indexOf(item.id) < 0; }).length;
+    $('smxUnreadCount').textContent = unread + ' unread';
+    $('smxNotificationList').innerHTML = items.length ? items.map(function (item) {
+      var isRead = readIds.indexOf(item.id) >= 0;
+      return '<article class="smx-notification-item' + (isRead ? ' is-read' : '') + '">' +
+        '<span class="smx-notification-dot" aria-hidden="true"></span>' +
+        '<div class="smx-notification-content"><strong>' + esc(item.title) + '</strong><p>' + esc(item.detail) + '</p><small>' + (item.date ? esc(new Date(item.date).toLocaleDateString('en-KE')) : 'Account update') + '</small></div>' +
+        (isRead ? '<span class="smx-read-label">Read</span>' : '<button type="button" class="smx-text-button" data-read-notice="' + esc(item.id) + '">Mark read</button>') +
+      '</article>';
+    }).join('') : '<div class="smx-empty">You are all caught up.</div>';
+  }
+
+  function renderProfileCompletion() {
+    var latest = smxCurrentUser() || user;
+    var data = readUser();
+    var tasks = [
+      { label: 'Add a profile photo', done: !!latest.avatarData, target: 'photo' },
+      { label: 'Add your phone number', done: !!String(latest.phone || '').trim(), target: 'settings' },
+      { label: 'Add your town or city', done: !!String(latest.location || '').trim(), target: 'settings' },
+      { label: 'Save a delivery address', done: !!(data.addresses && data.addresses.length), target: 'extras' }
+    ];
+    var completed = tasks.filter(function (task) { return task.done; }).length;
+    var percent = Math.round(completed / tasks.length * 100);
+    $('smxCompletionPercent').textContent = percent + '%';
+    $('smxCompletionLabel').textContent = completed + ' of ' + tasks.length + ' completed';
+    $('smxCompletionBar').style.width = percent + '%';
+    $('smxCompletionTasks').innerHTML = tasks.map(function (task) {
+      return '<div class="smx-completion-task' + (task.done ? ' is-done' : '') + '">' +
+        '<span class="smx-task-check">' + (task.done ? '✓' : '○') + '</span><span>' + esc(task.label) + '</span>' +
+        (task.done ? '<small>Done</small>' : '<button type="button" class="smx-text-button" data-complete-action="' + task.target + '">' + (task.target === 'photo' ? 'Use photo button' : task.target === 'settings' ? 'Add now' : 'Open Personal') + '</button>') +
+      '</div>';
+    }).join('');
+  }
+
+  $('smxNotificationList').addEventListener('click', function (event) {
+    var button = event.target.closest('[data-read-notice]');
+    if (!button) return;
+    var data = readUser();
+    data.readNotifications = Array.isArray(data.readNotifications) ? data.readNotifications : [];
+    if (data.readNotifications.indexOf(button.dataset.readNotice) < 0) data.readNotifications.push(button.dataset.readNotice);
+    saveUser(data);
+    renderNotificationCentre();
+  });
+  $('smxMarkAllRead').addEventListener('click', function () {
+    var data = readUser();
+    data.readNotifications = notificationItems().map(function (item) { return item.id; });
+    saveUser(data);
+    renderNotificationCentre();
+    toast('All notifications marked as read.');
+  });
+  $('smxCompletionTasks').addEventListener('click', function (event) {
+    var button = event.target.closest('[data-complete-action]');
+    if (!button) return;
+    var action = button.dataset.completeAction;
+    if (action === 'settings') {
+      var settingsTab = tabs.querySelector('[data-panel="settings"]');
+      if (settingsTab) settingsTab.click();
+    } else if (action === 'extras') {
+      openExtras();
+      $('smxAddressLabel').focus();
+    } else {
+      toast('Use Change photo beside your profile picture.');
+    }
+  });
+
   function renderAll() {
     renderAddresses();
     renderWishlist();
     renderWallet();
     renderPreferences();
+    renderNotificationCentre();
+    renderProfileCompletion();
+    renderProfileCompletion();
   }
   renderAll();
   window.addEventListener('storage', function () {
