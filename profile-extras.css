@@ -44,3 +44,32 @@
   .smx-extra-card { padding:17px; }
   .smx-address-item,.smx-wishlist-item { align-items:flex-start; }
 }
+
+/* Notification centre and profile completion */
+.smx-notification-toolbar { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:8px 0 10px; color:#64748b; font-size:.78rem; font-weight:700; }
+.smx-notification-list { display:grid; }
+.smx-notification-item { display:flex; align-items:flex-start; gap:11px; padding:13px 0; border-top:1px solid #edf1f6; }
+.smx-notification-dot { width:9px; height:9px; flex:none; margin-top:5px; border-radius:50%; background:#2563eb; box-shadow:0 0 0 4px #dbeafe; }
+.smx-notification-item.is-read .smx-notification-dot { background:#cbd5e1; box-shadow:none; }
+.smx-notification-content { flex:1; min-width:0; display:grid; gap:3px; }
+.smx-notification-content strong { color:#172033; font-size:.85rem; }
+.smx-notification-content p { color:#64748b; font-size:.78rem; overflow-wrap:anywhere; }
+.smx-notification-content small,.smx-read-label { color:#94a3b8; font-size:.7rem; }
+.smx-read-label { white-space:nowrap; }
+.smx-completion-summary { display:flex; align-items:baseline; gap:9px; margin:12px 0 9px; }
+.smx-completion-summary strong { color:#2563eb; font-size:2rem; letter-spacing:-.05em; }
+.smx-completion-summary span { color:#64748b; font-size:.78rem; }
+.smx-progress-track { height:9px; overflow:hidden; border-radius:99px; background:#e8eef7; }
+.smx-progress-track span { display:block; width:0; height:100%; border-radius:inherit; background:linear-gradient(90deg,#2563eb,#60a5fa); transition:width .25s ease; }
+.smx-completion-tasks { display:grid; margin-top:12px; }
+.smx-completion-task { display:flex; align-items:center; gap:9px; padding:10px 0; border-top:1px solid #edf1f6; color:#334155; font-size:.8rem; }
+.smx-completion-task>span:nth-child(2) { flex:1; }
+.smx-task-check { color:#2563eb; font-weight:800; }
+.smx-completion-task.is-done { color:#64748b; }
+.smx-completion-task small { color:#16804a; font-size:.72rem; font-weight:700; }
+.smx-completion-task .smx-text-button { font-size:.72rem; }
+@media(max-width:420px) {
+  .smx-notification-item { flex-wrap:wrap; }
+  .smx-notification-item .smx-text-button { margin-left:20px; }
+  .smx-completion-task { flex-wrap:wrap; }
+}
