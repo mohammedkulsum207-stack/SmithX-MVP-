@@ -420,7 +420,6 @@
     renderPreferences();
     renderNotificationCentre();
     renderProfileCompletion();
-    renderProfileCompletion();
   }
   renderAll();
   window.addEventListener('storage', function () {
