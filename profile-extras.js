@@ -125,19 +125,21 @@
 
   /* Avatar upload is intentionally local-only and size-limited. */
   var avatar = $('avatar');
+  function restoreAvatar() {
+    var latest = smxCurrentUser();
+    if (!avatar || !latest || !latest.avatarData) return;
+    avatar.textContent = '';
+    var image = document.createElement('img');
+    image.src = latest.avatarData;
+    image.alt = 'Your profile photo';
+    avatar.appendChild(image);
+  }
   if (avatar) {
     var photoWrap = document.createElement('div');
     photoWrap.className = 'smx-avatar-tools';
     photoWrap.innerHTML = '<label class="smx-photo-button" for="smxAvatarFile">Change photo</label><input id="smxAvatarFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>';
     avatar.insertAdjacentElement('afterend', photoWrap);
-    var current = smxCurrentUser();
-    if (current && current.avatarData) {
-      avatar.textContent = '';
-      var img = document.createElement('img');
-      img.src = current.avatarData;
-      img.alt = 'Your profile photo';
-      avatar.appendChild(img);
-    }
+    restoreAvatar();
     $('smxAvatarFile').addEventListener('change', function (event) {
       var file = event.target.files && event.target.files[0];
       if (!file) return;
@@ -150,14 +152,13 @@
       reader.onload = function () {
         var latest = smxCurrentUser();
         smxUpdateUser(latest.email, { avatarData: String(reader.result) });
-        avatar.textContent = '';
-        var image = document.createElement('img');
-        image.src = String(reader.result);
-        image.alt = 'Your profile photo';
-        avatar.appendChild(image);
+        restoreAvatar();
         toast('Profile photo saved on this device.');
       };
       reader.readAsDataURL(file);
+    });
+    if ($('detailsForm')) $('detailsForm').addEventListener('submit', function () {
+      window.setTimeout(restoreAvatar, 0);
     });
   }
 
