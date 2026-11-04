@@ -1,0 +1,46 @@
+/* SmithX profile extras */
+.smx-extra-panel { padding: 2px 0 20px; }
+.smx-extra-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+.smx-extra-card { min-width:0; }
+.smx-extra-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.smx-extra-heading h2 { font-size:1.18rem; font-weight:760; letter-spacing:-.035em; margin-top:4px; }
+.smx-extra-kicker { color:#7a7f86; font-size:.67rem; font-weight:800; letter-spacing:.14em; }
+.smx-extra-icon { display:grid; place-items:center; width:38px; height:38px; border-radius:12px; background:#f0f2f4; color:#30343a; font-size:1.35rem; }
+.smx-extra-copy { color:#747982; font-size:.86rem; margin-bottom:15px; }
+.smx-extra-form { display:grid; gap:10px; }
+.smx-extra-two { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.smx-extra-list { display:grid; gap:0; margin:14px 0; }
+.smx-address-item,.smx-wishlist-item,.smx-wallet-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-top:1px solid #eceef0; min-width:0; }
+.smx-address-item>div,.smx-wishlist-item>div,.smx-wallet-row>div { display:grid; gap:3px; min-width:0; }
+.smx-address-item strong,.smx-wishlist-item strong,.smx-wallet-row strong { font-size:.85rem; }
+.smx-address-item p,.smx-address-item small,.smx-wishlist-item small,.smx-wallet-row small { color:#747982; font-size:.76rem; overflow-wrap:anywhere; }
+.smx-text-button { border:0; background:transparent; color:#b42318; font-size:.78rem; font-weight:700; cursor:pointer; white-space:nowrap; }
+.smx-empty { padding:16px; border:1px dashed #d9dce0; border-radius:12px; color:#777d85; font-size:.82rem; text-align:center; }
+.smx-wishlist-item img { width:54px; height:54px; border-radius:10px; object-fit:cover; background:#f1f2f3; }
+.smx-wishlist-item>div { flex:1; }
+.smx-wishlist-heart { position:absolute; z-index:2; top:12px; right:12px; width:38px; height:38px; border:1px solid #e1e4e8; border-radius:50%; background:#fff; color:#d12b45; font-size:1.25rem; cursor:pointer; box-shadow:0 3px 12px #00000012; }
+.product-card { position:relative; }
+.smx-wallet-balance { display:grid; gap:4px; padding:18px; border-radius:14px; background:#111214; color:#fff; margin:12px 0; }
+.smx-wallet-balance span,.smx-wallet-balance small { color:#c5c8cc; font-size:.78rem; }
+.smx-wallet-balance strong { font-size:1.8rem; letter-spacing:-.04em; }
+.smx-wallet-row>strong { white-space:nowrap; }
+.smx-pref-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 0; border-top:1px solid #eceef0; }
+.smx-pref-row>div { display:grid; gap:3px; }
+.smx-pref-row strong { font-size:.86rem; }
+.smx-pref-row small { color:#747982; font-size:.76rem; }
+.smx-pref-row input { width:20px; height:20px; accent-color:#15803d; flex:none; }
+.smx-extra-note { margin-top:12px; color:#7b8087; font-size:.77rem; line-height:1.55; }
+.smx-status-line { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 0; border-top:1px solid #eceef0; font-size:.84rem; }
+.smx-status-pending { color:#8a5a10; font-size:.78rem; }
+.smx-avatar-tools { align-self:center; margin-left:-14px; }
+.smx-photo-button { display:inline-flex; padding:8px 11px; border:1px solid #ffffff50; border-radius:9px; color:#fff; font-size:.76rem; font-weight:700; cursor:pointer; background:#ffffff12; }
+.profile-head>.avatar img { width:100%; height:100%; border-radius:inherit; object-fit:cover; }
+@media(max-width:760px) {
+  .smx-extra-grid { grid-template-columns:1fr; }
+  .smx-extra-two { grid-template-columns:1fr; }
+  .smx-avatar-tools { margin-left:-12px; }
+}
+@media(max-width:420px) {
+  .smx-extra-card { padding:17px; }
+  .smx-address-item,.smx-wishlist-item { align-items:flex-start; }
+}
