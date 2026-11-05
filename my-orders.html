@@ -830,12 +830,12 @@
 
     function saveOrders() {
       try {
-        localStorage.setItem(
-          ORDERS_KEY,
-          JSON.stringify(orders)
-        );
+        const serialized = JSON.stringify(orders);
+        localStorage.setItem(ORDERS_KEY, serialized);
+        return localStorage.getItem(ORDERS_KEY) === serialized;
       } catch (error) {
         console.error("Could not save orders:", error);
+        return false;
       }
     }
 
