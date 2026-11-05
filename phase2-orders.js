@@ -57,8 +57,10 @@
 
   function canRequestRefund(order) {
     if (normalizeStatus(order.status) !== "Delivered" || order.refundRequest) return false;
-    const age = Date.now() - new Date(deliveredAt(order)).getTime();
-    return age <= REFUND_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+    const deliveredTime = new Date(deliveredAt(order)).getTime();
+    if (!Number.isFinite(deliveredTime)) return false;
+    const age = Date.now() - deliveredTime;
+    return age >= 0 && age <= REFUND_WINDOW_DAYS * 24 * 60 * 60 * 1000;
   }
 
   /* ---------------- Estimated delivery from checkout ---------------- */
@@ -304,16 +306,23 @@
   function requestRefund(id, reason, note) {
     const order = findActive(id);
     if (!order || !canRequestRefund(order)) {
-      showMessage("This order isn't eligible for a return request.");
+      showMessage("This order isn't eligible for a return request. Check that it is marked Delivered and is within 7 days of delivery.");
       return;
     }
     const now = new Date().toISOString();
+    const previousOrders = orders;
     orders = orders.map(item => (String(item.orderId) === String(id)
-      ? { ...item, refundRequest: { status: "Under review", reason, note, at: now }, updatedAt: now }
+      ? { ...item, refundRequest: { status: "Under review", reason: String(reason || "Other"), note: String(note || "").slice(0, 400), at: now }, updatedAt: now }
       : item));
-    saveOrders();
+    if (typeof saveOrders !== "function" || saveOrders() !== true) {
+      orders = previousOrders;
+      showMessage("Your request could not be saved on this device. Free some browser storage and try again.");
+      return;
+    }
+    closeDialog();
+    renderOrders();
     renderSelectedOrder();
-    showMessage("Return request sent. The seller will review it.");
+    showMessage("Return request saved. The request is now shown on this order.");
   }
 
   function showMessage(text) {
@@ -405,8 +414,9 @@
         <button type="submit" class="btn btn-primary">Send request</button>
         <button type="button" class="btn btn-secondary" data-p2-close>Not now</button>
       </div>`, form => {
-      closeDialog();
-      requestRefund(order.orderId, form.reason.value, form.note.value.trim());
+      const reasonField = form.elements.namedItem("reason");
+      const noteField = form.elements.namedItem("note");
+      requestRefund(order.orderId, reasonField ? reasonField.value : "Other", noteField ? noteField.value.trim() : "");
     });
   }
 
@@ -437,7 +447,8 @@
   }
 
   document.addEventListener("click", event => {
-    const button = event.target.closest("[data-p2]");
+    const target = event.target;
+    const button = target && typeof target.closest === "function" ? target.closest("[data-p2]") : null;
     if (!button) return;
     const id = button.dataset.id;
     const action = button.dataset.p2;
