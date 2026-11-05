@@ -128,6 +128,7 @@ const SMX_COUNTRIES = [
       <div class="smx-store-actions">
         <button class="btn btn-primary" type="submit">${existing ? "Save store" : "Create store"}</button>
         <a class="btn btn-outline" id="stPreview" href="#" target="_blank" rel="noopener">Preview</a>
+        <a class="btn btn-outline" href="seller-dashboard.html">Seller dashboard</a>
         <button class="btn btn-outline" type="button" id="stShare">Share link</button>
         ${existing ? '<button class="btn btn-outline smx-delete-store" type="button" id="stDelete">Delete store</button>' : ""}
       </div>
@@ -231,10 +232,10 @@ const SMX_COUNTRIES = [
         checkSlug();
         updateStatus(store);
         card.querySelector('button[type="submit"]').textContent = "Save store";
-        msg.textContent = store.published ? "Your store is live. Opening your storefront…" : "Store saved as a draft.";
+        msg.textContent = store.published ? "Your store is live. Opening your seller dashboard…" : "Store saved as a draft. Opening your seller dashboard…";
         msg.className = "form-message show success";
         // A saved draft is still visible to its owner as a storefront preview.
-        window.location.href = "store.html?s=" + encodeURIComponent(store.slug);
+        window.location.href = "seller-dashboard.html?s=" + encodeURIComponent(store.slug);
       } catch (error) {
         msg.textContent = error.message;
         msg.className = "form-message show error";
