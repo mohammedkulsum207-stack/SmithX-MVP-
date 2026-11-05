@@ -63,7 +63,7 @@
 
     <section class="card seller-card" aria-labelledby="formTitle">
       <h2 id="formTitle">Add a product</h2>
-      <p class="sp-hint">Use a clear product photo, accurate price, and stock quantity. Product data is currently saved in this browser only.</p>
+      <p class="sp-hint">Use a clear product photo, accurate price, and stock quantity. Product data is currently saved in this browser only; use a direct image link to avoid large image files.</p>
       <form id="productForm">
         <input type="hidden" id="editingId" value="">
         <div class="sp-form-grid">
@@ -95,9 +95,9 @@
             <textarea id="productDescription" rows="3" maxlength="1200" required placeholder="Describe the product, condition, size, material or key features."></textarea>
           </div>
           <div class="sp-field">
-            <label for="productImageUrl">Product image URL (optional)</label>
-            <input id="productImageUrl" type="url" maxlength="1800" placeholder="https://example.com/product.jpg">
-            <span class="sp-hint">Or choose an image file on your device.</span>
+            <label for="productImageUrl">Import an image from the internet</label>
+            <input id="productImageUrl" type="url" maxlength="1800" inputmode="url" placeholder="Paste a direct image link (https://...)">
+            <span class="sp-hint">Paste a direct image address from a public website. The image preview appears below.</span>
           </div>
           <div class="sp-field">
             <label for="productImageFile">Upload product image</label>
@@ -106,7 +106,7 @@
               <span class="sp-file-name" id="productImageFileName" aria-live="polite">No image selected</span>
               <input id="productImageFile" class="sp-file-input" type="file" accept="image/*" aria-describedby="productImageFileHelp">
             </div>
-            <span class="sp-hint" id="productImageFileHelp">JPG, PNG, WebP or another image format · up to 900 KB. Images are stored in this browser.</span>
+            <span class="sp-hint" id="productImageFileHelp">JPG, PNG or WebP. Images are resized and compressed before saving.</span>
           </div>
           <label class="sp-publish sp-span">
             <input id="productPublished" type="checkbox" checked>
@@ -255,14 +255,32 @@
   }
   async function imageFromFile(file) {
     if (!file) return "";
-    if (!file.type.startsWith("image/")) throw new Error("Choose an image file.");
-    if (file.size > 900 * 1024) throw new Error("That image is over 900 KB. Choose a smaller image or use an image URL.");
-    return new Promise((resolve,reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result || ""));
-      reader.onerror = () => reject(new Error("Could not read that image."));
-      reader.readAsDataURL(file);
-    });
+    if (!file.type || !file.type.startsWith("image/")) throw new Error("Choose a valid image file.");
+    if (file.size > 15 * 1024 * 1024) throw new Error("Choose an image smaller than 15 MB.");
+    let bitmap;
+    try {
+      bitmap = await createImageBitmap(file);
+      const maxSide = 1200;
+      const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Image processing is not supported in this browser.");
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.76));
+      if (!blob) throw new Error("Could not prepare this image. Try another file.");
+      return await new Promise((resolve,reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = () => reject(new Error("Could not read the prepared image."));
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      throw error instanceof Error ? error : new Error("Could not process that image.");
+    } finally {
+      if (bitmap && typeof bitmap.close === "function") bitmap.close();
+    }
   }
   $("productImageFile").addEventListener("change", async event => {
     try {
@@ -281,11 +299,21 @@
     }
   });
   $("productImageUrl").addEventListener("input", () => {
-    const url = $("productImageUrl").value.trim();
-    if (url) {
-      selectedImage = "";
-      $("imagePreview").src = url;
+    const value = $("productImageUrl").value.trim();
+    selectedImage = "";
+    if (!value) {
+      if (!$("editingId").value) $("imagePreviewWrap").hidden = true;
+      return;
+    }
+    try {
+      const url = new URL(value);
+      if (!["http:", "https:"].includes(url.protocol)) throw new Error("Use a public http or https image link.");
+      $("imagePreview").src = url.href;
       $("imagePreviewWrap").hidden = false;
+      $("imagePreview").onerror = () => notice("That link did not load as an image. Try a direct .jpg, .png or .webp image link.", "error");
+      $("imagePreview").onload = () => { $("imagePreview").onerror = null; };
+    } catch (error) {
+      notice(error.message || "Enter a valid image link.", "error");
     }
   });
   form.addEventListener("submit", event => {
