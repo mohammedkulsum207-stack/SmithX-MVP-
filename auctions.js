@@ -214,3 +214,21 @@ function smxFormatCountdown(ms) {
   if (h) return h + "h " + m + "m " + String(sec).padStart(2, "0") + "s";
   return m + "m " + String(sec).padStart(2, "0") + "s";
 }
+
+
+// SMITHX Live Auctions experience preview entry point.
+(function addLiveAuctionPreviewLink(){
+  function mount(){
+    const row=document.querySelector(".hero-row");
+    if(!row || row.querySelector("[data-live-auction-preview]")) return;
+    const link=document.createElement("a");
+    link.href="live-auctions.html";
+    link.className="btn btn-outline";
+    link.dataset.liveAuctionPreview="true";
+    link.textContent="Preview Live Auction Room";
+    link.style.marginLeft="8px";
+    row.appendChild(link);
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",mount,{once:true});
+  else mount();
+})();
